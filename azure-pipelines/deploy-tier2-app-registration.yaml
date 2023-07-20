@@ -25,7 +25,7 @@ extends:
        developmentEnvironment: True 
        azureRegions:
         primary: UKSouth
-       serviceConnection: AZD-CDO-SSV3
+       serviceConnection: AZD-CDO-SND2 #AZD-CDO-SSV3
     variableFiles:
       - /azure-pipelines/vars/common.yaml@self
       - /azure-pipelines/vars/{environment}.yaml@self

@@ -27,7 +27,7 @@ module vaults 'br:snd2cdoinfac1401.azurecr.io/bicep/modules/key-vault.vaults:0.5
     // Non-required parameters
     tags: tags
     vaultSku: skuName
-    enableRbacAuthorization: True    
+    enableRbacAuthorization: true    
     enableSoftDelete: enableSoftDelete
     enablePurgeProtection: enablePurgeProtection
     softDeleteRetentionInDays: softDeleteRetentionInDays
