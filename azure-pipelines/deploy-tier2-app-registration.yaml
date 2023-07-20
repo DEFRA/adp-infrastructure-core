@@ -1,0 +1,46 @@
+parameters:
+  - name: deployToDevelopmentEnvironment
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+
+trigger: none
+
+resources:
+  repositories:
+    - repository: PipelineCommon
+      name: DEFRA-DEVOPS-COMMON/Defra.Pipeline.Common
+      type: git
+      ref: refs/tags/Release-v5-latest
+
+extends:
+  template: /templates/pipelines/common-infrastructure-deploy.yaml@PipelineCommon
+  parameters:
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.deployToDevelopmentEnvironment }}
+    environments:
+     - name: 'snd1'
+       deploymentBranches:
+        - "refs/heads/*"
+       developmentEnvironment: True 
+       azureRegions:
+        primary: UKSouth
+       serviceConnection: AZD-CDO-SSV3
+    variableFiles:
+      - /azure-pipelines/vars/common.yaml@self
+      - /azure-pipelines/vars/{environment}.yaml@self
+    groupedTemplates:
+    - name: CentralKeyVaultStore
+      templates:
+        - name: central-keyvault
+          path: infra/bicep/centralKeyVault
+          type: bicep
+          scope: "Resource Group"
+          resourceGroupName: $(keyVaultResourceGroup)
+          postDeployScriptsList:
+            - displayName: Create Tier 2 App Registrations
+              filePathsForTransform:
+                - 'infra/adAppRegistrations/tier2-app-registration.json'
+              scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
+              ScriptArguments: >
+                -AppRegJsonPath 'infra/adAppRegistrations/tier2-app-registration.json'

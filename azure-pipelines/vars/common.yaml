@@ -1,0 +1,16 @@
+variables:
+  projectName: cdo
+  serviceCode: CDO
+
+  upperEnvironment: $[upper(variables.environment)]
+  upperProjectName: $[upper(variables.projectName)]
+  upperNcResourceGroup: $[upper(variables.nc_resourcegroup)]
+  upperNckeyvault: $[upper(variables.nc_keyvault)]
+
+  resourceNamePrefix: $(upperEnvironment)$(upperProjectName)INF #e.g SNDCDOINF
+  lowerResourceNamePrefix: $(environment)$(projectName)inf  #e.g sndcdoinf
+
+  #Keyvaut default setting and can be overriden for environment in environment specific variable files
+  keyvaultEnableSoftDelete: false
+  keyvaultEnablePurgeProtection: false
+  keyvaultSoftDeleteRetentionInDays: 90
