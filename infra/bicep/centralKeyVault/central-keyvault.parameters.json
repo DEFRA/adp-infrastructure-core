@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "keyVaultName": {
+            "value": "#{{ keyVaultName }}"
+        },
+        "ssvPrincipalId": {
+            "value": "#{{ ssvAppRegServicePrincipalId }}"
+        },
+        "environment": {
+            "value": "#{{ upperEnvironment }}"
+        },
+        "enableSoftDelete": {
+            "value": "#{{ keyvaultEnableSoftDelete }}"
+        },
+        "enablePurgeProtection": {
+            "value": "#{{ keyvaultEnablePurgeProtection }}"
+        },
+        "softDeleteRetentionInDays": {
+            "value": "#{{ keyvaultSoftDeleteRetentionInDays }}"
+        }
+    }
+}

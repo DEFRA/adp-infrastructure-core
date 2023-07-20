@@ -4,8 +4,8 @@ variables:
   ssvAppRegServicePrincipalId: b657d032-1be7-492f-8693-15180569c703 #ADO-DefraGovUK-AAD-CDO-SSV3
   
   # KeyVault
-  keyVaultName: $(resourceNamePrefix)$(upperNckeyvault)$(nc_regionid)01
-  keyVaultResourceGroup: $(resourceNamePrefix)$(upperNcResourceGroup)$(nc_regionid)02
+  keyVaultName: $(resourceNamePrefix)$(upperNckeyvault)1401 #SNDCDOINFKV1401
+  keyVaultResourceGroup: $(resourceNamePrefix)$(upperNcResourceGroup)1401
   keyvaultEnableSoftDelete: false
   keyvaultEnablePurgeProtection: false
 
