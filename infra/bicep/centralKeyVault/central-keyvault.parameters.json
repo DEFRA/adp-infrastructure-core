@@ -5,9 +5,6 @@
         "keyVaultName": {
             "value": "#{{ keyVaultName }}"
         },
-        "ssvPrincipalId": {
-            "value": "#{{ ssvAppRegServicePrincipalId }}"
-        },
         "environment": {
             "value": "#{{ upperEnvironment }}"
         },
@@ -19,6 +16,18 @@
         },
         "softDeleteRetentionInDays": {
             "value": "#{{ keyvaultSoftDeleteRetentionInDays }}"
+        },
+        "roleAssignments": {
+            "value": [
+                {
+                    "roleDefinitionIdOrName": "Key Vault Secrets Officer",
+                    "description": "Key Vault Secrets Officer Role Assignment",
+                    "principalIds": [
+                        "#{{ ssvAppRegServicePrincipalId }}"
+                    ],
+                    "principalType": "ServicePrincipal"
+                }
+            ]
         }
     }
 }

@@ -1,11 +1,11 @@
 param keyVaultName string
-param ssvPrincipalId string
 param location string = resourceGroup().location
 param environment string
 param serviceCode string = 'CDO'
 param enableSoftDelete bool
 param enablePurgeProtection bool
 param softDeleteRetentionInDays int
+param roleAssignments array
 param tags object = {
   ServiceCode: serviceCode
   Environment: environment
@@ -18,7 +18,6 @@ param tags object = {
     'premium'
   ])
 param skuName string = 'standard'
-
 
 module vaults 'br:snd2cdoinfac1401.azurecr.io/bicep/modules/key-vault.vaults:0.5.6' = {
   name: '${uniqueString(deployment().name, location)}-test-kvvmin'
@@ -36,5 +35,6 @@ module vaults 'br:snd2cdoinfac1401.azurecr.io/bicep/modules/key-vault.vaults:0.5
       bypass: 'AzureServices'
       defaultAction: 'Allow'
     }
+    roleAssignments: roleAssignments
   }
 }
