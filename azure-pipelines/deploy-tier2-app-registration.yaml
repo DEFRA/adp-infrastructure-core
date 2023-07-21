@@ -28,13 +28,13 @@ extends:
        serviceConnection: AZD-CDO-SSV3
      - name: 'snd2'
        deploymentBranches:
-        - "refs/heads/*"
+        - "*"
        azureRegions:
         primary: UKSouth
        serviceConnection: AZD-CDO-SSV3   
      - name: 'snd3'
        deploymentBranches:
-        - "refs/heads/*"
+        - "*"
        azureRegions:
         primary: UKSouth
        serviceConnection: AZD-CDO-SSV3    
