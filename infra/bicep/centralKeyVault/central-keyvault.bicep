@@ -28,8 +28,8 @@ module vaults 'br:snd2cdoinfac1401.azurecr.io/bicep/modules/key-vault.vaults:0.5
     tags: tags
     vaultSku: skuName
     enableRbacAuthorization: true    
-    enableSoftDelete: enableSoftDelete
-    enablePurgeProtection: enablePurgeProtection
+    enableSoftDelete: bool(enableSoftDelete)
+    enablePurgeProtection: bool(enablePurgeProtection)
     softDeleteRetentionInDays: softDeleteRetentionInDays
     networkAcls: {
       bypass: 'AzureServices'
