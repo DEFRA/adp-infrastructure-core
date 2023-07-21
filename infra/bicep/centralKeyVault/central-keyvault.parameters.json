@@ -8,9 +8,6 @@
         "environment": {
             "value": "#{{ upperEnvironment }}"
         },
-        "softDeleteRetentionInDays": {
-            "value": "#{{ keyvaultSoftDeleteRetentionInDays }}"
-        },
         "roleAssignments": {
             "value": [
                 {
@@ -28,6 +25,9 @@
         },
         "enablePurgeProtection": {
             "value": #{{ keyvaultEnablePurgeProtection }}
+        },
+        "softDeleteRetentionInDays": {
+            "value": #{{ keyvaultSoftDeleteRetentionInDays }}
         }
     }
 }
