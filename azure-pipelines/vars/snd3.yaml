@@ -9,4 +9,4 @@ variables:
   keyvaultEnablePurgeProtection: false
 
   # SND2 App Registration
-  appRegistrationName: ADO-DefraGovUK-CDO-SND1-Cont
+  appRegistrationName: ADO-DefraGovUK-CDO-SND3-Cont

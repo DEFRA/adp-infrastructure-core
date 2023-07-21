@@ -19,12 +19,10 @@ param tags object = {
   ])
 param skuName string = 'standard'
 
-module vaults 'br:snd2cdoinfac1401.azurecr.io/bicep/modules/key-vault.vaults:0.5.6' = {
-  name: '${uniqueString(deployment().name, location)}-test-kvvmin'
+module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
+  name: '${uniqueString(deployment().name, location)}-keyvault'
   params: {
-    // Required parameters
     name: keyVaultName
-    // Non-required parameters
     tags: tags
     vaultSku: skuName
     enableRbacAuthorization: true    
