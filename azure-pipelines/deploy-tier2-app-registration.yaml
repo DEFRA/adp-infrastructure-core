@@ -11,7 +11,7 @@ resources:
     - repository: PipelineCommon
       name: DEFRA-DEVOPS-COMMON/Defra.Pipeline.Common
       type: git
-      ref: refs/tags/Release-v5-latest
+      ref:  refs/tags/Release-v5-latest
 
 extends:
   template: /templates/pipelines/common-infrastructure-deploy.yaml@PipelineCommon
@@ -25,7 +25,7 @@ extends:
        developmentEnvironment: True 
        azureRegions:
         primary: UKSouth
-       serviceConnection: AZD-CDO-SND2 #AZD-CDO-SSV3
+       serviceConnection: AZD-CDO-SSV3
     variableFiles:
       - /azure-pipelines/vars/common.yaml@self
       - /azure-pipelines/vars/{environment}.yaml@self
@@ -36,6 +36,7 @@ extends:
           path: infra/bicep/centralKeyVault
           type: bicep
           scope: "Resource Group"
+          acrServiceConnection: AZD-CDO-SSV3
           resourceGroupName: $(keyVaultResourceGroup)
           postDeployScriptsList:
             - displayName: Create Tier 2 App Registrations
