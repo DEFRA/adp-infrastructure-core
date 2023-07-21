@@ -8,12 +8,6 @@
         "environment": {
             "value": "#{{ upperEnvironment }}"
         },
-        "enableSoftDelete": {
-            "value": "#{{ keyvaultEnableSoftDelete }}"
-        },
-        "enablePurgeProtection": {
-            "value": "#{{ keyvaultEnablePurgeProtection }}"
-        },
         "softDeleteRetentionInDays": {
             "value": "#{{ keyvaultSoftDeleteRetentionInDays }}"
         },
@@ -28,6 +22,12 @@
                     "principalType": "ServicePrincipal"
                 }
             ]
+        },
+        "enableSoftDelete": {
+            "value": #{{ keyvaultEnableSoftDelete }}           
+        },
+        "enablePurgeProtection": {
+            "value": #{{ keyvaultEnablePurgeProtection }}
         }
     }
 }
