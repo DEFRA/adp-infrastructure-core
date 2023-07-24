@@ -11,7 +11,7 @@ resources:
     - repository: PipelineCommon
       name: DEFRA-DEVOPS-COMMON/Defra.Pipeline.Common
       type: git
-      ref: gg/bicep-compile-acr-support
+      ref: refs/tags/Release-v5.5.13
 
 extends:
   template: /templates/pipelines/common-infrastructure-deploy.yaml@PipelineCommon
