@@ -3,7 +3,7 @@ variables:
   ssvAppRegServicePrincipalId: b657d032-1be7-492f-8693-15180569c703 #ADO-DefraGovUK-AAD-CDO-SSV3
   
   subscriptionName: AZD-CDO-SND2
-  clientIdSecretName: ADO-DefraGovUK-CDO-SND2-Cont-ClientId
+  tier2ApplicationClientIdSecretName: ADO-DefraGovUK-CDO-SND2-Cont-ClientId
 
   # KeyVault
   keyVaultName: $(resourceNamePrefix)$(upperNckeyvault)1401 #SNDCDOINFKV1401

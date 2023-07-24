@@ -24,7 +24,7 @@ extends:
         - "refs/heads/*"
        developmentEnvironment: True 
        azureRegions:
-        primary: UKSouth
+        primary: UKSouth        
        serviceConnection: AZD-CDO-SSV3
      - name: 'snd2'
        deploymentBranches:
@@ -50,18 +50,17 @@ extends:
           scope: "Resource Group"
           acrServiceConnection: AZD-CDO-SSV3
           resourceGroupName: $(keyVaultResourceGroup)
-          keyVaultName: SNDCDOINFKV1401
-          keyVaultSecretsFilter: ADO-DefraGovUK-CDO-SND1-Cont-ClientId
           postDeployScriptsList:
-            # - displayName: Create Tier 2 App Registrations
-            #   filePathsForTransform:
-            #     - 'infra/adAppRegistrations/tier2-app-registration.json'
-            #   scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
-            #   ScriptArguments: >
-            #     -AppRegJsonPath 'infra/adAppRegistrations/tier2-app-registration.json'
+            - displayName: Create Tier 2 App Registrations
+              filePathsForTransform:
+                - 'infra/adAppRegistrations/tier2-app-registration.json'
+              scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
+              ScriptArguments: >
+                -AppRegJsonPath 'infra/adAppRegistrations/tier2-app-registration.json'
             - displayName: Setup RBAC on Subscriptions
               Type: AzurePowerShell
               scriptPath: 'scripts/set-rbac-subscriptions.ps1'
               ScriptArguments: >
-                -SubscriptionName  $(subscriptionName)  
-                -KeyVaultName $(keyVaultName) 
+                -SubscriptionName  $(subscriptionName) 
+                -KeyVaultName $(keyVaultName)
+                -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName) 

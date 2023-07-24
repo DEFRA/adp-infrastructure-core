@@ -1,17 +1,13 @@
 param(
     [string][Parameter(mandatory=$true)] $SubscriptionName,
-    [string][Parameter(mandatory=$true)] $KeyVaultName
+    [string][Parameter(mandatory=$true)] $KeyVaultName,
+    [string][Parameter(mandatory=$true)] $Tier2ApplicationClientIdSecretName
 )
 
-Write-Host "KeyVaultName - $($KeyVaultName)"
+$tier2ApplicationClientId = (Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $Tier2ApplicationClientIdSecretName).SecretValueText
+Write-Host "Tier2ApplicationClientId value is =  $($tier2ApplicationClientId)"
 
-Write-Host "Assigning UAA to Subscription $($SubscriptionName)"
+Write-Host "Assigning $($tier2ApplicationClientId) User Acess Administrator role to Subscription $($SubscriptionName)"
 
-Write-Host "ADO-DefraGovUK-CDO-SND1-Cont-ClientId = $(ADO-DefraGovUK-CDO-SND1-Cont-ClientId)"
+Write-Host "Assigning $($tier2ApplicationClientId) Contributor role to Subscription $($SubscriptionName)"
 
-Write-Host "ADO-DefraGovUK-CDO-SND2-Cont-ClientId = $(ADO-DefraGovUK-CDO-SND2-Cont-ClientId)"
-
-Write-Host "ADO-DefraGovUK-CDO-SND3-Cont-ClientId = $(ADO-DefraGovUK-CDO-SND3-Cont-ClientId)"
-
-
-Write-Host "Assigning Contributor to Subscription $($SubscriptionName)"
