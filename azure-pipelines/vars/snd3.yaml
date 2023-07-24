@@ -2,6 +2,9 @@ variables:
   environment: snd 
   ssvAppRegServicePrincipalId: b657d032-1be7-492f-8693-15180569c703 #ADO-DefraGovUK-AAD-CDO-SSV3
   
+  subscriptionName: AZD-CDO-SND3
+  clientIdSecretName: ADO-DefraGovUK-CDO-SND3-Cont-ClientId
+
   # KeyVault
   keyVaultName: $(resourceNamePrefix)$(upperNckeyvault)1401 #SNDCDOINFKV1401
   keyVaultResourceGroup: $(resourceNamePrefix)$(upperNcResourceGroup)1401
