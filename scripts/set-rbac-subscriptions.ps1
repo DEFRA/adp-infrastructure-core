@@ -1,6 +1,9 @@
 param(
-    [string][Parameter(mandatory=$true)] $SubscriptionName
+    [string][Parameter(mandatory=$true)] $SubscriptionName,
+    [string][Parameter(mandatory=$true)] $KeyVaultName
 )
+
+Write-Host "KeyVaultName - $($KeyVaultName)"
 
 Write-Host "Assigning UAA to Subscription $($SubscriptionName)"
 
