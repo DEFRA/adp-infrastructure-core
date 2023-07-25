@@ -4,7 +4,7 @@
   "moduleAliases": {
     "br": {
       "SharedDefraRegistry": {
-        "registry": "snd2cdoinfac1401.azurecr.io",
+        "registry": "SSVCDOINFCR3401.azurecr.io",
         "modulePath": "bicep/modules"
       }
     }

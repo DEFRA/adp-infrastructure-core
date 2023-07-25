@@ -1,15 +1,14 @@
 variables:
   environment: snd 
-  ssvAppRegServicePrincipalId: b657d032-1be7-492f-8693-15180569c703 #ADO-DefraGovUK-AAD-CDO-SSV3
-  
   subscriptionName: AZD-CDO-SND2
-  tier2ApplicationClientIdSecretName: ADO-DefraGovUK-CDO-SND2-Cont-ClientId
-
+  ssvAppRegServicePrincipalId: b657d032-1be7-492f-8693-15180569c703 #ADO-DefraGovUK-AAD-CDO-SSV3
+    
   # KeyVault
-  keyVaultName: $(resourceNamePrefix)$(upperNckeyvault)1401 #SNDCDOINFKV1401
-  keyVaultResourceGroup: $(resourceNamePrefix)$(upperNcResourceGroup)1401
+  keyVaultName: SSVCDOINFKV3401
+  keyVaultResourceGroup: SSVCDOINFRG3401
   keyvaultEnableSoftDelete: false
   keyvaultEnablePurgeProtection: false
 
   # SND2 App Registration
   appRegistrationName: ADO-DefraGovUK-CDO-SND2-Cont
+  tier2ApplicationClientIdSecretName: ADO-DefraGovUK-CDO-SND2-Cont-ClientId
