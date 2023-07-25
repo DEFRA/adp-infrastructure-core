@@ -69,11 +69,12 @@ try {
 
         Write-Host "Create Contributor role assignment.."
         New-RoleAssignment -Scope $subscriptionScope -ObjectId $servicePrincipalObjectID -RoleDefinitionName "Contributor"
+        $exitCode = 0
     }
     else {
         Write-Error "Could not find ClinetID secret $($Tier2ApplicationClientIdSecretName) in keyvault $($KeyVaultName)"
     }
-    $exitCode = 0
+    
 }
 catch {
     $exitCode = -2
