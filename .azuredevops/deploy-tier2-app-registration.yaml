@@ -39,8 +39,8 @@ extends:
         primary: UKSouth
        serviceConnection: AZD-CDO-SSV3    
     variableFiles:
-      - /azure-pipelines/vars/common.yaml@self
-      - /azure-pipelines/vars/{environment}.yaml@self
+      - /.azuredevops/vars/common.yaml@self
+      - /.azuredevops/vars/{environment}.yaml@self
     groupedTemplates:
     - name: CentralKeyVaultStore
       templates:
