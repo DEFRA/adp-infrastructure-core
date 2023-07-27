@@ -42,9 +42,9 @@ extends:
       - /.azuredevops/vars/common.yaml@self
       - /.azuredevops/vars/{environment}.yaml@self
     groupedTemplates:
-    - name: CentralKeyVaultStore
+    - name: PlatformKeyVaultStore
       templates:
-        - name: central-keyvault
+        - name: platform-keyvault
           path: infra/keyvault
           type: bicep
           scope: "Resource Group"

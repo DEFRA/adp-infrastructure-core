@@ -27,7 +27,7 @@ param roleAssignments array
 param tags object = {
   ServiceCode: serviceCode
   Environment: environment
-  Description: 'CDO Central KeyVault Store'
+  Description: 'CDO Platform KeyVault Store'
 }
 
 @description('Optional. Specifies the SKU for the vault.')

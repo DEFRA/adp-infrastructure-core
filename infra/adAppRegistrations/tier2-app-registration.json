@@ -14,11 +14,6 @@
                     {
                         "key": "#{{ appRegistrationName }}-ClientId",
                         "type": "ClientId"
-                    },
-                    {
-                        "key": "#{{ appRegistrationName }}-ObjectId",
-                        "type": "ClientProperty",
-                        "propertyName": "objectId"
                     }
                 ]
             },
