@@ -84,7 +84,7 @@ try {
     Write-Host "$($Tier2ApplicationClientIdSecretName) = $($tier2ApplicationClientId)"
 
     if (-not [string]::IsNullOrWhiteSpace($tier2ApplicationClientId)) {
-        [PSAzureContext]$context = Set-AzContext -Subscription $SubscriptionName
+        [System.Object]$context = Set-AzContext -Subscription $SubscriptionName
         [string]$subscriptionID = $context.Subscription.Id
         [string]$subscriptionScope = "/subscriptions/$($subscriptionID)"
         [string]$servicePrincipalObjectID = (Get-AzADServicePrincipal -ApplicationId $tier2ApplicationClientId).Id
