@@ -3,10 +3,10 @@
 Create a role assignment to subscription scope.
 
 .DESCRIPTION
-Assigns RBAC 'User Access Administrator' and  'Contributor' to subscription scope.
+Assigns RBAC 'User Access Administrator' and 'Contributor' to subscription scope.
 
 .PARAMETER SubscriptionName
-Mandatory. Subscription Name for e.g. AZD-CDO-SND1.
+Mandatory. Subscription Name.
 
 .PARAMETER KeyVaultName
 Mandatory. Keyvault Name.
@@ -15,7 +15,7 @@ Mandatory. Keyvault Name.
 Mandatory. Keyvault Secret Name of AAD Application.
 
 .EXAMPLE
-.\set-rbac-subscriptions.ps1 -SubscriptionName 'AZD-CDO-SND1' -KeyVaultName 'SNDCDOINFKV1401' -Tier2ApplicationClientIdSecretName 'ADO-DefraGovUK-CDO-SND1-Cont-ClientId'
+.\Set-RBAC-Subscriptions.ps1 -SubscriptionName <SubscriptionName> -KeyVaultName <KeyVaultName> -Tier2ApplicationClientIdSecretName <AAD-Application-ClientId>
 #> 
 
 [CmdletBinding()]
@@ -27,6 +27,34 @@ param(
     [Parameter(Mandatory)]
     [string] $Tier2ApplicationClientIdSecretName
 )
+
+Function New-RoleAssignment {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $True)]$Scope,
+        [Parameter(Mandatory = $True)]$ObjectId,
+        [Parameter(Mandatory = $True)]$RoleDefinitionName
+    )
+
+    [string]$functionName = $MyInvocation.MyCommand    
+    Write-Debug "${functionName}:Entered"
+    Write-Debug "${functionName}:Scope=$Scope"
+    Write-Debug "${functionName}:ObjectId=$ObjectId"
+    Write-Debug "${functionName}:RoleDefinitionName=$RoleDefinitionName"
+
+    $isRoleAssignmentExist = (Get-AzRoleAssignment -Scope $Scope -RoleDefinitionName $RoleDefinitionName -ObjectId $ObjectId)
+    Write-Debug "isRoleAssignmentExist=$isRoleAssignmentExist"
+
+    if (-not $isRoleAssignmentExist) {
+        Write-Host "Creating new Role Assignment : RoleDefinitionName = $RoleDefinitionName, Scope = $Scope, ObjectId = $ObjectId"
+        New-AzRoleAssignment -Scope $subscriptionScope -RoleDefinitionName $RoleDefinitionName -ObjectId $ObjectId | Out-Null
+    }
+    else {
+        Write-Host "Role Assignment already exist for : RoleDefinitionName = $RoleDefinitionName, Scope = $subscriptionScope, ObjectId = $ObjectId"
+    }
+
+    Write-Debug "${functionName}:Exited"
+}
 
 Set-StrictMode -Version 3.0
 
@@ -50,19 +78,16 @@ Write-Debug "${functionName}:SubscriptionName=$SubscriptionName"
 Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
 Write-Debug "${functionName}:Tier2ApplicationClientIdSecretName=$Tier2ApplicationClientIdSecretName"
 
-# sourcing helper function
-. $PSScriptRoot\helper-functions.ps1
-
 try {
     Write-Host "Fethcing Client ID $($Tier2ApplicationClientIdSecretName) from KeyVaultName =  $($KeyVaultName)"
-    $tier2ApplicationClientId = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $Tier2ApplicationClientIdSecretName -AsPlainText -ErrorAction Stop
+    [string]$tier2ApplicationClientId = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $Tier2ApplicationClientIdSecretName -AsPlainText -ErrorAction Stop
     Write-Host "$($Tier2ApplicationClientIdSecretName) = $($tier2ApplicationClientId)"
 
     if (-not [string]::IsNullOrWhiteSpace($tier2ApplicationClientId)) {
-        Set-AzContext -Subscription $SubscriptionName
-        $subscriptionID = (Get-AzContext).Subscription.Id
-        $subscriptionScope = "/subscriptions/$($subscriptionID)"
-        $servicePrincipalObjectID = (Get-AzADServicePrincipal -ApplicationId $tier2ApplicationClientId).Id
+        [PSAzureContext]$context = Set-AzContext -Subscription $SubscriptionName
+        [string]$subscriptionID = $context.Subscription.Id
+        [string]$subscriptionScope = "/subscriptions/$($subscriptionID)"
+        [string]$servicePrincipalObjectID = (Get-AzADServicePrincipal -ApplicationId $tier2ApplicationClientId).Id
 
         Write-Host "Create User Acess Administrator role assignment.."
         New-RoleAssignment -Scope $subscriptionScope -ObjectId $servicePrincipalObjectID -RoleDefinitionName "User Access Administrator"
