@@ -1,0 +1,53 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "envCode": {
+            "value": "#{{targetEnvironment}}"
+        },
+        "subSpokeNumber": {
+            "value": "#{{subscriptionSpoke}}"
+        },
+        "addressPrefixes": {
+            "value": [
+                "#{{addressPrefix}}"
+            ]
+        },
+        "aks1RouteTableResourceGroupName": {
+            "value": "#{{aks1RouteTableResourceGroup}}"
+        },
+        "aks1RouteTableName": {
+            "value": "#{{aks1RouteTableName}}"
+        },
+        "aks2RouteTableResourceGroupName": {
+            "value": "#{{aks2RouteTableResourceGroup}}"
+        },
+        "aks2RouteTableName": {
+            "value": "#{{aks2RouteTableName}}"
+        },
+        "subnet1AddressPrefix": {
+            "value": "#{{subnet1AddressPrefix}}"
+        },
+        "subnet2AddressPrefix": {
+            "value": "#{{subnet2AddressPrefix}}"
+        },
+        "subnet3AddressPrefix": {
+            "value": "#{{subnet3AddressPrefix}}"
+        },
+        "subnet5AddressPrefix": {
+            "value": "#{{subnet5AddressPrefix}}"
+        },
+        "subnet6AddressPrefix": {
+            "value": "#{{subnet6AddressPrefix}}"
+        },
+        "subnet7AddressPrefix": {
+            "value": "#{{subnet7AddressPrefix}}"
+        },
+        "subnet8AddressPrefix": {
+            "value": "#{{subnet8AddressPrefix}}"
+        },
+        "dnsServers": {
+            "value": "#{{dnsServers}}"
+        }
+    }
+}

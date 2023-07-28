@@ -1,15 +1,33 @@
-param location string = resourceGroup().location
-param environment string
-param serviceCode string = 'CDO'
-param tags object = {
-  ServiceCode: serviceCode
-  Environment: environment
-}
+// Parameters
+// param <parameter-name> <parameter-data-type> = <default-value>
+@description('''
+Targeted Environment, allowed values:
+  - SND
+  - SND2
+  - DEV
+  - PRE
+  - PRD
+''')
+@allowed([
+  'SND'
+  'SND2'
+  'DEV'
+  'PRE'
+  'PRD'
+])
 param envCode string
-param subSpokeNumber string
 
-param addressPrefixes array
-param dnsServers array
+@description('Location to deploy resources into')
+param location string = resourceGroup().location
+
+@description('REQUIRED: Project eg imports = IMP, exports = EXP')
+param serviceCode string
+
+@description('The descriptive name of the Service that the ServiceCode tag denotes')
+param serviceName string = 'CDO'
+
+@description('UTC time to match tagging standard [YYYYMMDD] eg 20180215')
+param lastDeployedDate string = utcNow('yyyyMMdd')
 
 @description('REQUIRED: Subnet range for public Application Gateway')
 param appGatewaySubnet string
@@ -17,6 +35,10 @@ param appGatewaySubnet string
 @description('REQUIRED: Subnet range for private Application Gateway')
 param privateAppGatewaySubnet string
 
+@description('REQUIRED: Number for the subsciption')
+param spokeSubNumber string
+
+var networkSecurityGroupName = '${toUpper(envCode)}${serviceCode}NETNS${spokeSubNumber}401'
 var securityRules = [
   {
     name: 'Allow_Internal_Traffic'
@@ -182,32 +204,22 @@ var securityRules = [
     }
   }
 ]
-
-module vnet 'br/SharedDefraRegistry:network.virtual-networks:0.4.6' = {
-  name: '${uniqueString(deployment().name, location)}-vnet'
+// Resources
+module networkSecurityGroup 'br/SharedDefraRegistry:network.network-security-groups:0.4.6' = {
+  name: uniqueString(networkSecurityGroupName)
   params: {
-    name: concat(envCode, 'CDONETVN', subSpokeNumber, '401')
+    name: networkSecurityGroupName
     location: location
-    tags: tags
-    addressPrefixes: addressPrefixes
-    dnsServers: dnsServers
+    tags: {
+      Name: networkSecurityGroupName
+      ServiceCode: serviceCode
+      ServiceName: serviceName
+      CreatedDate: lastDeployedDate
+      ServiceType: 'LOB'
+      Environment: envCode
+      Tier: 'networkSecurityGroup'
+      Location: location
+    }
+    securityRules: securityRules
   }
 }
-
-// New Resources
-@batchSize(1)
-module subnet 'br/SharedDefraRegistry:network.virtual-networks:0.4.6' = [for (sn, index) in subnetLoop: {
-  name: uniqueString(sn.name)
-  params: {
-    name: sn.name
-    location: location
-    virtualNetworkName: virtualNetworkName
-    addressPrefix: sn.addressPrefix
-    delegation: sn.delegation
-    routeTable: sn.routeTable
-    serviceEndpoints: sn.serviceEndpoints
-    networkSecurityGroup: sn.networkSecurityGroup
-    privateEndpointNetworkPolicies: sn.privateEndpointNetworkPolicies
-    privateLinkServiceNetworkPolicies: sn.privateLinkServiceNetworkPolicies
-  }
-}]
