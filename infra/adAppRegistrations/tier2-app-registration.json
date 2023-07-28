@@ -5,7 +5,7 @@
             "IdentifierUris": "",
             "secretAutoRenewalEnabled": true,
             "keyVault": {
-                "name": "#{{ keyVaultName }}",
+                "name": "#{{ platformKeyVaultName }}",
                 "secrets": [
                     {
                         "key": "#{{ appRegistrationName }}",

@@ -25,7 +25,7 @@ extends:
         type: bicep
         scope: "Resource Group"
         acrServiceConnection: AZD-CDO-SSV3
-        resourceGroupName: $(keyVaultResourceGroup)
+        resourceGroupName: $(sharedResourceGroup)
         postDeployScriptsList:
           - displayName: Create Tier 2 App Registrations
             filePathsForTransform:
@@ -38,5 +38,5 @@ extends:
             scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
             ScriptArguments: >
               -SubscriptionName $(subscriptionName) 
-              -KeyVaultName $(keyVaultName)
+              -KeyVaultName $(platformKeyVaultName)
               -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)           
