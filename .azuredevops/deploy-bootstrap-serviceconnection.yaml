@@ -12,12 +12,12 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: gg/211779-bootstrappipeline  
+      ref: main  
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
-    projectName: CDO
+    projectName: $(projectName)
     forceDevDeploy: ${{ parameters.deployFromFeature }}    
     templates:
       - name: platform-keyvault
@@ -37,6 +37,6 @@ extends:
             Type: AzurePowerShell
             scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
             ScriptArguments: >
-              -SubscriptionName  $(subscriptionName) 
+              -SubscriptionName $(subscriptionName) 
               -KeyVaultName $(keyVaultName)
               -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)           
