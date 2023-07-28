@@ -1,5 +1,6 @@
 variables:
   environment: snd
+  resourceGroup: $(resourceNamePrefix)RG2401
   ssvAppRegServicePrincipalId: b657d032-1be7-492f-8693-15180569c703 #ADO-DefraGovUK-AAD-CDO-SSV3
 
   subscriptionName: AZD-CDO-SND2
@@ -17,6 +18,7 @@ variables:
   subscriptionSpoke: 2
 
   #VNET
+  netResourceGroup: SNDCDONETVN2401
   addressPrefix: '10.178.112.0/22'
   subnet1AddressPrefix: '10.178.112.0/25'
   subnet2AddressPrefix: '10.178.113.0/28'

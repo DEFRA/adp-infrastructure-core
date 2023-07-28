@@ -48,9 +48,15 @@ extends:
     groupedTemplates:
       - name: Networking
         templates:
-          - name: NetworkSecurityGroups
-            path: infra/bicep/centralKeyVault
+          - name: network-security-group
+            path: infra/bicep/network-security-group
             type: bicep
             scope: 'Resource Group'
             acrServiceConnection: AZD-CDO-SSV3
-            resourceGroupName: $(keyVaultResourceGroup)
+            resourceGroupName: $(resourceGroup)
+          - name: virtual-network
+            path: infra/bicep/virtual-network
+            type: bicep
+            scope: 'Resource Group'
+            acrServiceConnection: AZD-CDO-SSV3
+            resourceGroupName: $(netResourceGroup)
