@@ -1,5 +1,5 @@
 parameters:
-  - name: deployToDevelopmentEnvironment
+  - name: deployFromFeature
     displayName: "Deploy from Feature Branch"
     type: boolean
     default: false
@@ -8,59 +8,35 @@ trigger: none
 
 resources:
   repositories:
-    - repository: PipelineCommon
-      name: DEFRA-DEVOPS-COMMON/Defra.Pipeline.Common
-      type: git
-      ref: refs/tags/Release-v5-latest
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: refs/heads/main  
 
 extends:
-  template: /templates/pipelines/common-infrastructure-deploy.yaml@PipelineCommon
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
-    projectName: $(projectName)
-    deployFromFeature: ${{ parameters.deployToDevelopmentEnvironment }}
-    environments:
-     - name: 'snd1'
-       deploymentBranches:
-        - "refs/heads/*"
-       developmentEnvironment: True 
-       azureRegions:
-        primary: UKSouth        
-       serviceConnection: AZD-CDO-SSV3
-     - name: 'snd2'
-       deploymentBranches:
-        - "*"
-       azureRegions:
-        primary: UKSouth
-       serviceConnection: AZD-CDO-SSV3   
-     - name: 'snd3'
-       deploymentBranches:
-        - "*"
-       azureRegions:
-        primary: UKSouth
-       serviceConnection: AZD-CDO-SSV3    
-    variableFiles:
-      - /.azuredevops/vars/common.yaml@self
-      - /.azuredevops/vars/{environment}.yaml@self
-    groupedTemplates:
-    - name: PlatformKeyVaultStore
-      templates:
-        - name: platform-keyvault
-          path: infra/keyvault
-          type: bicep
-          scope: "Resource Group"
-          acrServiceConnection: AZD-CDO-SSV3
-          resourceGroupName: $(keyVaultResourceGroup)
-          postDeployScriptsList:
-            - displayName: Create Tier 2 App Registrations
-              filePathsForTransform:
-                - 'infra/adAppRegistrations/tier2-app-registration.json'
-              scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
-              ScriptArguments: >
-                -AppRegJsonPath 'infra/adAppRegistrations/tier2-app-registration.json'
-            - displayName: Setup RBAC on Subscriptions
-              Type: AzurePowerShell
-              scriptPath: 'scripts/Set-RBAC-Subscriptions.ps1'
-              ScriptArguments: >
-                -SubscriptionName  $(subscriptionName) 
-                -KeyVaultName $(keyVaultName)
-                -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName) 
+    projectName: CDO
+    forceDevDeploy: ${{ parameters.deployFromFeature }}    
+    templates:
+      - name: platform-keyvault
+        path: infra/keyvault
+        type: bicep
+        scope: "Resource Group"
+        acrServiceConnection: AZD-CDO-SSV3
+        resourceGroupName: $(keyVaultResourceGroup)
+        postDeployScriptsList:
+          - displayName: Create Tier 2 App Registrations
+            filePathsForTransform:
+              - 'infra/adAppRegistrations/tier2-app-registration.json'
+            scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
+            ScriptArguments: >
+              -AppRegJsonPath 'infra/adAppRegistrations/tier2-app-registration.json'
+          - displayName: Setup RBAC on Subscriptions
+            Type: AzurePowerShell
+            scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
+            ScriptArguments: >
+              -SubscriptionName  $(subscriptionName) 
+              -KeyVaultName $(keyVaultName)
+              -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)           
