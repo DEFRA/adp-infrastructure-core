@@ -1,0 +1,42 @@
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+
+trigger: none
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: main  
+
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    forceDevDeploy: ${{ parameters.deployFromFeature }}    
+    templates:
+      - name: platform-keyvault
+        path: infra/keyvault
+        type: bicep
+        scope: "Resource Group"
+        acrServiceConnection: AZD-CDO-SSV3
+        resourceGroupName: $(sharedResourceGroup)
+        postDeployScriptsList:
+          - displayName: Create Tier 2 App Registrations
+            filePathsForTransform:
+              - 'infra/adAppRegistrations/tier2-app-registration.json'
+            scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
+            ScriptArguments: >
+              -AppRegJsonPath 'infra/adAppRegistrations/tier2-app-registration.json'
+          - displayName: Setup RBAC on Subscriptions
+            Type: AzurePowerShell
+            scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
+            ScriptArguments: >
+              -SubscriptionName $(subscriptionName) 
+              -KeyVaultName $(platformKeyVaultName)
+              -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)           

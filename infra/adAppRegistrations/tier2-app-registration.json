@@ -1,0 +1,34 @@
+{
+    "applications": [
+        {
+            "displayName": "#{{ appRegistrationName }}",
+            "IdentifierUris": "",
+            "secretAutoRenewalEnabled": true,
+            "keyVault": {
+                "name": "#{{ platformKeyVaultName }}",
+                "secrets": [
+                    {
+                        "key": "#{{ appRegistrationName }}",
+                        "type": "ClientSecret"
+                    },
+                    {
+                        "key": "#{{ appRegistrationName }}-ClientId",
+                        "type": "ClientId"
+                    }
+                ]
+            },
+            "requiredResourceAccess": [
+                {
+                    "resourceAppId": "00000003-0000-0000-c000-000000000000",
+                    "resourceAccess": [
+                        {
+                            "id": "18a4783c-866b-4cc7-a460-3d5e5662c884",
+                            "type": "Role"
+                        }
+                    ]
+                }
+            ],
+            "signInAudience": "AzureADMultipleOrgs"
+        }
+    ]
+}
