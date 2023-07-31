@@ -12,7 +12,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main  
+      ref: gg/216395-GROUP-TEMPLATE-SUPPORT  
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
