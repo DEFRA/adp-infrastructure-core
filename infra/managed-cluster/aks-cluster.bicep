@@ -48,7 +48,7 @@ var tagsMi = {
 var aksTags = {
   Name: cluster.name
   Purpose: 'AKS Cluster'
-  Tier: 'Shared Cluster'
+  Tier: 'Shared'
 }
 
 resource vnetResourceGroup 'Microsoft.Resources/resourceGroups@2022-09-01' existing = {
