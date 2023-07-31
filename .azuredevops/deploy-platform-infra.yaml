@@ -34,5 +34,5 @@ extends:
             path: infra/managed-cluster
             type: bicep
             scope: "Resource Group"
-            acrServiceConnection: AZD-CDO-SND3
+            acrServiceConnection: AZD-CDO-SSV3
             resourceGroupName: $(servicesResourceGroup)
