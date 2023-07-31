@@ -5,10 +5,10 @@ param vnet object
 param cluster object
 
 @allowed([
-  'uksouth'
+  'UKSouth'
 ])
 @description('Required. The Azure region where the resources will be deployed.')
-param location string = 'uksouth'
+param location string = 'UKSouth'
 @description('Required. Environment name.')
 param environment string
 @description('Required. Date in the format yyyy-MM-dd.')
