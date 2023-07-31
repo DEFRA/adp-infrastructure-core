@@ -41,4 +41,12 @@ extends:
                 ScriptArguments: >
                   -SubscriptionName $(subscriptionName) 
                   -KeyVaultName $(platformKeyVaultName)
-                  -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)           
+                  -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)    
+    environments:
+      - name: 'snd2'
+        outputTemplateChange: Skip
+        serviceConnection: AZD-CDO-SSV3    
+        deploymentBranches:
+          - '*'
+        azureRegions:
+          primary: 'UKSouth'                     
