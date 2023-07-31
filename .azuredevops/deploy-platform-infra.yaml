@@ -28,7 +28,7 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedTemplates:
-      - name: adp-platform-infra
+      - name: platformInfra
         templates:
           - name: aks-cluster
             path: infra/managed-cluster
