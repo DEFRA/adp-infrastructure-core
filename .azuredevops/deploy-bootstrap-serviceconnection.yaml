@@ -18,25 +18,27 @@ extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
     projectName: $(projectName)
-    forceDevDeploy: ${{ parameters.deployFromFeature }}    
-    templates:
-      - name: platform-keyvault
-        path: infra/keyvault
-        type: bicep
-        scope: "Resource Group"
-        acrServiceConnection: AZD-CDO-SSV3
-        resourceGroupName: $(sharedResourceGroup)
-        postDeployScriptsList:
-          - displayName: Create Tier 2 App Registrations
-            filePathsForTransform:
-              - 'infra/adAppRegistrations/tier2-app-registration.json'
-            scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
-            ScriptArguments: >
-              -AppRegJsonPath 'infra/adAppRegistrations/tier2-app-registration.json'
-          - displayName: Setup RBAC on Subscriptions
-            Type: AzurePowerShell
-            scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
-            ScriptArguments: >
-              -SubscriptionName $(subscriptionName) 
-              -KeyVaultName $(platformKeyVaultName)
-              -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)           
+    forceDevDeploy: ${{ parameters.deployFromFeature }}   
+    groupedTemplates:
+      - name: SharedResources 
+        templates:
+          - name: platform-keyvault
+            path: infra/keyvault
+            type: bicep
+            scope: "Resource Group"
+            acrServiceConnection: AZD-CDO-SSV3
+            resourceGroupName: $(sharedResourceGroup)
+            postDeployScriptsList:
+              - displayName: Create Tier 2 App Registrations
+                filePathsForTransform:
+                  - 'infra/adAppRegistrations/tier2-app-registration.json'
+                scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
+                ScriptArguments: >
+                  -AppRegJsonPath 'infra/adAppRegistrations/tier2-app-registration.json'
+              - displayName: Setup RBAC on Subscriptions
+                Type: AzurePowerShell
+                scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
+                ScriptArguments: >
+                  -SubscriptionName $(subscriptionName) 
+                  -KeyVaultName $(platformKeyVaultName)
+                  -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)           
