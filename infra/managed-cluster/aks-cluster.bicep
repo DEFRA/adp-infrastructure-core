@@ -1,22 +1,8 @@
 @description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and subnetClusterNodes values.')
-param vnet object = {
-  name: 'SNDCDONETVN2401'
-  resourceGroup: 'SNDCDONETRG2401'
-  subnetClusterNodes: 'SNDCDONETSU2407'
-}
+param vnet object
 
-@description('Required. The parameter object for the cluster. The object must contain the name,nodeResourceGroup,miControlPlane,adminAadGroupObjectId and monitoringWorkspace values.')
-param cluster object = {
-  name: 'SNDCDOINFAK2401'
-  skuTier: 'Free'
-  nodeResourceGroup: 'SNDCDOINFRG2402'
-  miControlPlane: 'SNDCDOINFMI2401'
-  adminAadGroupObjectId: 'cdf149cd-7dd6-48b0-9d1f-6be074b424cc'
-  monitoringWorkspace: {
-    name: ''
-    resourceGroup: ''
-  }
-}
+@description('Required. The parameter object for the cluster. The object must contain the name,skuTier,nodeResourceGroup,miControlPlane,adminAadGroupObjectId and monitoringWorkspace values.')
+param cluster object
 
 @allowed([
   'uksouth'

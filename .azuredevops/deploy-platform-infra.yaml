@@ -1,0 +1,38 @@
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+
+trigger: none
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: features/core-variables  
+
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    forceDevDeploy: ${{ parameters.deployFromFeature }}
+    environments:
+      - name: 'snd2'
+        serviceConnection: AZD-CDO-SND2
+        deploymentBranches:
+          - '*'
+        developmentEnvironment: true
+        azureRegions:
+          primary: 'UKSouth'
+    groupedTemplates:
+      - name: adp-platform-infra
+        templates:
+          - name: aks-cluster
+            path: infra/managed-cluster
+            type: bicep
+            scope: "Resource Group"
+            acrServiceConnection: AZD-CDO-SND2
+            resourceGroupName: $(sharedResourceGroup)

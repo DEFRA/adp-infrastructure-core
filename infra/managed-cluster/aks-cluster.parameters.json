@@ -1,0 +1,28 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnet": {
+            "value": {
+                "name": "#{{ virtualNetworkName }}",
+                "resourceGroup": "#{{ virtualNetworkResourceGroup }}",
+                "subnetClusterNodes": "#{{ environment }}#{{ projectName }}#{{ nc_function_network }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}07"
+            }
+        },
+        "cluster": {
+            "value": {
+                "name": "#{{ environment }}#{{ projectName }}#{{ nc_function_infrastructure }}#{{ nc_resource_kubernetesservice }}#{{ nc_instance_regionid }}01",
+                "skuTier": "#{{ aksClusterSkuTier }}",
+                "nodeResourceGroup": "#{{ aksNodeResourceGroup }}",
+                "miControlPlane": "#{{ aksControlPlaneManagedIdentity }}",
+                "adminAadGroupObjectId": "#{{ aksAADProfileAdminGroupObjectId }}"
+            }
+        },
+        "location": {
+            "value": "#{{ location }}"
+        },
+        "environment": {
+            "value": "#{{ environment }}"
+        }
+    }
+}
