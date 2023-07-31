@@ -35,4 +35,4 @@ extends:
             type: bicep
             scope: "Resource Group"
             acrServiceConnection: AZD-CDO-SND2
-            resourceGroupName: $(sharedResourceGroup)
+            resourceGroupName: $(servicesResourceGroup)
