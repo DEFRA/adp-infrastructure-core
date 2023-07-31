@@ -15,7 +15,9 @@
                 "skuTier": "#{{ aksClusterSkuTier }}",
                 "nodeResourceGroup": "#{{ aksNodeResourceGroup }}",
                 "miControlPlane": "#{{ aksControlPlaneManagedIdentity }}",
-                "adminAadGroupObjectId": "#{{ aksAADProfileAdminGroupObjectId }}"
+                "adminAadGroupObjectId": "#{{ aksAADProfileAdminGroupObjectId }}",
+                "npSystemVmSize": "Standard_DS2_v2",
+                "npUserVmSize": "Standard_DS3_v2"
             }
         },
         "location": {

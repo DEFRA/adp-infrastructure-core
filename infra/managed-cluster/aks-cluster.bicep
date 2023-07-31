@@ -115,7 +115,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         name: 'npsystem'
         mode: 'System'
         count: 1
-        vmSize: 'Standard_DS2_v2'
+        vmSize: cluster.npSystemVmSize
         type: 'VirtualMachineScaleSets'
         osDiskSizeGB: 80
         osDiskType: 'Ephemeral'
@@ -137,7 +137,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         name: 'npuser1'
         mode: 'User'
         count: 2
-        vmSize: 'Standard_DS3_v2'
+        vmSize: cluster.npUserVmSize
         type: 'VirtualMachineScaleSets'
         osDiskSizeGB: 128
         osDiskType: 'Ephemeral'
