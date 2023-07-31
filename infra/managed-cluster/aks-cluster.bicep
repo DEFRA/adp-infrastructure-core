@@ -65,7 +65,7 @@ module miClusterControlPlane 'br/SharedDefraRegistry:managed-identity.user-assig
   }
 }
 
-module deployAKS '../../../../defra-adp-sandpit/ResourceModules/modules/container-service/managed-clusters/main.bicep' = {
+module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.8-prerelease' = {
   name: 'aks-cluster-${deploymentDate}'
   params: {
     name: cluster.name
