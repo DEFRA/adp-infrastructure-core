@@ -8,7 +8,7 @@ param cluster object
   'UKSouth'
 ])
 @description('Required. The Azure region where the resources will be deployed.')
-param location string = 'UKSouth'
+param location string
 @description('Required. Environment name.')
 param environment string
 @description('Required. Date in the format yyyy-MM-dd.')
