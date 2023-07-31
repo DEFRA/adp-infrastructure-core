@@ -18,7 +18,29 @@ extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
     projectName: $(projectName)
-    forceDevDeploy: ${{ parameters.deployFromFeature }}   
+    deployFromFeature: ${{ parameters.deployFromFeature }}  
+    environments:
+      - name: 'snd1'
+        serviceConnection: AZD-CDO-SSV3
+        deploymentBranches:
+          - '*'
+        developmentEnvironment: true
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'snd2'
+        outputTemplateChange: Skip
+        serviceConnection: AZD-CDO-SSV3    
+        deploymentBranches:
+          - '*'
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'snd3'
+        outputTemplateChange: Skip
+        serviceConnection: AZD-CDO-SSV3    
+        deploymentBranches:
+          - '*'
+        azureRegions:
+          primary: 'UKSouth'  
     groupedTemplates:
       - name: SharedResources 
         templates:
@@ -27,7 +49,7 @@ extends:
             type: bicep
             scope: "Resource Group"
             acrServiceConnection: AZD-CDO-SSV3
-            resourceGroupName: $(sharedResourceGroup)
+            resourceGroupName: $(ssvSharedResourceGroup)
             postDeployScriptsList:
               - displayName: Create Tier 2 App Registrations
                 filePathsForTransform:
@@ -40,13 +62,6 @@ extends:
                 scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
                 ScriptArguments: >
                   -SubscriptionName $(subscriptionName) 
-                  -KeyVaultName $(platformKeyVaultName)
-                  -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)    
-    environments:
-      - name: 'snd2'
-        outputTemplateChange: Skip
-        serviceConnection: AZD-CDO-SSV3    
-        deploymentBranches:
-          - '*'
-        azureRegions:
-          primary: 'UKSouth'                     
+                  -KeyVaultName $(ssvPlatformKeyVaultName)
+                  -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)                   
+                
