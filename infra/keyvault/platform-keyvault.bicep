@@ -34,7 +34,6 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Required. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-
 var customTags = {
   Location: location
   CreatedDate: createdDate
