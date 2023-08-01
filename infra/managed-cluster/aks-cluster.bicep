@@ -114,55 +114,49 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
       {
         name: 'npsystem'
         mode: 'System'
-        count: 1
-        vmSize: cluster.npSystemVmSize
+        count: cluster.npSystem.count
+        vmSize: cluster.npSystem.vmSize
         type: 'VirtualMachineScaleSets'
-        osDiskSizeGB: 80
-        osDiskType: 'Ephemeral'
-        osType: 'Linux'
-        osSKU: 'Ubuntu'
+        osDiskSizeGB: cluster.npSystem.osDiskSizeGB
+        osDiskType: cluster.npSystem.osDiskType
+        osType: cluster.npSystem.osType
+        osSKU: cluster.npSystem.osSKU
         nodeTaints: [
           'CriticalAddonsOnly=true:NoSchedule'
         ]
         orchestratorVersion: kubernetesVersion
         enableNodePublicIP: false
         vnetSubnetId: clusterVirtualNetwork::clusterNodesSubnet.id
-        availabilityZones: [
-          '1'
-        ]
+        availabilityZones: cluster.npSystem.availabilityZones
       }
     ]
     agentPools: [
       {
         name: 'npuser1'
         mode: 'User'
-        count: 2
-        vmSize: cluster.npUserVmSize
+        count: cluster.npUser.count
+        vmSize: cluster.npUser.vmSize
         type: 'VirtualMachineScaleSets'
-        osDiskSizeGB: 128
-        osDiskType: 'Ephemeral'
-        osType: 'Linux'
-        osSKU: 'Ubuntu'
+        osDiskSizeGB: cluster.npUser.osDiskSizeGB
+        osDiskType: cluster.npUser.osDiskType
+        osType: cluster.npUser.osType
+        osSKU: cluster.npUser.osSKU
         orchestratorVersion: kubernetesVersion
         enableNodePublicIP: false
         enableAutoScaling: true
-        upgradeSettings: {
-          maxSurge: '33%'
-        }
-        maxCount: 3
-        maxPods: 30
-        minCount: 1
-        minPods: 2
+        maxCount: cluster.npUser.maxCount
+        maxPods: cluster.npUser.maxPods
+        minCount: cluster.npUser.minCount
+        minPods: cluster.npUser.minPods
         nodeLabels: {}
         scaleSetEvictionPolicy: 'Delete'
         scaleSetPriority: 'Regular'
         storageProfile: 'ManagedDisks'
         vnetSubnetId: clusterVirtualNetwork::clusterNodesSubnet.id
-        availabilityZones: [
-          '1'
-          '2'
-          '3'
-        ]
+        availabilityZones: cluster.npUser.availabilityZones
+        upgradeSettings: {
+          maxSurge: '33%'
+        }
       }
     ]
     autoScalerProfileBalanceSimilarNodeGroups: 'false'
