@@ -12,7 +12,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: features/core-variables  
+      ref: pp/arm-ttk
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
