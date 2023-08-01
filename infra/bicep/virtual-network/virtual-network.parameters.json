@@ -3,6 +3,9 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "envCode": {
+            "value": "#{{projectName}}"
+        },
+        "envCode": {
             "value": "#{{targetEnvironment}}"
         },
         "subSpokeNumber": {
