@@ -5,7 +5,7 @@
         "envCode": {
             "value": "#{{projectName}}"
         },
-        "envCode": {
+        "projectName": {
             "value": "#{{targetEnvironment}}"
         },
         "subSpokeNumber": {
