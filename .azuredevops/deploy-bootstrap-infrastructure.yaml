@@ -30,7 +30,7 @@ extends:
     groupedTemplates:
       - name: bootstrap-infra
         templates:
-          - name: application-bootstrap
+          - name: applicationbootstrap
             path: infra/keyvault
             type: bicep
             scope: "Resource Group"
