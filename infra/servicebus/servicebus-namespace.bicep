@@ -1,25 +1,17 @@
 @description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and subnetPrivateEndpoints values.')
-param vnet object = {
-  resourceGroup: 'SNDCDONETRG2401'
-  name: 'SNDCDONETVN2401'
-  subnetPrivateEndpoints: 'SNDCDONETSU2405'
-}
+param vnet object
 
 //@description('Require. The parameter object of LogAnalytics Workspace.  The object must contain the resourceGroup and name of the log analytics workspace.')
 //param logAnalyticsWorkspace object
 
 @description('Required. The parameter object for servicebus. The object must contain the namespaceName,namespacePrivateEndpointName and skuName values.')
-param serviceBus object = {
-  namespaceName: 'SNDCDOINFSB2402'
-  namespacePrivateEndpointName: 'SNDCDOINFPE2402'
-  skuName: 'Premium'
-}
+param serviceBus object
 
 @description('Required. The Azure region where the resources will be deployed.')
 param location string = resourceGroup().location
 
 @description('Required. Environment name.')
-param environment string = 'SND2'
+param environment string
 
 @description('Required. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
@@ -72,7 +64,6 @@ module serviceBusResource 'br/SharedDefraRegistry:service-bus.namespaces:0.5.7' 
     diagnosticWorkspaceId: '' //logAnalyticsWorkspaceResource.id
     networkRuleSets: {
       publicNetworkAccess: 'Disabled'
-      trustedServiceAccessEnabled: true
     }
     privateEndpoints: [
       {
