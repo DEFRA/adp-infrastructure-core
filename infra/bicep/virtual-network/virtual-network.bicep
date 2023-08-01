@@ -162,6 +162,5 @@ module vnet 'br/SharedDefraRegistry:network.virtual-networks:0.4.6' = {
     tags: tags
     addressPrefixes: addressPrefixes
     dnsServers: split(dnsServers, ';')
-    subnets: subnets
   }
 }
