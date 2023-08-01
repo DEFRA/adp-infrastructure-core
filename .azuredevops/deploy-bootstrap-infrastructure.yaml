@@ -28,9 +28,9 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedTemplates:
-      - name: bootstrap-infra
+      - name: bootstrapinfra
         templates:
-          - name: applicationbootstrap
+          - name: application-bootstrap
             path: infra/keyvault
             type: bicep
             scope: "Resource Group"
