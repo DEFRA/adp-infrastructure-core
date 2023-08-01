@@ -19,6 +19,7 @@
                 "npSystem":{
                     "count": 1,
                     "vmSize": "Standard_DS2_v2",
+                    "type": "VirtualMachineScaleSets",
                     "osDiskSizeGB": 80,
                     "osDiskType": "Ephemeral",
                     "osType": "Linux",
@@ -28,6 +29,7 @@
                 "npUser":{
                     "count": 2,
                     "vmSize": "Standard_DS3_v2",
+                    "type": "VirtualMachineScaleSets",
                     "osDiskSizeGB": 128,
                     "osDiskType": "Ephemeral",
                     "osType": "Linux",
@@ -36,6 +38,9 @@
                     "maxPods": 30,
                     "minCount": 1,
                     "minPods": 2,
+                    "scaleSetEvictionPolicy": "Delete",
+                    "scaleSetPriority": "Regular",
+                    "storageProfile": "ManagedDisks",
                     "availabilityZones":["1","2","3"]
                 }
             }

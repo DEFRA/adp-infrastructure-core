@@ -116,7 +116,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         mode: 'System'
         count: cluster.npSystem.count
         vmSize: cluster.npSystem.vmSize
-        type: 'VirtualMachineScaleSets'
+        type: cluster.npSystem.type
         osDiskSizeGB: cluster.npSystem.osDiskSizeGB
         osDiskType: cluster.npSystem.osDiskType
         osType: cluster.npSystem.osType
@@ -136,7 +136,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         mode: 'User'
         count: cluster.npUser.count
         vmSize: cluster.npUser.vmSize
-        type: 'VirtualMachineScaleSets'
+        type: cluster.npUser.type
         osDiskSizeGB: cluster.npUser.osDiskSizeGB
         osDiskType: cluster.npUser.osDiskType
         osType: cluster.npUser.osType
@@ -149,9 +149,9 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         minCount: cluster.npUser.minCount
         minPods: cluster.npUser.minPods
         nodeLabels: {}
-        scaleSetEvictionPolicy: 'Delete'
-        scaleSetPriority: 'Regular'
-        storageProfile: 'ManagedDisks'
+        scaleSetEvictionPolicy: cluster.npUser.scaleSetEvictionPolicy
+        scaleSetPriority: cluster.npUser.scaleSetPriority
+        storageProfile: cluster.npUser.storageProfile
         vnetSubnetId: clusterVirtualNetwork::clusterNodesSubnet.id
         availabilityZones: cluster.npUser.availabilityZones
         upgradeSettings: {
