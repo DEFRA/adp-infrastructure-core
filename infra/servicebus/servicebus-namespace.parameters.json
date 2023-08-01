@@ -6,7 +6,7 @@
       "value": {
         "namespaceName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_servicebus }}#{{ nc_instance_regionid }}01",
         "namespacePrivateEndpointName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}01",
-        "skuName": "#{{ serviceBusSkuName }}"
+        "skuName": "Premium"
       }
     },
     "vnet": {
