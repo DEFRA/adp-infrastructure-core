@@ -36,3 +36,12 @@ extends:
             scope: "Resource Group"
             acrServiceConnection: AZD-CDO-SSV3
             resourceGroupName: $(servicesResourceGroup)
+            postDeployScriptsList:
+              - displayName: Resolve Private Endpoint IP for $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
+                scriptPath: 'Get-ResourcePrivateEndPointsDnsRecordsAsJson.ps1@PipelineCommon'
+                ScriptArguments: >
+                  -ResourceGroupName $(servicesResourceGroup)
+                  -ResourceName $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01                 
+              - displayName: Set DNS record for $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
+                scriptPath: 'Set-PrivateDnsRecordSet.ps1@PipelineCommon'
+                serviceConnectionVariableName: mstAzureResourceManagerConnection
