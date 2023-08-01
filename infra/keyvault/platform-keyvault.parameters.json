@@ -6,7 +6,7 @@
             "value": "#{{ ssvPlatformKeyVaultName }}"
         },
         "environment": {
-            "value": "#{{ upperEnvironment }}"
+            "value": "#{{ environment }}"
         },
         "roleAssignments": {
             "value": [
