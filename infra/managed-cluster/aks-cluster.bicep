@@ -50,11 +50,6 @@ resource clusterVirtualNetwork 'Microsoft.Network/virtualNetworks@2023-02-01' ex
   }
 }
 
-//resource monitoringWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = {
-//  scope: resourceGroup(cluster.monitoringWorkspace.resourceGroup)
-//  name: cluster.monitoringWorkspace.name
-//}
-
 module miClusterControlPlane 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
   name: 'aks-cluster-mi-${deploymentDate}'
   params: {
@@ -76,7 +71,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     nodeResourceGroup: cluster.nodeResourceGroup
     enableDefaultTelemetry: false
     omsAgentEnabled: true
-    monitoringWorkspaceId: '' //monitoringWorkspace.id
+    monitoringWorkspaceId: ''
     enableRBAC: true
     aadProfileManaged: true
     disableLocalAccounts: true
@@ -105,7 +100,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     aksClusterOutboundType: 'loadBalancer'
     aksClusterSkuTier: cluster.skuTier
     aksClusterSshPublicKey: ''
-    aksServicePrincipalProfile: {} //TODO:Add service principal
+    aksServicePrincipalProfile: {}
     aadProfileClientAppID: ''
     aadProfileServerAppID: ''
     aadProfileServerAppSecret:''
@@ -116,11 +111,11 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         mode: 'System'
         count: cluster.npSystem.count
         vmSize: cluster.npSystem.vmSize
-        type: cluster.npSystem.type
+        type: 'VirtualMachineScaleSets'
         osDiskSizeGB: cluster.npSystem.osDiskSizeGB
-        osDiskType: cluster.npSystem.osDiskType
-        osType: cluster.npSystem.osType
-        osSKU: cluster.npSystem.osSKU
+        osDiskType: 'Ephemeral'
+        osType: 'Linux'
+        osSKU: 'Ubuntu'
         nodeTaints: [
           'CriticalAddonsOnly=true:NoSchedule'
         ]
@@ -132,15 +127,15 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     ]
     agentPools: [
       {
-        name: 'npuser1'
+        name:  'npuser1'
         mode: 'User'
         count: cluster.npUser.count
-        vmSize: cluster.npUser.vmSize
-        type: cluster.npUser.type
+        vmSize: 'Standard_DS3_v2'
+        type: 'VirtualMachineScaleSets'
         osDiskSizeGB: cluster.npUser.osDiskSizeGB
-        osDiskType: cluster.npUser.osDiskType
-        osType: cluster.npUser.osType
-        osSKU: cluster.npUser.osSKU
+        osDiskType: 'Ephemeral'
+        osType: 'Linux'
+        osSKU: 'Ubuntu'
         orchestratorVersion: kubernetesVersion
         enableNodePublicIP: false
         enableAutoScaling: true
@@ -149,9 +144,9 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         minCount: cluster.npUser.minCount
         minPods: cluster.npUser.minPods
         nodeLabels: {}
-        scaleSetEvictionPolicy: cluster.npUser.scaleSetEvictionPolicy
-        scaleSetPriority: cluster.npUser.scaleSetPriority
-        storageProfile: cluster.npUser.storageProfile
+        scaleSetEvictionPolicy: 'Delete'
+        scaleSetPriority: 'Regular'
+        storageProfile: 'ManagedDisks'
         vnetSubnetId: clusterVirtualNetwork::clusterNodesSubnet.id
         availabilityZones: cluster.npUser.availabilityZones
         upgradeSettings: {

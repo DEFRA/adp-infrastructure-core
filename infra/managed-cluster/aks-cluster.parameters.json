@@ -16,32 +16,25 @@
                 "nodeResourceGroup": "#{{ aksNodeResourceGroup }}",
                 "miControlPlane": "#{{ aksControlPlaneManagedIdentity }}",
                 "adminAadGroupObjectId": "#{{ aksAADProfileAdminGroupObjectId }}",
-                "npSystem":{
+                "npSystem": {
                     "count": 1,
-                    "vmSize": "Standard_DS2_v2",
-                    "type": "VirtualMachineScaleSets",
                     "osDiskSizeGB": 80,
-                    "osDiskType": "Ephemeral",
-                    "osType": "Linux",
-                    "osSKU": "Ubuntu",
-                    "availabilityZones":["1"]
+                    "availabilityZones": [
+                        "1"
+                    ]
                 },
-                "npUser":{
+                "npUser": {
                     "count": 2,
-                    "vmSize": "Standard_DS3_v2",
-                    "type": "VirtualMachineScaleSets",
                     "osDiskSizeGB": 128,
-                    "osDiskType": "Ephemeral",
-                    "osType": "Linux",
-                    "osSKU": "Ubuntu",
                     "maxCount": 3,
                     "maxPods": 30,
                     "minCount": 1,
                     "minPods": 2,
-                    "scaleSetEvictionPolicy": "Delete",
-                    "scaleSetPriority": "Regular",
-                    "storageProfile": "ManagedDisks",
-                    "availabilityZones":["1","2","3"]
+                    "availabilityZones": [
+                        "1",
+                        "2",
+                        "3"
+                    ]
                 }
             }
         },
