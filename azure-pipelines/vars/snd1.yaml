@@ -1,0 +1,33 @@
+variables:
+  environment: snd
+  ssvAppRegServicePrincipalId: b657d032-1be7-492f-8693-15180569c703 #ADO-DefraGovUK-AAD-CDO-SSV3
+
+  subscriptionName: AZD-CDO-SND1
+  tier2ApplicationClientIdSecretName: ADO-DefraGovUK-CDO-SND1-Cont-ClientId
+
+  # KeyVault
+  keyVaultName: $(resourceNamePrefix)$(upperNckeyvault)1401 #SNDCDOINFKV1401
+  keyVaultResourceGroup: $(resourceNamePrefix)$(upperNcResourceGroup)1401
+  keyvaultEnableSoftDelete: false
+  keyvaultEnablePurgeProtection: false
+
+  # SND2 App Registration
+  appRegistrationName: ADO-DefraGovUK-CDO-SND1-Cont
+
+  subscriptionSpoke: 2
+
+  #VNET
+  netResourceGroup: SNDCDONETVN2401
+  addressPrefix: '10.178.112.0/22'
+  subnet1AddressPrefix: '10.178.112.0/25'
+  subnet2AddressPrefix: '10.178.113.0/28'
+  subnet3AddressPrefix: '10.178.113.16/28'
+  subnet5AddressPrefix: '10.178.113.32/28'
+  subnet6AddressPrefix: '10.178.113.48/28'
+  subnet7AddressPrefix: '10.178.112.128/25'
+  subnet8AddressPrefix: '10.178.113.64/27'
+  dnsServers: '168.63.129.16'
+
+  ## Misc
+  cdoAppGatewaySubnet: 127.0.0.1/32
+  cdoPrivateAppGatewaySubnet: 127.0.0.1/32
