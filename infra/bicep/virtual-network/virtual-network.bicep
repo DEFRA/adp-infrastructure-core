@@ -1,13 +1,13 @@
 param projectName string
 param location string = resourceGroup().location
-param environment string
 param serviceCode string = 'CDO'
-param tags object = {
-  ServiceCode: serviceCode
-  Environment: environment
-}
 param envCode string
 param subSpokeNumber string
+
+param tags object = {
+  ServiceCode: serviceCode
+  Environment: envCode
+}
 
 param addressPrefixes array
 param dnsServers string
