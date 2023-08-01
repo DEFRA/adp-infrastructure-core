@@ -1,5 +1,6 @@
 variables:
   environment: snd
+  resourceGroup: $(resourceNamePrefix)RG2401
   ssvAppRegServicePrincipalId: b657d032-1be7-492f-8693-15180569c703 #ADO-DefraGovUK-AAD-CDO-SSV3
 
   subscriptionName: AZD-CDO-SND1
