@@ -74,7 +74,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     tags: union(tags, aksTags)
     aksClusterKubernetesVersion: kubernetesVersion
     nodeResourceGroup: cluster.nodeResourceGroup
-    enableDefaultTelemetry: true
+    enableDefaultTelemetry: false
     omsAgentEnabled: true
     monitoringWorkspaceId: '' //monitoringWorkspace.id
     enableRBAC: true
