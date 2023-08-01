@@ -30,7 +30,13 @@ extends:
     groupedTemplates:
       - name: bootstrapinfra
         templates:
-          - name: application-bootstrap
+          - name: application-keyvault
+            path: infra/keyvault
+            type: bicep
+            scope: "Resource Group"
+            acrServiceConnection: AZD-CDO-SSV3
+            resourceGroupName: $(servicesResourceGroup)
+          - name: application-
             path: infra/keyvault
             type: bicep
             scope: "Resource Group"
