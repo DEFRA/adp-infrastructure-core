@@ -53,7 +53,7 @@ extends:
             type: bicep
             scope: 'Resource Group'
             acrServiceConnection: AZD-CDO-SSV3
-            resourceGroupName: $(resourceGroup)
+            resourceGroupName: $(netResourceGroup)
           - name: virtual-network
             path: infra/bicep/virtual-network
             type: bicep
