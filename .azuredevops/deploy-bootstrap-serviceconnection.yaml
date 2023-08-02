@@ -12,7 +12,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main 
+      ref: gg/214939-serviceendpointvariables 
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -63,5 +63,14 @@ extends:
                 ScriptArguments: >
                   -SubscriptionName $(subscriptionName) 
                   -KeyVaultName $(ssvPlatformKeyVaultName)
-                  -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)                   
+                  -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)    
+              - displayName: Setup AzureRm Service Endpoint
+                Type: AzureCLI
+                scriptPath: 'scripts/Setup-Service-Connection.ps1'
+                ScriptArguments: >
+                  -TenantId $(tenantId)
+                  -SubscriptionId $(subscriptionId)
+                  -SubscriptionName $(subscriptionName)
+                  -ServiceConnectionAppRegName $(tier2ServiceConnectionAppRegName)
+                  -KeyVaultName $(ssvPlatformKeyVaultName)                  
                 
