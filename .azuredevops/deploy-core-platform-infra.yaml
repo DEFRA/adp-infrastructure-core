@@ -28,7 +28,7 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedTemplates:
-      - name: aks-cluster
+      - name: aks_cluster
         templates:
           - name: aks-cluster
             path: infra/managed-cluster
@@ -36,7 +36,7 @@ extends:
             scope: "Resource Group"
             acrServiceConnection: AZD-CDO-SSV3
             resourceGroupName: $(servicesResourceGroup)
-      - name: service-bus
+      - name: service_bus
         templates:
           - name: namespace
             path: infra/service-bus
