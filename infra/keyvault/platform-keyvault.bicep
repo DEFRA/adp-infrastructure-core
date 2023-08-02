@@ -26,7 +26,7 @@ param roleAssignments array
     'standard'
     'premium'
   ])
-param skuName string
+param skuName string = 'premium'
 
 @description('Required. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
