@@ -30,8 +30,8 @@ extends:
     groupedTemplates:
       - name: platformInfra
         templates:
-          - name: servicebus-namespace
-            path: infra/servicebus
+          - name: namespace
+            path: infra/service-bus
             type: bicep
             scope: "Resource Group"
             acrServiceConnection: AZD-CDO-SSV3
