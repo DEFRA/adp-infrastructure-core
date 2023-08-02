@@ -1,4 +1,4 @@
-@description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and subnetPrivateEndpoints values.')
+@description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPrivateEndpoints values.')
 param vnet object
 
 @description('Required. The parameter object for keyvault. The object must contain the name, enableSoftDelete, enablePurgeProtection and softDeleteRetentionInDays values.')
@@ -10,23 +10,10 @@ param location string = resourceGroup().location
 @description('Required. Environment name.')
 param environment string
 
-@description('Optional. Service code.')
-param serviceCode string = 'CDO'
-
 @description('Optional. Resource tags.')
 param tags object = {
-  ServiceCode: serviceCode
-  Environment: environment
   Description: 'CDO Platform KeyVault Store'
 }
-
-@description('Optional. Specifies the SKU for the vault.')
-@allowed(
-  [
-    'standard'
-    'premium'
-  ])
-param skuName string = 'standard'
 
 @description('Required. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
@@ -57,7 +44,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
   params: {
     name: keyVault.name
     tags: combinedTags
-    vaultSku: skuName
+    vaultSku: keyVault.skuName
     enableRbacAuthorization: true    
     enableSoftDelete: bool(keyVault.enableSoftDelete)
     enablePurgeProtection: bool(keyVault.enablePurgeProtection)
