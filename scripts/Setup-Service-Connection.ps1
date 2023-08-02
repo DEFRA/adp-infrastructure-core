@@ -88,7 +88,7 @@ try {
     $spClientPassword = az keyvault secret show --name $kvClientPasswordSecretName --vault-name $KeyVaultName --query "value" -o tsv
 
     # Set PAT as an environment variable for DevOps Login
-    # $env:AZURE_DEVOPS_EXT_PAT = $env:SYSTEM_ACCESSTOKEN
+    $env:AZURE_DEVOPS_EXT_PAT = $env:SYSTEM_ACCESSTOKEN
 
     # #Set Service Principal Secret as an Environment Variable for creating Azure DevOps Service Connection
     $env:AZURE_DEVOPS_EXT_AZURE_RM_SERVICE_PRINCIPAL_KEY = $spClientPassword
