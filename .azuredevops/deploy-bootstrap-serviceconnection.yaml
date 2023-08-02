@@ -12,7 +12,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main  
+      ref: 216126-asada-servicebus-vars  
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -31,14 +31,14 @@ extends:
         outputTemplateChange: Skip
         serviceConnection: AZD-CDO-SSV3    
         deploymentBranches:
-          - '*'
+          - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd3'
         outputTemplateChange: Skip
         serviceConnection: AZD-CDO-SSV3    
         deploymentBranches:
-          - '*'
+          - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'  
     groupedTemplates:

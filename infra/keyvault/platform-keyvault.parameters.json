@@ -5,6 +5,9 @@
         "keyVaultName": {
             "value": "#{{ ssvPlatformKeyVaultName }}"
         },
+        "skuName": {
+            "value": "#{{ keyvaultSkuName }}"
+        },
         "environment": {
             "value": "#{{ environment }}"
         },
