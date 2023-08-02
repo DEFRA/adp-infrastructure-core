@@ -27,18 +27,6 @@ var customTags = {
 var defaultTags = json(loadTextContent('../default-tags.json'))
 var combinedTags = union(defaultTags, tags, customTags)
 
-resource vnetResourceGroup 'Microsoft.Resources/resourceGroups@2022-09-01' existing = {
-  scope: subscription()
-  name: vnet.resourceGroup
-}
-
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-02-01' existing = {
-  scope: vnetResourceGroup
-  name: vnet.name
-  resource privateEndpointSubnet 'subnets@2023-02-01' existing = {
-    name: vnet.subnetPrivateEndpoints
-  }
-}
 module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
   name: '${uniqueString(deployment().name, location)}-keyvault'
   params: {
@@ -56,7 +44,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
     privateEndpoints: [
       {
         service: 'vault'
-        subnetResourceId: virtualNetwork::privateEndpointSubnet.id
+        subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
         tags: combinedTags
       }
     ]
