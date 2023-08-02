@@ -44,5 +44,5 @@ extends:
                   -ResourceName $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01                 
               - displayName: Set DNS record for $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
                 scriptPath: 'Set-PrivateDnsRecordSet.ps1@PipelineCommon'
-                serviceConnectionVariableName: AZR-MST-PrivateLinkDNS-DEFRA-FFC
+                serviceConnectionVariableName: mstAzureResourceManagerConnection
           
