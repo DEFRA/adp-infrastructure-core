@@ -5,6 +5,7 @@
         "keyVault": {
             "value": {
                 "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}01",
+                "skuName": "#{{ keyvaultSkuName }}",
                 "enableSoftDelete": "#{{ keyvaultEnableSoftDelete }}",
                 "enablePurgeProtection": "#{{ keyvaultEnablePurgeProtection }}",
                 "softDeleteRetentionInDays": "#{{ keyvaultSoftDeleteRetentionInDays }}"
