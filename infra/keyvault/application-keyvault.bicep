@@ -59,9 +59,9 @@ module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
     tags: combinedTags
     vaultSku: skuName
     enableRbacAuthorization: true    
-    enableSoftDelete: keyVault.enableSoftDelete
-    enablePurgeProtection: keyVault.enablePurgeProtection
-    softDeleteRetentionInDays: keyVault.softDeleteRetentionInDays
+    enableSoftDelete: bool(keyVault.enableSoftDelete)
+    enablePurgeProtection: bool(keyVault.enablePurgeProtection)
+    softDeleteRetentionInDays: bool(keyVault.softDeleteRetentionInDays)
     networkAcls: {
       bypass: 'AzureServices'
       defaultAction: 'Allow'
