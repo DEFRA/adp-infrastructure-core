@@ -12,7 +12,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: 216126-asada-servicebus-vars  
+      ref: main 
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
