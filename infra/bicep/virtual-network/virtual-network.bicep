@@ -62,13 +62,8 @@ var subnets = [
   {
     name: '${subnetPrefix}2'
     addressPrefix: subnet2AddressPrefix
-    routeTable: {
-      id: ''
-    }
-    networkSecurityGroupId: '' //nsg1002.id
     privateEndpointNetworkPolicies: 'Disabled'
     privateLinkServiceNetworkPolicies: 'Enabled'
-    delegations: []
     serviceEndpoints: [
       {
         service: 'Microsoft.Storage'
@@ -96,31 +91,18 @@ var subnets = [
     routeTable: {
       id: aks1RouteTableName == '' ? '' : aks1RouteTable.id
     }
-    networkSecurityGroupId: '' //nsg1002.id
     privateEndpointNetworkPolicies: 'Enabled'
     privateLinkServiceNetworkPolicies: 'Enabled'
-    delegations: []
-    serviceEndpoints: []
   }
   {
     name: '${subnetPrefix}5'
     addressPrefix: subnet5AddressPrefix
-    routeTable: {
-      id: ''
-    }
-    networkSecurityGroupId: ''
     privateEndpointNetworkPolicies: 'Disabled'
     privateLinkServiceNetworkPolicies: 'Enabled'
-    delegations: []
-    serviceEndpoints: []
   }
   {
     name: '${subnetPrefix}6'
     addressPrefix: subnet6AddressPrefix
-    routeTable: {
-      id: ''
-    }
-    networkSecurityGroupId: ''
     privateEndpointNetworkPolicies: 'Disabled'
     privateLinkServiceNetworkPolicies: 'Enabled'
     delegations: [
@@ -149,7 +131,6 @@ var subnets = [
     networkSecurityGroupId: nsg.id
     privateEndpointNetworkPolicies: 'Disabled'
     privateLinkServiceNetworkPolicies: 'Enabled'
-    delegations: []
     serviceEndpoints: [
       {
         service: 'Microsoft.Storage'
@@ -174,13 +155,9 @@ var subnets = [
   {
     name: '${subnetPrefix}8'
     addressPrefix: subnet8AddressPrefix
-    routeTable: {
-      id: ''
-    }
     networkSecurityGroupId: nsg.id
     privateEndpointNetworkPolicies: 'Disabled'
     privateLinkServiceNetworkPolicies: 'Enabled'
-    delegations: []
     serviceEndpoints: [
       {
         service: 'Microsoft.AzureActiveDirectory'
