@@ -3,10 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "envCode": {
-            "value": "#{{projectName}}"
+            "value": "#{{targetEnvironment}}"
         },
         "projectName": {
-            "value": "#{{targetEnvironment}}"
+            "value": "#{{projectName}}"
         },
         "subSpokeNumber": {
             "value": "#{{subscriptionSpoke}}"
