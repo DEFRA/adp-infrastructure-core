@@ -27,8 +27,8 @@ param aks2RouteTableResourceGroupName string
 
 // Variables
 var subnetPrefix = '${envCode}${projectName}NETSU${subSpokeNumber}40'
-
-var subnets = [ {
+var subnets = [
+  {
     name: '${subnetPrefix}1'
     addressPrefix: subnet1AddressPrefix
     routeTable: {
@@ -59,223 +59,162 @@ var subnets = [ {
       }
     ]
   }
-]
-/*
-var subnets = [ {
-    name: '${subnetPrefix}1'
-    properties: {
-      addressPrefix: subnet1AddressPrefix
-      routeTable: {
-        id: aks1RouteTableName == '' ? '' : aks1RouteTable.id
-      }
-      networkSecurityGroup: {
-        id: nsg.id
-      }
-      privateEndpointNetworkPolicies: 'Disabled'
-      privateLinkServiceNetworkPolicies: 'Enabled'
-      delegations: []
-      serviceEndpoints: [
-        {
-          service: 'Microsoft.Storage'
-        }
-        {
-          service: 'Microsoft.Sql'
-        }
-        {
-          service: 'Microsoft.ContainerRegistry'
-        }
-        {
-          service: 'Microsoft.ServiceBus'
-        }
-        {
-          service: 'Microsoft.EventHub'
-        }
-        {
-          service: 'Microsoft.KeyVault'
-        }
-      ]
-    }
-  }
   {
     name: '${subnetPrefix}2'
-    properties: {
-      addressPrefix: subnet2AddressPrefix
-      routeTable: {
-        id: ''
-      }
-      networkSecurityGroup: {
-        id: '' //nsg1002.id
-      }
-      privateEndpointNetworkPolicies: 'Disabled'
-      privateLinkServiceNetworkPolicies: 'Enabled'
-      delegations: []
-      serviceEndpoints: [
-        {
-          service: 'Microsoft.Storage'
-        }
-        {
-          service: 'Microsoft.Sql'
-        }
-        {
-          service: 'Microsoft.ContainerRegistry'
-        }
-        {
-          service: 'Microsoft.ServiceBus'
-        }
-        {
-          service: 'Microsoft.EventHub'
-        }
-        {
-          service: 'Microsoft.KeyVault'
-        }
-      ]
+    addressPrefix: subnet2AddressPrefix
+    routeTable: {
+      id: ''
     }
+    networkSecurityGroupId: '' //nsg1002.id
+    privateEndpointNetworkPolicies: 'Disabled'
+    privateLinkServiceNetworkPolicies: 'Enabled'
+    delegations: []
+    serviceEndpoints: [
+      {
+        service: 'Microsoft.Storage'
+      }
+      {
+        service: 'Microsoft.Sql'
+      }
+      {
+        service: 'Microsoft.ContainerRegistry'
+      }
+      {
+        service: 'Microsoft.ServiceBus'
+      }
+      {
+        service: 'Microsoft.EventHub'
+      }
+      {
+        service: 'Microsoft.KeyVault'
+      }
+    ]
   }
   {
     name: '${subnetPrefix}3'
-    properties: {
-      addressPrefix: subnet3AddressPrefix
-      routeTable: {
-        id: aks1RouteTableName == '' ? '' : aks1RouteTable.id
-      }
-      networkSecurityGroup: {
-        id: '' //nsg1002.id
-      }
-      privateEndpointNetworkPolicies: 'Enabled'
-      privateLinkServiceNetworkPolicies: 'Enabled'
-      delegations: []
-      serviceEndpoints: []
+    addressPrefix: subnet3AddressPrefix
+    routeTable: {
+      id: aks1RouteTableName == '' ? '' : aks1RouteTable.id
     }
+    networkSecurityGroupId: '' //nsg1002.id
+    privateEndpointNetworkPolicies: 'Enabled'
+    privateLinkServiceNetworkPolicies: 'Enabled'
+    delegations: []
+    serviceEndpoints: []
   }
   {
     name: '${subnetPrefix}5'
-    properties: {
-      addressPrefix: subnet5AddressPrefix
-      routeTable: {
-        id: ''
-      }
-      networkSecurityGroup: {
-        id: ''
-      }
-      privateEndpointNetworkPolicies: 'Disabled'
-      privateLinkServiceNetworkPolicies: 'Enabled'
-      delegations: []
-      serviceEndpoints: []
+    addressPrefix: subnet5AddressPrefix
+    routeTable: {
+      id: ''
     }
+    networkSecurityGroupId: ''
+    privateEndpointNetworkPolicies: 'Disabled'
+    privateLinkServiceNetworkPolicies: 'Enabled'
+    delegations: []
+    serviceEndpoints: []
   }
   {
     name: '${subnetPrefix}6'
-    properties: {
-      addressPrefix: subnet6AddressPrefix
-      routeTable: {
-        id: ''
-      }
-      networkSecurityGroup: {
-        id: ''
-      }
-      privateEndpointNetworkPolicies: 'Disabled'
-      privateLinkServiceNetworkPolicies: 'Enabled'
-      delegations: [
-        {
-          name: 'Microsoft.Web.serverFarms'
-          propertyies: {
-            serviceName: 'Microsoft.Web/serverFarms'
-          }
-        }
-      ]
-      serviceEndpoints: [
-        {
-          service: 'Microsoft.Storage'
-        }
-        {
-          service: 'Microsoft.Web'
-        }
-      ]
+    addressPrefix: subnet6AddressPrefix
+    routeTable: {
+      id: ''
     }
+    networkSecurityGroupId: ''
+    privateEndpointNetworkPolicies: 'Disabled'
+    privateLinkServiceNetworkPolicies: 'Enabled'
+    delegations: [
+      {
+        name: 'Microsoft.Web.serverFarms'
+        properties: {
+          serviceName: 'Microsoft.Web/serverFarms'
+        }
+      }
+    ]
+    serviceEndpoints: [
+      {
+        service: 'Microsoft.Storage'
+      }
+      {
+        service: 'Microsoft.Web'
+      }
+    ]
   }
   {
     name: '${subnetPrefix}7'
-    properties: {
-      addressPrefix: subnet7AddressPrefix
-      routeTable: {
-        id: aks2RouteTableName == '' ? '' : aks2RouteTable.id
-      }
-      networkSecurityGroup: {
-        id: nsg.id
-      }
-      privateEndpointNetworkPolicies: 'Disabled'
-      privateLinkServiceNetworkPolicies: 'Enabled'
-      delegations: []
-      serviceEndpoints: [
-        {
-          service: 'Microsoft.Storage'
-        }
-        {
-          service: 'Microsoft.Sql'
-        }
-        {
-          service: 'Microsoft.ContainerRegistry'
-        }
-        {
-          service: 'Microsoft.ServiceBus'
-        }
-        {
-          service: 'Microsoft.EventHub'
-        }
-        {
-          service: 'Microsoft.KeyVault'
-        }
-      ]
+    addressPrefix: subnet7AddressPrefix
+    routeTable: {
+      id: aks2RouteTableName == '' ? '' : aks2RouteTable.id
     }
+    networkSecurityGroupId: nsg.id
+    privateEndpointNetworkPolicies: 'Disabled'
+    privateLinkServiceNetworkPolicies: 'Enabled'
+    delegations: []
+    serviceEndpoints: [
+      {
+        service: 'Microsoft.Storage'
+      }
+      {
+        service: 'Microsoft.Sql'
+      }
+      {
+        service: 'Microsoft.ContainerRegistry'
+      }
+      {
+        service: 'Microsoft.ServiceBus'
+      }
+      {
+        service: 'Microsoft.EventHub'
+      }
+      {
+        service: 'Microsoft.KeyVault'
+      }
+    ]
   }
   {
     name: '${subnetPrefix}8'
-    properties: {
-      addressPrefix: subnet8AddressPrefix
-      routeTable: {
-        id: ''
-      }
-      networkSecurityGroup: {
-        id: nsg.id
-      }
-      privateEndpointNetworkPolicies: 'Disabled'
-      privateLinkServiceNetworkPolicies: 'Enabled'
-      delegations: []
-      serviceEndpoints: [
-        {
-          service: 'Microsoft.AzureActiveDirectory'
-        }
-        {
-          service: 'Microsoft.AzureCosmosDB'
-        }
-        {
-          service: 'Microsoft.CognitiveServices'
-        }
-        {
-          service: 'Microsoft.ContainerRegistry'
-        }
-        {
-          service: 'Microsoft.EventHub'
-        }
-        {
-          service: 'Microsoft.KeyVault'
-        }
-        {
-          service: 'Microsoft.ServiceBus'
-        }
-        {
-          service: 'Microsoft.Sql'
-        }
-        {
-          service: 'Microsoft.Storage'
-        }
-        {
-          service: 'Microsoft.Web'
-        }
-      ]
+    addressPrefix: subnet8AddressPrefix
+    routeTable: {
+      id: ''
     }
+    networkSecurityGroupId: nsg.id
+    privateEndpointNetworkPolicies: 'Disabled'
+    privateLinkServiceNetworkPolicies: 'Enabled'
+    delegations: []
+    serviceEndpoints: [
+      {
+        service: 'Microsoft.AzureActiveDirectory'
+      }
+      {
+        service: 'Microsoft.AzureCosmosDB'
+      }
+      {
+        service: 'Microsoft.CognitiveServices'
+      }
+      {
+        service: 'Microsoft.ContainerRegistry'
+      }
+      {
+        service: 'Microsoft.EventHub'
+      }
+      {
+        service: 'Microsoft.KeyVault'
+      }
+      {
+        service: 'Microsoft.ServiceBus'
+      }
+      {
+        service: 'Microsoft.Sql'
+      }
+      {
+        service: 'Microsoft.Storage'
+      }
+      {
+        service: 'Microsoft.Web'
+      }
+    ]
   } ]
-*/
+
 // Existing Resources
 resource nsg 'Microsoft.Network/networkSecurityGroups@2022-07-01' existing = {
   name: '${envCode}CDONETNS2401'
