@@ -12,7 +12,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: 216126-asada-servicebus-vars  
+      ref: main
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -28,7 +28,15 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedTemplates:
-      - name: platformInfra
+      - name: aks-cluster
+        templates:
+          - name: aks-cluster
+            path: infra/managed-cluster
+            type: bicep
+            scope: "Resource Group"
+            acrServiceConnection: AZD-CDO-SSV3
+            resourceGroupName: $(servicesResourceGroup)
+      - name: service-bus
         templates:
           - name: namespace
             path: infra/service-bus

@@ -1,18 +1,18 @@
 {
     "applications": [
         {
-            "displayName": "#{{ appRegistrationName }}",
+            "displayName": "#{{ tier2ServiceConnectionAppRegName }}",
             "IdentifierUris": "",
             "secretAutoRenewalEnabled": true,
             "keyVault": {
-                "name": "#{{ platformKeyVaultName }}",
+                "name": "#{{ ssvPlatformKeyVaultName }}",
                 "secrets": [
                     {
-                        "key": "#{{ appRegistrationName }}",
+                        "key": "#{{ tier2ServiceConnectionAppRegName }}",
                         "type": "ClientSecret"
                     },
                     {
-                        "key": "#{{ appRegistrationName }}-ClientId",
+                        "key": "#{{ tier2ServiceConnectionAppRegName }}-ClientId",
                         "type": "ClientId"
                     }
                 ]
