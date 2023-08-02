@@ -111,43 +111,55 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         mode: 'System'
         count: cluster.npSystem.count
         vmSize: 'Standard_DS2_v2'
-        type: 'VirtualMachineScaleSets'
         osDiskSizeGB: cluster.npSystem.osDiskSizeGB
         osDiskType: 'Ephemeral'
         osType: 'Linux'
         osSKU: 'Ubuntu'
+        minCount: cluster.npSystem.minCount
+        maxCount: cluster.npSystem.maxCount
+        vnetSubnetId: clusterVirtualNetwork::clusterNodesSubnet.id
+        enableAutoScaling: true
+        enableCustomCATrust: false
+        enableFIPS: false
+        enableEncryptionAtHost: false
+        type: 'VirtualMachineScaleSets'
+        scaleSetPriority: 'Regular'
+        scaleSetEvictionPolicy: 'Delete'
+        orchestratorVersion: kubernetesVersion
+        enableNodePublicIP: false
+        maxPods: cluster.npSystem.maxPods
+        availabilityZones: cluster.npSystem.availabilityZones
+        upgradeSettings: {
+          maxSurge: '33%'
+        }
         nodeTaints: [
           'CriticalAddonsOnly=true:NoSchedule'
         ]
-        orchestratorVersion: kubernetesVersion
-        enableNodePublicIP: false
-        vnetSubnetId: clusterVirtualNetwork::clusterNodesSubnet.id
-        availabilityZones: cluster.npSystem.availabilityZones
       }
     ]
     agentPools: [
       {
-        name:  'npuser1'
+        name: 'npuser01'
         mode: 'User'
         count: cluster.npUser.count
         vmSize: 'Standard_DS3_v2'
-        type: 'VirtualMachineScaleSets'
         osDiskSizeGB: cluster.npUser.osDiskSizeGB
         osDiskType: 'Ephemeral'
         osType: 'Linux'
         osSKU: 'Ubuntu'
+        minCount: cluster.npUser.minCount
+        maxCount: cluster.npUser.maxCount
+        vnetSubnetId: clusterVirtualNetwork::clusterNodesSubnet.id
+        enableAutoScaling: true
+        enableCustomCATrust: false
+        enableFIPS: false
+        enableEncryptionAtHost: false
+        type: 'VirtualMachineScaleSets'
+        scaleSetPriority: 'Regular'
+        scaleSetEvictionPolicy: 'Delete'
         orchestratorVersion: kubernetesVersion
         enableNodePublicIP: false
-        enableAutoScaling: true
-        maxCount: cluster.npUser.maxCount
         maxPods: cluster.npUser.maxPods
-        minCount: cluster.npUser.minCount
-        minPods: cluster.npUser.minPods
-        nodeLabels: {}
-        scaleSetEvictionPolicy: 'Delete'
-        scaleSetPriority: 'Regular'
-        storageProfile: 'ManagedDisks'
-        vnetSubnetId: clusterVirtualNetwork::clusterNodesSubnet.id
         availabilityZones: cluster.npUser.availabilityZones
         upgradeSettings: {
           maxSurge: '33%'
