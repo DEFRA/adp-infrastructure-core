@@ -37,7 +37,8 @@ var customTags = {
   Environment: environment
 }
 
-var combinedTags = union(loadJsonContent('../default-tags.json'), tags, customTags)
+var defaultTags = json(loadTextContent('../default-tags.json'))
+var combinedTags = union(defaultTags, tags, customTags)
 
 resource vnetResourceGroup 'Microsoft.Resources/resourceGroups@2022-09-01' existing = {
   scope: subscription()

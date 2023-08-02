@@ -4,7 +4,7 @@
     "parameters": {
         "keyVault": {
             "value": {
-                "name": "#{{ applicationKeyVaultName }}",
+                "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}01",
                 "enableSoftDelete": "#{{ keyvaultEnableSoftDelete }}",
                 "enablePurgeProtection": "#{{ keyvaultEnablePurgeProtection }}",
                 "softDeleteRetentionInDays": "#{{ keyvaultSoftDeleteRetentionInDays }}"
