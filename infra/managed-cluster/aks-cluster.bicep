@@ -37,13 +37,8 @@ var aksTags = {
   Tier: 'Shared'
 }
 
-resource vnetResourceGroup 'Microsoft.Resources/resourceGroups@2022-09-01' existing = {
-  scope: subscription()
-  name: vnet.resourceGroup
-}
-
 resource clusterVirtualNetwork 'Microsoft.Network/virtualNetworks@2023-02-01' existing = {
-  scope: vnetResourceGroup
+  scope: resourceGroup(vnet.resourceGroup)
   name: vnet.name
   resource clusterNodesSubnet 'subnets@2023-02-01' existing = {
     name: vnet.subnetClusterNodes
