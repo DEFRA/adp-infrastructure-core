@@ -12,7 +12,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main 
+      ref: features/kb/update-kv-variable-value 
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
