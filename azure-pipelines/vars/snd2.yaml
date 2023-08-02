@@ -18,7 +18,7 @@ variables:
   subscriptionSpoke: 2
 
   #VNET
-  netResourceGroup: SNDCDONETVN2401
+  netResourceGroup: SNDCDONETRG2401
   addressPrefix: '10.178.112.0/22'
   subnet1AddressPrefix: '10.178.112.0/25'
   subnet2AddressPrefix: '10.178.113.0/28'
