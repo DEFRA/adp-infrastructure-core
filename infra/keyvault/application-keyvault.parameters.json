@@ -2,32 +2,26 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "keyVaultName": {
-            "value": "#{{ applicationKeyVaultName }}"
+        "keyVault": {
+            "value": {
+                "name": "#{{ applicationKeyVaultName }}",
+                "enableSoftDelete": "#{{ keyvaultEnableSoftDelete }}",
+                "enablePurgeProtection": "#{{ keyvaultEnablePurgeProtection }}",
+                "softDeleteRetentionInDays": "#{{ keyvaultSoftDeleteRetentionInDays }}"
+            }    
+        },
+        "vnet": {
+            "value": {
+              "name": "#{{ virtualNetworkName }}",
+              "resourceGroup": "#{{ virtualNetworkResourceGroup }}",
+              "subnetPrivateEndpoints": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}05"
+            }
         },
         "environment": {
             "value": "#{{ upperEnvironment }}"
         },
-        "enableSoftDelete": {
-            "value": #{{ keyvaultEnableSoftDelete }}           
-        },
-        "enablePurgeProtection": {
-            "value": #{{ keyvaultEnablePurgeProtection }}
-        },
-        "softDeleteRetentionInDays": {
-            "value": #{{ keyvaultSoftDeleteRetentionInDays }}
-        },
-        "privateEndpoints": {
-            "value": [
-                {
-                  service: 'vault'
-                  subnetResourceId: nestedDependencies.outputs.subnetResourceId
-                  tags: {
-                    Environment: 'Non-Prod'
-                    Role: 'DeploymentValidation'
-                  }
-                }
-              ]
-        },
+        "location": {
+            "value": "#{{ location }}"
+        }
     }
 }
