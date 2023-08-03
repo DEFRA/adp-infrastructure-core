@@ -1,9 +1,6 @@
 @description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and subnetPrivateEndpoints values.')
 param vnet object
 
-//@description('Require. The parameter object of LogAnalytics Workspace.  The object must contain the resourceGroup and name of the log analytics workspace.')
-//param logAnalyticsWorkspace object
-
 @description('Required. The parameter object for servicebus. The object must contain the namespaceName,namespacePrivateEndpointName and skuName values.')
 param serviceBus object
 
@@ -38,30 +35,14 @@ var serviceBusPrivateEndpointTags = {
   Tier: 'Shared'
 }
 
-resource vnetResourceGroup 'Microsoft.Resources/resourceGroups@2022-09-01' existing = {
-  scope: subscription()
-  name: vnet.resourceGroup
-}
-
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-02-01' existing = {
-  scope: vnetResourceGroup
-  name: vnet.name
-  resource privateEndpointSubnet 'subnets@2023-02-01' existing = {
-    name: vnet.subnetPrivateEndpoints
-  }
-}
-
-//resource logAnalyticsWorkspaceResource 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = {
-//  scope: resourceGroup(logAnalyticsWorkspace.resourceGroup)
-//  name: logAnalyticsWorkspace.name
-//}
-
 module serviceBusResource 'br/SharedDefraRegistry:service-bus.namespaces:0.5.7' = {
   name: 'service-bus-${deploymentDate}'
   params: {
     name: serviceBus.namespaceName
     skuName: serviceBus.skuName
-    diagnosticWorkspaceId: '' //logAnalyticsWorkspaceResource.id
+    location: location
+    diagnosticWorkspaceId: ''
+    lock: 'CanNotDelete'
     networkRuleSets: {
       publicNetworkAccess: 'Disabled'
     }
@@ -69,7 +50,7 @@ module serviceBusResource 'br/SharedDefraRegistry:service-bus.namespaces:0.5.7' 
       {
         name: serviceBus.namespacePrivateEndpointName
         service: 'namespace'
-        subnetResourceId: virtualNetwork::privateEndpointSubnet.id
+        subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
         tags: union(tags, serviceBusPrivateEndpointTags)
       }
     ]
