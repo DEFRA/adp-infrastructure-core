@@ -15,6 +15,9 @@ param tags object = {
   Description: 'CDO Platform KeyVault Store'
 }
 
+@description('Required. Date in the format yyyyMMdd-HHmmss.')
+param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
+
 @description('Required. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
@@ -28,7 +31,7 @@ var defaultTags = json(loadTextContent('../default-tags.json'))
 var combinedTags = union(defaultTags, tags, customTags)
 
 module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
-  name: '${uniqueString(deployment().name, location)}-keyvault'
+  name: 'app-keyvault-${deploymentDate}'
   params: {
     name: keyVault.name
     tags: combinedTags
@@ -39,7 +42,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
     softDeleteRetentionInDays: int(keyVault.softDeleteRetentionInDays)
     networkAcls: {
       bypass: 'AzureServices'
-      defaultAction: 'Allow'
+      defaultAction: 'Deny'
     }
     privateEndpoints: [
       {
