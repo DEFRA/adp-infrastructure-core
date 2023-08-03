@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "serviceBus": {
+      "value": {
+        "namespaceName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_servicebus }}#{{ nc_instance_regionid }}01",
+        "namespacePrivateEndpointName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}01",
+        "skuName": "#{{ serviceBusSkuName }}"
+      }
+    },
+    "vnet": {
+      "value": {
+        "name": "#{{ virtualNetworkName }}",
+        "resourceGroup": "#{{ virtualNetworkResourceGroup }}",
+        "subnetPrivateEndpoints": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}05"
+      }
+    },
+    "location": {
+      "value": "#{{ location }}"
+    },
+    "environment": {
+      "value": "#{{ environment }}"
+    }
+  }
+}
