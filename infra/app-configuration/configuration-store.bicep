@@ -21,11 +21,11 @@ param environment string
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 @description('Required. Date in the format yyyy-MM-dd.')
-param createdDate string = utcNow('yyyy-MM-dd')
+param createdOrUpdatedDate string = utcNow('yyyy-MM-dd')
 
 var customTags = {
   Location: location
-  CreatedDate: createdDate
+  CreatedOrUpdatedDate: createdOrUpdatedDate
   Environment: environment
 }
 var tags = union(loadJsonContent('../default-tags.json'), customTags)
