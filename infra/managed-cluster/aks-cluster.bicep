@@ -12,7 +12,7 @@ param location string
 @description('Required. Environment name.')
 param environment string
 @description('Required. Date in the format yyyy-MM-dd.')
-param createdOrUpdatedDate string = utcNow('yyyy-MM-dd')
+param createdDate string = utcNow('yyyy-MM-dd')
 @description('Required. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
@@ -20,7 +20,7 @@ var kubernetesVersion = '1.26.6'
 
 var customTags = {
   Location: location
-  CreatedOrUpdatedDate: createdOrUpdatedDate
+  CreatedDate: createdDate
   Environment: environment
 }
 var tags = union(loadJsonContent('../default-tags.json'), customTags)

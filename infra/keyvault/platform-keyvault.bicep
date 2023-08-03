@@ -29,14 +29,14 @@ param roleAssignments array
 param skuName string = 'premium'
 
 @description('Required. Date in the format yyyy-MM-dd.')
-param createdOrUpdatedDate string = utcNow('yyyy-MM-dd')
+param createdDate string = utcNow('yyyy-MM-dd')
 
 @description('Required. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 var customTags = {
   Location: location
-  CreatedOrUpdatedDate: createdOrUpdatedDate
+  CreatedDate: createdDate
   Environment: environment
   Purpose: 'CDO Platform KeyVault Store'
   Tier: 'Shared'
