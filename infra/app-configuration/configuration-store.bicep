@@ -2,12 +2,16 @@
 param vnet object
 
 @description('Required. The parameter object for appConfig. The object must contain the name and privateEndpointName values.')
-param appConfig object = {
-  name: 'SNDCDOINFAC2401'
-  privateEndpointName: 'SNDCDOINFPE2402'
-}
+param appConfig object
 
-@description('Required. The Azure region where the resources will be deployed.')
+@allowed([
+  'Free'
+  'Standard'
+])
+@description('Optional. Pricing tier of App Configuration.')
+param sku string = 'Standard'
+
+@description('Optional. The Azure region where the resources will be deployed.')
 param location string = resourceGroup().location
 
 @description('Required. Environment name.')
@@ -28,46 +32,33 @@ var tags = union(loadJsonContent('../default-tags.json'), customTags)
 
 var appConfigTags = {
   Name: appConfig.name
-  Purpose: 'Service Bus Namespace'
+  Purpose: 'App Configuration'
   Tier: 'Shared'
 }
 
 var appConfigPrivateEndpointTags = {
   Name: appConfig.privateEndpointName
-  Purpose: 'Service Bus Namespace private endpoint'
+  Purpose: 'App Configuration private endpoint'
   Tier: 'Shared'
 }
-
-resource vnetResourceGroup 'Microsoft.Resources/resourceGroups@2022-09-01' existing = {
-  scope: subscription()
-  name: vnet.resourceGroup
-}
-
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-02-01' existing = {
-  scope: vnetResourceGroup
-  name: vnet.name
-  resource privateEndpointSubnet 'subnets@2023-02-01' existing = {
-    name: vnet.subnetPrivateEndpoints
-  }
-}
-
 
 module appConfigResource 'br/SharedDefraRegistry:app-configuration.configuration-stores:0.3.6' = {
   name: 'app-config-${deploymentDate}'
   params: {
     name: appConfig.name
-    createMode: 'Default'
+    sku: sku
     disableLocalAuth: true
-    enablePurgeProtection: false
+    softDeleteRetentionInDays: int(appConfig.softDeleteRetentionInDays)
+    enablePurgeProtection: bool(appConfig.enablePurgeProtection)
+    publicNetworkAccess: 'Disabled'
     privateEndpoints: [
       {
         name: appConfig.privateEndpointName
         service: 'configurationStores'
-        subnetResourceId: virtualNetwork::privateEndpointSubnet.id
+        subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
         tags: union(tags, appConfigPrivateEndpointTags)
       }
     ]
-    softDeleteRetentionInDays: 1
     tags: union(tags, appConfigTags)
   }
 }
