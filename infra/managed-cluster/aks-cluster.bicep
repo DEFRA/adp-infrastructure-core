@@ -37,14 +37,6 @@ var aksTags = {
   Tier: 'Shared'
 }
 
-resource clusterVirtualNetwork 'Microsoft.Network/virtualNetworks@2023-02-01' existing = {
-  scope: resourceGroup(vnet.resourceGroup)
-  name: vnet.name
-  resource clusterNodesSubnet 'subnets@2023-02-01' existing = {
-    name: vnet.subnetClusterNodes
-  }
-}
-
 module miClusterControlPlane 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
   name: 'aks-cluster-mi-${deploymentDate}'
   params: {
@@ -112,7 +104,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         osSKU: 'Ubuntu'
         minCount: cluster.npSystem.minCount
         maxCount: cluster.npSystem.maxCount
-        vnetSubnetId: clusterVirtualNetwork::clusterNodesSubnet.id
+        vnetSubnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetClusterNodes)
         enableAutoScaling: true
         enableCustomCATrust: false
         enableFIPS: false
@@ -144,7 +136,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         osSKU: 'Ubuntu'
         minCount: cluster.npUser.minCount
         maxCount: cluster.npUser.maxCount
-        vnetSubnetId: clusterVirtualNetwork::clusterNodesSubnet.id
+        vnetSubnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetClusterNodes)
         enableAutoScaling: true
         enableCustomCATrust: false
         enableFIPS: false

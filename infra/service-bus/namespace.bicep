@@ -35,14 +35,6 @@ var serviceBusPrivateEndpointTags = {
   Tier: 'Shared'
 }
 
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-02-01' existing = {
-  scope: resourceGroup(vnet.resourceGroup)
-  name: vnet.name
-  resource privateEndpointSubnet 'subnets@2023-02-01' existing = {
-    name: vnet.subnetPrivateEndpoints
-  }
-}
-
 module serviceBusResource 'br/SharedDefraRegistry:service-bus.namespaces:0.5.7' = {
   name: 'service-bus-${deploymentDate}'
   params: {
@@ -58,7 +50,7 @@ module serviceBusResource 'br/SharedDefraRegistry:service-bus.namespaces:0.5.7' 
       {
         name: serviceBus.namespacePrivateEndpointName
         service: 'namespace'
-        subnetResourceId: virtualNetwork::privateEndpointSubnet.id
+        subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
         tags: union(tags, serviceBusPrivateEndpointTags)
       }
     ]
