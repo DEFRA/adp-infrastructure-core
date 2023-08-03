@@ -73,5 +73,5 @@ extends:
                   -SubscriptionName $(subscriptionName)
                   -ServiceConnectionAppRegName $(tier2ServiceConnectionAppRegName)
                   -KeyVaultName $(ssvPlatformKeyVaultName)     
-                  -SystemAccessToken $(System.AccessToken)             
+                  -SystemAccessToken 'ConvertTo-SecureString $(System.AccessToken) -AsPlainText -Force'         
                 
