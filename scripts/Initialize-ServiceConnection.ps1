@@ -42,6 +42,8 @@ param(
     [string] $ServiceConnectionAppRegName,
     [Parameter(Mandatory)]
     [string] $KeyVaultName,
+    [Parameter(Mandatory)]
+    [SecureString] $SystemAccessToken,
     [Parameter(Mandatory = $false)]
     [string] $DevopsOrgnization = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI,
     [Parameter(Mandatory = $false)]
@@ -71,6 +73,7 @@ Write-Debug "${functionName}:SubscriptionId=$SubscriptionId"
 Write-Debug "${functionName}:SubscriptionName=$SubscriptionName"
 Write-Debug "${functionName}:ServiceConnectionAppRegName=$ServiceConnectionAppRegName"
 Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
+Write-Debug "${functionName}:SystemAccessToken=$SystemAccessToken"
 Write-Debug "${functionName}:DevopsOrgnization=$DevopsOrgnization"
 Write-Debug "${functionName}:DevopsProjectName=$DevopsProjectName"
 
@@ -88,7 +91,8 @@ try {
     $spClientPassword = az keyvault secret show --name $kvClientPasswordSecretName --vault-name $KeyVaultName --query "value" -o tsv
 
     # Set PAT as an environment variable for DevOps Login
-    $env:AZURE_DEVOPS_EXT_PAT = $env:SYSTEM_ACCESSTOKEN
+    # $env:AZURE_DEVOPS_EXT_PAT = $env:SYSTEM_ACCESSTOKEN
+    $env:AZURE_DEVOPS_EXT_PAT = $SystemAccessToken
 
     # #Set Service Principal Secret as an Environment Variable for creating Azure DevOps Service Connection
     $env:AZURE_DEVOPS_EXT_AZURE_RM_SERVICE_PRINCIPAL_KEY = $spClientPassword
@@ -102,10 +106,17 @@ try {
     if (-not $isServiceEndpointAlreadyExist) {
         Write-Host "Creating ServiceEndpointName $($ServiceEndpointName).."
         # Create DevOps Service Connection:-
-        az devops service-endpoint azurerm create --azure-rm-service-principal-id $spClientId --azure-rm-subscription-id $SubscriptionId --azure-rm-subscription-name $SubscriptionName --azure-rm-tenant-id $TenantId --name $ServiceEndpointName --org $DevopsOrgnization --project $DevopsProjectName
+        az devops service-endpoint azurerm create `
+            --azure-rm-service-principal-id $spClientId `
+            --azure-rm-subscription-id $SubscriptionId `
+            --azure-rm-subscription-name $SubscriptionName `
+            --azure-rm-tenant-id $TenantId `
+            --name $ServiceEndpointName `
+            --org $DevopsOrgnization `
+            --project $DevopsProjectName
     }
     else {
-        Write-Host "ServiceEndpointName $ServiceEndpointName already exist."
+        Write-Host "ServiceEndpoint $ServiceEndpointName already exist."
     }
 
     $exitCode = 0    

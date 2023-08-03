@@ -51,26 +51,27 @@ extends:
             acrServiceConnection: AZD-CDO-SSV3
             resourceGroupName: $(ssvSharedResourceGroup)
             postDeployScriptsList:
-              - displayName: Create Tier 2 App Registrations
-                filePathsForTransform:
-                  - 'infra/adAppRegistrations/tier2-app-registration.json'
-                scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
-                ScriptArguments: >
-                  -AppRegJsonPath 'infra/adAppRegistrations/tier2-app-registration.json'
-              - displayName: Setup RBAC on Subscriptions
-                Type: AzurePowerShell
-                scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
-                ScriptArguments: >
-                  -SubscriptionName $(subscriptionName) 
-                  -KeyVaultName $(ssvPlatformKeyVaultName)
-                  -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)    
+              # - displayName: Create Tier 2 App Registrations
+              #   filePathsForTransform:
+              #     - 'infra/adAppRegistrations/tier2-app-registration.json'
+              #   scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
+              #   ScriptArguments: >
+              #     -AppRegJsonPath 'infra/adAppRegistrations/tier2-app-registration.json'
+              # - displayName: Setup RBAC on Subscriptions
+              #   Type: AzurePowerShell
+              #   scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
+              #   ScriptArguments: >
+              #     -SubscriptionName $(subscriptionName) 
+              #     -KeyVaultName $(ssvPlatformKeyVaultName)
+              #     -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)    
               - displayName: Setup AzureRm Service Endpoint
                 Type: AzureCLI
-                scriptPath: 'scripts/Setup-Service-Connection.ps1'
+                scriptPath: 'scripts/Initialize-ServiceConnection.ps1'
                 ScriptArguments: >
                   -TenantId $(tenantId)
                   -SubscriptionId $(subscriptionId)
                   -SubscriptionName $(subscriptionName)
                   -ServiceConnectionAppRegName $(tier2ServiceConnectionAppRegName)
-                  -KeyVaultName $(ssvPlatformKeyVaultName)                  
+                  -KeyVaultName $(ssvPlatformKeyVaultName)     
+                  -SystemAccessToken $(System.AccessToken)             
                 
