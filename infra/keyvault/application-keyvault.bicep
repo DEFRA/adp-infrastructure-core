@@ -27,14 +27,25 @@ var customTags = {
   Environment: environment
 }
 
-var defaultTags = json(loadTextContent('../default-tags.json'))
-var combinedTags = union(defaultTags, tags, customTags)
+var defaultTags = union(json(loadTextContent('../default-tags.json')), customTags)
+
+var keyVaultTags = {
+  Name: keyVault.name
+  Purpose: 'Key Vault'
+  Tier: 'Shared'
+}
+
+var keyVaultPrivateEndpointTags = {
+  Name: keyVault.privateEndpointName
+  Purpose: 'App Configuration private endpoint'
+  Tier: 'Shared'
+}
 
 module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
   name: 'app-keyvault-${deploymentDate}'
   params: {
     name: keyVault.name
-    tags: combinedTags
+    tags: union(defaultTags, tags, keyVaultTags)
     vaultSku: keyVault.skuName
     enableRbacAuthorization: true    
     enableSoftDelete: bool(keyVault.enableSoftDelete)
@@ -46,9 +57,10 @@ module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
     }
     privateEndpoints: [
       {
+        name: keyVault.privateEndpointName
         service: 'vault'
         subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
-        tags: combinedTags
+        tags: union(defaultTags, tags, keyVaultPrivateEndpointTags)
       }
     ]
   }
