@@ -1,7 +1,7 @@
 @description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and subnetPrivateEndpoints values.')
 param vnet object
 
-@description('Required. The parameter object for appConfig. The object must contain the name and privateEndpointName values.')
+@description('Required. The parameter object for appConfig. The object must contain the name, privateEndpointName, softDeleteRetentionInDays and enablePurgeProtection values.')
 param appConfig object
 
 @allowed([
