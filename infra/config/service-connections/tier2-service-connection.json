@@ -1,0 +1,26 @@
+{
+    "azureRMServiceConnections": [
+        {
+            "displayName": "#{{ ?? }}",
+            "description": "#{{ ?? }}",
+            "tenantId":  "#{{ TenantId }}",
+            "subscriptionId":  "#{{ SubscriptionId }}",
+            "subscriptionName":  "#{{ SubscriptionName }}",
+            "keyVault": {
+                "name": "#{{ ?? }}",
+                "secrets": [
+                    {
+                        "key": "#{{ ?? }}",
+                        "type": "ClientSecret"
+                    },
+                    {
+                        "key": "#{{ ?? }}",
+                        "type": "ClientId"
+                    }
+                ]
+            },
+            "isShared": false
+          }        
+    ]
+}
+
