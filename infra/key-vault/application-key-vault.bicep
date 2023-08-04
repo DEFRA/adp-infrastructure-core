@@ -55,6 +55,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
       bypass: 'AzureServices'
       defaultAction: 'Deny'
     }
+    publicNetworkAccess: !empty(publicNetworkAccess) ? any(publicNetworkAccess) : (!empty(privateEndpoints) && empty(networkAcls) ? 'Disabled' : null)
     privateEndpoints: [
       {
         name: keyVault.privateEndpointName
