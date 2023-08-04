@@ -28,7 +28,23 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedTemplates:
+      - name: monitoring
+        templates:
+          - name: workspace
+            path: infra/operational-insights
+            type: bicep
+            scope: "Resource Group"
+            acrServiceConnection: AZD-CDO-SSV3
+            resourceGroupName: $(servicesResourceGroup)
+          - name: component
+            path: infra/insights
+            type: bicep
+            scope: "Resource Group"
+            acrServiceConnection: AZD-CDO-SSV3
+            resourceGroupName: $(servicesResourceGroup)
       - name: bootstrapinfra
+        dependsOnGroupedTemplates:
+          - monitoring
         templates:
           - name: application-key-vault
             path: infra/key-vault
