@@ -56,7 +56,7 @@ extends:
                   - 'infra/config/app-registrations/tier2-app-registration.json'
                 scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
                 ScriptArguments: >
-                  -AppRegJsonPath 'infra/adAppRegistrations/tier2-app-registration.json'
+                  -AppRegJsonPath 'infra/config/app-registrations/tier2-app-registration.json'
               - displayName: Setup RBAC on Subscriptions
                 Type: AzurePowerShell
                 scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
