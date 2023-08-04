@@ -42,7 +42,7 @@ extends:
             scope: "Resource Group"
             acrServiceConnection: AZD-CDO-SSV3
             resourceGroupName: $(servicesResourceGroup)
-      - name: bootstrapinfra
+      - name: security
         dependsOnGroupedTemplates:
           - monitoring
         templates:
