@@ -4,8 +4,8 @@
   "parameters": {
     "appInsights": {
       "value": {
-        "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_appinsights }}#{{ nc_instance_regionid }}01",
-        "workspaceName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_loganalytics }}#{{ nc_instance_regionid }}01"
+        "name": "#{{ applicationInsightsName }}",
+        "workspaceName": "#{{ logAnalyticsWorkspace }}"
       }
     },
     "location": {

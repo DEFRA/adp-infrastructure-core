@@ -17,14 +17,11 @@ var customTags = {
   Location: location
   CreatedDate: createdDate
   Environment: environment
-}
-var tags = union(loadJsonContent('../default-tags.json'), customTags)
-
-var logAnalyticsWorkspaceTags = {
   Name: logAnalytics.name
   Purpose: 'Log Analytics Workspace'
   Tier: 'Shared'
 }
+var tags = union(loadJsonContent('../default-tags.json'), customTags)
 
 module logAnalyticsWorkspaceResource 'br/SharedDefraRegistry:operational-insights.workspaces:0.4.6' = {
   name: 'log-analytics-${deploymentDate}'
@@ -32,6 +29,6 @@ module logAnalyticsWorkspaceResource 'br/SharedDefraRegistry:operational-insight
     name: logAnalytics.name
     location: location
     skuName: logAnalytics.skuName
-    tags: union(tags, logAnalyticsWorkspaceTags)
+    tags: tags
   }
 }

@@ -17,14 +17,11 @@ var customTags = {
   Location: location
   CreatedDate: createdDate
   Environment: environment
-}
-var tags = union(loadJsonContent('../default-tags.json'), customTags)
-
-var appInsightsTags = {
   Name: appInsights.name
   Purpose: 'Application Insights'
   Tier: 'Shared'
 }
+var tags = union(loadJsonContent('../default-tags.json'), customTags)
 
 module appInsightsResource 'br/SharedDefraRegistry:insights.components:0.4.5' = {
   name: 'app-insights-${deploymentDate}'
@@ -33,6 +30,6 @@ module appInsightsResource 'br/SharedDefraRegistry:insights.components:0.4.5' = 
     workspaceResourceId: resourceId('Microsoft.OperationalInsights/workspaces', appInsights.workspaceName)
 
     location: location
-    tags: union(tags, appInsightsTags)
+    tags: tags
   }
 }
