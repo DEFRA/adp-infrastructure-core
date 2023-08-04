@@ -28,7 +28,7 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedTemplates:
-      - name: aks_cluster
+      - name: managed_cluster
         templates:
           - name: aks-cluster
             path: infra/managed-cluster

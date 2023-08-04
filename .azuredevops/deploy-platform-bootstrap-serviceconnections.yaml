@@ -44,8 +44,8 @@ extends:
     groupedTemplates:
       - name: SharedResources 
         templates:
-          - name: platform-keyvault
-            path: infra/keyvault
+          - name: platform-key-vault
+            path: infra/key-vault
             type: bicep
             scope: "Resource Group"
             acrServiceConnection: AZD-CDO-SSV3
@@ -53,10 +53,10 @@ extends:
             postDeployScriptsList:
               - displayName: Create Tier 2 App Registrations
                 filePathsForTransform:
-                  - 'infra/adAppRegistrations/tier2-app-registration.json'
+                  - 'infra/config/app-registrations/tier2-app-registration.json'
                 scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
                 ScriptArguments: >
-                  -AppRegJsonPath 'infra/adAppRegistrations/tier2-app-registration.json'
+                  -AppRegJsonPath 'infra/config/app-registrations/tier2-app-registration.json'
               - displayName: Setup RBAC on Subscriptions
                 Type: AzurePowerShell
                 scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'

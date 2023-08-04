@@ -30,8 +30,8 @@ extends:
     groupedTemplates:
       - name: bootstrapinfra
         templates:
-          - name: application-keyvault
-            path: infra/keyvault
+          - name: application-key-vault
+            path: infra/key-vault
             type: bicep
             scope: "Resource Group"
             acrServiceConnection: AZD-CDO-SSV3
