@@ -1,0 +1,25 @@
+{
+    "azureRMServiceConnections": [
+        {
+            "displayName": "test-from-ui-4",
+            "description": "GG desc 1617",
+            "tenantId": "6f504113-6b64-43f2-ade9-242e05780007",
+            "subscriptionId": "55f3b8c6-6800-41c7-a40d-2adb5e4e1bd1",
+            "subscriptionName": "AZD-CDO-SND1",
+            "keyVault": {
+                "name": "SSVCDOINFVT3401",
+                "secrets": [
+                    {
+                        "key": "ADO-DefraGovUK-CDO-SND1-Cont",
+                        "type": "ClientSecret"
+                    },
+                    {
+                        "key": "ADO-DefraGovUK-CDO-SND1-Cont-ClientId",
+                        "type": "ClientId"
+                    }
+                ]
+            },
+            "isShared": true
+        }
+    ]
+}

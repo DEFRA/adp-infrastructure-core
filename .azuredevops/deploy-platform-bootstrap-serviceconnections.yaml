@@ -12,7 +12,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main 
+      ref: gg/214939-sc-accesstoken #main 
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -68,7 +68,7 @@ extends:
                 Type: AzureCLI
                 filePathsForTransform:
                   - 'infra/config/service-connections/tier2-service-connection.json'
-                scriptPath: 'scripts/Initialize-ServiceEndpoint.ps1'
+                scriptPath: 'scripts/service-connection/Initialize-ServiceEndpoint.ps1'
                 ScriptArguments: >
                   -ServiceEndpointJsonPath 'infra/config/service-connections/tier2-service-connection.json'
                   -WorkingDirectory $(Pipeline.Workspace)\s\self           
