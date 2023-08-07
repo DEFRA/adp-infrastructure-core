@@ -46,11 +46,11 @@ Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 try {
     Write-Debug "${functionName}:Loading functions..."
     
-    . (Join-Path -Path $WorkingDirectory -ChildPath "scripts" "service-connection/utilities" "Initialize-RequestBody.ps1")
-    . (Join-Path -Path $WorkingDirectory -ChildPath "scripts" "service-connection/utilities" "Set-ServiceEndpoint.ps1")
-    . (Join-Path -Path $WorkingDirectory -ChildPath "scripts" "service-connection/utilities" "Get-DefaultHeadersWithAccessToken.ps1")
-    . (Join-Path -Path $WorkingDirectory -ChildPath "scripts" "service-connection/utilities" "Initialize-ProxyRequestBody.ps1")
-    . (Join-Path -Path $WorkingDirectory -ChildPath "scripts" "service-connection/utilities" "Test-ServiceEndpoint.ps1")
+    . (Join-Path -Path $WorkingDirectory -ChildPath "scripts/service-connection/utilities/Initialize-RequestBody.ps1")
+    . (Join-Path -Path $WorkingDirectory -ChildPath "scripts/service-connection/utilities/Set-ServiceEndpoint.ps1")
+    . (Join-Path -Path $WorkingDirectory -ChildPath "scripts/service-connection/utilities/Get-DefaultHeadersWithAccessToken.ps1")
+    . (Join-Path -Path $WorkingDirectory -ChildPath "scripts/service-connection/utilities/Initialize-ProxyRequestBody.ps1")
+    . (Join-Path -Path $WorkingDirectory -ChildPath "scripts/service-connection/utilities/Test-ServiceEndpoint.ps1")
 
     # Initialize az devops commands
     [string]$devopsOrgnizationUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
