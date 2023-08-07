@@ -29,12 +29,18 @@ var customTags = {
 
 var defaultTags = union(json(loadTextContent('../default-tags.json')), customTags)
 
-module registry 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
+var containerRegistryPrivateEndpointTags = {
+  Name: containerRegistry.privateEndpointName
+  Purpose: 'App Configuration private endpoint'
+  Tier: 'Shared'
+}
+
+module registry 'br/SharedDefraRegistry:container-registry.registries:0.5.6' = {
   name: 'app-containerregistry-${deploymentDate}'
   params: {
     name: containerRegistry.name
     tags: union(defaultTags, tags)
-    vaultSku: containerRegistry.skuName
+    registrySku: containerRegistry.skuName
     enableRbacAuthorization: true    
     enableSoftDelete: bool(containerRegistry.enableSoftDelete)
     enablePurgeProtection: bool(containerRegistry.enablePurgeProtection)
@@ -45,5 +51,13 @@ module registry 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
     }
     dataEndpointEnabled: dataEndpointEnabled
     publicNetworkAccess: 'Disabled'
+    privateEndpoints: [
+      {
+        name: containerRegistry.privateEndpointName
+        service: 'registry'
+        subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
+        tags: union(defaultTags, tags, containerRegistryPrivateEndpointTags)
+      }
+    ]
   }
 }
