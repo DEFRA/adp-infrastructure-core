@@ -1,0 +1,19 @@
+{
+  "dataSourceDetails": {
+    "dataSourceName": "TestConnection",
+    "dataSourceUrl": "",
+    "headers": null,
+    "resourceUrl": "",
+    "requestContent": null,
+    "requestVerb": null,
+    "parameters": null,
+    "resultSelector": "",
+    "initialContextTemplate": ""
+  },
+  "resultTransformationDetails": {
+    "callbackContextTemplate": "",
+    "callbackRequiredTemplate": "",
+    "resultTemplate": ""
+  },
+  "serviceEndpointDetails": {}
+}

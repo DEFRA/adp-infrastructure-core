@@ -1,20 +1,20 @@
 {
     "azureRMServiceConnections": [
         {
-            "displayName": "#{{ ?? }}",
-            "description": "#{{ ?? }}",
+            "displayName": "#{{ SubscriptionName }}",
+            "description": "ADO automatic Service Connection #{{ SubscriptionName }}",
             "tenantId":  "#{{ TenantId }}",
             "subscriptionId":  "#{{ SubscriptionId }}",
             "subscriptionName":  "#{{ SubscriptionName }}",
             "keyVault": {
-                "name": "#{{ ?? }}",
+                "name": "#{{ ssvPlatformKeyVaultName }}",
                 "secrets": [
                     {
-                        "key": "#{{ ?? }}",
+                        "key": "#{{ tier2ServiceConnectionAppRegName }}",
                         "type": "ClientSecret"
                     },
                     {
-                        "key": "#{{ ?? }}",
+                        "key": "#{{ tier2ApplicationClientIdSecretName }}",
                         "type": "ClientId"
                     }
                 ]

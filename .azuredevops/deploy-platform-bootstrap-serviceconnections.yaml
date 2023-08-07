@@ -51,17 +51,25 @@ extends:
             acrServiceConnection: AZD-CDO-SSV3
             resourceGroupName: $(ssvSharedResourceGroup)
             postDeployScriptsList:
-              - displayName: Create Tier 2 App Registrations
+              # - displayName: Create Tier 2 App Registrations
+              #   filePathsForTransform:
+              #     - 'infra/config/app-registrations/tier2-app-registration.json'
+              #   scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
+              #   ScriptArguments: >
+              #     -AppRegJsonPath 'infra/config/app-registrations/tier2-app-registration.json'
+              # - displayName: Setup RBAC on Subscriptions
+              #   Type: AzurePowerShell
+              #   scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
+              #   ScriptArguments: >
+              #     -SubscriptionName $(subscriptionName) 
+              #     -KeyVaultName $(ssvPlatformKeyVaultName)
+              #     -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)       
+              - displayName: Create or Update AzureRm Service Endpoint(Service Connection)
+                Type: AzureCLI
                 filePathsForTransform:
-                  - 'infra/config/app-registrations/tier2-app-registration.json'
-                scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
+                  - 'infra/config/service-connections/tier2-service-connection.json'
+                scriptPath: 'scripts/Initialize-ServiceEndpoint.ps1'
                 ScriptArguments: >
-                  -AppRegJsonPath 'infra/config/app-registrations/tier2-app-registration.json'
-              - displayName: Setup RBAC on Subscriptions
-                Type: AzurePowerShell
-                scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
-                ScriptArguments: >
-                  -SubscriptionName $(subscriptionName) 
-                  -KeyVaultName $(ssvPlatformKeyVaultName)
-                  -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)                   
+                  -ServiceEndpointJsonPath 'infra/config/service-connections/tier2-service-connection.json'
+                  -WorkingDirectory $(Pipeline.Workspace)\s\self           
                 
