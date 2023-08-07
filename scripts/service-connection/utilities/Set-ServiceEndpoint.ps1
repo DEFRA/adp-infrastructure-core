@@ -45,7 +45,8 @@ Function Set-ServiceEndpoint() {
     process {    
         Write-Debug "${functionName}:ArmServiceConnection=$($ArmServiceConnection | ConvertTo-Json -Depth 10)"
         
-        $headers = Get-DefaultHeadersWithAccessToken -PatToken $env:SYSTEM_ACCESSTOKEN
+        #$headers = Get-DefaultHeadersWithAccessToken -PatToken $env:SYSTEM_ACCESSTOKEN
+        $headers = Get-DefaultHeadersWithAccessToken
 
         $serviceEndpointRequestBody = Initialize-RequestBody -ArmServiceConnection $ArmServiceConnection -ProjectId $ProjectId -ProjectName $ProjectName
        

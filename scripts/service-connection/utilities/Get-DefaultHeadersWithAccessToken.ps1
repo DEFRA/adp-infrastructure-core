@@ -18,7 +18,6 @@ Function Get-DefaultHeadersWithAccessToken() {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory = $false)]
-        [ValidateNotNullOrEmpty()]
         [string]$PatToken
     )
 

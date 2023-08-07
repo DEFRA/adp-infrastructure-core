@@ -44,7 +44,8 @@ Function Test-ServiceEndpoint() {
     }
 
     process {            
-        $headers = Get-DefaultHeadersWithAccessToken -PatToken $env:SYSTEM_ACCESSTOKEN
+        #$headers = Get-DefaultHeadersWithAccessToken -PatToken $env:SYSTEM_ACCESSTOKEN
+        $headers = Get-DefaultHeadersWithAccessToken
 
         $serviceEndpointProxyRequestBody = Initialize-ProxyRequestBody -ServiceEndpointRequestBody $ServiceEndpointRequestBody
         
