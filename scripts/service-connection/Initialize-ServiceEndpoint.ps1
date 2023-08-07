@@ -66,7 +66,7 @@ try {
         throw "Error configuring default devops organization=$devopsOrgnizationUri project=$devopsProjectName with exit code $LASTEXITCODE"
     }
 
-    [hashtable]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json -AsHashtable
+    [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json
 
     $functionInput = @{
         ProjectId      = $devopsProjectId
