@@ -27,20 +27,20 @@ extends:
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
-      # - name: 'snd2'
-      #   outputTemplateChange: Skip
-      #   serviceConnection: AZD-CDO-SSV3    
-      #   deploymentBranches:
-      #     - 'refs/heads/main'
-      #   azureRegions:
-      #     primary: 'UKSouth'
-      # - name: 'snd3'
-      #   outputTemplateChange: Skip
-      #   serviceConnection: AZD-CDO-SSV3    
-      #   deploymentBranches:
-      #     - 'refs/heads/main'
-      #   azureRegions:
-      #     primary: 'UKSouth'  
+      - name: 'snd2'
+        outputTemplateChange: Skip
+        serviceConnection: AZD-CDO-SSV3    
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'snd3'
+        outputTemplateChange: Skip
+        serviceConnection: AZD-CDO-SSV3    
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'  
     groupedTemplates:
       - name: SharedResources 
         templates:
@@ -51,19 +51,19 @@ extends:
             acrServiceConnection: AZD-CDO-SSV3
             resourceGroupName: $(ssvSharedResourceGroup)
             postDeployScriptsList:
-              # - displayName: Create Tier 2 App Registrations
-              #   filePathsForTransform:
-              #     - 'infra/config/app-registrations/tier2-app-registration.json'
-              #   scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
-              #   ScriptArguments: >
-              #     -AppRegJsonPath 'infra/config/app-registrations/tier2-app-registration.json'
-              # - displayName: Setup RBAC on Subscriptions
-              #   Type: AzurePowerShell
-              #   scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
-              #   ScriptArguments: >
-              #     -SubscriptionName $(subscriptionName) 
-              #     -KeyVaultName $(ssvPlatformKeyVaultName)
-              #     -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)       
+              - displayName: Create Tier 2 App Registrations
+                filePathsForTransform:
+                  - 'infra/config/app-registrations/tier2-app-registration.json'
+                scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
+                ScriptArguments: >
+                  -AppRegJsonPath 'infra/config/app-registrations/tier2-app-registration.json'
+              - displayName: Setup RBAC on Subscriptions
+                Type: AzurePowerShell
+                scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
+                ScriptArguments: >
+                  -SubscriptionName $(subscriptionName) 
+                  -KeyVaultName $(ssvPlatformKeyVaultName)
+                  -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)       
               - displayName: Create or Update AzureRm Service Endpoint(Service Connection)
                 Type: AzureCLI
                 useSystemAccessToken: true
