@@ -21,6 +21,29 @@ param tags object = {
 @description('Required. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
+@description('Required. Date in the format yyyy-MM-dd.')
+param createdDate string = utcNow('yyyy-MM-dd')
+
+var customTags = {
+  Location: location
+  CreatedDate: createdDate
+  Environment: environment
+}
+
+var defaultTags = union(json(loadTextContent('../default-tags.json')), customTags)
+
+var containerRegistryTags = {
+  Name: containerRegistry.name
+  Purpose: 'Container Registry'
+  Tier: 'Shared'
+}
+
+var containerRegistryPrivateEndpointTags = {
+  Name: containerRegistry.privateEndpointName
+  Purpose: 'App Configuration private endpoint'
+  Tier: 'Shared'
+}
+
 module registry 'br/SharedDefraRegistry:container-registry.registries:0.5.6' = {
   name: 'app-containerregistry-${deploymentDate}'
   params: {
@@ -28,8 +51,16 @@ module registry 'br/SharedDefraRegistry:container-registry.registries:0.5.6' = {
     acrSku: containerRegistry.arcSku
     retentionPolicyDays: int(containerRegistry.retentionPolicDays)
     softDeletePolicyDays: int(containerRegistry.softDeletePolicyDays)
-    tags: tags
+    tags: union(defaultTags, tags, containerRegistryTags)
     dataEndpointEnabled: dataEndpointEnabled
     publicNetworkAccess: 'Disabled'
+    privateEndpoints: [
+      {
+        name: containerRegistry.privateEndpointName
+        service: 'registry'
+        subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
+        tags: union(defaultTags, tags, containerRegistryPrivateEndpointTags)
+      }
+    ]
   }
 }
