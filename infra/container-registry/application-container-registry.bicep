@@ -48,7 +48,7 @@ module registry 'br/SharedDefraRegistry:container-registry.registries:0.5.6' = {
   name: 'app-containerregistry-${deploymentDate}'
   params: {
     name: containerRegistry.name
-    acrSku: containerRegistry.arcSku
+    acrSku: containerRegistry.acrSku
     retentionPolicyDays: int(containerRegistry.retentionPolicDays)
     softDeletePolicyDays: int(containerRegistry.softDeletePolicyDays)
     tags: union(defaultTags, tags, containerRegistryTags)
