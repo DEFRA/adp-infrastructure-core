@@ -6,10 +6,9 @@
             "value": {
                 "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
                 "privateEndpointName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}03",
-                "skuName": "premium",
-                "enableSoftDelete": "#{{ containerRegistryEnableSoftDelete }}",
-                "enablePurgeProtection": "#{{ containerRegistryEnablePurgeProtection }}",
-                "softDeleteRetentionInDays": "#{{ containerRegistrySoftDeleteRetentionInDays }}"
+                "acrSku": "premium",
+                "softDeletePolicyDays": "#{{ containerRegistrySoftDeletePolicyDays }}",
+                "retentionPolicyDays": "#{{ containerRegistryRetentionPolicyDays }}"
             }    
         },
         "vnet": {

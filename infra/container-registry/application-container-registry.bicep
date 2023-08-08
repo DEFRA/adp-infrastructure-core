@@ -42,9 +42,9 @@ module registry 'br/SharedDefraRegistry:container-registry.registries:0.5.6' = {
   name: 'app-containerregistry-${deploymentDate}'
   params: {
     name: containerRegistry.name
-    acrSku: 'Premium'
+    acrSku: containerRegistry.arcSku
     retentionPolicyDays: int(containerRegistry.retentionPolicDays)
-    softDeletePolicyDays: int(containerRegistry.softDeleteInDays)
+    softDeletePolicyDays: int(containerRegistry.softDeletePolicyDays)
     tags: union(defaultTags, tags)
     dataEndpointEnabled: dataEndpointEnabled
     publicNetworkAccess: 'Disabled'
