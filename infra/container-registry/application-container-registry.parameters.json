@@ -7,9 +7,9 @@
                 "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
                 "privateEndpointName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}03",
                 "skuName": "premium",
-                "enableSoftDelete": "#{{ keyvaultEnableSoftDelete }}",
-                "enablePurgeProtection": "#{{ keyvaultEnablePurgeProtection }}",
-                "softDeleteRetentionInDays": "#{{ keyvaultSoftDeleteRetentionInDays }}"
+                "enableSoftDelete": "#{{ containerRegistryEnableSoftDelete }}",
+                "enablePurgeProtection": "#{{ containerRegistryEnablePurgeProtection }}",
+                "softDeleteRetentionInDays": "#{{ containerRegistrySoftDeleteRetentionInDays }}"
             }    
         },
         "vnet": {
