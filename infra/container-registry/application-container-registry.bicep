@@ -10,6 +10,9 @@ param location string = resourceGroup().location
 @description('Required. Environment name.')
 param environment string
 
+@description('Optional. Enable a single data endpoint per region for serving data. Not relevant in case of disabled public access. Note, requires the \'acrSku\' to be \'Premium\'.')
+param dataEndpointEnabled bool = false
+
 @description('Optional. Resource tags.')
 param tags object = {
   Description: 'CDO Container Registry'
@@ -35,20 +38,14 @@ var containerRegistryPrivateEndpointTags = {
   Tier: 'Shared'
 }
 
-module registries 'br/SharedDefraRegistry:container-registry.registries:0.5.6' = {
+module registry 'br/SharedDefraRegistry:container-registry.registries:0.5.6' = {
   name: 'app-containerregistry-${deploymentDate}'
   params: {
     name: containerRegistry.name
+    acrSku: 'Premium'
+    retentionPolicyDays: int(containerRegistry.retentionPolicDays)
+    softDeletePolicyDays: int(containerRegistry.softDeleteInDays)
     tags: union(defaultTags, tags)
-    registrySku: containerRegistry.skuName
-    enableRbacAuthorization: true    
-    enableSoftDelete: bool(containerRegistry.enableSoftDelete)
-    enablePurgeProtection: bool(containerRegistry.enablePurgeProtection)
-    softDeleteRetentionInDays: int(containerRegistry.softDeleteRetentionInDays)
-    networkAcls: {
-      bypass: 'AzureServices'
-      defaultAction: 'Deny'
-    }
     dataEndpointEnabled: dataEndpointEnabled
     publicNetworkAccess: 'Disabled'
     privateEndpoints: [
