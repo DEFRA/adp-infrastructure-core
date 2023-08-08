@@ -12,7 +12,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: gg/214939-sc-accesstoken #main 
+      ref: main 
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon

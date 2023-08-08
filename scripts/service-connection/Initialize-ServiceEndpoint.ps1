@@ -44,13 +44,11 @@ Write-Debug "${functionName}:ServiceEndpointJsonPath=$ServiceEndpointJsonPath"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
-    Write-Debug "${functionName}:Loading functions..."
-    
-    . (Join-Path -Path $WorkingDirectory -ChildPath "scripts/service-connection/utilities/Initialize-RequestBody.ps1")
-    . (Join-Path -Path $WorkingDirectory -ChildPath "scripts/service-connection/utilities/Set-ServiceEndpoint.ps1")
-    . (Join-Path -Path $WorkingDirectory -ChildPath "scripts/service-connection/utilities/Get-DefaultHeadersWithAccessToken.ps1")
-    . (Join-Path -Path $WorkingDirectory -ChildPath "scripts/service-connection/utilities/Initialize-ProxyRequestBody.ps1")
-    . (Join-Path -Path $WorkingDirectory -ChildPath "scripts/service-connection/utilities/Test-ServiceEndpoint.ps1")
+    #Import modules
+    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/service-connection"
+    Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
+
+    Import-Module $moduleDir.FullName -Force
 
     # Initialize az devops commands
     [string]$devopsOrgnizationUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
