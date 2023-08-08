@@ -61,4 +61,9 @@ extends:
               - displayName: Set DNS record for $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
                 scriptPath: 'Set-PrivateDnsRecordSet.ps1@PipelineCommon'
                 serviceConnectionVariableName: mstAzureResourceManagerConnection
-          
+          - name: application-container-registry
+            path: infra/container-registry
+            type: bicep
+            scope: "Resource Group"
+            acrServiceConnection: AZD-CDO-SSV3
+            resourceGroupName: $(servicesResourceGroup)
