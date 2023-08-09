@@ -63,5 +63,14 @@ extends:
                 ScriptArguments: >
                   -SubscriptionName $(subscriptionName) 
                   -KeyVaultName $(ssvPlatformKeyVaultName)
-                  -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)                   
+                  -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)       
+              - displayName: Create or Update AzureRm Service Endpoint(Service Connection)
+                Type: AzureCLI
+                useSystemAccessToken: true
+                filePathsForTransform:
+                  - 'infra/config/service-connections/tier2-service-connection.json'
+                scriptPath: 'scripts/service-connection/Initialize-ServiceEndpoint.ps1'
+                ScriptArguments: >
+                  -ServiceEndpointJsonPath 'infra/config/service-connections/tier2-service-connection.json'
+                  -WorkingDirectory $(Pipeline.Workspace)\s\self           
                 

@@ -1,0 +1,34 @@
+{
+    "data": {
+      "environment": "AzureCloud",
+      "scopeLevel": "Subscription",
+      "creationMode": "Manual",
+      "subscriptionId": "",
+      "subscriptionName": ""
+    },
+    "authorization": {
+      "parameters": {
+        "tenantid": "",
+        "serviceprincipalid": "",
+        "authenticationType": "spnKey",
+        "serviceprincipalkey": ""
+      },
+      "scheme": "ServicePrincipal"
+    },
+    "name": "",
+    "type": "AzureRM",
+    "url": "https://management.azure.com/",
+    "isShared": false,
+    "isReady": true,
+    "description": "Service connection description",
+    "serviceEndpointProjectReferences": [
+      {
+        "projectReference": {
+          "id": "selfprojectid",
+          "name": "selfprojectname"
+        },
+        "name": "",
+        "description": ""
+      }
+    ]
+  }
