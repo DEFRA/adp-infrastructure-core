@@ -6,7 +6,7 @@
             "value": {
                 "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
                 "privateEndpointName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}03",
-                "acrSku": "premium",
+                "acrSku": "Premium",
                 "softDeletePolicyDays": "#{{ acrSoftDeletePolicyDays }}",
                 "retentionPolicyDays": "#{{ acrRetentionPolicyDays }}"
             }    
