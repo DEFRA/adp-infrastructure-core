@@ -7,8 +7,8 @@
                 "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
                 "privateEndpointName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}03",
                 "acrSku": "premium",
-                "softDeletePolicyDays": "#{{ containerRegistrySoftDeletePolicyDays }}",
-                "retentionPolicyDays": "#{{ containerRegistryRetentionPolicyDays }}"
+                "softDeletePolicyDays": "#{{ acrSoftDeletePolicyDays }}",
+                "retentionPolicyDays": "#{{ acrRetentionPolicyDays }}"
             }    
         },
         "vnet": {
