@@ -4,7 +4,28 @@ parameters:
     type: boolean
     default: false
 
-trigger: none
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - infra/config/app-registrations/*
+    - infra/config/service-connections/*
+    - scripts/service-connection/*
+    - scripts/Assign-RBAC-Subscription.ps1
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+    - infra/config/app-registrations/*
+    - infra/config/service-connections/*
+    - scripts/service-connection/*
+    - scripts/Assign-RBAC-Subscription.ps1
 
 resources:
   repositories:
@@ -23,7 +44,7 @@ extends:
       - name: 'snd1'
         serviceConnection: AZD-CDO-SSV3
         deploymentBranches:
-          - '*'
+          - 'refs/heads/main'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
