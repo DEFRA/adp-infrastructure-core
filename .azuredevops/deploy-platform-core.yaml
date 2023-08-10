@@ -12,7 +12,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: pp/refactor
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -28,13 +28,40 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedTemplates:
+      - name: monitoring
+        templates:
+          - name: workspace
+            path: infra/operational-insights
+            type: bicep
+            scope: "Resource Group"
+            acrServiceConnection: $(acrServiceConnection)
+            resourceGroupName: $(servicesResourceGroup)
+          - name: component
+            path: infra/insights
+            type: bicep
+            scope: "Resource Group"
+            acrServiceConnection: $(acrServiceConnection)
+            resourceGroupName: $(servicesResourceGroup)
+      - name: security
+        dependsOnGroupedTemplates:
+          - monitoring
+        templates:
+          - name: application-key-vault
+            path: infra/key-vault
+            type: bicep
+            scope: "Resource Group"
+            acrServiceConnection: $(acrServiceConnection)
+            resourceGroupName: $(servicesResourceGroup)
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01 
+                resourceGroupName: $(servicesResourceGroup)
       - name: managed_cluster
         templates:
           - name: aks-cluster
             path: infra/managed-cluster
             type: bicep
             scope: "Resource Group"
-            acrServiceConnection: AZD-CDO-SSV3
+            acrServiceConnection: $(acrServiceConnection)
             resourceGroupName: $(servicesResourceGroup)
       - name: service_bus
         templates:
@@ -42,7 +69,7 @@ extends:
             path: infra/service-bus
             type: bicep
             scope: "Resource Group"
-            acrServiceConnection: AZD-CDO-SSV3
+            acrServiceConnection: $(acrServiceConnection)
             resourceGroupName: $(servicesResourceGroup)
             postDeployScriptsList:
               - displayName: Resolve Private Endpoint IP for $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
@@ -59,7 +86,7 @@ extends:
             path: infra/app-configuration
             type: bicep
             scope: "Resource Group"
-            acrServiceConnection: AZD-CDO-SSV3
+            acrServiceConnection: $(acrServiceConnection)
             resourceGroupName: $(servicesResourceGroup)
             postDeployScriptsList:
               - displayName: Resolve Private Endpoint IP for $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
