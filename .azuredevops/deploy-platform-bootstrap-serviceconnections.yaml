@@ -44,7 +44,7 @@ extends:
       - name: 'snd1'
         serviceConnection: AZD-CDO-SSV3
         deploymentBranches:
-          - 'refs/heads/main'
+          - '*'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
@@ -67,9 +67,6 @@ extends:
         templates:
           - name: platform-key-vault
             path: infra/key-vault
-            type: bicep
-            scope: "Resource Group"
-            acrServiceConnection: AZD-CDO-SSV3
             resourceGroupName: $(ssvSharedResourceGroup)
             postDeployScriptsList:
               - displayName: Create Tier 2 App Registrations
