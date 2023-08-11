@@ -9,6 +9,9 @@ pr:
     include:
     - main
   paths:
+    include:
+    - infra/*
+    - scripts/*
     exclude:
     - infra/config/app-registrations/*
     - infra/config/service-connections/*
@@ -21,6 +24,9 @@ trigger:
     include:
       - '*'
   paths:
+    include:
+    - infra/*
+    - scripts/*
     exclude:
     - infra/config/app-registrations/*
     - infra/config/service-connections/*
