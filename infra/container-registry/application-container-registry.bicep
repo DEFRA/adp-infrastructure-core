@@ -18,10 +18,10 @@ param tags object = {
   Description: 'CDO Container Registry'
 }
 
-@description('Required. Date in the format yyyyMMdd-HHmmss.')
+@description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-@description('Required. Date in the format yyyy-MM-dd.')
+@description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
 var customTags = {
