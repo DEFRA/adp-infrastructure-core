@@ -17,10 +17,10 @@ param location string = resourceGroup().location
 @description('Required. Environment name.')
 param environment string
 
-@description('Required. Date in the format yyyyMMdd-HHmmss.')
+@description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-@description('Required. Date in the format yyyy-MM-dd.')
+@description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
 var customTags = {
