@@ -86,12 +86,17 @@ extends:
             privateEndpointDnsRecordsForResources:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
                 resourceGroupName: $(servicesResourceGroup)
-      - name: app_configuration
+      - name: application_infra
         templates:
           - name: configuration-store
             path: infra/app-configuration
-            acrServiceConnection: $(acrServiceConnection)
             resourceGroupName: $(servicesResourceGroup)
             privateEndpointDnsRecordsForResources:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                resourceGroupName: $(servicesResourceGroup)
+          - name: application-container-registry
+            path: infra/container-registry
+            resourceGroupName: $(servicesResourceGroup)
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
                 resourceGroupName: $(servicesResourceGroup)
