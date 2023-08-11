@@ -4,7 +4,28 @@ parameters:
     type: boolean
     default: false
 
-trigger: none
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - infra/config/app-registrations/*
+    - infra/config/service-connections/*
+    - scripts/service-connection/*
+    - scripts/Assign-RBAC-Subscription.ps1
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+    - infra/config/app-registrations/*
+    - infra/config/service-connections/*
+    - scripts/service-connection/*
+    - scripts/Assign-RBAC-Subscription.ps1
 
 resources:
   repositories:
@@ -46,9 +67,6 @@ extends:
         templates:
           - name: platform-key-vault
             path: infra/key-vault
-            type: bicep
-            scope: "Resource Group"
-            acrServiceConnection: AZD-CDO-SSV3
             resourceGroupName: $(ssvSharedResourceGroup)
             postDeployScriptsList:
               - displayName: Create Tier 2 App Registrations

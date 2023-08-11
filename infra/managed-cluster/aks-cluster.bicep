@@ -11,9 +11,9 @@ param cluster object
 param location string
 @description('Required. Environment name.')
 param environment string
-@description('Required. Date in the format yyyy-MM-dd.')
+@description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
-@description('Required. Date in the format yyyyMMdd-HHmmss.')
+@description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 var kubernetesVersion = '1.26.6'

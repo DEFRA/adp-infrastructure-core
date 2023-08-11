@@ -4,7 +4,34 @@ parameters:
     type: boolean
     default: false
 
-trigger: none
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - infra/*
+    - scripts/*
+    exclude:
+    - infra/config/app-registrations/*
+    - infra/config/service-connections/*
+    - scripts/service-connection/*
+    - scripts/Assign-RBAC-Subscription.ps1
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+    - infra/*
+    - scripts/*
+    exclude:
+    - infra/config/app-registrations/*
+    - infra/config/service-connections/*
+    - scripts/service-connection/*
+    - scripts/Assign-RBAC-Subscription.ps1
 
 resources:
   repositories:
@@ -28,45 +55,43 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedTemplates:
+      - name: monitoring
+        templates:
+          - name: workspace
+            path: infra/operational-insights
+            resourceGroupName: $(servicesResourceGroup)
+          - name: component
+            path: infra/insights
+            resourceGroupName: $(servicesResourceGroup)
+      - name: security
+        dependsOnGroupedTemplates:
+          - monitoring
+        templates:
+          - name: application-key-vault
+            path: infra/key-vault
+            resourceGroupName: $(servicesResourceGroup)
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01 
+                resourceGroupName: $(servicesResourceGroup)
       - name: managed_cluster
         templates:
           - name: aks-cluster
             path: infra/managed-cluster
-            type: bicep
-            scope: "Resource Group"
-            acrServiceConnection: AZD-CDO-SSV3
             resourceGroupName: $(servicesResourceGroup)
       - name: service_bus
         templates:
           - name: namespace
             path: infra/service-bus
-            type: bicep
-            scope: "Resource Group"
-            acrServiceConnection: AZD-CDO-SSV3
             resourceGroupName: $(servicesResourceGroup)
-            postDeployScriptsList:
-              - displayName: Resolve Private Endpoint IP for $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
-                scriptPath: 'Get-ResourcePrivateEndPointsDnsRecordsAsJson.ps1@PipelineCommon'
-                ScriptArguments: >
-                  -ResourceGroupName $(servicesResourceGroup)
-                  -ResourceName $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01                 
-              - displayName: Set DNS record for $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
-                scriptPath: 'Set-PrivateDnsRecordSet.ps1@PipelineCommon'
-                serviceConnectionVariableName: mstAzureResourceManagerConnection
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
+                resourceGroupName: $(servicesResourceGroup)
       - name: app_configuration
         templates:
           - name: configuration-store
             path: infra/app-configuration
-            type: bicep
-            scope: "Resource Group"
-            acrServiceConnection: AZD-CDO-SSV3
+            acrServiceConnection: $(acrServiceConnection)
             resourceGroupName: $(servicesResourceGroup)
-            postDeployScriptsList:
-              - displayName: Resolve Private Endpoint IP for $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                scriptPath: 'Get-ResourcePrivateEndPointsDnsRecordsAsJson.ps1@PipelineCommon'
-                ScriptArguments: >
-                  -ResourceGroupName $(servicesResourceGroup)
-                  -ResourceName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01                 
-              - displayName: Set DNS record for $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                scriptPath: 'Set-PrivateDnsRecordSet.ps1@PipelineCommon'
-                serviceConnectionVariableName: mstAzureResourceManagerConnection
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                resourceGroupName: $(servicesResourceGroup)

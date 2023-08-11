@@ -10,15 +10,10 @@ param location string = resourceGroup().location
 @description('Required. Environment name.')
 param environment string
 
-@description('Optional. Resource tags.')
-param tags object = {
-  Description: 'CDO Platform KeyVault Store'
-}
-
-@description('Required. Date in the format yyyyMMdd-HHmmss.')
+@description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-@description('Required. Date in the format yyyy-MM-dd.')
+@description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
 var customTags = {
@@ -45,7 +40,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
   name: 'app-keyvault-${deploymentDate}'
   params: {
     name: keyVault.name
-    tags: union(defaultTags, tags, keyVaultTags)
+    tags: union(defaultTags, keyVaultTags)
     vaultSku: keyVault.skuName
     enableRbacAuthorization: true    
     enableSoftDelete: bool(keyVault.enableSoftDelete)
@@ -61,7 +56,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
         name: keyVault.privateEndpointName
         service: 'vault'
         subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
-        tags: union(defaultTags, tags, keyVaultPrivateEndpointTags)
+        tags: union(defaultTags, keyVaultPrivateEndpointTags)
       }
     ]
   }
