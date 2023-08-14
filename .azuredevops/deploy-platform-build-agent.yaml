@@ -3,6 +3,15 @@ parameters:
     displayName: "Deploy from Feature Branch"
     type: boolean
     default: false
+  - name: imageType
+    displayName: 'Select Image Type for the agent'
+    type: string
+    default: ubuntu2204
+    values:
+      - ubuntu2004
+      - ubuntu2204
+      - windows2019
+      - windows2022
 
 pr:
   branches:
@@ -28,6 +37,9 @@ resources:
       endpoint: DEFRA
       type: github
       ref: main
+
+variables:
+  imageType: ${{ parameters.imageType }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
