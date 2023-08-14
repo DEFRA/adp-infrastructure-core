@@ -1,0 +1,29 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "server": {
+            "value": {
+                "name" : "#{{ serverName }}",
+                "storageSizeGB": "#{{ postgreSqlStorageSizeGB }}",
+                "highAvailability": "#{{ postgreSqlHighAvailability }}",
+                "availabilityZone": "#{{ postgreSqlAvailabilityZone }}"
+            }
+        },
+        "administrators":{
+            "value": "#{{ postgreSqlAdministrators }}"
+        },
+        "diagnostics": {
+            "value": {
+                "diagnosticLogCategoriesToEnable": ["allLogs"],
+                "diagnosticMetricsToEnable": ["allMetrics"]
+            }
+        },
+        "location": {
+            "value": "#{{ location }}"
+        },
+        "environment": {
+            "value": "#{{ environment }}"
+        }
+    }
+}
