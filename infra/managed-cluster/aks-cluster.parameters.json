@@ -19,8 +19,8 @@
                 "npSystem": {
                     "count": 2,
                     "osDiskSizeGB": 80,
-                    "minCount": 3,
                     "maxCount": 4,
+                    "minCount": 1,
                     "maxPods": 30,
                     "availabilityZones": [
                         "1",
