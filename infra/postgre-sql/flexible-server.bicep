@@ -30,7 +30,7 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
     name: toLower(server.name)
-    storageSizeGB: server.storageSizeGB
+    storageSizeGB: int(server.storageSizeGB)
     highAvailability: server.highAvailability
     availabilityZone: server.availabilityZone
     version:'15'
