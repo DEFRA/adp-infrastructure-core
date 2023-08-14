@@ -16,7 +16,7 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-var kubernetesVersion = '1.27.3'
+var kubernetesVersion = '1.26.6'
 
 var customTags = {
   Location: location
@@ -112,6 +112,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         type: 'VirtualMachineScaleSets'
         scaleSetPriority: 'Regular'
         scaleSetEvictionPolicy: 'Delete'
+        orchestratorVersion: kubernetesVersion
         enableNodePublicIP: false
         maxPods: cluster.npSystem.maxPods
         availabilityZones: cluster.npSystem.availabilityZones
@@ -143,6 +144,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         type: 'VirtualMachineScaleSets'
         scaleSetPriority: 'Regular'
         scaleSetEvictionPolicy: 'Delete'
+        orchestratorVersion: kubernetesVersion
         enableNodePublicIP: false
         maxPods: cluster.npUser.maxPods
         availabilityZones: cluster.npUser.availabilityZones
