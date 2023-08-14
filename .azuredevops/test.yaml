@@ -1,0 +1,9 @@
+variables:
+  myVariable: |
+    [
+      { "principalName": "AG-Azure-CDO-ADP-PlatformEngineers", "principalType": "Group", "objectId": "cdf149cd-7dd6-48b0-9d1f-6be074b424cc" ,"tenantId": $(tenantId) }
+    ]
+
+steps:
+  - script: echo $(myVariable)
+    displayName: 'Run a one-line script'
