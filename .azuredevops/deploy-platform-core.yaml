@@ -39,7 +39,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: pp/postgresql-vars
+      ref: pp/postgre-sql-vars
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon

@@ -4,9 +4,6 @@ param server object
 @description('Required. The diagnostic object. The object must contain diagnosticLogCategoriesToEnable and diagnosticMetricsToEnable properties.')
 param diagnostics object
 
-@description('Required. The array of administrators. The array must contain objectId,principalName,principalType, and tenantId properties.')
-param administratorsJson string
-
 @allowed([
   'UKSouth'
 ])
@@ -26,8 +23,6 @@ var customTags = {
   Purpose: 'ADP POSTGRESQL FLEXIBLE SERVER'
 }
 
-var administrators = json(administratorsJson)
-
 var defaultTags = union(json(loadTextContent('../default-tags.json')), customTags)
 
 module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-servers:0.4.2-prerelease' = {
@@ -40,8 +35,8 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     version:'14'
     location: location
     tags: union(defaultTags, customTags)
-    tier: 'GeneralPurpose'
-    skuName: 'Standard_D4s_v5'
+    tier: server.tier
+    skuName: server.skuName
     activeDirectoryAuth:'Enabled'
     passwordAuth: 'Disabled'
     enableDefaultTelemetry:false
@@ -52,11 +47,10 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     diagnosticMetricsToEnable: diagnostics.diagnosticMetricsToEnable
     diagnosticSettingsName:''
     diagnosticLogsRetentionInDays: 90
-    administrators: administrators
-    // Don't remove the following commented out lines. They are used for future reference.
-    //configurations:[]
-    //delegatedSubnetResourceId : delegatedSubnetResourceId
-    //privateDnsZoneArmResourceId: privateDnsZoneArmResourceId
-    //diagnosticWorkspaceId: diagnosticWorkspaceId
+    administrators: []
+    configurations:[]
+    delegatedSubnetResourceId : ''
+    privateDnsZoneArmResourceId: ''
+    diagnosticWorkspaceId: ''
   }
 }

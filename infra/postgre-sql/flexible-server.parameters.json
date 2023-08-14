@@ -6,6 +6,8 @@
             "value": {
                 "name": "#{{ serverName }}",
                 "storageSizeGB": "#{{ postgreSqlStorageSizeGB }}",
+                "tier": "#{{ postgreSqlTier }}",
+                "skuName": "#{{ postgreSqlSkuName }}",
                 "highAvailability": "#{{ postgreSqlHighAvailability }}",
                 "availabilityZone": "#{{ postgreSqlAvailabilityZone }}"
             }
