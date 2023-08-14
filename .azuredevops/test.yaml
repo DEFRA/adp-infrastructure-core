@@ -1,9 +1,15 @@
 variables:
-  myVariable: |
-    [
-      { "principalName": "AG-Azure-CDO-ADP-PlatformEngineers", "principalType": "Group", "objectId": "cdf149cd-7dd6-48b0-9d1f-6be074b424cc" ,"tenantId": $(tenantId) }
-    ]
+  myJsonVariable: |
+    {
+      "key1": "value1",
+      "key2": "value2",
+      "key3": "value3"
+    }
 
-steps:
-  - script: echo $(myVariable)
-    displayName: 'Run a one-line script'
+jobs:
+- job: MyJob
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+  - script: echo $(myJsonVariable)
+    displayName: Print JSON Variable
