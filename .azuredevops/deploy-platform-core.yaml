@@ -59,10 +59,10 @@ extends:
         templates:
           - name: route-table
             path: infra/network
-            resourceGroupName: $(servicesResourceGroup)
+            resourceGroupName: $(virtualNetworkResourceGroup)
           - name: virtual-network
             path: infra/network
-            resourceGroupName: $(servicesResourceGroup)
+            resourceGroupName: $(virtualNetworkResourceGroup)
       #- name: monitoring
       #  templates:
       #    - name: workspace
