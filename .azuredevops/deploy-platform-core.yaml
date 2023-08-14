@@ -100,3 +100,6 @@ extends:
             privateEndpointDnsRecordsForResources:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
                 resourceGroupName: $(servicesResourceGroup)
+          - name: flexible-server
+            path: infra/postgre-sql
+            resourceGroupName: $(servicesResourceGroup)
