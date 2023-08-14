@@ -20,20 +20,6 @@ param environment string
 @description('Optional. Type of Storage Account to create.')
 param kind string = 'StorageV2'
 
-
-@allowed([
-  'Standard_LRS'
-  'Standard_GRS'
-  'Standard_RAGRS'
-  'Standard_ZRS'
-  'Premium_LRS'
-  'Premium_ZRS'
-  'Standard_GZRS'
-  'Standard_RAGZRS'
-])
-@description('Optional. Storage Account Sku Name.')
-param skuName string = 'Standard_ZRS'
-
 @allowed([
   'Premium'
   'Hot'
