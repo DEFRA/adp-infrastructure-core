@@ -22,9 +22,6 @@
                 ]
             }
         },
-        "administratorsJson": {
-            "value": "#{{ postgreSqlAdministrators }}"
-        },
         "location": {
             "value": "#{{ location }}"
         },
