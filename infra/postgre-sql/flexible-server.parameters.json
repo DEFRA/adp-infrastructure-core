@@ -4,7 +4,7 @@
     "parameters": {
         "server": {
             "value": {
-                "name": "#{{ serverName }}",
+                "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}01",
                 "storageSizeGB": "#{{ postgreSqlStorageSizeGB }}",
                 "tier": "#{{ postgreSqlTier }}",
                 "skuName": "#{{ postgreSqlSkuName }}",

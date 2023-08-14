@@ -17,6 +17,7 @@ param createdDate string = utcNow('yyyy-MM-dd')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 var customTags = {
+  Name: server.name
   Location: location
   CreatedDate: createdDate
   Environment: environment
@@ -28,7 +29,7 @@ var defaultTags = union(json(loadTextContent('../default-tags.json')), customTag
 module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-servers:0.4.2-prerelease' = {
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
-    name: server.name
+    name: toLower(server.name)
     storageSizeGB: server.storageSizeGB
     highAvailability: server.highAvailability
     availabilityZone: server.availabilityZone
