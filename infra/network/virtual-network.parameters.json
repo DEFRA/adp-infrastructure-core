@@ -1,0 +1,31 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vnet": {
+      "value": {
+        "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01",
+        "addressPrefixes": "#{{ vnet1AddressPrefixes }}"
+      }
+    },
+    
+    "subnets": {
+      "value": [
+        {
+          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01",
+          "addressPrefix": "#{{ subnet1AddressPrefix }}",
+          "serviceEndpoints": [],
+          "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ networkResourceNamePrefix }}#{{ nc_resource_resourcegroup }}#{{ nc_instance_regionid }}01/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01",
+          "privateEndpointNetworkPolicies": "Enabled",
+          "privateLinkServiceNetworkPolicies": "Enabled"
+        }
+      ]
+    },
+    "location": {
+      "value": "#{{ location }}"
+    },
+    "environment": {
+      "value": "#{{ environment }}"
+    }
+  }
+}
