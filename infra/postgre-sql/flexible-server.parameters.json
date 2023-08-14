@@ -10,7 +10,7 @@
                 "availabilityZone": "#{{ postgreSqlAvailabilityZone }}"
             }
         },
-        "administrators":{
+        "administratorsJson":{
             "value": "#{{ postgreSqlAdministrators }}"
         },
         "diagnostics": {

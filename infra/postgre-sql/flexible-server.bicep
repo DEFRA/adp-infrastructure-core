@@ -5,7 +5,7 @@ param server object
 param diagnostics object
 
 @description('Required. The array of administrators. The array must contain objectId,principalName,principalType, and tenantId properties.')
-param administrators array
+param administratorsJson string
 
 @allowed([
   'UKSouth'
@@ -25,6 +25,9 @@ var customTags = {
   Environment: environment
   Purpose: 'ADP POSTGRESQL FLEXIBLE SERVER'
 }
+
+var administrators = json(administratorsJson)
+
 var defaultTags = union(json(loadTextContent('../default-tags.json')), customTags)
 
 module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-servers:0.4.2-prerelease' = {
