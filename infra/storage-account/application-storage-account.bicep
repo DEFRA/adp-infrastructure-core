@@ -75,6 +75,10 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-accounts:0.5.8' =
     tags: union(defaultTags, storageAccountTags)
     skuName: storageAccount.skuName
     accessTier: accessTier
+    kind: kind
+    dnsEndpointType: dnsEndpointType
+    customDomainName: customDomainName
+    customDomainUseSubDomainName: customDomainUseSubDomainName
     networkAcls: {
       bypass: 'AzureServices'
       defaultAction: 'Deny'
