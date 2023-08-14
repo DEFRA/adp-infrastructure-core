@@ -53,6 +53,7 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     diagnosticSettingsName:''
     diagnosticLogsRetentionInDays: 90
     administrators: administrators
+    // Don't remove the following commented out lines. They are used for future reference.
     //configurations:[]
     //delegatedSubnetResourceId : delegatedSubnetResourceId
     //privateDnsZoneArmResourceId: privateDnsZoneArmResourceId
