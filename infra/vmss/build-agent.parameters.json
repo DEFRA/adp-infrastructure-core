@@ -1,0 +1,31 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "buildAgent": {
+      "value": {
+        "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_virtualmachine_scalesets }}#{{ nc_instance_regionid }}01",
+        "userName": "azureuser",
+        "sku": "Standard_D4s_v4",
+        "imageId": "/subscriptions/#{{ imageGallerySubscription }}/resourceGroups/#{{ imageGalleryResourceGroup }}/providers/Microsoft.Compute/galleries/#{{ imageGalleryName }}/images/ubuntu2204",
+        "osDisk": {
+          "createOption": "FromImage",
+          "caching": "ReadWrite",
+          "managedDisk": {
+            "storageAccountType": "Premium_LRS"
+          },
+          "diskSizeGB": 128
+        },
+        "osType": "Linux"
+      }
+    },
+    "adminPassword": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ servicesResourceGroup }}/providers/Microsoft.KeyVault/vaults/#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}01"
+        },
+        "secretName": "ado-build-agent-password"
+      }
+    }
+  }
+}
