@@ -26,14 +26,14 @@ var customTags = {
 
 var defaultTags = union(json(loadTextContent('../default-tags.json')), customTags)
 
-module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-servers:0.4.2-prerelease' = {
+module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-servers:0.4.3-prerelease' = {
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
     name: toLower(server.name)
     storageSizeGB: server.storageSizeGB
     highAvailability: server.highAvailability
     availabilityZone: server.availabilityZone
-    version:'14'
+    version:'15'
     location: location
     tags: union(defaultTags, customTags)
     tier: server.tier
