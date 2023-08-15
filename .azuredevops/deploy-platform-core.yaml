@@ -63,50 +63,50 @@ extends:
           - name: virtual-network
             path: infra/network
             resourceGroupName: $(virtualNetworkResourceGroup)
-      #- name: monitoring
-      #  templates:
-      #    - name: workspace
-      #      path: infra/operational-insights
-      #      resourceGroupName: $(servicesResourceGroup)
-      #    - name: component
-      #      path: infra/insights
-      #      resourceGroupName: $(servicesResourceGroup)
-      #- name: security
-      #  dependsOnGroupedTemplates:
-      #    - monitoring
-      #  templates:
-      #    - name: application-key-vault
-      #      path: infra/key-vault
-      #      resourceGroupName: $(servicesResourceGroup)
-      #      privateEndpointDnsRecordsForResources:
-      #        - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01 
-      #          resourceGroupName: $(servicesResourceGroup)
-      #- name: managed_cluster
-      #  dependsOnGroupedTemplates:
-      #    - network
-      #  templates:
-      #    - name: aks-cluster
-      #      path: infra/managed-cluster
-      #      resourceGroupName: $(servicesResourceGroup)
-      #- name: service_bus
-      #  templates:
-      #    - name: namespace
-      #      path: infra/service-bus
-      #      resourceGroupName: $(servicesResourceGroup)
-      #      privateEndpointDnsRecordsForResources:
-      #        - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
-      #          resourceGroupName: $(servicesResourceGroup)
-      #- name: application_infra
-      #  templates:
-      #    - name: configuration-store
-      #      path: infra/app-configuration
-      #      resourceGroupName: $(servicesResourceGroup)
-      #      privateEndpointDnsRecordsForResources:
-      #        - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-      #          resourceGroupName: $(servicesResourceGroup)
-      #    - name: application-container-registry
-      #      path: infra/container-registry
-      #      resourceGroupName: $(servicesResourceGroup)
-      #      privateEndpointDnsRecordsForResources:
-      #        - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
-      #          resourceGroupName: $(servicesResourceGroup)
+      - name: monitoring
+        templates:
+          - name: workspace
+            path: infra/operational-insights
+            resourceGroupName: $(servicesResourceGroup)
+          - name: component
+            path: infra/insights
+            resourceGroupName: $(servicesResourceGroup)
+      - name: security
+        dependsOnGroupedTemplates:
+          - monitoring
+        templates:
+          - name: application-key-vault
+            path: infra/key-vault
+            resourceGroupName: $(servicesResourceGroup)
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01 
+                resourceGroupName: $(servicesResourceGroup)
+      - name: managed_cluster
+        dependsOnGroupedTemplates:
+          - network
+        templates:
+          - name: aks-cluster
+            path: infra/managed-cluster
+            resourceGroupName: $(servicesResourceGroup)
+      - name: service_bus
+        templates:
+          - name: namespace
+            path: infra/service-bus
+            resourceGroupName: $(servicesResourceGroup)
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
+                resourceGroupName: $(servicesResourceGroup)
+      - name: application_infra
+        templates:
+          - name: configuration-store
+            path: infra/app-configuration
+            resourceGroupName: $(servicesResourceGroup)
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                resourceGroupName: $(servicesResourceGroup)
+          - name: application-container-registry
+            path: infra/container-registry
+            resourceGroupName: $(servicesResourceGroup)
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
+                resourceGroupName: $(servicesResourceGroup)
