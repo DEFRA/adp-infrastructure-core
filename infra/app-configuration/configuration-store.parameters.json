@@ -5,7 +5,7 @@
     "appConfig": {
       "value": {
         "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_appconfiguration }}#{{ nc_instance_regionid }}01",
-        "privateEndpointName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}01",
+        "privateEndpointName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}02",
         "softDeleteRetentionInDays": "#{{ appConfigurationSoftDeleteRetentionInDays }}",
         "enablePurgeProtection": "#{{ appConfigurationEnablePurgeProtection }}"
       }
