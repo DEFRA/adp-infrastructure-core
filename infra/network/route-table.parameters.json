@@ -5,7 +5,7 @@
     "routeTable": {
       "value": {
         "name": "UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01",
-        "virtualApplicanceIp": "#{{ virtualApplianceIpUks }}"
+        "virtualApplicanceIp": "#{{ virtualApplianceIp }}"
       }
     },
     "location": {
