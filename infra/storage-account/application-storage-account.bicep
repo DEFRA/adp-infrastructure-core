@@ -66,6 +66,7 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-accounts:0.5.8' =
     name: toLower(storageAccount.name)
     tags: union(defaultTags, storageAccountTags)
     skuName: storageAccount.skuName
+    lock: 'CanNotDelete'
     kind: kind
     dnsEndpointType: dnsEndpointType
     customDomainName: customDomainName
