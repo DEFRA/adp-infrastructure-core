@@ -63,7 +63,7 @@ var storageAccountPrivateEndpointTags = {
 module storageAccounts 'br/SharedDefraRegistry:storage.storage-accounts:0.5.8' = {
   name: 'app-storageAccount-${deploymentDate}'
   params: {
-    name: storageAccount.name
+    name: toLower(storageAccount.name)
     tags: union(defaultTags, storageAccountTags)
     skuName: storageAccount.skuName
     kind: kind
