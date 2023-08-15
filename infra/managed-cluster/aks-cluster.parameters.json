@@ -5,8 +5,7 @@
         "vnet": {
             "value": {
                 "name": "#{{ virtualNetworkName }}",
-                "resourceGroup": "#{{ virtualNetworkResourceGroup }}",
-                "subnetClusterNodes": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01"
+                "resourceGroup": "#{{ virtualNetworkResourceGroup }}"
             }
         },
         "cluster": {

@@ -104,7 +104,6 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         osSKU: 'Ubuntu'
         minCount: cluster.npSystem.minCount
         maxCount: cluster.npSystem.maxCount
-        //vnetSubnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetClusterNodes)
         enableAutoScaling: true
         enableCustomCATrust: false
         enableFIPS: false
@@ -136,7 +135,6 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         osSKU: 'Ubuntu'
         minCount: cluster.npUser.minCount
         maxCount: cluster.npUser.maxCount
-        //vnetSubnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetClusterNodes)
         enableAutoScaling: true
         enableCustomCATrust: false
         enableFIPS: false
