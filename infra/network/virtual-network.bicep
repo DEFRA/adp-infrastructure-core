@@ -1,7 +1,7 @@
-@description('The VNET Infra object.')
+@description('Required. The VNET Infra object.')
 param vnet object
 
-
+@description('Required. The subnets object.')
 param subnets array
 
 @allowed([

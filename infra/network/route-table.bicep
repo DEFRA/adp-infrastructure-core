@@ -1,4 +1,4 @@
-@description('The Route Table object.')
+@description('Required. The Route Table object.')
 param routeTable object
 @allowed([
   'UKSouth'
