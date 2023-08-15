@@ -5,8 +5,8 @@
     "vnet": {
       "value": {
         "name": "#{{ virtualNetworkName }}",
-        "addressPrefixes": "#{{ vnet1AddressPrefixes }}",
-        "dnsServers": "#{{ dnsServers }}"
+        "addressPrefixes": "#{{ noescape(vnet1AddressPrefixes) }}",
+        "dnsServers": "#{{ noescape(dnsServers) }}"
       }
     },
     
