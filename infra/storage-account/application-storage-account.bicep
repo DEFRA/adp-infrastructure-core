@@ -20,14 +20,6 @@ param environment string
 @description('Optional. Type of Storage Account to create.')
 param kind string = 'StorageV2'
 
-@allowed([
-  'Premium'
-  'Hot'
-  'Cool'
-])
-@description('Conditional. Required if the Storage Account kind is set to BlobStorage. The access tier is used for billing. The "Premium" access tier is the default value for premium block blobs storage account type and it cannot be changed for the premium block blobs storage account type.')
-param accessTier string = 'Cool'
-
 @description('Optional. Sets the custom domain name assigned to the storage account. Name is the CNAME source.')
 param customDomainName string = ''
 
@@ -74,7 +66,6 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-accounts:0.5.8' =
     name: storageAccount.name
     tags: union(defaultTags, storageAccountTags)
     skuName: storageAccount.skuName
-    accessTier: accessTier
     kind: kind
     dnsEndpointType: dnsEndpointType
     customDomainName: customDomainName
