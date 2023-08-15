@@ -1,5 +1,8 @@
-@description('Required. The parameter object for build agent vmss. The object must contain the namespaceName,namespacePrivateEndpointName and skuName values.')
+@description('Required. The parameter object for build agent vmss. The object must contain the name, userName, osDisk, osType, sku and imageId values.')
 param buildAgent object
+
+@description('Required. The parameter object for nic details. The object must contain nicSuffix and ipConfigurations values.')
+param nicConfigurations array
 
 @secure()
 @description('Required. The password to access build agent vmss.')
@@ -38,6 +41,7 @@ module privateBuildAgent 'br/SharedDefraRegistry:compute.virtual-machine-scale-s
     imageReference: {
       id: buildAgent.imageId
     }
+    nicConfigurations: nicConfigurations
     skuCapacity: 2
     osDisk: buildAgent.osDisk
     osType: buildAgent.osType
