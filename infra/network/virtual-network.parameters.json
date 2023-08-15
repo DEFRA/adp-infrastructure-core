@@ -18,6 +18,8 @@
           "serviceEndpoints": [
             { "service": "Microsoft.ContainerRegistry" },
             { "service": "Microsoft.Storage" },
+            { "service": "Microsoft.EventHub" },
+            { "service": "Microsoft.ServiceBus" },
             { "service": "Microsoft.KeyVault" }
           ],
           "privateEndpointNetworkPolicies": "Disabled",
