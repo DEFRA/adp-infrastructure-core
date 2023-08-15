@@ -1,3 +1,5 @@
+@description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and subnetClusterNodes values.')
+param vnet object
 
 @description('Required. The parameter object for the cluster. The object must contain the name,skuTier,nodeResourceGroup,miControlPlane,adminAadGroupObjectId and monitoringWorkspace values.')
 param cluster object
@@ -102,6 +104,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         osSKU: 'Ubuntu'
         minCount: cluster.npSystem.minCount
         maxCount: cluster.npSystem.maxCount
+        vnetSubnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetClusterNodes)
         enableAutoScaling: true
         enableCustomCATrust: false
         enableFIPS: false
@@ -133,6 +136,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         osSKU: 'Ubuntu'
         minCount: cluster.npUser.minCount
         maxCount: cluster.npUser.maxCount
+        vnetSubnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetClusterNodes)
         enableAutoScaling: true
         enableCustomCATrust: false
         enableFIPS: false

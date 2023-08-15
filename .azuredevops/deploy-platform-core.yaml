@@ -55,14 +55,14 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedTemplates:
-      - name: network
-        templates:
-          - name: route-table
-            path: infra/network
-            resourceGroupName: $(virtualNetworkResourceGroup)
-          - name: virtual-network
-            path: infra/network
-            resourceGroupName: $(virtualNetworkResourceGroup)
+      #- name: network
+      #  templates:
+      #    - name: route-table
+      #      path: infra/network
+      #      resourceGroupName: $(virtualNetworkResourceGroup)
+      #    - name: virtual-network
+      #      path: infra/network
+      #      resourceGroupName: $(virtualNetworkResourceGroup)
       #- name: monitoring
       #  templates:
       #    - name: workspace
@@ -82,8 +82,8 @@ extends:
       #        - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01 
       #          resourceGroupName: $(servicesResourceGroup)
       - name: managed_cluster
-        dependsOnGroupedTemplates:
-          - network
+        #dependsOnGroupedTemplates:
+        #  - network
         templates:
           - name: aks-cluster
             path: infra/managed-cluster
