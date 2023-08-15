@@ -1,7 +1,7 @@
 @description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPrivateEndpoints values.')
 param vnet object
 
-@description('Required. Name of your Azure container registry. The parameter object for storageAccount.')
+@description('Required. Name of your storage account. The parameter object for storageAccount.')
 param storageAccount object
 
 @description('Optional. Location for all resources.')
