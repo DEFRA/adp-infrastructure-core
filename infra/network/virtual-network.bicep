@@ -32,8 +32,8 @@ module virtualNetwork 'br/SharedDefraRegistry:network.virtual-networks:0.4.7' = 
     lock: 'CanNotDelete'
     tags: tags
     enableDefaultTelemetry: true
-    addressPrefixes: split(vnet.addressPrefixes, ';')
-    dnsServers: split(vnet.dnsServers, ';')
+    addressPrefixes: vnet.addressPrefixes
+    dnsServers: vnet.dnsServers
     subnets: subnets
   }
 }
