@@ -112,4 +112,4 @@ extends:
                 resourceGroupName: $(servicesResourceGroup)
           - name: flexible-server
             path: infra/postgre-sql
-            resourceGroupName: $(servicesResourceGroup)
+            resourceGroupName: $(dbsResourceGroup)
