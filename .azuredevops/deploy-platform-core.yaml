@@ -113,6 +113,9 @@ extends:
           - name: flexible-server
             path: infra/postgre-sql
             resourceGroupName: $(dbsResourceGroup)
+          - name: redis-cache
+            path: infra/redis-cache
+            resourceGroupName: $(servicesResourceGroup)                         
           - name: application-storage-account
             path: infra/storage-account
             resourceGroupName: $(servicesResourceGroup)
