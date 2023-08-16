@@ -36,7 +36,7 @@ var containerRegistryTags = {
 
 var containerRegistryPrivateEndpointTags = {
   Name: containerRegistry.privateEndpointName
-  Purpose: 'App Configuration private endpoint'
+  Purpose: 'Container Registry private endpoint'
   Tier: 'Shared'
 }
 
