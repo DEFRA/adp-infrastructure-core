@@ -17,7 +17,7 @@ param environment string
   'FileStorage'
   'BlockBlobStorage'
 ])
-@description('Optional. Type of Storage Account to create.')
+@description('Optional. Type of Storage Account to create for the storage account.')
 param kind string = 'StorageV2'
 
 @description('Optional. Sets the custom domain name assigned to the storage account. Name is the CNAME source.')
