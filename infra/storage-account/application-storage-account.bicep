@@ -20,9 +20,6 @@ param environment string
 @description('Optional. Type of Storage Account to create for the storage account.')
 param kind string = 'StorageV2'
 
-@description('Optional. Sets the custom domain name assigned to the storage account. Name is the CNAME source.')
-param customDomainName string = ''
-
 @description('Optional. Indicates whether indirect CName validation is enabled. This should only be set on updates.')
 param customDomainUseSubDomainName bool = false
 
@@ -69,7 +66,6 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-accounts:0.5.8' =
     lock: 'CanNotDelete'
     kind: kind
     dnsEndpointType: dnsEndpointType
-    customDomainName: customDomainName
     customDomainUseSubDomainName: customDomainUseSubDomainName
     networkAcls: {
       bypass: 'AzureServices'
