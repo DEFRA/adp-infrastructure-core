@@ -12,6 +12,13 @@
                 "availabilityZone": "#{{ postgreSqlAvailabilityZone }}"
             }
         },
+        "vnet": {
+            "value": {
+                "name": "#{{ virtualNetworkName }}",
+                "resourceGroup": "#{{ virtualNetworkResourceGroup }}",
+                "subnetPostgreSql": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}05"
+            }
+        },
         "diagnostics": {
             "value": {
                 "diagnosticLogCategoriesToEnable": [
