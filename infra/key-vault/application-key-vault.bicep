@@ -42,6 +42,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
     name: keyVault.name
     tags: union(defaultTags, keyVaultTags)
     vaultSku: keyVault.skuName
+    lock: 'CanNotDelete'
     enableRbacAuthorization: true    
     enableSoftDelete: bool(keyVault.enableSoftDelete)
     enablePurgeProtection: bool(keyVault.enablePurgeProtection)
