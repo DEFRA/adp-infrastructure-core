@@ -110,3 +110,11 @@ extends:
             privateEndpointDnsRecordsForResources:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
                 resourceGroupName: $(servicesResourceGroup)
+      - name: redis_cache
+        templates:
+          - name: namespace
+            path: infra/redis-cache
+            resourceGroupName: $(servicesResourceGroup)
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
+                resourceGroupName: $(servicesResourceGroup)                
