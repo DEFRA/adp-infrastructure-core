@@ -79,7 +79,7 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-accounts:0.5.8' =
     privateEndpoints: [
       {
         name: storageAccount.privateEndpointName
-        service: 'vault'
+        service: 'blob'
         subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
         tags: union(defaultTags, storageAccountPrivateEndpointTags)
       }
