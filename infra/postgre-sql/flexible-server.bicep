@@ -1,9 +1,6 @@
 @description('Required. The object of the PostgreSQL Flexible Server. The object must contain name,storageSizeGB and highAvailability properties.')
 param server object
 
-@description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and subnetPostgreSql values.')
-param vnet object
-
 @description('Required. The diagnostic object. The object must contain diagnosticLogCategoriesToEnable and diagnosticMetricsToEnable properties.')
 param diagnostics object
 
@@ -53,7 +50,7 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     diagnosticLogsRetentionInDays: 90
     administrators: []
     configurations:[]
-    delegatedSubnetResourceId : resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPostgreSql)
+    delegatedSubnetResourceId : ''
     privateDnsZoneArmResourceId: ''
     diagnosticWorkspaceId: ''
   }
