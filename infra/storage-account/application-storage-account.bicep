@@ -20,17 +20,6 @@ param environment string
 @description('Optional. Type of Storage Account to create for the storage account.')
 param kind string = 'StorageV2'
 
-@description('Optional. Indicates whether indirect CName validation is enabled. This should only be set on updates.')
-param customDomainUseSubDomainName bool = false
-
-@description('Optional. Allows you to specify the type of endpoint. Set this to AzureDNSZone to create a large number of accounts in a single subscription, which creates accounts in an Azure DNS Zone and the endpoint URL will have an alphanumeric DNS Zone identifier.')
-@allowed([
-  ''
-  'AzureDnsZone'
-  'Standard'
-])
-param dnsEndpointType string = ''
-
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
@@ -65,8 +54,6 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-accounts:0.5.8' =
     skuName: storageAccount.skuName
     lock: 'CanNotDelete'
     kind: kind
-    dnsEndpointType: dnsEndpointType
-    customDomainUseSubDomainName: customDomainUseSubDomainName
     networkAcls: {
       bypass: 'AzureServices'
       defaultAction: 'Deny'
