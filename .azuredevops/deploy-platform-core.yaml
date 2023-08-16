@@ -113,4 +113,3 @@ extends:
           - name: flexible-server
             path: infra/postgre-sql
             resourceGroupName: $(dbsResourceGroup)
-        
