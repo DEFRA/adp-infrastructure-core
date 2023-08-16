@@ -45,6 +45,7 @@ module registry 'br/SharedDefraRegistry:container-registry.registries:0.5.6' = {
   params: {
     name: containerRegistry.name
     acrSku: containerRegistry.acrSku
+    lock: 'CanNotDelete'
     retentionPolicyDays: int(containerRegistry.retentionPolicyDays)
     softDeletePolicyDays: int(containerRegistry.softDeletePolicyDays)
     tags: union(defaultTags, containerRegistryTags)
