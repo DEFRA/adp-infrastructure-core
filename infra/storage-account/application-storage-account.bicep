@@ -53,7 +53,7 @@ var storageAccountTags = {
 
 var storageAccountPrivateEndpointTags = {
   Name: storageAccount.privateEndpointName
-  Purpose: 'App Configuration private endpoint'
+  Purpose: 'Storage Account private endpoint'
   Tier: 'Shared'
 }
 
