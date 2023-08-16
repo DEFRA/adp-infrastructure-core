@@ -17,11 +17,11 @@
                 "miControlPlane": "#{{ aksControlPlaneManagedIdentity }}",
                 "adminAadGroupObjectId": "#{{ aksAADProfileAdminGroupObjectId }}",
                 "npSystem": {
-                    "count": 1,
+                    "count": 2,
                     "osDiskSizeGB": 80,
-                    "minCount": 3,
                     "maxCount": 4,
-                    "maxPods": 30,
+                    "minCount": 1,
+                    "maxPods": 80,
                     "availabilityZones": [
                         "1",
                         "2",
@@ -31,9 +31,9 @@
                 "npUser": {
                     "count": 2,
                     "osDiskSizeGB": 128,
-                    "maxCount": 3,
-                    "maxPods": 30,
-                    "minCount": 1,
+                    "maxCount": 10,
+                    "minCount": 2,
+                    "maxPods": 80,
                     "minPods": 2,
                     "availabilityZones": [
                         "1",
