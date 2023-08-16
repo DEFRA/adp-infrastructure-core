@@ -32,7 +32,7 @@ var keyVaultTags = {
 
 var keyVaultPrivateEndpointTags = {
   Name: keyVault.privateEndpointName
-  Purpose: 'App Configuration private endpoint'
+  Purpose: 'Keyvault private endpoint'
   Tier: 'Shared'
 }
 
