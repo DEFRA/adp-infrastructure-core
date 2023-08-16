@@ -1,0 +1,32 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "server": {
+            "value": {
+                "name": "#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}01",
+                "storageSizeGB": #{{ postgreSqlStorageSizeGB }},
+                "tier": "#{{ postgreSqlTier }}",
+                "skuName": "#{{ postgreSqlSkuName }}",
+                "highAvailability": "#{{ postgreSqlHighAvailability }}",
+                "availabilityZone": "#{{ postgreSqlAvailabilityZone }}"
+            }
+        },
+        "diagnostics": {
+            "value": {
+                "diagnosticLogCategoriesToEnable": [
+                    "allLogs"
+                ],
+                "diagnosticMetricsToEnable": [
+                    "AllMetrics"
+                ]
+            }
+        },
+        "location": {
+            "value": "#{{ location }}"
+        },
+        "environment": {
+            "value": "#{{ environment }}"
+        }
+    }
+}
