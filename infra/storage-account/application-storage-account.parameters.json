@@ -5,7 +5,7 @@
         "storageAccount": {
             "value": {
                 "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_storageaccount }}#{{ nc_instance_regionid }}01",
-                "privateEndpointName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}06",
+                "privateEndpointName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}05",
                 "skuName": "Standard_ZRS"
             }    
         },
