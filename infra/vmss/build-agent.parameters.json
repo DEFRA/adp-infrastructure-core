@@ -39,7 +39,7 @@
     "adminPassword": {
       "reference": {
         "keyVault": {
-          "id": "/subscriptions/7dc5bbdf-72d7-42ca-ac23-eb5eea3764b4/resourceGroups/#{{ ssvSharedResourceGroup }}/providers/Microsoft.KeyVault/vaults/#{{ ssvPlatformKeyVaultName }}"
+          "id": "/subscriptions/#{{ ssvSubscriptionId }}/resourceGroups/#{{ ssvSharedResourceGroup }}/providers/Microsoft.KeyVault/vaults/#{{ ssvPlatformKeyVaultName }}"
         },
         "secretName": "ADO-BuildAgent-Password"
       }
