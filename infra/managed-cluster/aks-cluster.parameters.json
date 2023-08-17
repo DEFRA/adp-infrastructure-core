@@ -13,7 +13,7 @@
             "value": {
                 "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_kubernetesservice }}#{{ nc_instance_regionid }}01",
                 "skuTier": "#{{ aksClusterSkuTier }}",
-                "nodeResourceGroup": "#{{ aksNodeResourceGroup }}",
+                "nodeResourceGroup": "#{{ aksResourceGroup }}-Managed",
                 "miControlPlane": "#{{ aksControlPlaneManagedIdentity }}",
                 "adminAadGroupObjectId": "#{{ aksAADProfileAdminGroupObjectId }}",
                 "npSystem": {

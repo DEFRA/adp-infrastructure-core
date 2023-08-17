@@ -4,6 +4,9 @@ param vnet object
 @description('Required. The parameter object for the cluster. The object must contain the name,skuTier,nodeResourceGroup,miControlPlane,adminAadGroupObjectId and monitoringWorkspace values.')
 param cluster object
 
+@description('Required. The prefix for the private DNS zone.')
+param privateDnsZonePrefix string
+
 @allowed([
   'UKSouth'
 ])
@@ -18,12 +21,12 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 var kubernetesVersion = '1.26.6'
 
-var customTags = {
+var commonTags = {
   Location: location
   CreatedDate: createdDate
   Environment: environment
 }
-var tags = union(loadJsonContent('../default-tags.json'), customTags)
+var tags = union(loadJsonContent('../default-tags.json'), commonTags)
 
 var tagsMi = {
   Name: cluster.miControlPlane
@@ -37,7 +40,7 @@ var aksTags = {
   Tier: 'Shared'
 }
 
-module miClusterControlPlane 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
+module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
   name: 'aks-cluster-mi-${deploymentDate}'
   params: {
     name: cluster.miControlPlane
@@ -47,8 +50,57 @@ module miClusterControlPlane 'br/SharedDefraRegistry:managed-identity.user-assig
   }
 }
 
+var privateDnsZoneName = '${privateDnsZonePrefix}.privatelink.${location}.azmk8s.io'
+
+resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
+  name: privateDnsZoneName
+  location: 'global'
+}
+
+resource virtualNetwork 'Microsoft.ScVmm/virtualNetworks@2022-05-21-preview' existing = {
+  name: vnet.name
+}
+
+resource privateDNSZoneVNetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = {
+  name: '${vnet.name}'
+  location: 'global'
+  parent: privateDnsZone
+  properties: {
+      registrationEnabled: true
+      virtualNetwork: {
+          id: virtualNetwork.id
+      }
+  }
+}
+
+resource msiVnetRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(resourceGroup().id, 'NetworkContributor', managedIdentity.name)
+  scope: virtualNetwork
+  properties: {
+      principalId: managedIdentity.outputs.principalId
+      roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4d97b98b-1d4f-4787-a291-c67834d212e7') // Network Contributor
+      principalType: 'ServicePrincipal'
+  }
+}
+
+resource msiPrivDnsZoneRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(resourceGroup().id, 'PrivateDNSZoneContributor', managedIdentity.name)
+  scope: privateDnsZone
+  properties: {
+      principalId: managedIdentity.outputs.principalId
+      roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b12aa53e-6015-4669-85d0-8515ebb3ae7f') // Private DNS Zone Contributor
+      principalType: 'ServicePrincipal'
+  }
+}
+
 module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.8-prerelease' = {
   name: 'aks-cluster-${deploymentDate}'
+  dependsOn: [
+    managedIdentity
+    privateDnsZone
+    msiVnetRoleAssignment
+    msiPrivDnsZoneRoleAssignment
+  ]
   params: {
     name: cluster.name
     location: location
@@ -64,7 +116,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     disableLocalAccounts: true
     systemAssignedIdentity: false
     userAssignedIdentities: {
-      '${miClusterControlPlane.outputs.resourceId}': {}
+      '${managedIdentity.outputs.resourceId}': {}
     }
     enableSecurityProfileWorkloadIdentity: true
     azurePolicyEnabled: true
