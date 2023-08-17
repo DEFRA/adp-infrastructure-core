@@ -16,6 +16,9 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
+@description('Optional. Object array, with propterties Name, addressprefix')
+param firewallRules array = []
+
 var customTags = {
   Location: location
   CreatedDate: createdDate
@@ -34,9 +37,20 @@ module redisCacheResource 'br/SharedDefraRegistry:cache.redis:0.5.7' = {
   params: {
     name: redisCache.name
     skuName: redisCache.skuName
+    
     location: location
     lock: 'CanNotDelete'
     subnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.rediscachesubnet)
+    
     tags: union(tags, redisCacheTags)
   }
 }
+
+resource redisCacheFirewallRule 'Microsoft.Cache/redis/firewallRules@2022-06-01' = [for rule in firewallRules: {
+  name: rule.name
+  parent: redisCacheResource
+  properties: {
+    endIP: parseCidr(rule.addressprefix).lastUsable
+    startIP: parseCidr(rule.addressprefix).firstUsable
+  }  
+}]
