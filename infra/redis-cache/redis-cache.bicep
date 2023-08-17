@@ -45,9 +45,13 @@ module redisCacheResource 'br/SharedDefraRegistry:cache.redis:0.5.7' = {
   }
 }
 
+resource redisCacheParent 'Microsoft.Cache/redis@2022-06-01' existing = {
+  name: redisCache.name
+}
+
 resource redisCacheFirewallRule 'Microsoft.Cache/redis/firewallRules@2022-06-01' = [for rule in firewallRules: if (startsWith(redisCache.skuName, 'Premium')) {
   name: rule.name
-  parent: redisCacheResource
+  parent: redisCacheParent
   properties: {
     endIP: parseCidr(rule.addressprefix).lastUsable
     startIP: parseCidr(rule.addressprefix).firstUsable
