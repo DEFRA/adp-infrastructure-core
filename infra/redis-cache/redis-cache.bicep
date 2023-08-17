@@ -36,11 +36,7 @@ module redisCacheResource 'br/SharedDefraRegistry:cache.redis:0.5.7' = {
   name: 'redis-cache-${deploymentDate}'
   params: {
     name: redisCache.name
-    sku: {
-      capacity: redisCache.Capacity
-      family: redisCache.Family
-      name: redisCache.skuName
-    }
+    skuName: redisCache.skuName
     location: location
     lock: 'CanNotDelete'
     subnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.rediscachesubnet)
