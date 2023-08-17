@@ -1,14 +1,24 @@
 @description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPrivateEndpoints values.')
 param vnet object
 
-@description('Required. The parameter object for keyvault. The object must contain the name, enableSoftDelete, enablePurgeProtection and softDeleteRetentionInDays values.')
-param keyVault object
+@description('Required. Name of your storage account. The parameter object for storageAccount.')
+param storageAccount object
 
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
 @description('Required. Environment name.')
 param environment string
+
+@allowed([
+  'Storage'
+  'StorageV2'
+  'BlobStorage'
+  'FileStorage'
+  'BlockBlobStorage'
+])
+@description('Optional. Type of Storage Account to create for the storage account.')
+param kind string = 'StorageV2'
 
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
@@ -24,29 +34,26 @@ var customTags = {
 
 var defaultTags = union(json(loadTextContent('../default-tags.json')), customTags)
 
-var keyVaultTags = {
-  Name: keyVault.name
-  Purpose: 'Key Vault'
+var storageAccountTags = {
+  Name: storageAccount.name
+  Purpose: 'Storage Account'
   Tier: 'Shared'
 }
 
-var keyVaultPrivateEndpointTags = {
-  Name: keyVault.privateEndpointName
-  Purpose: 'Keyvault private endpoint'
+var storageAccountPrivateEndpointTags = {
+  Name: storageAccount.privateEndpointName
+  Purpose: 'Storage Account private endpoint'
   Tier: 'Shared'
 }
 
-module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
-  name: 'app-keyvault-${deploymentDate}'
+module storageAccounts 'br/SharedDefraRegistry:storage.storage-accounts:0.5.8' = {
+  name: 'app-storageAccount-${deploymentDate}'
   params: {
-    name: keyVault.name
-    tags: union(defaultTags, keyVaultTags)
-    vaultSku: keyVault.skuName
+    name: toLower(storageAccount.name)
+    tags: union(defaultTags, storageAccountTags)
+    skuName: storageAccount.skuName
     lock: 'CanNotDelete'
-    enableRbacAuthorization: true    
-    enableSoftDelete: bool(keyVault.enableSoftDelete)
-    enablePurgeProtection: bool(keyVault.enablePurgeProtection)
-    softDeleteRetentionInDays: int(keyVault.softDeleteRetentionInDays)
+    kind: kind
     networkAcls: {
       bypass: 'AzureServices'
       defaultAction: 'Deny'
@@ -54,10 +61,10 @@ module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
     publicNetworkAccess: 'Disabled'
     privateEndpoints: [
       {
-        name: keyVault.privateEndpointName
-        service: 'vault'
+        name: storageAccount.privateEndpointName
+        service: 'blob'
         subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
-        tags: union(defaultTags, keyVaultPrivateEndpointTags)
+        tags: union(defaultTags, storageAccountPrivateEndpointTags)
       }
     ]
   }
