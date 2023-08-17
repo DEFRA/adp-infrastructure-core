@@ -3,6 +3,8 @@ using 'redis-cache.bicep'
 param redisCache = {
   name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_redis }}#{{ nc_instance_regionid }}01'
   skuName: '#{{ redisCacheSkuName }}'
+  Family: 'P'
+  capacity: '1'
 }
 
 param vnet = {

@@ -1,7 +1,7 @@
 @description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and rediscachesubnet values.')
 param vnet object
 
-@description('Required. The parameter object for redis cache. The object must contain the name and skuName values.')
+@description('Required. The parameter object for redis cache. The object must contain the name and skuName,  values.')
 param redisCache object
 
 @description('Optional. The Azure region where the resources will be deployed.')
@@ -36,8 +36,11 @@ module redisCacheResource 'br/SharedDefraRegistry:cache.redis:0.5.7' = {
   name: 'redis-cache-${deploymentDate}'
   params: {
     name: redisCache.name
-    skuName: redisCache.skuName
-    
+    sku: {
+      capacity: redisCache.Capacity
+      family: redisCache.Family
+      name: redisCache.skuName
+    }
     location: location
     lock: 'CanNotDelete'
     subnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.rediscachesubnet)
@@ -46,7 +49,7 @@ module redisCacheResource 'br/SharedDefraRegistry:cache.redis:0.5.7' = {
   }
 }
 
-resource redisCacheFirewallRule 'Microsoft.Cache/redis/firewallRules@2022-06-01' = [for rule in firewallRules: {
+resource redisCacheFirewallRule 'Microsoft.Cache/redis/firewallRules@2022-06-01' = [for rule in firewallRules: if (startsWith(redisCache.skuName, 'Premium')) {
   name: rule.name
   parent: redisCacheResource
   properties: {
