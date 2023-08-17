@@ -5,7 +5,7 @@ param vnet object
 param cluster object
 
 @description('Required. The prefix for the private DNS zone.')
-param privateDnsZonePrefix string
+param privateDnsZone object
 
 @allowed([
   'UKSouth'
@@ -40,7 +40,7 @@ var aksTags = {
   Tier: 'Shared'
 }
 
-module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
+module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
   name: 'aks-cluster-mi-${deploymentDate}'
   params: {
     name: cluster.miControlPlane
@@ -50,56 +50,45 @@ module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-id
   }
 }
 
-var privateDnsZoneName = '${privateDnsZonePrefix}.privatelink.${location}.azmk8s.io'
+var privateDnsZoneName = '${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io'
 
-resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
-  name: privateDnsZoneName
-  location: 'global'
-}
-
-resource virtualNetwork 'Microsoft.ScVmm/virtualNetworks@2022-05-21-preview' existing = {
-  name: vnet.name
-}
-
-resource privateDNSZoneVNetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = {
-  name: '${vnet.name}'
-  location: 'global'
-  parent: privateDnsZone
-  properties: {
-      registrationEnabled: true
-      virtualNetwork: {
-          id: virtualNetwork.id
-      }
+module privateDnsZoneModule '.bicep/private-dns-zone.bicep' = {
+  name: 'aks-private-dns-zone-${deploymentDate}'
+  scope: resourceGroup()
+  dependsOn: [
+    managedIdentityModule
+  ]
+  params: {
+    privateDnsZoneName: privateDnsZoneName
+    vnet: vnet
+    managedIdentity: {
+      name: cluster.miControlPlane
+      principalId: managedIdentityModule.outputs.principalId
+    }
   }
 }
 
-resource msiVnetRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(resourceGroup().id, 'NetworkContributor', managedIdentity.name)
-  scope: virtualNetwork
-  properties: {
-      principalId: managedIdentity.outputs.principalId
-      roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '4d97b98b-1d4f-4787-a291-c67834d212e7') // Network Contributor
-      principalType: 'ServicePrincipal'
-  }
-}
-
-resource msiPrivDnsZoneRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(resourceGroup().id, 'PrivateDNSZoneContributor', managedIdentity.name)
-  scope: privateDnsZone
-  properties: {
-      principalId: managedIdentity.outputs.principalId
-      roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b12aa53e-6015-4669-85d0-8515ebb3ae7f') // Private DNS Zone Contributor
-      principalType: 'ServicePrincipal'
+module networkContributorModule '.bicep/network-contributor.bicep' = {
+  name: 'aks-cluster-network-contributor-${deploymentDate}'
+  dependsOn: [
+    managedIdentityModule
+    privateDnsZoneModule
+  ]
+  params: {
+    managedIdentity: {
+      name: cluster.miControlPlane
+      principalId: managedIdentityModule.outputs.principalId
+    }
+    vnetName: vnet.name
   }
 }
 
 module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.8-prerelease' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
-    managedIdentity
-    privateDnsZone
-    msiVnetRoleAssignment
-    msiPrivDnsZoneRoleAssignment
+    managedIdentityModule
+    privateDnsZoneModule
+    networkContributorModule
   ]
   params: {
     name: cluster.name
@@ -116,7 +105,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     disableLocalAccounts: true
     systemAssignedIdentity: false
     userAssignedIdentities: {
-      '${managedIdentity.outputs.resourceId}': {}
+      '${managedIdentityModule.outputs.resourceId}': {}
     }
     enableSecurityProfileWorkloadIdentity: true
     azurePolicyEnabled: true
@@ -142,7 +131,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     aksServicePrincipalProfile: {}
     aadProfileClientAppID: ''
     aadProfileServerAppID: ''
-    aadProfileServerAppSecret:''
+    aadProfileServerAppSecret: ''
     aadProfileTenantId: subscription().tenantId
     primaryAgentPoolProfile: [
       {
