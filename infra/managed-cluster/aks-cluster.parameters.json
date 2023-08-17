@@ -43,6 +43,9 @@
                 }
             }
         },
+        "privateDnsZonePrefix":{
+            "value": "#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}01"
+        },
         "location": {
             "value": "#{{ location }}"
         },
