@@ -1,4 +1,6 @@
+@description('Required. The parameter object for the managed identity. The object must contain the name and principalId values.')
 param managedIdentity object
+@description('Required. The name of the vnet')
 param vnetName string
 
 resource msiVnetRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {

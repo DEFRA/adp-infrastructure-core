@@ -50,11 +50,10 @@ module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assig
   }
 }
 
-var privateDnsZoneName = '${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io'
+var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io')
 
 module privateDnsZoneModule '.bicep/private-dns-zone.bicep' = {
   name: 'aks-private-dns-zone-${deploymentDate}'
-  scope: resourceGroup()
   dependsOn: [
     managedIdentityModule
   ]
@@ -65,11 +64,13 @@ module privateDnsZoneModule '.bicep/private-dns-zone.bicep' = {
       name: cluster.miControlPlane
       principalId: managedIdentityModule.outputs.principalId
     }
+    tags: tags
   }
 }
 
 module networkContributorModule '.bicep/network-contributor.bicep' = {
   name: 'aks-cluster-network-contributor-${deploymentDate}'
+  scope: resourceGroup(vnet.resourceGroup)
   dependsOn: [
     managedIdentityModule
     privateDnsZoneModule
@@ -83,7 +84,7 @@ module networkContributorModule '.bicep/network-contributor.bicep' = {
   }
 }
 
-module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.8-prerelease' = {
+module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.13-prerelease' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
     managedIdentityModule
@@ -113,7 +114,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     enableOidcIssuerProfile: true
     aadProfileAdminGroupObjectIDs: array(cluster.adminAadGroupObjectId)
     enablePrivateCluster: true
-    usePrivateDNSZone: true
+    privateDNSZone: privateDnsZoneModule.outputs.privateDnsZoneId
     disableRunCommand: false
     enablePrivateClusterPublicFQDN: false
     aksClusterNetworkPlugin: 'azure'
@@ -122,7 +123,6 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     aksClusterPodCidr: '172.16.0.0/16'
     aksClusterServiceCidr: '172.18.0.0/16'
     aksClusterDnsServiceIP: '172.18.255.250'
-    aksClusterDockerBridgeCidr: ''
     aksClusterLoadBalancerSku: 'standard'
     managedOutboundIPCount: 1
     aksClusterOutboundType: 'loadBalancer'

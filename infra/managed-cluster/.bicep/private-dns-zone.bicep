@@ -1,9 +1,20 @@
+@description('Required. The parameter object for the virtual network. The object must contain the name and resourceGroup values.')
 param vnet object
+@description('Required. The parameter object for the managed identity. The object must contain the name and principalId values.')
 param managedIdentity object
+@description('Required. The name of the private DNS zone.')
 param privateDnsZoneName string
+@description('Required. The tags to associate with the private DNS zone.')
+param tags object
+
+var pdnsTags = { 
+  Name: privateDnsZoneName
+  Purpose: 'AKS Private DNS Zone'
+}
 
 resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
   name: privateDnsZoneName
+  tags: union(tags, pdnsTags)
   location: 'global'
 }
 
@@ -28,3 +39,6 @@ resource msiPrivDnsZoneRoleAssignment 'Microsoft.Authorization/roleAssignments@2
       principalType: 'ServicePrincipal'
   }
 }
+
+@description('Private DNS Zone ID')
+output privateDnsZoneId string = privateDnsZone.id
