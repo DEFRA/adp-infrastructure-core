@@ -115,4 +115,10 @@ extends:
             resourceGroupName: $(dbsResourceGroup)
           - name: redis-cache
             path: infra/redis-cache
-            resourceGroupName: $(servicesResourceGroup)               
+            resourceGroupName: $(servicesResourceGroup)                         
+          - name: application-storage-account
+            path: infra/storage-account
+            resourceGroupName: $(servicesResourceGroup)
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
+                resourceGroupName: $(servicesResourceGroup)
