@@ -19,8 +19,6 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-var kubernetesVersion = '1.26.6'
-
 var commonTags = {
   Location: location
   CreatedDate: createdDate
@@ -40,6 +38,16 @@ var aksTags = {
   Tier: 'Shared'
 }
 
+var pdnsTags = {
+  Name: privateDnsZoneName
+  Purpose: 'AKS Private DNS Zone'
+}
+
+var pdnsVnetLinksTags = {
+  Name: vnet.name
+  Purpose: 'AKS Private DNS Zone VNet Link'
+}
+
 module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
   name: 'aks-cluster-mi-${deploymentDate}'
   params: {
@@ -52,21 +60,36 @@ module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assig
 
 var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io')
 
-module privateDnsZoneModule '.bicep/private-dns-zone.bicep' = {
+module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zones:0.5.7' = {
   name: 'aks-private-dns-zone-${deploymentDate}'
   dependsOn: [
     managedIdentityModule
   ]
   params: {
-    privateDnsZoneName: privateDnsZoneName
-    vnet: vnet
-    managedIdentity: {
-      name: cluster.miControlPlane
-      principalId: managedIdentityModule.outputs.principalId
+   name: privateDnsZoneName
+   lock: 'CanNotDelete'
+   tags: union(tags, pdnsTags)
+   roleAssignments: [
+    {
+      roleDefinitionIdOrName: 'Private DNS Zone Contributor'
+      principalIds: [
+        managedIdentityModule.outputs.principalId
+      ]
+      principalType: 'ServicePrincipal'
     }
-    tags: tags
+   ]
+   virtualNetworkLinks: [
+    {
+      name: vnet.name
+      virtualNetworkResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks', vnet.name)
+      registrationEnabled: true
+      tags: union(tags, pdnsVnetLinksTags)
+    }
+   ]
   }
 }
+
+
 
 module networkContributorModule '.bicep/network-contributor.bicep' = {
   name: 'aks-cluster-network-contributor-${deploymentDate}'
@@ -96,7 +119,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     location: location
     lock: 'CanNotDelete'
     tags: union(tags, aksTags)
-    aksClusterKubernetesVersion: kubernetesVersion
+    aksClusterKubernetesVersion: cluster.kubernetesVersion
     nodeResourceGroup: cluster.nodeResourceGroup
     enableDefaultTelemetry: false
     omsAgentEnabled: true
@@ -114,7 +137,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     enableOidcIssuerProfile: true
     aadProfileAdminGroupObjectIDs: array(cluster.adminAadGroupObjectId)
     enablePrivateCluster: true
-    privateDNSZone: privateDnsZoneModule.outputs.privateDnsZoneResourceId
+    privateDNSZone: privateDnsZoneModule.outputs.resourceId
     disableRunCommand: false
     enablePrivateClusterPublicFQDN: false
     aksClusterNetworkPlugin: 'azure'
@@ -153,7 +176,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         type: 'VirtualMachineScaleSets'
         scaleSetPriority: 'Regular'
         scaleSetEvictionPolicy: 'Delete'
-        orchestratorVersion: kubernetesVersion
+        orchestratorVersion: cluster.kubernetesVersion
         enableNodePublicIP: false
         maxPods: cluster.npSystem.maxPods
         availabilityZones: cluster.npSystem.availabilityZones
@@ -185,7 +208,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         type: 'VirtualMachineScaleSets'
         scaleSetPriority: 'Regular'
         scaleSetEvictionPolicy: 'Delete'
-        orchestratorVersion: kubernetesVersion
+        orchestratorVersion: cluster.kubernetesVersion
         enableNodePublicIP: false
         maxPods: cluster.npUser.maxPods
         availabilityZones: cluster.npUser.availabilityZones
