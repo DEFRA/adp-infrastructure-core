@@ -1,7 +1,7 @@
 @description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and rediscachesubnet values.')
 param vnet object
 
-@description('Required. The parameter object for redis cache. The object must contain the name and skuName,  values.')
+@description('Required. The parameter object for redis cache. The object must contain the name, skuName and capacity  values.')
 param redisCache object
 
 @description('Optional. The Azure region where the resources will be deployed.')
@@ -16,7 +16,7 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
-@description('Optional. Object array, with propterties Name, addressprefix')
+@description('Optional. Object array, with propterties Name, addressprefix in cidr format')
 param firewallRules array = []
 
 var customTags = {
@@ -37,6 +37,7 @@ module redisCacheResource 'br/SharedDefraRegistry:cache.redis:0.5.7' = {
   params: {
     name: redisCache.name
     skuName: redisCache.skuName
+    capacity: redisCache.capacity
     location: location
     lock: 'CanNotDelete'
     subnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.rediscachesubnet)
