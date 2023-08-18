@@ -74,15 +74,15 @@ extends:
           - name: azuremonitor-workspace
             path: infra/operational-insights
             resourceGroupName: $(servicesResourceGroup)
-            #postDeployScriptsList:
-            #  - displayName: Enable Prometheus Logs and link Azure Monitor Workspace to Grafana Dashboard
-            #    scriptPath: scripts/Enable-AksPrometheusGrafanaMonitoring.ps1
-            #    type: AzureCLI
-            #    scriptArguments: >
-            #      -ResourceGroupName $(aksResourceGroup)
-            #      -AksClusterName $(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01
-            #      -AzureMonitorWorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(servicesResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
-            #      -GrafanaResourceId '/subscriptions/$(ssvSubscriptionId)/resourceGroups/$(ssvSharedResourceGroup)/providers/Microsoft.Dashboard/grafana/$(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01'
+            postDeployScriptsList:
+              - displayName: Enable Prometheus Logs and link Azure Monitor Workspace to Grafana Dashboard
+                scriptPath: scripts/Enable-AksPrometheusGrafanaMonitoring.ps1
+                type: AzureCLI
+                scriptArguments: >
+                  -ResourceGroupName $(aksResourceGroup)
+                  -AksClusterName $(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01
+                  -AzureMonitorWorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(servicesResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
+                  -GrafanaResourceId '/subscriptions/$(ssvSubscriptionId)/resourceGroups/$(ssvSharedResourceGroup)/providers/Microsoft.Dashboard/grafana/$(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01'
             #    #inlineScript: |
             #    #  az aks update --enable-azure-monitor-metrics -n 'SNDCDOINFAK2401' -g 'SNDCDOINFRG2402' --azure-monitor-workspace-resource-id '/subscriptions/916afc11-9a78-4f8a-91c4-d50754b76733/resourceGroups/SNDCDOINFRG2401/providers/Microsoft.Monitor/accounts/SNDCDOINFAMW2401' --grafana-resource-id  '/subscriptions/7dc5bbdf-72d7-42ca-ac23-eb5eea3764b4/resourceGroups/SSVCDOINFRG3401/providers/Microsoft.Dashboard/grafana/SSVCDOINFGRA3401'
       #- name: security
