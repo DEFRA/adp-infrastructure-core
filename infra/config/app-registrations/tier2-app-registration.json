@@ -28,7 +28,24 @@
                     ]
                 }
             ],
-            "signInAudience": "AzureADMultipleOrgs"
+            "signInAudience": "AzureADMultipleOrgs",
+            "isPublicClient": false,
+            "publicClient": {
+                "redirectUris": [
+                    "https://www.microsoft.com"
+                ]
+            },
+            "web": {
+                "homePageUrl": "https://consento.com",
+                "logoutUrl": "https://consento.com/logout",
+                "redirectUris": [
+                    "https://www.microsoft.com"
+                ],
+                "implicitGrantSettings": {
+                    "enableAccessTokenIssuance": false,
+                    "enableIdTokenIssuance": true
+                }
+            }
         }
     ]
 }
