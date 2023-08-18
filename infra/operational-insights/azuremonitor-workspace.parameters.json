@@ -3,13 +3,13 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "azureMonitorWorkspaceName": {
-      "value": "SNDCDOINFAMW2401"
+      "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_azuremonitorworkspace }}#{{ nc_instance_regionid }}01"
     },
     "location": {
-      "value": "UKSouth"
+      "value": "#{{ location }}"
     },
     "environment": {
-      "value": "SND"
+      "value": "#{{ environment }}"
     }
   }
 }

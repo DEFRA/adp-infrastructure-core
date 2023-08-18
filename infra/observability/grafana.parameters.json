@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "name": {
-      "value": "SSVCDOINFGRA3401"
+      "value": "#{{ ssvResourceNamePrefix }}#{{ nc_resource_grafana }}#{{ nc_shared_instance_regionid }}01"
     },
     "publicNetworkAccess": {
       "value": "Enabled"
@@ -15,10 +15,10 @@
       "value": "SystemAssigned"
     },
     "location": {
-      "value": "UKSouth"
+      "value": "#{{ location }}"
     },
     "environment": {
-      "value": "SSV"
+      "value": "#{{ environment }}"
     }
   }
 }
