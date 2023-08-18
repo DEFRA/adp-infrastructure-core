@@ -30,7 +30,7 @@ var tags = union(loadJsonContent('../default-tags.json'), commonTags)
 
 var tagsMi = {
   Name: cluster.miControlPlane
-  Purpose: 'Managed Identity'
+  Purpose: 'AKS Control Plane Managed Identity'
   Tier: 'Security'
 }
 
