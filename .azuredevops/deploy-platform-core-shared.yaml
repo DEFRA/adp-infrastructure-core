@@ -1,0 +1,50 @@
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - infra/observability/*
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+    - infra/observability/*
+    
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: aa/grafana
+
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.deployFromFeature }}
+    environments:
+      - name: 'ssv3'
+        serviceConnection: AZD-CDO-SSV3
+        deploymentBranches:
+          - '*'
+        developmentEnvironment: true
+        azureRegions:
+          primary: 'UKSouth'
+    groupedTemplates:
+      - name: monitoring
+        templates:
+          - name: grafana
+            path: infra/observability
+            resourceGroupName: $(ssvSharedResourceGroup)
