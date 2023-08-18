@@ -23,10 +23,8 @@ var customTags = {
 }
 var tags = union(loadJsonContent('../default-tags.json'), customTags)
 
-/*
 resource monitor 'Microsoft.Monitor/accounts@2023-04-03' = {
   location: location
   name: 'SNDCDOINFAMW2401'
   tags: tags
 }
-*/
