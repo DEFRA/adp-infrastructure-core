@@ -1,17 +1,11 @@
-@description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPrivateEndpoints values.')
-param vnet object
-
 @description('Optional. Name of the User Assigned Identity.')
-param name object
+param managedIdentity object
 
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
 @description('Required. Environment name.')
 param environment string
-
-@description('Optional. Array of role assignment objects that contain the \'roleDefinitionIdOrName\' and \'principalId\' to define RBAC role assignments on this resource. In the roleDefinitionIdOrName attribute, you can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'.')
-param roleAssignments array = []
 
 @description('Optional. Enable telemetry via a Globally Unique Identifier (GUID).')
 param enableDefaultTelemetry bool = true
@@ -36,8 +30,8 @@ var managedIdentityTags = {
   Tier: 'Shared'
 }
 
-module managedIdentities 'br/SharedDefraRegistry:storage.storage-accounts:0.5.8' = {
-  name: 'managed-identityunt-${deploymentDate}'
+module managedIdentities 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.7' = {
+  name: 'managed-identity-${deploymentDate}'
   params: {
     enableDefaultTelemetry: enableDefaultTelemetry
     name: manageIndentity.name
