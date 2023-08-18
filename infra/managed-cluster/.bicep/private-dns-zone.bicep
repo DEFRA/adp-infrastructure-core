@@ -40,5 +40,5 @@ resource msiPrivDnsZoneRoleAssignment 'Microsoft.Authorization/roleAssignments@2
   }
 }
 
-@description('Private DNS Zone Id.')
-output privateDnsZoneId string = privateDnsZone.id
+@description('The resource ID of the private DNS Zone created.')
+output privateDnsZoneResourceId string = privateDnsZone.id

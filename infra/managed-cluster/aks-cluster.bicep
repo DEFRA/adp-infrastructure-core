@@ -114,7 +114,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     enableOidcIssuerProfile: true
     aadProfileAdminGroupObjectIDs: array(cluster.adminAadGroupObjectId)
     enablePrivateCluster: true
-    privateDNSZone: privateDnsZoneModule.outputs.privateDnsZoneId
+    privateDNSZone: privateDnsZoneModule.outputs.privateDnsZoneResourceId
     disableRunCommand: false
     enablePrivateClusterPublicFQDN: false
     aksClusterNetworkPlugin: 'azure'
