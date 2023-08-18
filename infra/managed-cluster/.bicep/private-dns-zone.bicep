@@ -7,7 +7,7 @@ param privateDnsZoneName string
 @description('Required. The tags to associate with the private DNS zone.')
 param tags object
 
-var pdnsTags = { 
+var pdnsTags = {
   Name: privateDnsZoneName
   Purpose: 'AKS Private DNS Zone'
 }
@@ -23,10 +23,10 @@ resource privateDNSZoneVNetLink 'Microsoft.Network/privateDnsZones/virtualNetwor
   location: 'global'
   parent: privateDnsZone
   properties: {
-      registrationEnabled: true
-      virtualNetwork: {
-          id: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks', vnet.name)
-      }
+    registrationEnabled: true
+    virtualNetwork: {
+      id: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks', vnet.name)
+    }
   }
 }
 
@@ -34,11 +34,11 @@ resource msiPrivDnsZoneRoleAssignment 'Microsoft.Authorization/roleAssignments@2
   name: guid(resourceGroup().id, 'PrivateDNSZoneContributor', managedIdentity.name)
   scope: privateDnsZone
   properties: {
-      principalId: managedIdentity.principalId
-      roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b12aa53e-6015-4669-85d0-8515ebb3ae7f') // Private DNS Zone Contributor
-      principalType: 'ServicePrincipal'
+    principalId: managedIdentity.principalId
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b12aa53e-6015-4669-85d0-8515ebb3ae7f') // Private DNS Zone Contributor
+    principalType: 'ServicePrincipal'
   }
 }
 
-@description('Private DNS Zone ID')
+@description('Private DNS Zone Id.')
 output privateDnsZoneId string = privateDnsZone.id
