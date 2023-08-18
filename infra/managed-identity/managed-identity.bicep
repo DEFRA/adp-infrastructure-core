@@ -7,9 +7,6 @@ param location string = resourceGroup().location
 @description('Required. Environment name.')
 param environment string
 
-@description('Optional. Enable telemetry via a Globally Unique Identifier (GUID).')
-param enableDefaultTelemetry bool = true
-
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
@@ -33,7 +30,6 @@ var managedIdentityTags = {
 module managedIdentities 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
   name: 'managed-identity-${deploymentDate}'
   params: {
-    enableDefaultTelemetry: enableDefaultTelemetry
     name: managedIdentity.name
     tags: union(defaultTags, managedIdentityTags)
     lock: 'CanNotDelete'
