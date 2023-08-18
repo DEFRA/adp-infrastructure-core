@@ -33,11 +33,5 @@ module managedIdentities 'br/SharedDefraRegistry:managed-identity.user-assigned-
     name: managedIdentity.name
     tags: union(defaultTags, managedIdentityTags)
     lock: 'CanNotDelete'
-    roleAssignments: [
-      {
-        roleDefinitionIdOrName: 'Reader'
-        principalType: 'ServicePrincipal'
-      }
-    ]
   }
 }
