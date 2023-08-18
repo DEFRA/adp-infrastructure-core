@@ -15,6 +15,8 @@ param environment string
 param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
+@description('Required. The parameter object for configuring flux with the aks cluster. The object must contain the clusterId, fluxInfraGitUrl and fluxAppsGitUrl values.')
+param clusterFluxConfig object
 
 var kubernetesVersion = '1.26.6'
 
@@ -90,7 +92,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     aksServicePrincipalProfile: {}
     aadProfileClientAppID: ''
     aadProfileServerAppID: ''
-    aadProfileServerAppSecret:''
+    aadProfileServerAppSecret: ''
     aadProfileTenantId: subscription().tenantId
     primaryAgentPoolProfile: [
       {
@@ -170,5 +172,16 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     autoScalerProfileScanInterval: '10s'
     autoScalerProfileSkipNodesWithLocalStorage: 'true'
     autoScalerProfileSkipNodesWithSystemPods: 'true'
+  }
+}
+
+module aksFluxConfig 'aks-flux-config.bicep' = {
+  name: 'aks-cluster-flux-config-${deploymentDate}'
+  params: {
+    cluster: cluster
+    clusterId: clusterFluxConfig.clusterId
+    environment: environment
+    fluxAppsGitUrl: clusterFluxConfig.fluxAppsGitUrl
+    fluxInfraGitUrl: clusterFluxConfig.fluxInfraGitUrl
   }
 }
