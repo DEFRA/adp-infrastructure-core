@@ -30,19 +30,16 @@ var managedIdentityTags = {
   Tier: 'Shared'
 }
 
-module managedIdentities 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.7' = {
+module managedIdentities 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
   name: 'managed-identity-${deploymentDate}'
   params: {
     enableDefaultTelemetry: enableDefaultTelemetry
-    name: manageIndentity.name
+    name: managedIdentity.name
     tags: union(defaultTags, managedIdentityTags)
     lock: 'CanNotDelete'
     roleAssignments: [
       {
         roleDefinitionIdOrName: 'Reader'
-        principalIds: [
-          nestedDependencies.outputs.managedIdentityPrincipalId
-        ]
         principalType: 'ServicePrincipal'
       }
     ]
