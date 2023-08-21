@@ -172,16 +172,78 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     autoScalerProfileScanInterval: '10s'
     autoScalerProfileSkipNodesWithLocalStorage: 'true'
     autoScalerProfileSkipNodesWithSystemPods: 'true'
-  }
-}
 
-module aksFluxConfig 'aks-flux-config.bicep' = {
-  name: 'aks-cluster-flux-config-${deploymentDate}'
-  params: {
-    cluster: cluster
-    clusterId: clusterFluxConfig.clusterId
-    environment: environment
-    fluxAppsGitUrl: clusterFluxConfig.fluxAppsGitUrl
-    fluxInfraGitUrl: clusterFluxConfig.fluxInfraGitUrl
+    fluxExtension: {
+      autoUpgradeMinorVersion: true
+      releaseTrain: 'Stable'
+      configurationSettings: {
+        'helm-controller.enabled': 'true'
+        'source-controller.enabled': 'true'
+        'kustomize-controller.enabled': 'true'
+        'notification-controller.enabled': 'true'
+        'image-automation-controller.enabled': 'false'
+        'image-reflector-controller.enabled': 'false'
+      }
+      configurations: [
+        {
+          namespace: 'flux-system'
+          scope: 'cluster'
+          gitRepository: {
+            repositoryRef: {
+              branch: 'main'
+            }
+            syncIntervalInSeconds: 300
+            timeoutInSeconds: 180
+            url: clusterFluxConfig.fluxInfraGitUrl
+          }
+        }
+        {
+          namespace: 'flux-core-services'
+          scope: 'cluster'
+          gitRepository: {
+            repositoryRef: {
+              branch: 'main'
+            }
+            syncIntervalInSeconds: 300
+            timeoutInSeconds: 180
+            url: clusterFluxConfig.fluxInfraGitUrl
+          }
+          kustomizations: {
+            infra: {
+              path: './core/${environment}/${clusterFluxConfig.clusterId}'
+              dependsOn: []
+              timeoutInSeconds: 600
+              syncIntervalInSeconds: 600
+              validation: 'none'
+              prune: true
+            }
+          }
+        }
+        {
+          namespace: 'flux-core-services'
+          scope: 'cluster'
+          gitRepository: {
+            repositoryRef: {
+              branch: 'main'
+            }
+            syncIntervalInSeconds: 300
+            timeoutInSeconds: 180
+            url: clusterFluxConfig.fluxAppsGitUrl
+          }
+          kustomizations: {
+            apps: {
+              path: './apps/${environment}/${clusterFluxConfig.clusterId}'
+              dependsOn: [
+                'infra'
+              ]
+              timeoutInSeconds: 600
+              syncIntervalInSeconds: 600
+              retryIntervalInSeconds: 120
+              prune: true
+            }
+          }
+        }
+      ]
+    }
   }
 }
