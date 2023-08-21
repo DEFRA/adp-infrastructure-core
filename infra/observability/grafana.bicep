@@ -45,6 +45,17 @@ var commonTags = {
 }
 var tags = union(loadJsonContent('../default-tags.json'), commonTags)
 
+var principalIds = [
+  {
+    name: 'ADO-DefraGovUK-CDO-SND1-Cont'
+    objectId: '60ee3cde-2a80-4d56-9484-70b49ca06b56'
+  }
+  {
+    name: 'ADO-DefraGovUK-CDO-SND2-Cont'
+    objectId: '781d48ba-8edd-43d1-9d40-f16be08d45bc'
+  }
+]
+
 resource graphanaDashboardResource 'Microsoft.Dashboard/grafana@2022-08-01' = {
   name: name
   location: location
@@ -67,3 +78,13 @@ resource graphanaDashboardResource 'Microsoft.Dashboard/grafana@2022-08-01' = {
     zoneRedundancy: zoneRedundancy
   }
 }
+
+resource grafanaRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = [for principalId in principalIds: {
+  name: guid(resourceGroup().id, 'Contributor', principalId.name)
+  scope: graphanaDashboardResource
+  properties: {
+    principalId: principalId.objectId
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c') // Contributor
+    principalType: 'ServicePrincipal'
+  }
+}]
