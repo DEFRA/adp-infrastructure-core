@@ -16,6 +16,7 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
+/*
 var kubernetesVersion = '1.26.6'
 
 var customTags = {
@@ -36,8 +37,6 @@ var aksTags = {
   Purpose: 'AKS Cluster'
   Tier: 'Shared'
 }
-
-/*
 
 module miClusterControlPlane 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
   name: 'aks-cluster-mi-${deploymentDate}'
