@@ -47,49 +47,47 @@ extends:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
-      - name: 'snd2'
-        serviceConnection: AZD-CDO-SND2
+      - name: 'snd1'
+        serviceConnection: AZD-CDO-SND1
         deploymentBranches:
           - '*'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
     groupedTemplates:
-      #- name: network
-      #  templates:
-      #    - name: route-table
-      #      path: infra/network
-      #      resourceGroupName: $(virtualNetworkResourceGroup)
-      #    - name: virtual-network
-      #      path: infra/network
-      #      resourceGroupName: $(virtualNetworkResourceGroup)
+      - name: network
+        templates:
+          - name: route-table
+            path: infra/network
+            resourceGroupName: $(virtualNetworkResourceGroup)
+          - name: virtual-network
+            path: infra/network
+            resourceGroupName: $(virtualNetworkResourceGroup)
       - name: monitoring
         templates:
-          #- name: workspace
-          #  path: infra/operational-insights
-          #  resourceGroupName: $(servicesResourceGroup)
-          #- name: component
-          #  path: infra/insights
-          #  resourceGroupName: $(servicesResourceGroup)
+          - name: workspace
+            path: infra/operational-insights
+            resourceGroupName: $(servicesResourceGroup)
+          - name: component
+            path: infra/insights
+            resourceGroupName: $(servicesResourceGroup)
           - name: azuremonitor-workspace
             path: infra/operational-insights
             resourceGroupName: $(servicesResourceGroup)
-            #    #inlineScript: |
-            #    #  az aks update --enable-azure-monitor-metrics -n 'SNDCDOINFAK2401' -g 'SNDCDOINFRG2402' --azure-monitor-workspace-resource-id '/subscriptions/916afc11-9a78-4f8a-91c4-d50754b76733/resourceGroups/SNDCDOINFRG2401/providers/Microsoft.Monitor/accounts/SNDCDOINFAMW2401' --grafana-resource-id  '/subscriptions/7dc5bbdf-72d7-42ca-ac23-eb5eea3764b4/resourceGroups/SSVCDOINFRG3401/providers/Microsoft.Dashboard/grafana/SSVCDOINFGRA3401'
-      #- name: security
-      #  dependsOnGroupedTemplates:
-      #    - monitoring
-      #  templates:
-      #    - name: application-key-vault
-      #      path: infra/key-vault
-      #      resourceGroupName: $(servicesResourceGroup)
-      #      privateEndpointDnsRecordsForResources:
-      #        - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01 
-      #          resourceGroupName: $(servicesResourceGroup)
+      - name: security
+        dependsOnGroupedTemplates:
+          - monitoring
+        templates:
+          - name: application-key-vault
+            path: infra/key-vault
+            resourceGroupName: $(servicesResourceGroup)
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01 
+                resourceGroupName: $(servicesResourceGroup)
       - name: managed_cluster
         dependsOnGroupedTemplates:
           - monitoring
-        #  - network
+          - network
         templates:
         - name: aks-cluster
           path: infra/managed-cluster
@@ -103,37 +101,37 @@ extends:
               -AksClusterName $(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01
               -AzureMonitorWorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(servicesResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
               -GrafanaResourceId '/subscriptions/$(ssvSubscriptionId)/resourceGroups/$(ssvSharedResourceGroup)/providers/Microsoft.Dashboard/grafana/$(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01'
-      #- name: service_bus
-      #  templates:
-      #    - name: namespace
-      #      path: infra/service-bus
-      #      resourceGroupName: $(servicesResourceGroup)
-      #      privateEndpointDnsRecordsForResources:
-      #        - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
-      #          resourceGroupName: $(servicesResourceGroup)
-      #- name: application_infra
-      #  templates:
-      #    - name: configuration-store
-      #      path: infra/app-configuration
-      #      resourceGroupName: $(servicesResourceGroup)
-      #      privateEndpointDnsRecordsForResources:
-      #        - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-      #          resourceGroupName: $(servicesResourceGroup)
-      #    - name: application-container-registry
-      #      path: infra/container-registry
-      #      resourceGroupName: $(servicesResourceGroup)
-      #      privateEndpointDnsRecordsForResources:
-      #        - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
-      #          resourceGroupName: $(servicesResourceGroup)
-      #    - name: flexible-server
-      #      path: infra/postgre-sql
-      #      resourceGroupName: $(dbsResourceGroup)
-      #    - name: redis-cache
-      #      path: infra/redis-cache
-      #      resourceGroupName: $(servicesResourceGroup)                         
-      #    - name: application-storage-account
-      #      path: infra/storage-account
-      #      resourceGroupName: $(servicesResourceGroup)
-      #      privateEndpointDnsRecordsForResources:
-      #        - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
-      #          resourceGroupName: $(servicesResourceGroup)
+      - name: service_bus
+        templates:
+          - name: namespace
+            path: infra/service-bus
+            resourceGroupName: $(servicesResourceGroup)
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
+                resourceGroupName: $(servicesResourceGroup)
+      - name: application_infra
+        templates:
+          - name: configuration-store
+            path: infra/app-configuration
+            resourceGroupName: $(servicesResourceGroup)
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                resourceGroupName: $(servicesResourceGroup)
+          - name: application-container-registry
+            path: infra/container-registry
+            resourceGroupName: $(servicesResourceGroup)
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
+                resourceGroupName: $(servicesResourceGroup)
+          #- name: flexible-server
+          #  path: infra/postgre-sql
+          #  resourceGroupName: $(dbsResourceGroup)
+          #- name: redis-cache
+          #  path: infra/redis-cache
+          #  resourceGroupName: $(servicesResourceGroup)                         
+          - name: application-storage-account
+            path: infra/storage-account
+            resourceGroupName: $(servicesResourceGroup)
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
+                resourceGroupName: $(servicesResourceGroup)
