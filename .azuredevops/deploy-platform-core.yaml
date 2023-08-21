@@ -87,7 +87,7 @@ extends:
         templates:
           - name: aks-cluster
             path: infra/managed-cluster
-            resourceGroupName: $(servicesResourceGroup)
+            resourceGroupName: $(aksResourceGroup)
       - name: service_bus
         templates:
           - name: namespace
