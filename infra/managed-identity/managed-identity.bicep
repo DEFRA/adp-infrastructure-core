@@ -23,7 +23,7 @@ var defaultTags = union(json(loadTextContent('../default-tags.json')), customTag
 
 var managedIdentityTags = {
   Name: managedIdentity.name
-  Purpose: 'Managed Identity'
+  Purpose: 'ADP Platform Managed Identity'
   Tier: 'Shared'
 }
 
