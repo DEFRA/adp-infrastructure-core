@@ -89,13 +89,10 @@ module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zones:0.
   }
 }
 
-
-
 module networkContributorModule '.bicep/network-contributor.bicep' = {
   name: 'aks-cluster-network-contributor-${deploymentDate}'
   scope: resourceGroup(vnet.resourceGroup)
   dependsOn: [
-    managedIdentityModule
     privateDnsZoneModule
   ]
   params: {
@@ -110,8 +107,6 @@ module networkContributorModule '.bicep/network-contributor.bicep' = {
 module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.13-prerelease' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
-    managedIdentityModule
-    privateDnsZoneModule
     networkContributorModule
   ]
   params: {
