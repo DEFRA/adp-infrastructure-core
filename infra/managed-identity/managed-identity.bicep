@@ -7,6 +7,9 @@ param location string = resourceGroup().location
 @description('Required. Environment name.')
 param environment string
 
+@description('The principal ID of the created Managed Identity.')
+output managedIdentityPrincipalId string = managedIdentity.properties.principalId
+
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
@@ -35,3 +38,15 @@ module managedIdentities 'br/SharedDefraRegistry:managed-identity.user-assigned-
     lock: 'CanNotDelete'
   }
 }
+
+module mi_roleAssignments 'br/SharedDefraRegistry:authorization.role-assignments:0.4.6' = [for (roleAssignment, index) in roleAssignments: {
+  name: '{mi-role-assignment-${deploymentDate}'
+  params: {
+    principalIds: [
+      nestedDependencies.outputs.managedIdentityPrincipalId
+    ]
+    principalType: 'ServicePrincipal' 
+    roleDefinitionIdOrName: roleDefinitionResourceId
+  }
+}]
+
