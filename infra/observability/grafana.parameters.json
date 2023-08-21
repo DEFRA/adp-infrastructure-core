@@ -14,6 +14,9 @@
     "managedServiceIdentityType": {
       "value": "SystemAssigned"
     },
+    "adoServicePrincipals": {
+      "value": #{{ noescape(adoAppRegServicePrincipals) }}
+    },
     "location": {
       "value": "#{{ location }}"
     },
