@@ -37,6 +37,8 @@ var aksTags = {
   Tier: 'Shared'
 }
 
+/*
+
 module miClusterControlPlane 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
   name: 'aks-cluster-mi-${deploymentDate}'
   params: {
@@ -172,3 +174,5 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     autoScalerProfileSkipNodesWithSystemPods: 'true'
   }
 }
+
+*/
