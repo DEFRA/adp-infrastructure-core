@@ -102,6 +102,8 @@ extends:
               -AzureMonitorWorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(servicesResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
               -GrafanaResourceId '/subscriptions/$(ssvSubscriptionId)/resourceGroups/$(ssvSharedResourceGroup)/providers/Microsoft.Dashboard/grafana/$(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01'
       - name: service_bus
+        dependsOnGroupedTemplates:
+            - network
         templates:
           - name: namespace
             path: infra/service-bus
@@ -110,6 +112,8 @@ extends:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
                 resourceGroupName: $(servicesResourceGroup)
       - name: application_infra
+        dependsOnGroupedTemplates:
+            - network
         templates:
           - name: configuration-store
             path: infra/app-configuration
