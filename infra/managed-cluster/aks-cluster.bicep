@@ -196,21 +196,9 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
             timeoutInSeconds: 180
             url: clusterFluxConfig.fluxInfraGitUrl
           }
-        }
-        {
-          namespace: 'flux-core-services'
-          scope: 'cluster'
-          gitRepository: {
-            repositoryRef: {
-              branch: 'main'
-            }
-            syncIntervalInSeconds: 300
-            timeoutInSeconds: 180
-            url: clusterFluxConfig.fluxInfraGitUrl
-          }
           kustomizations: {
             infra: {
-              path: './core/${environment}/${clusterFluxConfig.clusterId}'
+              path: './clusters/${environment}/${clusterFluxConfig.clusterId}'
               dependsOn: []
               timeoutInSeconds: 600
               syncIntervalInSeconds: 600
@@ -219,30 +207,30 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
             }
           }
         }
-        // {
-        //   namespace: 'flux-core-services'
-        //   scope: 'cluster'
-        //   gitRepository: {
-        //     repositoryRef: {
-        //       branch: 'main'
-        //     }
-        //     syncIntervalInSeconds: 300
-        //     timeoutInSeconds: 180
-        //     url: clusterFluxConfig.fluxAppsGitUrl
-        //   }
-        //   kustomizations: {
-        //     apps: {
-        //       path: './apps/${environment}/${clusterFluxConfig.clusterId}'
-        //       dependsOn: [
-        //         'infra'
-        //       ]
-        //       timeoutInSeconds: 600
-        //       syncIntervalInSeconds: 600
-        //       retryIntervalInSeconds: 120
-        //       prune: true
-        //     }
-        //   }
-        // }
+        {
+          namespace: 'flux-apps'
+          scope: 'cluster'
+          gitRepository: {
+            repositoryRef: {
+              branch: 'main'
+            }
+            syncIntervalInSeconds: 300
+            timeoutInSeconds: 180
+            url: clusterFluxConfig.fluxAppsGitUrl
+          }
+          kustomizations: {
+            apps: {
+              path: './apps/${environment}/${clusterFluxConfig.clusterId}'
+              dependsOn: [
+                'infra'
+              ]
+              timeoutInSeconds: 600
+              syncIntervalInSeconds: 600
+              retryIntervalInSeconds: 120
+              prune: true
+            }
+          }
+        }
       ]
     }
   }
