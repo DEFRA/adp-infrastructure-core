@@ -1,3 +1,4 @@
+/*
 @description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and subnetClusterNodes values.')
 param vnet object
 
@@ -16,7 +17,6 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-/*
 var kubernetesVersion = '1.26.6'
 
 var customTags = {
