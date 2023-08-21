@@ -122,6 +122,3 @@ extends:
             privateEndpointDnsRecordsForResources:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
                 resourceGroupName: $(servicesResourceGroup)
-          - name: managed-identity
-            path: infra/managed-identity
-            resourceGroupName: $(servicesResourceGroup)
