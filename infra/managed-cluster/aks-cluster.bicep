@@ -1,4 +1,3 @@
-/*
 @description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and subnetClusterNodes values.')
 param vnet object
 
@@ -173,5 +172,3 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     autoScalerProfileSkipNodesWithSystemPods: 'true'
   }
 }
-
-*/
