@@ -4,7 +4,7 @@
     "parameters": {
         "managedIdentity": {
             "value": {
-                "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-platform-core"
+                "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-adp-platform-core"
             }    
         },
         "environment": {
