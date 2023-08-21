@@ -15,7 +15,7 @@
         "value": [{
             "name": "AllowHttpHttpsInboundVnet",
             "properties": {
-                "protocol": "TCP",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "sourceAddressPrefix": "VirtualNetwork",
                 "destinationAddressPrefix": "VirtualNetwork",
@@ -68,7 +68,7 @@
         {
             "name": "AllowAnyTcpVNetOutbound",
             "properties": {
-                "protocol": "TCP",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "*",
                 "sourceAddressPrefix": "VirtualNetwork",
@@ -85,7 +85,7 @@
         {
             "name": "AllowAnyUdpVNetOutbound",
             "properties": {
-                "protocol": "UDP",
+                "protocol": "Udp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "*",
                 "sourceAddressPrefix": "VirtualNetwork",
@@ -102,7 +102,7 @@
         {
             "name": "AllowAADAuthOutbound",
             "properties": {
-                "protocol": "TCP",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "443",
                 "sourceAddressPrefix": "VirtualNetwork",
@@ -119,7 +119,7 @@
         {
             "name": "AllowDevOpsSSHOutbound",
             "properties": {
-                "protocol": "TCP",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "22",
                 "sourceAddressPrefix": "VirtualNetwork",
@@ -136,7 +136,7 @@
         {
             "name": "AllowAzMonitorOutbound",
             "properties": {
-                "protocol": "TCP",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "sourceAddressPrefix": "VirtualNetwork",
                 "destinationAddressPrefix": "AzureMonitor",
@@ -155,7 +155,7 @@
         {
             "name": "AllowAzSqlUksOutbound",
             "properties": {
-                "protocol": "TCP",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "sourceAddressPrefix": "VirtualNetwork",
                 "destinationAddressPrefix": "Sql.UKSouth",
@@ -174,7 +174,7 @@
         {
             "name": "AllowAzSqlUkwOutbound",
             "properties": {
-                "protocol": "TCP",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "sourceAddressPrefix": "VirtualNetwork",
                 "destinationAddressPrefix": "Sql.UKWest",
@@ -193,7 +193,7 @@
         {
             "name": "AllowAzCosmosUksOutbound",
             "properties": {
-                "protocol": "TCP",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "0-65535",
                 "sourceAddressPrefix": "VirtualNetwork",
@@ -210,7 +210,7 @@
         {
             "name": "AllowAzCosmosUkwOutbound",
             "properties": {
-                "protocol": "TCP",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "0-65535",
                 "sourceAddressPrefix": "VirtualNetwork",
@@ -227,7 +227,7 @@
         {
             "name": "AllowAzAcrUksOutbound",
             "properties": {
-                "protocol": "TCP",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "443",
                 "sourceAddressPrefix": "VirtualNetwork",
@@ -244,7 +244,7 @@
         {
             "name": "AllowAzAcrUkwOutbound",
             "properties": {
-                "protocol": "TCP",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "443",
                 "sourceAddressPrefix": "VirtualNetwork",
@@ -261,7 +261,7 @@
         {
             "name": "AllowAzAppConfigurationOutbound",
             "properties": {
-                "protocol": "TCP",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "443",
                 "sourceAddressPrefix": "VirtualNetwork",
@@ -278,7 +278,7 @@
         {
             "name": "AllowAzKvltUksOutbound",
             "properties": {
-                "protocol": "TCP",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "443",
                 "sourceAddressPrefix": "VirtualNetwork",
@@ -295,7 +295,7 @@
         {
             "name": "AllowAzKvltUkwOutbound",
             "properties": {
-                "protocol": "TCP",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "443",
                 "sourceAddressPrefix": "VirtualNetwork",
@@ -312,7 +312,7 @@
         {
             "name": "AllowHttpsForFluxOutbound",
             "properties": {
-                "protocol": "TCP",
+                "protocol": "Tcp",
                 "sourcePortRange": "*",
                 "destinationPortRange": "443",
                 "sourceAddressPrefix": "VirtualNetwork",
