@@ -15,8 +15,8 @@ param environment string
 param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
-@description('Required. The parameter object for configuring flux with the aks cluster. The object must contain the clusterId, fluxInfraGitUrl and fluxAppsGitUrl values.')
-param clusterFluxConfig object
+@description('Required. The parameter object for configuring flux with the aks cluster. The object must contain the fluxCore  and fluxServices values.')
+param fluxConfig object
 
 var kubernetesVersion = '1.26.6'
 
@@ -192,29 +192,29 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
             repositoryRef: {
               branch: 'main'
             }
-            syncIntervalInSeconds: 300
-            timeoutInSeconds: 180
-            url: clusterFluxConfig.fluxInfraGitUrl
+            syncIntervalInSeconds: fluxConfig.fluxCore.gitRepository.syncIntervalInSeconds
+            timeoutInSeconds: fluxConfig.fluxCore.gitRepository.timeoutInSeconds
+            url: fluxConfig.fluxCore.gitRepository.url
           }
           kustomizations: {
             cluster: {
-              path: './clusters/${environment}/${clusterFluxConfig.clusterId}'
+              path: fluxConfig.fluxCore.kustomizations.clusterPath
               dependsOn: []
-              timeoutInSeconds: 600
-              syncIntervalInSeconds: 600
+              timeoutInSeconds: fluxConfig.fluxCore.kustomizations.timeoutInSeconds
+              syncIntervalInSeconds: fluxConfig.fluxCore.kustomizations.syncIntervalInSeconds
               validation: 'none'
               prune: true
             }
-            // infra: {
-            //   path: './infra/${environment}/${clusterFluxConfig.clusterId}'
-            //   dependsOn: [ 
-            //     // 'cluster' 
-            //   ]
-            //   timeoutInSeconds: 600
-            //   syncIntervalInSeconds: 600
-            //   validation: 'none'
-            //   prune: true
-            // }
+            infra: {
+              path: fluxConfig.fluxCore.kustomizations.infraPath
+              dependsOn: [
+                'cluster'
+              ]
+              timeoutInSeconds: fluxConfig.fluxCore.kustomizations.timeoutInSeconds
+              syncIntervalInSeconds: fluxConfig.fluxCore.kustomizations.syncIntervalInSeconds
+              validation: 'none'
+              prune: true
+            }
           }
         }
         {
@@ -224,16 +224,16 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
             repositoryRef: {
               branch: 'main'
             }
-            syncIntervalInSeconds: 300
-            timeoutInSeconds: 180
-            url: clusterFluxConfig.fluxAppsGitUrl
+            syncIntervalInSeconds: fluxConfig.fluxServices.gitRepository.syncIntervalInSeconds
+            timeoutInSeconds: fluxConfig.fluxServices.gitRepository.timeoutInSeconds
+            url: fluxConfig.fluxAppsGitUrl
           }
           kustomizations: {
             apps: {
-              path: './services/${environment}/${clusterFluxConfig.clusterId}'
-              timeoutInSeconds: 600
-              syncIntervalInSeconds: 600
-              retryIntervalInSeconds: 120
+              path: fluxConfig.fluxServices.kustomizations.appsPath
+              timeoutInSeconds: fluxConfig.fluxServices.kustomizations.timeoutInSeconds
+              syncIntervalInSeconds: fluxConfig.fluxServices.kustomizations.syncIntervalInSeconds
+              retryIntervalInSeconds: fluxConfig.fluxServices.kustomizations.retryIntervalInSeconds
               prune: true
             }
           }
