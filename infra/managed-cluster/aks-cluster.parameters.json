@@ -58,11 +58,10 @@
         },
         "clusterFluxConfig": {
             "value": {
-                "clusterId":"01",
-                "fluxInfraGitUrl":"https://github.com/defra-adp-sandpit/adp-flux-infrastructure",
-                "fluxAppsGitUrl":"https://github.com/defra-adp-sandpit/adp-flux-applications"
+                "clusterId": "01",
+                "fluxInfraGitUrl": "https://github.com/defra-adp-sandpit/adp-flux-infrastructure",
+                "fluxAppsGitUrl": "https://github.com/defra-adp-sandpit/adp-flux-applications"
             }
         }
-    
     }
 }

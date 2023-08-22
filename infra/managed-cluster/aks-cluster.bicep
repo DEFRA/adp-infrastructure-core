@@ -245,7 +245,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
       }
       configurations: [
         {
-          namespace: 'flux-core-services'
+          namespace: 'flux-core'
           scope: 'cluster'
           gitRepository: {
             repositoryRef: {
@@ -256,9 +256,17 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
             url: clusterFluxConfig.fluxInfraGitUrl
           }
           kustomizations: {
-            infra: {
+            cluster: {
               path: './clusters/${environment}/${clusterFluxConfig.clusterId}'
               dependsOn: []
+              timeoutInSeconds: 600
+              syncIntervalInSeconds: 600
+              validation: 'none'
+              prune: true
+            }
+            infra: {
+              path: './infra/${environment}/${clusterFluxConfig.clusterId}'
+              dependsOn: [ 'cluster' ]
               timeoutInSeconds: 600
               syncIntervalInSeconds: 600
               validation: 'none'
@@ -267,7 +275,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
           }
         }
         {
-          namespace: 'flux-apps'
+          namespace: 'flux-services'
           scope: 'cluster'
           gitRepository: {
             repositoryRef: {
@@ -279,7 +287,8 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
           }
           kustomizations: {
             apps: {
-              path: './apps/${environment}/${clusterFluxConfig.clusterId}'
+              path: './services/${environment}/${clusterFluxConfig.clusterId}'
+              dependsOn: []
               timeoutInSeconds: 600
               syncIntervalInSeconds: 600
               retryIntervalInSeconds: 120
