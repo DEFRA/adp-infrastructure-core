@@ -186,7 +186,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
       }
       configurations: [
         {
-          namespace: 'flux-infra'
+          namespace: 'flux-system'
           scope: 'cluster'
           gitRepository: {
             repositoryRef: {
