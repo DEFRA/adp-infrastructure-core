@@ -1,7 +1,7 @@
 # Description
 *A brief description of changes being made*
 
-*Link to the relevant work items: e.g. [#213700](https://dev.azure.com/defragovuk/DEFRA-FFC/_workitems/edit/213700)*
+*Link to the relevant work items: e.g. AB#213700*
 
 # Testing
 *Any relevant testing information and pipeline runs.*
