@@ -1,0 +1,352 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "location": {
+        "value": "#{{ location }}"
+      },
+      "environment": {
+        "value": "#{{ environment }}"
+      },
+      "nsgList":{
+        "value": [
+            {
+            "name" : "#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
+            "securityRules":[{
+                "name": "AllowHttpHttpsInboundVnet",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "VirtualNetwork",
+                    "access": "Allow",
+                    "priority": 2000,
+                    "direction": "Inbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [
+                        "443",
+                        "80"
+                    ],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowAnyInboundFromAzLB",
+                "properties": {
+                    "protocol": "*",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "*",
+                    "sourceAddressPrefix": "AzureLoadBalancer",
+                    "destinationAddressPrefix": "VirtualNetwork",
+                    "access": "Allow",
+                    "priority": 3600,
+                    "direction": "Inbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "DenyAnyOtherInbound",
+                "properties": {
+                    "protocol": "*",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "*",
+                    "sourceAddressPrefix": "*",
+                    "destinationAddressPrefix": "*",
+                    "access": "Deny",
+                    "priority": 4000,
+                    "direction": "Inbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowAnyTcpVNetOutbound",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "*",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "VirtualNetwork",
+                    "access": "Allow",
+                    "priority": 2000,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowAnyUdpVNetOutbound",
+                "properties": {
+                    "protocol": "Udp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "*",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "VirtualNetwork",
+                    "access": "Allow",
+                    "priority": 2010,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowAADAuthOutbound",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "443",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "AzureActiveDirectory",
+                    "access": "Allow",
+                    "priority": 2020,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowDevOpsSSHOutbound",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "22",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "AzureDevOps",
+                    "access": "Allow",
+                    "priority": 2030,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowAzMonitorOutbound",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "AzureMonitor",
+                    "access": "Allow",
+                    "priority": 2040,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [
+                        "443",
+                        "1886"
+                    ],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowAzSqlUksOutbound",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "Sql.UKSouth",
+                    "access": "Allow",
+                    "priority": 2050,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [
+                        "1433",
+                        "11000-11999"
+                    ],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowAzSqlUkwOutbound",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "Sql.UKWest",
+                    "access": "Allow",
+                    "priority": 2055,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [
+                        "1433",
+                        "11000-11999"
+                    ],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowAzCosmosUksOutbound",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "0-65535",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "AzureCosmosDB.UKSouth",
+                    "access": "Allow",
+                    "priority": 2060,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowAzCosmosUkwOutbound",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "0-65535",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "AzureCosmosDB.UKWest",
+                    "access": "Allow",
+                    "priority": 2065,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowAzAcrUksOutbound",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "443",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "AzureContainerRegistry.UKSouth",
+                    "access": "Allow",
+                    "priority": 2070,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowAzAcrUkwOutbound",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "443",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "AzureContainerRegistry.UKWest",
+                    "access": "Allow",
+                    "priority": 2075,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowAzAppConfigurationOutbound",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "443",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "AppConfiguration",
+                    "access": "Allow",
+                    "priority": 2080,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowAzKvltUksOutbound",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "443",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "AzureKeyVault.UKSouth",
+                    "access": "Allow",
+                    "priority": 2090,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowAzKvltUkwOutbound",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "443",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "AzureKeyVault.UKWest",
+                    "access": "Allow",
+                    "priority": 2095,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowHttpsForFluxOutbound",
+                "properties": {
+                    "protocol": "Tcp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "443",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "Internet",
+                    "access": "Allow",
+                    "priority": 3900,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "DenyAllOtherOutbound",
+                "properties": {
+                    "protocol": "*",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "*",
+                    "sourceAddressPrefix": "*",
+                    "destinationAddressPrefix": "*",
+                    "access": "Deny",
+                    "priority": 4000,
+                    "direction": "Outbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            }]
+        }            
+        ]
+      }
+
+      
+    }
+  }

@@ -60,6 +60,9 @@ extends:
           - name: route-table
             path: infra/network
             resourceGroupName: $(virtualNetworkResourceGroup)
+          - name: subnet-nsg
+            path: infra/network
+            resourceGroupName: $(virtualNetworkResourceGroup)            
           - name: virtual-network
             path: infra/network
             resourceGroupName: $(virtualNetworkResourceGroup)
