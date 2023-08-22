@@ -205,16 +205,16 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
               validation: 'none'
               prune: true
             }
-            infra: {
-              path: './infra/${environment}/${clusterFluxConfig.clusterId}'
-              dependsOn: [ 
-                // 'cluster' 
-              ]
-              timeoutInSeconds: 600
-              syncIntervalInSeconds: 600
-              validation: 'none'
-              prune: true
-            }
+            // infra: {
+            //   path: './infra/${environment}/${clusterFluxConfig.clusterId}'
+            //   dependsOn: [ 
+            //     // 'cluster' 
+            //   ]
+            //   timeoutInSeconds: 600
+            //   syncIntervalInSeconds: 600
+            //   validation: 'none'
+            //   prune: true
+            // }
           }
         }
         {
