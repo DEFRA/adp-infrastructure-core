@@ -56,12 +56,34 @@
         "environment": {
             "value": "#{{ environment }}"
         },
-        "clusterFluxConfig": {
+        "fluxConfig": {
             "value": {
-                "clusterId": "01",
-                "fluxInfraGitUrl": "https://github.com/defra-adp-sandpit/adp-flux-infrastructure",
-                "fluxAppsGitUrl": "https://github.com/defra-adp-sandpit/adp-flux-applications"
+                "fluxCore": {
+                    "gitRepository": {
+                        "syncIntervalInSeconds": 300,
+                        "timeoutInSeconds": 180,
+                        "url": "https://github.com/defra-adp-sandpit/adp-flux-infrastructure"
+                    },
+                    "kustomizations": {
+                        "timeoutInSeconds": 600,
+                        "syncIntervalInSeconds": 600,
+                        "clusterPath": "./clusters/#{{ environment }}/01",
+                        "infraPath": "./infra/#{{ environment }}/01"
+                    }
+                },
+                "fluxServices": {
+                    "gitRepository": {
+                        "syncIntervalInSeconds": 300,
+                        "timeoutInSeconds": 180,
+                        "url": "https://github.com/defra-adp-sandpit/adp-flux-applications"
+                    },
+                    "kustomizations": {
+                        "timeoutInSeconds": 600,
+                        "syncIntervalInSeconds": 600,
+                        "retryIntervalInSeconds": 120,
+                        "appsPath": "./services/#{{ environment }}/01"
+                    }
+                }
             }
         }
     }
-}
