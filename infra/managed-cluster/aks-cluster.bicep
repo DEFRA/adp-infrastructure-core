@@ -266,7 +266,9 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
             }
             infra: {
               path: './infra/${environment}/${clusterFluxConfig.clusterId}'
-              dependsOn: [ 'cluster' ]
+              dependsOn: [ 
+                // 'cluster' 
+              ]
               timeoutInSeconds: 600
               syncIntervalInSeconds: 600
               validation: 'none'
@@ -288,7 +290,6 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
           kustomizations: {
             apps: {
               path: './services/${environment}/${clusterFluxConfig.clusterId}'
-              dependsOn: []
               timeoutInSeconds: 600
               syncIntervalInSeconds: 600
               retryIntervalInSeconds: 120
