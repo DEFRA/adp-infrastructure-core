@@ -245,7 +245,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
       }
       configurations: [
         {
-          namespace: 'flux-system'
+          namespace: 'flux-core-services'
           scope: 'cluster'
           gitRepository: {
             repositoryRef: {
@@ -280,9 +280,9 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
           kustomizations: {
             apps: {
               path: './apps/${environment}/${clusterFluxConfig.clusterId}'
-              // dependsOn: [
-              //   'infra'
-              // ]
+              dependsOn: [
+                'infra'
+              ]
               timeoutInSeconds: 600
               syncIntervalInSeconds: 600
               retryIntervalInSeconds: 120
