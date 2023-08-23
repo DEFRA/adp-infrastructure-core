@@ -1,0 +1,56 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "wafPolicyName": {
+      "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_frontdoorwaf }}#{{ nc_instance_regionid }}01"
+    },
+    "wafMode": {
+      "value": "Prevention"
+    },
+    "wafManagedRuleSets": {
+      "value": [
+        {
+          "ruleSetType": "Microsoft_DefaultRuleSet",
+          "ruleSetVersion": "2.1",
+          "ruleGroupOverrides": [],
+          "exclusions": [],
+          "ruleSetAction": "Block"
+        },
+        {
+          "ruleSetType": "Microsoft_BotManagerRuleSet",
+          "ruleSetVersion": "1.0",
+          "ruleGroupOverrides": [],
+          "exclusions": []
+        }
+      ]
+    },
+    "customRules": {
+      "value": [
+        {
+          "name": "ApplyGeoFilter",
+          "priority": 100,
+          "enabledState": "Enabled",
+          "ruleType": "MatchRule",
+          "action": "Block",
+          "matchConditions": [
+            {
+              "matchVariable": "RemoteAddr",
+              "operator": "GeoMatch",
+              "negateCondition": true,
+              "matchValue": [
+                "GB"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "location": {
+      "value": "global"
+    },
+    "environment": {
+      "value": "#{{ environment }}"
+    }
+  }
+}
