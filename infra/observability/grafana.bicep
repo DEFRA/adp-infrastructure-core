@@ -79,6 +79,8 @@ resource graphanaDashboardResource 'Microsoft.Dashboard/grafana@2022-08-01' = {
   }
 }
 
+// NEED TO ADD GRAFANA ADMINS ROLE
+
 resource grafanaRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = [for adoServicePrincipal in adoServicePrincipals: {
   name: guid(resourceGroup().id, 'Contributor', adoServicePrincipal.objectId, adoServicePrincipal.name)
   scope: graphanaDashboardResource
