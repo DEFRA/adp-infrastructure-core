@@ -3,10 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "name": {
-        "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_frontdoor }}#{{ nc_instance_regionid }}01"                 
+        "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_frontdoor }}#{{ nc_instance_regionid }}01"
       },
       "sku": {
-        "value": "#{{ frontDoorSkuName }}"                 
+        "value": "#{{ frontDoorSkuName }}"
       },
       "location": {
         "value": "global"
