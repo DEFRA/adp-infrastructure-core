@@ -55,13 +55,15 @@ param wafManagedRuleSets array = [
 ]
 
 @description('Optional. The Azure region where the resources will be deployed.')
-param location string = resourceGroup().location
+param location string = 'global'
 
 @description('Required. Environment name.')
 param environment string
 
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
+
+var lock = 'CanNotDelete'
 
 var customTags = {
   Location: location
@@ -100,5 +102,15 @@ resource wafPolicy 'Microsoft.Network/FrontDoorWebApplicationFirewallPolicies@20
   }
   tags: union(tags, frontDoorWafTags)
 }
+
+resource profile_lock 'Microsoft.Authorization/locks@2020-05-01' = if (!empty(lock)) {
+  name: '${wafPolicy.name}-${lock}-lock'
+  properties: {
+    level: any(lock)
+    notes: lock == 'CanNotDelete' ? 'Cannot delete resource or child resources.' : 'Cannot modify the resource or child resources.'
+  }
+  scope: wafPolicy
+}
+
 
 output frontDoorWAFPolicyName string = wafPolicy.name

@@ -5,6 +5,9 @@
     "wafPolicyName": {
       "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_frontdoorwaf }}#{{ nc_instance_regionid }}01"
     },
+    "skuName": {
+      "value": "#{{ frontDoorSkuName }}"
+    },
     "wafMode": {
       "value": "Prevention"
     },
