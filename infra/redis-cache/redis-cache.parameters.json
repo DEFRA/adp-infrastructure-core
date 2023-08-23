@@ -6,7 +6,7 @@
       "value": {
         "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_redis }}#{{ nc_instance_regionid }}01",
         "skuName": "#{{ redisCacheSkuName }}",
-        "capacity": "1"
+        "capacity": "#{{ redisCacheCapacity }}"
       }
     },
     "vnet": {
