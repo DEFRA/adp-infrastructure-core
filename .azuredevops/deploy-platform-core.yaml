@@ -125,3 +125,8 @@ extends:
             privateEndpointDnsRecordsForResources:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
                 resourceGroupName: $(servicesResourceGroup)
+      - name: front_door
+        templates:
+          - name: front-door-waf
+            path: infra/front-door
+            resourceGroupName: $(frontDoorResourceGroup)                
