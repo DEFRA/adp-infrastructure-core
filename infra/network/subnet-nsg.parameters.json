@@ -12,6 +12,7 @@
         "value": [
             {
             "name" : "#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
+            "purpose" : "AKS Subnet",
             "securityRules":[{
                 "name": "AllowHttpHttpsInboundVnet",
                 "properties": {
