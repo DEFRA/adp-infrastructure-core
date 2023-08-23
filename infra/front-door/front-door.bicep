@@ -1,10 +1,6 @@
 @description('Required. Name of Front Door Profile.')
 param name string
 
-@allowed([
-  'Standard_AzureFrontDoor'
-  'Premium_AzureFrontDoor'
-])
 @description('Required. The pricing tier of the FrontDoor profile.')
 param sku string
 
