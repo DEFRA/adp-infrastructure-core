@@ -62,7 +62,7 @@
                     "gitRepository": {
                         "syncIntervalInSeconds": 300,
                         "timeoutInSeconds": 180,
-                        "url": "https://github.com/defra-adp-sandpit/adp-flux-infrastructure"
+                        "url": "https://github.com/DEFRA/adp-flux-core"
                     },
                     "kustomizations": {
                         "timeoutInSeconds": 600,
@@ -75,7 +75,7 @@
                     "gitRepository": {
                         "syncIntervalInSeconds": 300,
                         "timeoutInSeconds": 180,
-                        "url": "https://github.com/defra-adp-sandpit/adp-flux-applications"
+                        "url": "https://github.com/DEFRA/adp-flux-services"
                     },
                     "kustomizations": {
                         "timeoutInSeconds": 600,
