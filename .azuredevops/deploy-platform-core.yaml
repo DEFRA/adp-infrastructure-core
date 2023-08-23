@@ -92,15 +92,15 @@ extends:
         - name: aks-cluster
           path: infra/managed-cluster
           resourceGroupName: $(servicesResourceGroup)
-          postDeployScriptsList:
-          - displayName: Enable Prometheus Logs and link Azure Monitor Workspace to Grafana Dashboard
-            scriptPath: scripts/Enable-AksPrometheusGrafanaMonitoring.ps1
-            type: AzureCLI
-            scriptArguments: >
-              -ResourceGroupName $(servicesResourceGroup)
-              -AksClusterName $(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01
-              -AzureMonitorWorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(servicesResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
-              -GrafanaResourceId '/subscriptions/$(ssvSubscriptionId)/resourceGroups/$(ssvSharedResourceGroup)/providers/Microsoft.Dashboard/grafana/$(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01'
+          #postDeployScriptsList:
+          #- displayName: Enable Prometheus Logs and link Azure Monitor Workspace to Grafana Dashboard
+          #  scriptPath: scripts/Enable-AksPrometheusGrafanaMonitoring.ps1
+          #  type: AzureCLI
+          #  scriptArguments: >
+          #    -ResourceGroupName $(servicesResourceGroup)
+          #    -AksClusterName $(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01
+          #    -AzureMonitorWorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(servicesResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
+          #    -GrafanaResourceId '/subscriptions/$(ssvSubscriptionId)/resourceGroups/$(ssvSharedResourceGroup)/providers/Microsoft.Dashboard/grafana/$(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01'
       - name: service_bus
         dependsOnGroupedTemplates:
             - network
