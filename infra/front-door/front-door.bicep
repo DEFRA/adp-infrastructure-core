@@ -11,8 +11,8 @@ param sku string
 @description('Required. Environment name.')
 param environment string
 
-@description('Optional. Date in the format yyyyMMdd-HHmmss.')
-param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
+// @description('Optional. Date in the format yyyyMMdd-HHmmss.')
+// param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
