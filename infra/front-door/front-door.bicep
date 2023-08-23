@@ -2,11 +2,11 @@
 param name string
 
 @allowed([
-  'Standard_Microsoft_AzureFrontDoor'
-  'Premium_Microsoft_AzureFrontDoor'
+  'Standard_AzureFrontDoor'
+  'Premium_AzureFrontDoor'
 ])
-@description('Required. The pricing tier of the FrontDoor profile.')
-param sku string
+@description('Optional. The pricing tier of the FrontDoor profile.')
+param sku string = 'Premium_AzureFrontDoor'
 
 @description('Required. Environment name.')
 param environment string
