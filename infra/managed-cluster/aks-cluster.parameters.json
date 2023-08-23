@@ -12,8 +12,9 @@
         "cluster": {
             "value": {
                 "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_kubernetesservice }}#{{ nc_instance_regionid }}01",
+                "kubernetesVersion": "#{{ aksVersion }}",
                 "skuTier": "#{{ aksClusterSkuTier }}",
-                "nodeResourceGroup": "#{{ aksNodeResourceGroup }}",
+                "nodeResourceGroup": "#{{ aksResourceGroup }}-Managed",
                 "miControlPlane": "#{{ aksControlPlaneManagedIdentity }}",
                 "adminAadGroupObjectId": "#{{ aksAADProfileAdminGroupObjectId }}",
                 "npSystem": {
@@ -41,6 +42,12 @@
                         "3"
                     ]
                 }
+            }
+        },
+        "privateDnsZone":{
+            "value": { 
+                "prefix" : "#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}01",
+                "resourceGroup": "#{{ dnsResourceGroup }}"
             }
         },
         "location": {

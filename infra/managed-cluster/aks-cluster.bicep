@@ -4,6 +4,9 @@ param vnet object
 @description('Required. The parameter object for the cluster. The object must contain the name,skuTier,nodeResourceGroup,miControlPlane,adminAadGroupObjectId and monitoringWorkspace values.')
 param cluster object
 
+@description('Required. The prefix for the private DNS zone.')
+param privateDnsZone object
+
 @allowed([
   'UKSouth'
 ])
@@ -16,18 +19,16 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-var kubernetesVersion = '1.26.6'
-
-var customTags = {
+var commonTags = {
   Location: location
   CreatedDate: createdDate
   Environment: environment
 }
-var tags = union(loadJsonContent('../default-tags.json'), customTags)
+var tags = union(loadJsonContent('../default-tags.json'), commonTags)
 
 var tagsMi = {
   Name: cluster.miControlPlane
-  Purpose: 'Managed Identity'
+  Purpose: 'AKS Control Plane Managed Identity'
   Tier: 'Security'
 }
 
@@ -37,7 +38,17 @@ var aksTags = {
   Tier: 'Shared'
 }
 
-module miClusterControlPlane 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
+var pdnsTags = {
+  Name: privateDnsZoneName
+  Purpose: 'AKS Private DNS Zone'
+}
+
+var pdnsVnetLinksTags = {
+  Name: vnet.name
+  Purpose: 'AKS Private DNS Zone VNet Link'
+}
+
+module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
   name: 'aks-cluster-mi-${deploymentDate}'
   params: {
     name: cluster.miControlPlane
@@ -47,14 +58,63 @@ module miClusterControlPlane 'br/SharedDefraRegistry:managed-identity.user-assig
   }
 }
 
-module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.8-prerelease' = {
+var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io')
+
+module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zones:0.5.7' = {
+  name: 'aks-private-dns-zone-${deploymentDate}'
+  dependsOn: [
+    managedIdentityModule
+  ]
+  params: {
+   name: privateDnsZoneName
+   lock: 'CanNotDelete'
+   tags: union(tags, pdnsTags)
+   roleAssignments: [
+    {
+      roleDefinitionIdOrName: 'Private DNS Zone Contributor'
+      principalIds: [
+        managedIdentityModule.outputs.principalId
+      ]
+      principalType: 'ServicePrincipal'
+    }
+   ]
+   virtualNetworkLinks: [
+    {
+      name: vnet.name
+      virtualNetworkResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks', vnet.name)
+      registrationEnabled: true
+      tags: union(tags, pdnsVnetLinksTags)
+    }
+   ]
+  }
+}
+
+module networkContributorModule '.bicep/network-contributor.bicep' = {
+  name: 'aks-cluster-network-contributor-${deploymentDate}'
+  scope: resourceGroup(vnet.resourceGroup)
+  dependsOn: [
+    privateDnsZoneModule
+  ]
+  params: {
+    managedIdentity: {
+      name: cluster.miControlPlane
+      principalId: managedIdentityModule.outputs.principalId
+    }
+    vnetName: vnet.name
+  }
+}
+
+module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.13-prerelease' = {
   name: 'aks-cluster-${deploymentDate}'
+  dependsOn: [
+    networkContributorModule
+  ]
   params: {
     name: cluster.name
     location: location
     lock: 'CanNotDelete'
     tags: union(tags, aksTags)
-    aksClusterKubernetesVersion: kubernetesVersion
+    aksClusterKubernetesVersion: cluster.kubernetesVersion
     nodeResourceGroup: cluster.nodeResourceGroup
     enableDefaultTelemetry: false
     omsAgentEnabled: true
@@ -64,7 +124,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     disableLocalAccounts: true
     systemAssignedIdentity: false
     userAssignedIdentities: {
-      '${miClusterControlPlane.outputs.resourceId}': {}
+      '${managedIdentityModule.outputs.resourceId}': {}
     }
     enableSecurityProfileWorkloadIdentity: true
     azurePolicyEnabled: true
@@ -72,7 +132,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     enableOidcIssuerProfile: true
     aadProfileAdminGroupObjectIDs: array(cluster.adminAadGroupObjectId)
     enablePrivateCluster: true
-    usePrivateDNSZone: true
+    privateDNSZone: privateDnsZoneModule.outputs.resourceId
     disableRunCommand: false
     enablePrivateClusterPublicFQDN: false
     aksClusterNetworkPlugin: 'azure'
@@ -81,7 +141,6 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     aksClusterPodCidr: '172.16.0.0/16'
     aksClusterServiceCidr: '172.18.0.0/16'
     aksClusterDnsServiceIP: '172.18.255.250'
-    aksClusterDockerBridgeCidr: ''
     aksClusterLoadBalancerSku: 'standard'
     managedOutboundIPCount: 1
     aksClusterOutboundType: 'loadBalancer'
@@ -90,7 +149,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     aksServicePrincipalProfile: {}
     aadProfileClientAppID: ''
     aadProfileServerAppID: ''
-    aadProfileServerAppSecret:''
+    aadProfileServerAppSecret: ''
     aadProfileTenantId: subscription().tenantId
     primaryAgentPoolProfile: [
       {
@@ -112,7 +171,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         type: 'VirtualMachineScaleSets'
         scaleSetPriority: 'Regular'
         scaleSetEvictionPolicy: 'Delete'
-        orchestratorVersion: kubernetesVersion
+        orchestratorVersion: cluster.kubernetesVersion
         enableNodePublicIP: false
         maxPods: cluster.npSystem.maxPods
         availabilityZones: cluster.npSystem.availabilityZones
@@ -144,7 +203,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
         type: 'VirtualMachineScaleSets'
         scaleSetPriority: 'Regular'
         scaleSetEvictionPolicy: 'Delete'
-        orchestratorVersion: kubernetesVersion
+        orchestratorVersion: cluster.kubernetesVersion
         enableNodePublicIP: false
         maxPods: cluster.npUser.maxPods
         availabilityZones: cluster.npUser.availabilityZones
