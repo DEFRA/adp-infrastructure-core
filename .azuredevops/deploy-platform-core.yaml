@@ -55,73 +55,73 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedTemplates:
-      - name: network
-        templates:
-          - name: route-table
-            path: infra/network
-            resourceGroupName: $(virtualNetworkResourceGroup)
-          - name: subnet-nsg
-            path: infra/network
-            resourceGroupName: $(virtualNetworkResourceGroup)            
-          - name: virtual-network
-            path: infra/network
-            resourceGroupName: $(virtualNetworkResourceGroup)
-      - name: monitoring
-        templates:
-          - name: workspace
-            path: infra/operational-insights
-            resourceGroupName: $(servicesResourceGroup)
-          - name: component
-            path: infra/insights
-            resourceGroupName: $(servicesResourceGroup)
-      - name: security
-        dependsOnGroupedTemplates:
-          - monitoring
-        templates:
-          - name: application-key-vault
-            path: infra/key-vault
-            resourceGroupName: $(servicesResourceGroup)
-            privateEndpointDnsRecordsForResources:
-              - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01 
-                resourceGroupName: $(servicesResourceGroup)
+      # - name: network
+      #   templates:
+      #     - name: route-table
+      #       path: infra/network
+      #       resourceGroupName: $(virtualNetworkResourceGroup)
+      #     - name: subnet-nsg
+      #       path: infra/network
+      #       resourceGroupName: $(virtualNetworkResourceGroup)            
+      #     - name: virtual-network
+      #       path: infra/network
+      #       resourceGroupName: $(virtualNetworkResourceGroup)
+      # - name: monitoring
+      #   templates:
+      #     - name: workspace
+      #       path: infra/operational-insights
+      #       resourceGroupName: $(servicesResourceGroup)
+      #     - name: component
+      #       path: infra/insights
+      #       resourceGroupName: $(servicesResourceGroup)
+      # - name: security
+      #   dependsOnGroupedTemplates:
+      #     - monitoring
+      #   templates:
+      #     - name: application-key-vault
+      #       path: infra/key-vault
+      #       resourceGroupName: $(servicesResourceGroup)
+      #       privateEndpointDnsRecordsForResources:
+      #         - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01 
+      #           resourceGroupName: $(servicesResourceGroup)
       - name: managed_cluster
-        dependsOnGroupedTemplates:
-          - network
+        # dependsOnGroupedTemplates:
+        #   - network
         templates:
           - name: aks-cluster
             path: infra/managed-cluster
             resourceGroupName: $(aksResourceGroup)
-      - name: service_bus
-        templates:
-          - name: namespace
-            path: infra/service-bus
-            resourceGroupName: $(servicesResourceGroup)
-            privateEndpointDnsRecordsForResources:
-              - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
-                resourceGroupName: $(servicesResourceGroup)
-      - name: application_infra
-        templates:
-          - name: configuration-store
-            path: infra/app-configuration
-            resourceGroupName: $(servicesResourceGroup)
-            privateEndpointDnsRecordsForResources:
-              - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                resourceGroupName: $(servicesResourceGroup)
-          - name: application-container-registry
-            path: infra/container-registry
-            resourceGroupName: $(servicesResourceGroup)
-            privateEndpointDnsRecordsForResources:
-              - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
-                resourceGroupName: $(servicesResourceGroup)
-          - name: flexible-server
-            path: infra/postgre-sql
-            resourceGroupName: $(dbsResourceGroup)
-          - name: redis-cache
-            path: infra/redis-cache
-            resourceGroupName: $(servicesResourceGroup)                         
-          - name: application-storage-account
-            path: infra/storage-account
-            resourceGroupName: $(servicesResourceGroup)
-            privateEndpointDnsRecordsForResources:
-              - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
-                resourceGroupName: $(servicesResourceGroup)
+      # - name: service_bus
+      #   templates:
+      #     - name: namespace
+      #       path: infra/service-bus
+      #       resourceGroupName: $(servicesResourceGroup)
+      #       privateEndpointDnsRecordsForResources:
+      #         - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
+      #           resourceGroupName: $(servicesResourceGroup)
+      # - name: application_infra
+      #   templates:
+      #     - name: configuration-store
+      #       path: infra/app-configuration
+      #       resourceGroupName: $(servicesResourceGroup)
+      #       privateEndpointDnsRecordsForResources:
+      #         - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+      #           resourceGroupName: $(servicesResourceGroup)
+      #     - name: application-container-registry
+      #       path: infra/container-registry
+      #       resourceGroupName: $(servicesResourceGroup)
+      #       privateEndpointDnsRecordsForResources:
+      #         - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
+      #           resourceGroupName: $(servicesResourceGroup)
+      #     - name: flexible-server
+      #       path: infra/postgre-sql
+      #       resourceGroupName: $(dbsResourceGroup)
+      #     - name: redis-cache
+      #       path: infra/redis-cache
+      #       resourceGroupName: $(servicesResourceGroup)                         
+      #     - name: application-storage-account
+      #       path: infra/storage-account
+      #       resourceGroupName: $(servicesResourceGroup)
+      #       privateEndpointDnsRecordsForResources:
+      #         - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
+      #           resourceGroupName: $(servicesResourceGroup)
