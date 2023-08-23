@@ -285,7 +285,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
             }
             syncIntervalInSeconds: fluxConfig.fluxServices.gitRepository.syncIntervalInSeconds
             timeoutInSeconds: fluxConfig.fluxServices.gitRepository.timeoutInSeconds
-            url: fluxConfig.fluxAppsGitUrl
+            url: fluxConfig.fluxServices.gitRepository.url
           }
           kustomizations: {
             apps: {
