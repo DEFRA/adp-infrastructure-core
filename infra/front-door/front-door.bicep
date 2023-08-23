@@ -28,7 +28,7 @@ var customTags = {
 var tags = union(loadJsonContent('../default-tags.json'), customTags)
 
 var frontDoorTags = {
-  Name: name 
+  Name: name
   Purpose: 'ADP Core Front Door'
   Tier: 'Shared'
 }
