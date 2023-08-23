@@ -1,11 +1,11 @@
-@description('Required. The parameter object for redis cache. The object must contain the name and skuName values.')
+@description('Required. Name of Front Door Profile.')
 param name string
 
 @allowed([
   'Standard_Microsoft_AzureFrontDoor'
   'Premium_Microsoft_AzureFrontDoor'
 ])
-@description('Required. The pricing tier (defines a CDN provider, feature list and rate) of the CDN profile.')
+@description('Required. The pricing tier of the FrontDoor profile.')
 param sku string
 
 @description('Required. Environment name.')
