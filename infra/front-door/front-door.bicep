@@ -5,8 +5,8 @@ param name string
   'Standard_AzureFrontDoor'
   'Premium_AzureFrontDoor'
 ])
-@description('Optional. The pricing tier of the FrontDoor profile.')
-param sku string = 'Premium_AzureFrontDoor'
+@description('Required. The pricing tier of the FrontDoor profile.')
+param sku string
 
 @description('Required. Environment name.')
 param environment string
