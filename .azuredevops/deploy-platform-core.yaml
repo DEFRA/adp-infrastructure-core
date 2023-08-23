@@ -85,8 +85,8 @@ extends:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01 
                 resourceGroupName: $(servicesResourceGroup)
       - name: managed_cluster
-        # dependsOnGroupedTemplates:
-        #   - network
+        dependsOnGroupedTemplates:
+          - network
         templates:
           - name: aks-cluster
             path: infra/managed-cluster
