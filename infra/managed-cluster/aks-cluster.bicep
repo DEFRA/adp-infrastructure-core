@@ -18,6 +18,8 @@ param environment string
 param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
+@description('Required. The parameter object for configuring flux with the aks cluster. The object must contain the fluxCore  and fluxServices values.')
+param fluxConfig object
 
 var commonTags = {
   Location: location
@@ -229,5 +231,73 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     autoScalerProfileScanInterval: '10s'
     autoScalerProfileSkipNodesWithLocalStorage: 'true'
     autoScalerProfileSkipNodesWithSystemPods: 'true'
+
+    fluxExtension: {
+      autoUpgradeMinorVersion: true
+      releaseTrain: 'Stable'
+      configurationSettings: {
+        'helm-controller.enabled': 'true'
+        'source-controller.enabled': 'true'
+        'kustomize-controller.enabled': 'true'
+        'notification-controller.enabled': 'true'
+        'image-automation-controller.enabled': 'false'
+        'image-reflector-controller.enabled': 'false'
+      }
+      configurations: [
+        {
+          namespace: 'flux-core'
+          scope: 'cluster'
+          gitRepository: {
+            repositoryRef: {
+              branch: 'main'
+            }
+            syncIntervalInSeconds: fluxConfig.fluxCore.gitRepository.syncIntervalInSeconds
+            timeoutInSeconds: fluxConfig.fluxCore.gitRepository.timeoutInSeconds
+            url: fluxConfig.fluxCore.gitRepository.url
+          }
+          kustomizations: {
+            cluster: {
+              path: fluxConfig.fluxCore.kustomizations.clusterPath
+              dependsOn: []
+              timeoutInSeconds: fluxConfig.fluxCore.kustomizations.timeoutInSeconds
+              syncIntervalInSeconds: fluxConfig.fluxCore.kustomizations.syncIntervalInSeconds
+              validation: 'none'
+              prune: true
+            }
+            infra: {
+              path: fluxConfig.fluxCore.kustomizations.infraPath
+              dependsOn: [
+                'cluster'
+              ]
+              timeoutInSeconds: fluxConfig.fluxCore.kustomizations.timeoutInSeconds
+              syncIntervalInSeconds: fluxConfig.fluxCore.kustomizations.syncIntervalInSeconds
+              validation: 'none'
+              prune: true
+            }
+          }
+        }
+        {
+          namespace: 'flux-services'
+          scope: 'cluster'
+          gitRepository: {
+            repositoryRef: {
+              branch: 'main'
+            }
+            syncIntervalInSeconds: fluxConfig.fluxServices.gitRepository.syncIntervalInSeconds
+            timeoutInSeconds: fluxConfig.fluxServices.gitRepository.timeoutInSeconds
+            url: fluxConfig.fluxServices.gitRepository.url
+          }
+          kustomizations: {
+            apps: {
+              path: fluxConfig.fluxServices.kustomizations.appsPath
+              timeoutInSeconds: fluxConfig.fluxServices.kustomizations.timeoutInSeconds
+              syncIntervalInSeconds: fluxConfig.fluxServices.kustomizations.syncIntervalInSeconds
+              retryIntervalInSeconds: fluxConfig.fluxServices.kustomizations.retryIntervalInSeconds
+              prune: true
+            }
+          }
+        }
+      ]
+    }
   }
 }
