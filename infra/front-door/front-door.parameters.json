@@ -8,9 +8,6 @@
       "sku": {
         "value": "#{{ frontDoorSkuName }}"                 
       },
-      "location": {
-        "value": "#{{ location }}"
-      },
       "environment": {
         "value": "#{{ environment }}"
       }

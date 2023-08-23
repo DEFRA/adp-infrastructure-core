@@ -8,9 +8,6 @@ param name string
 @description('Required. The pricing tier (defines a CDN provider, feature list and rate) of the CDN profile.')
 param sku string
 
-@description('Optional. The Azure region where the resources will be deployed.')
-param location string = resourceGroup().location
-
 @description('Required. Environment name.')
 param environment string
 
@@ -19,6 +16,8 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
+
+var location = 'global'
 
 var customTags = {
   Location: location
