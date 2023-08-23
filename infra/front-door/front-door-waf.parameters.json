@@ -6,7 +6,7 @@
       "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_frontdoorwaf }}#{{ nc_instance_regionid }}01"
     },
     "skuName": {
-      "value": "#{{ frontDoorSkuName }}"
+      "value": "Premium_AzureFrontDoor"
     },
     "wafMode": {
       "value": "Prevention"
