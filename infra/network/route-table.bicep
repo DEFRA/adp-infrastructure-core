@@ -1,3 +1,4 @@
+/*
 @description('Required. The Route Table object.')
 param routeTable object
 @allowed([
@@ -40,3 +41,4 @@ module route 'br/SharedDefraRegistry:network.route-tables:0.4.7' = {
     ]
   }
 }
+*/

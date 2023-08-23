@@ -104,7 +104,7 @@ module networkContributorModule '.bicep/network-contributor.bicep' = {
   }
 }
 
-module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.13-prerelease' = {
+module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.14.AA' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
     networkContributorModule
