@@ -38,7 +38,7 @@ param adoServicePrincipals array = [
 */
 
 @description('The resourceIds of Azure Monitor Workspaces which will be linked to Grafana')
-param azureMonitorWorkspaceResourceIds object
+param azureMonitorWorkspaceResourceIds array
 
 //@description('The user assigned identity resource Ids of the Grafana instance.')
 //param userAssignedIdentities object = {}
