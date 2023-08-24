@@ -10,8 +10,6 @@ parameters:
     values:
       - ubuntu2004
       - ubuntu2204
-      - windows2019
-      - windows2022
 
 pr:
   branches:

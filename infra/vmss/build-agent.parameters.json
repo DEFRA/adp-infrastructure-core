@@ -7,7 +7,9 @@
         "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_virtualmachine_scalesets }}#{{ nc_instance_regionid }}01-#{{ imageType }}",
         "userName": "azureuser",
         "sku": "Standard_D4s_v4",
-        "imageId": "/subscriptions/#{{ imageGallerySubscription }}/resourceGroups/#{{ imageGalleryResourceGroup }}/providers/Microsoft.Compute/galleries/#{{ imageGalleryName }}/images/#{{ imageType }}",
+        "imageReference": {
+          "id": "/subscriptions/#{{ imageGallerySubscription }}/resourceGroups/#{{ imageGalleryResourceGroup }}/providers/Microsoft.Compute/galleries/#{{ imageGalleryName }}/images/#{{ imageType }}",
+        },
         "osDisk": {
           "createOption": "FromImage",
           "caching": "ReadWrite",

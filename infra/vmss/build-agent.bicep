@@ -38,9 +38,7 @@ module privateBuildAgent 'br/SharedDefraRegistry:compute.virtual-machine-scale-s
     name: buildAgent.name
     adminUsername: buildAgent.userName
     adminPassword: adminPassword
-    imageReference: {
-      id: buildAgent.imageId
-    }
+    imageReference: buildAgent.imageReference
     lock: 'CanNotDelete'
     nicConfigurations: nicConfigurations
     skuCapacity: 2
