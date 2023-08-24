@@ -19,9 +19,12 @@
     },
     "location": {
       "value": "#{{ location }}"
-    },
+    },  
     "environment": {
       "value": "#{{ environment }}"
+    },
+    "azureMonitorWorkspaceResourceIds": {
+      "value": #{{ noescape(grafanaLinkToAzureMonitorWorkspace) }}
     }
   }
 }
