@@ -32,7 +32,7 @@ var frontDoorTags = {
   Tier: 'Shared'
 }
 
-module frontDoor 'br/SharedDefraRegistry:cdn.profiles:0.4.0' = {
+module frontDoor 'br/SharedDefraRegistry:cdn.profile:0.4.1-prerelease' = {
   name: 'front-door-${deploymentDate}'
   params: {
     name: name
