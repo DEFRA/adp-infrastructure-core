@@ -14,17 +14,14 @@
     "managedServiceIdentityType": {
       "value": "SystemAssigned"
     },
-    "adoServicePrincipals": {
-      "value": #{{ noescape(adoAppRegServicePrincipals) }}
+    "azureMonitorWorkspaceResourceIds": {
+      "value": #{{ noescape(grafanaLinkToAzureMonitorWorkspace) }}
     },
     "location": {
       "value": "#{{ location }}"
     },  
     "environment": {
       "value": "#{{ environment }}"
-    },
-    "azureMonitorWorkspaceResourceIds": {
-      "value": #{{ noescape(grafanaLinkToAzureMonitorWorkspace) }}
     }
   }
 }
