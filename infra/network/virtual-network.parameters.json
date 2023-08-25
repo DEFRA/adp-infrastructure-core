@@ -1,0 +1,65 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vnet": {
+      "value": {
+        "name": "#{{ virtualNetworkName }}",
+        "addressPrefixes": #{{ noescape(vnet1AddressPrefixes) }},
+        "dnsServers": #{{ noescape(dnsServers) }}
+      }
+    },
+    
+    "subnets": {
+      "value": [
+        {
+          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01",
+          "addressPrefix": "#{{ subnet1AddressPrefix }}",
+          "serviceEndpoints": [
+            { "service": "Microsoft.ContainerRegistry" },
+            { "service": "Microsoft.Storage" },
+            { "service": "Microsoft.EventHub" },
+            { "service": "Microsoft.ServiceBus" },
+            { "service": "Microsoft.KeyVault" }
+          ],
+          "networkSecurityGroupId":"/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
+          "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01",
+          "privateEndpointNetworkPolicies": "Disabled",
+          "privateLinkServiceNetworkPolicies": "Enabled"
+        },
+        {
+          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}02",
+          "addressPrefix": "#{{ subnet2AddressPrefix }}",
+          "serviceEndpoints": [],
+          "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01",
+          "privateEndpointNetworkPolicies": "Enabled",
+          "privateLinkServiceNetworkPolicies": "Enabled"
+        },
+        {
+          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}03",
+          "addressPrefix": "#{{ subnet3AddressPrefix }}",
+          "serviceEndpoints": [],
+          "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01"
+        },
+        {
+          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}04",
+          "addressPrefix": "#{{ subnet4AddressPrefix }}",
+          "serviceEndpoints": [],
+          "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01"
+        },
+        {
+          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}05",
+          "addressPrefix": "#{{ subnet5AddressPrefix }}",
+          "serviceEndpoints": [],
+          "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01"
+        }
+      ]
+    },
+    "location": {
+      "value": "#{{ location }}"
+    },
+    "environment": {
+      "value": "#{{ environment }}"
+    }
+  }
+}

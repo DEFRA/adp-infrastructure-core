@@ -6,22 +6,23 @@
             "value": {
                 "name": "#{{ virtualNetworkName }}",
                 "resourceGroup": "#{{ virtualNetworkResourceGroup }}",
-                "subnetClusterNodes": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}07"
+                "subnetClusterNodes": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01"
             }
         },
         "cluster": {
             "value": {
                 "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_kubernetesservice }}#{{ nc_instance_regionid }}01",
+                "kubernetesVersion": "#{{ aksVersion }}",
                 "skuTier": "#{{ aksClusterSkuTier }}",
-                "nodeResourceGroup": "#{{ aksNodeResourceGroup }}",
+                "nodeResourceGroup": "#{{ aksResourceGroup }}-Managed",
                 "miControlPlane": "#{{ aksControlPlaneManagedIdentity }}",
                 "adminAadGroupObjectId": "#{{ aksAADProfileAdminGroupObjectId }}",
                 "npSystem": {
-                    "count": 1,
+                    "count": 2,
                     "osDiskSizeGB": 80,
-                    "minCount": 3,
                     "maxCount": 4,
-                    "maxPods": 30,
+                    "minCount": 1,
+                    "maxPods": 80,
                     "availabilityZones": [
                         "1",
                         "2",
@@ -31,9 +32,9 @@
                 "npUser": {
                     "count": 2,
                     "osDiskSizeGB": 128,
-                    "maxCount": 3,
-                    "maxPods": 30,
-                    "minCount": 1,
+                    "maxCount": 10,
+                    "minCount": 2,
+                    "maxPods": 80,
                     "minPods": 2,
                     "availabilityZones": [
                         "1",
@@ -43,11 +44,47 @@
                 }
             }
         },
+        "privateDnsZone":{
+            "value": { 
+                "prefix" : "#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}01",
+                "resourceGroup": "#{{ dnsResourceGroup }}"
+            }
+        },
         "location": {
             "value": "#{{ location }}"
         },
         "environment": {
             "value": "#{{ environment }}"
+        },
+        "fluxConfig": {
+            "value": {
+                "fluxCore": {
+                    "gitRepository": {
+                        "syncIntervalInSeconds": 300,
+                        "timeoutInSeconds": 180,
+                        "url": "https://github.com/DEFRA/adp-flux-core"
+                    },
+                    "kustomizations": {
+                        "timeoutInSeconds": 600,
+                        "syncIntervalInSeconds": 600,
+                        "clusterPath": "./clusters/#{{ environment }}/01",
+                        "infraPath": "./infra/#{{ environment }}/01"
+                    }
+                },
+                "fluxServices": {
+                    "gitRepository": {
+                        "syncIntervalInSeconds": 300,
+                        "timeoutInSeconds": 180,
+                        "url": "https://github.com/DEFRA/adp-flux-services"
+                    },
+                    "kustomizations": {
+                        "timeoutInSeconds": 600,
+                        "syncIntervalInSeconds": 600,
+                        "retryIntervalInSeconds": 120,
+                        "appsPath": "./services/#{{ environment }}/01"
+                    }
+                }
+            }
         }
     }
 }

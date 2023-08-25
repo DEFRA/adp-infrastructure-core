@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "routeTable": {
+      "value": {
+        "name": "UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01",
+        "virtualApplicanceIp": "#{{ virtualApplianceIp }}"
+      }
+    },
+    "location": {
+      "value": "#{{ location }}"
+    },
+    "environment": {
+      "value": "#{{ environment }}"
+    }
+  }
+}
