@@ -77,10 +77,18 @@ extends:
           - name: azuremonitor-workspace
             path: infra/operational-insights
             resourceGroupName: $(servicesResourceGroup)
-          - name: grafana
-            serviceConnectionVariableName: ssvServiceConnection
-            path: infra/observability
-            resourceGroupName: $(ssvSharedResourceGroup)
+            postDeployScriptsList:
+            - displayName: Link Azure Monitor Workspace to Grafana Dashboard
+              scriptPath: scripts/Connect-WorkspaceToGrafana.ps1
+              type: AzureCLI
+              scriptArguments: >
+                -ResourceGroupName $(ssvSharedResourceGroup)
+                -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
+                -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(servicesResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
+          #- name: grafana
+          #  serviceConnectionVariableName: ssvServiceConnection
+          #  path: infra/observability
+          #  resourceGroupName: $(ssvSharedResourceGroup)
       #- name: security
       #  dependsOnGroupedTemplates:
       #    - monitoring
