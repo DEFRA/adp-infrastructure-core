@@ -8,7 +8,7 @@
         "userName": "azureuser",
         "sku": "Standard_D4s_v4",
         "imageReference": {
-          "id": "/subscriptions/#{{ imageGallerySubscription }}/resourceGroups/#{{ imageGalleryResourceGroup }}/providers/Microsoft.Compute/galleries/#{{ imageGalleryName }}/images/#{{ imageType }}",
+          "id": "/subscriptions/#{{ imageGallerySubscription }}/resourceGroups/#{{ imageGalleryResourceGroup }}/providers/Microsoft.Compute/galleries/#{{ imageGalleryName }}/images/#{{ imageType }}"
         },
         "osDisk": {
           "createOption": "FromImage",

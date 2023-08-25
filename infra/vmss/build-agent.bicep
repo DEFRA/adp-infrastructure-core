@@ -46,5 +46,6 @@ module privateBuildAgent 'br/SharedDefraRegistry:compute.virtual-machine-scale-s
     osType: buildAgent.osType
     skuName: buildAgent.sku
     tags: union(tags, buildAgentTags)
+    encryptionAtHost: false
   }
 }
