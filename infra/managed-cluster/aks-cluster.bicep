@@ -1,12 +1,9 @@
 @description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and subnetClusterNodes values.')
 param vnet object
-
 @description('Required. The parameter object for the cluster. The object must contain the name,skuTier,nodeResourceGroup,miControlPlane,adminAadGroupObjectId and monitoringWorkspace values.')
 param cluster object
-
 @description('Required. The prefix for the private DNS zone.')
 param privateDnsZone object
-
 @allowed([
   'UKSouth'
 ])
@@ -21,34 +18,36 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 @description('Required. The parameter object for configuring flux with the aks cluster. The object must contain the fluxCore  and fluxServices values.')
 param fluxConfig object
 
+/// Container Insight Params ///
+@description('Azure Monitor Log Analytics Resource ID')
+param monitoringWorkspaceId object
+//////////////////////////////////
+
 var commonTags = {
   Location: location
   CreatedDate: createdDate
   Environment: environment
 }
 var tags = union(loadJsonContent('../default-tags.json'), commonTags)
-
 var tagsMi = {
   Name: cluster.miControlPlane
   Purpose: 'AKS Control Plane Managed Identity'
   Tier: 'Security'
 }
-
 var aksTags = {
   Name: cluster.name
   Purpose: 'AKS Cluster'
   Tier: 'Shared'
 }
-
 var pdnsTags = {
   Name: privateDnsZoneName
   Purpose: 'AKS Private DNS Zone'
 }
-
 var pdnsVnetLinksTags = {
   Name: vnet.name
   Purpose: 'AKS Private DNS Zone VNet Link'
 }
+var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io')
 
 module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
   name: 'aks-cluster-mi-${deploymentDate}'
@@ -59,8 +58,6 @@ module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assig
     tags: union(tags, tagsMi)
   }
 }
-
-var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io')
 
 module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zones:0.5.7' = {
   name: 'aks-private-dns-zone-${deploymentDate}'
@@ -120,7 +117,8 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     nodeResourceGroup: cluster.nodeResourceGroup
     enableDefaultTelemetry: false
     omsAgentEnabled: true
-    monitoringWorkspaceId: ''
+    monitoringWorkspaceId: monitoringWorkspaceId
+    // resourceId(monitoringWorkspaceId.resourceGroup, 'Microsoft.OperationalInsights/workspaces', monitoringWorkspaceId.name) 
     enableRBAC: true
     aadProfileManaged: true
     disableLocalAccounts: true
