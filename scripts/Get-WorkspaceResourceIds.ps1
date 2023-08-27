@@ -58,24 +58,38 @@ try {
     }
 
     Write-Host "${functionName}:Getting Grafana Dashboard $GrafanaName from Resource Group $ResourceGroupName..."
-    [object]$grafana = Get-AzGrafana -ResourceGroupName $ResourceGroupName -GrafanaName $GrafanaName
+    [object]$grafana = Get-AzGrafana -ResourceGroupName $ResourceGroupName -GrafanaName $GrafanaName -ErrorAction SilentlyContinue
     Write-Host "${functionName}:Finished getting Grafana Dashboard"
 
-    [array]$linkedWorkspaces = $grafana.GrafanaIntegrationAzureMonitorWorkspaceIntegration
-    Write-Debug "${functionName}:linkedWorkspaces=$linkedWorkspaces"
+    [array]$linkedWorkspaces = @()
+    [object]$azureMonitorWorkspaceIntegrationObject = @{}
 
-    [string]$workspaceAlreadyLinked = $linkedWorkspaces -Match "$WorkspaceResourceId"
-
-    if ([string]::IsNullOrEmpty($workspaceAlreadyLinked) -or $workspaceAlreadyLinked -eq $False) {
-        [object]$azureMonitorWorkspaceIntegrationObject = New-AzGrafanaMonitorWorkspaceIntegrationObject -AzureMonitorWorkspaceResourceId $WorkspaceResourceId
-
+    if ($null -eq $grafana) {
+        $azureMonitorWorkspaceIntegrationObject = New-AzGrafanaMonitorWorkspaceIntegrationObject -AzureMonitorWorkspaceResourceId $WorkspaceResourceId
         $linkedWorkspaces += $azureMonitorWorkspaceIntegrationObject
-
-        Write-Host "${functionName}:Linking Grafana Dashboard $GrafanaName to Workspace $WorkspaceResourceId..."
-        Update-AzGrafana -ResourceGroupName $ResourceGroupName -GrafanaName $GrafanaName -MonitorWorkspaceIntegration $linkedWorkspaces -ErrorAction SilentlyContinue
-        Write-Host "${functionName}:Finished linking Grafana Dashboard $GrafanaName to Workspace $WorkspaceResourceId..."
     }
+    else {
+        $linkedWorkspaces = $grafana.GrafanaIntegrationAzureMonitorWorkspaceIntegration
+        Write-Debug "${functionName}:linkedWorkspaces=$linkedWorkspaces"
+
+        [string]$workspaceAlreadyLinked = $linkedWorkspaces -Match "$WorkspaceResourceId"
+
+        if ([string]::IsNullOrEmpty($workspaceAlreadyLinked) -or $workspaceAlreadyLinked -eq 'False') {
+            [object]$azureMonitorWorkspaceIntegrationObject = New-AzGrafanaMonitorWorkspaceIntegrationObject -AzureMonitorWorkspaceResourceId $WorkspaceResourceId
+
+            $linkedWorkspaces += $azureMonitorWorkspaceIntegrationObject
+
+            #Write-Host "${functionName}:Linking Grafana Dashboard $GrafanaName to Workspace $WorkspaceResourceId..."
+            #Update-AzGrafana -ResourceGroupName $ResourceGroupName -GrafanaName $GrafanaName -MonitorWorkspaceIntegration $linkedWorkspaces -ErrorAction SilentlyContinue
+            #Write-Host "${functionName}:Finished linking Grafana Dashboard $GrafanaName to Workspace $WorkspaceResourceId..."
+        }
+    }
+
+    $linkedWorkspacesJson = ConvertTo-Json -Compress $linkedWorkspaces
+    Write-Host "##vso[task.setvariable variable=azureMonitorWorkspaceResourceIds]$linkedWorkspacesJson"
+    Write-Host $linkedWorkspacesJson
     $exitCode = 0
+
 }
 catch {
     $exitCode = -2
