@@ -15,7 +15,7 @@
       "value": "SystemAssigned"
     },
     "azureMonitorWorkspaceResourceIds": {
-      "value": "$(azureMonitorWorkspaceResourceIds)"
+      "value": $(azureMonitorWorkspaceResourceIds)
     },
     "location": {
       "value": "#{{ location }}"
