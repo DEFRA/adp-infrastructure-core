@@ -55,6 +55,12 @@ Write-Debug "${functionName}:GrafanaName=$GrafanaName"
 Write-Debug "${functionName}:WorkspaceResourceId=$WorkspaceResourceId"
 
 try {
+    if (-not (Get-Module -ListAvailable -Name 'Az.Dashboard')) {
+        Write-Host "Az.Dashboard Module does not exists. Installing now.."
+        Install-Module Az.Dashboard -Force
+        Write-Host "Az.Dashboard Installed Successfully."
+    }
+
     Write-Host "${functionName}:Getting Grafana Dashboard $GrafanaName from Resource Group $ResourceGroupName..."
     [object]$grafana = Get-AzGrafana -ResourceGroupName $ResourceGroupName -GrafanaName $GrafanaName
     Write-Host "${functionName}:Finished getting Grafana Dashboard"
