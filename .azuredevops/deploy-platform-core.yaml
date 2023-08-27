@@ -82,6 +82,7 @@ extends:
             postDeployScriptsList:
             - displayName: Link Azure Monitor Workspace to Grafana Dashboard
               scriptPath: scripts/Connect-WorkspaceToGrafana.ps1
+              serviceConnectionVariableName: ssvServiceConnection
               type: AzurePowerShell
               scriptArguments: >
                 -ResourceGroupName $(ssvSharedResourceGroup)
