@@ -15,7 +15,7 @@
       "value": "SystemAssigned"
     },
     "azureMonitorWorkspaceResourceIds": {
-      "value": #{{ noescape(azureMonitorWorkspaceResourceIds) }}
+      "value": "#{{ azureMonitorWorkspaceResourceIds }}"
     },
     "location": {
       "value": "#{{ location }}"
