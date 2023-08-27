@@ -28,31 +28,27 @@ param(
     [string] $WorkspaceResourceId
 )
 
-#$ResourceGroupName = 'SSVCDOINFRG3401'
-#$GrafanaName = 'SSVCDOINFGR3401'
-#$WorkspaceResourceId = '/subscriptions/916afc11-9a78-4f8a-91c4-d50754b76733/resourceGroups/SNDCDOINFRG2401/providers/Microsoft.Monitor/accounts/SNDCDOINFMW2401'
-
-Set-StrictMode -Version 3.0
-
-[string]$functionName = $MyInvocation.MyCommand
-[datetime]$startTime = [datetime]::UtcNow
-
-[int]$exitCode = -1
-[bool]$setHostExitCode = (Test-Path -Path ENV:TF_BUILD) -and ($ENV:TF_BUILD -eq "true")
-[bool]$enableDebug = (Test-Path -Path ENV:SYSTEM_DEBUG) -and ($ENV:SYSTEM_DEBUG -eq "true")
-
-Set-Variable -Name ErrorActionPreference -Value Continue -scope global
-Set-Variable -Name InformationPreference -Value Continue -Scope global
-
-if ($enableDebug) {
-    Set-Variable -Name VerbosePreference -Value Continue -Scope global
-    Set-Variable -Name DebugPreference -Value Continue -Scope global
-}
-
-Write-Host "${functionName} started at $($startTime.ToString('u'))"
-Write-Debug "${functionName}:ResourceGroupName=$ResourceGroupName"
-Write-Debug "${functionName}:GrafanaName=$GrafanaName"
-Write-Debug "${functionName}:WorkspaceResourceId=$WorkspaceResourceId"
+#Set-StrictMode -Version 3.0
+#
+#[string]$functionName = $MyInvocation.MyCommand
+#[datetime]$startTime = [datetime]::UtcNow
+#
+#[int]$exitCode = -1
+#[bool]$setHostExitCode = (Test-Path -Path ENV:TF_BUILD) -and ($ENV:TF_BUILD -eq "true")
+#[bool]$enableDebug = (Test-Path -Path ENV:SYSTEM_DEBUG) -and ($ENV:SYSTEM_DEBUG -eq "true")
+#
+#Set-Variable -Name ErrorActionPreference -Value Continue -scope global
+#Set-Variable -Name InformationPreference -Value Continue -Scope global
+#
+#if ($enableDebug) {
+#    Set-Variable -Name VerbosePreference -Value Continue -Scope global
+#    Set-Variable -Name DebugPreference -Value Continue -Scope global
+#}
+#
+#Write-Host "${functionName} started at $($startTime.ToString('u'))"
+#Write-Debug "${functionName}:ResourceGroupName=$ResourceGroupName"
+#Write-Debug "${functionName}:GrafanaName=$GrafanaName"
+#Write-Debug "${functionName}:WorkspaceResourceId=$WorkspaceResourceId"
 
 try {
     if (-not (Get-Module -ListAvailable -Name 'Az.Dashboard')) {
@@ -76,9 +72,10 @@ try {
         $linkedWorkspaces += $azureMonitorWorkspaceIntegrationObject
 
         Write-Host "${functionName}:Linking Grafana Dashboard $GrafanaName to Workspace $WorkspaceResourceId..."
-        Update-AzGrafana -ResourceGroupName SSVCDOINFRG3401 -GrafanaName SSVCDOINFGR3401 -MonitorWorkspaceIntegration $linkedWorkspaces -ErrorAction SilentlyContinue
+        Update-AzGrafana -ResourceGroupName $ResourceGroupName -GrafanaName $GrafanaName -MonitorWorkspaceIntegration $linkedWorkspaces -ErrorAction SilentlyContinue
         Write-Host "${functionName}:Finished linking Grafana Dashboard $GrafanaName to Workspace $WorkspaceResourceId..."
     }
+    $exitCode = 0
 }
 catch {
     $exitCode = -2
