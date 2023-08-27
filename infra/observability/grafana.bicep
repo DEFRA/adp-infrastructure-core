@@ -37,19 +37,14 @@ param adoServicePrincipals array = [
 ]
 */
 
-//@description('The resourceIds of Azure Monitor Workspaces which will be linked to Grafana')
-//param azureMonitorWorkspaceResourceIds array
-
 //@description('The user assigned identity resource Ids of the Grafana instance.')
 //param userAssignedIdentities object = {}
-
-@allowed([
-  'UKSouth'
-])
 @description('Required. The Azure region where the resources will be deployed.')
 param location string
+
 @description('Required. Environment name.')
 param environment string
+
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
