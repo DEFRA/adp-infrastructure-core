@@ -83,9 +83,9 @@ extends:
           #- name: component
           #  path: infra/insights
           #  resourceGroupName: $(servicesResourceGroup)
-          #- name: azuremonitor-workspace
-          #  path: infra/operational-insights
-          #  resourceGroupName: $(servicesResourceGroup)
+          - name: azuremonitor-workspace
+            path: infra/operational-insights
+            resourceGroupName: $(servicesResourceGroup)
             #postDeployScriptsList:
             #- displayName: Link Azure Monitor Workspace to Grafana Dashboard
             #  scriptPath: scripts/Connect-WorkspaceToGrafana.ps1
