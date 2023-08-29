@@ -35,9 +35,9 @@ resource graphanaDashboardResource 'Microsoft.Dashboard/grafana@2022-08-01' = {
   sku: {
     name: grafana.resourceSku
   }
-  identity: {
-    type: 'SystemAssigned'
-  }
+  //identity: {
+  //  type: 'SystemAssigned'
+  //}
   properties: {
     grafanaIntegrations: {
       azureMonitorWorkspaceIntegrations: !empty(azureMonitorWorkspaceResourceIds) ? azureMonitorWorkspaceResourceIdObject : null
