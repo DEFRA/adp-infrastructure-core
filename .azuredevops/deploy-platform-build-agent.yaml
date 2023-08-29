@@ -62,7 +62,7 @@ extends:
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
-    keyVaultName: ${{ variables.ssvPlatformKeyVaultName }}
+    keyVaultName: $(ssvPlatformKeyVaultName)
     scriptsList:
       - displayName: Deploy Build Agent - ${{ parameters.imageType }}
         scriptPath: /scripts/ADO-Build-Agent.ps1
