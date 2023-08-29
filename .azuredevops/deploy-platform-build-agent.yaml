@@ -8,8 +8,10 @@ parameters:
     type: string
     default: ubuntu2204
     values:
-      - ubuntu2004
+      - windows2022
       - ubuntu2204
+      - windows2019
+      - ubuntu2004
 
 pr:
   branches:
@@ -34,27 +36,44 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: features/script-deployment
 
 variables:
   imageType: ${{ parameters.imageType }}
+  ${{ if eq(parameters.imageType, 'windows2022') }}:
+    instanceNumber: 01
+  ${{ if eq(parameters.imageType, 'ubuntu2204') }}:
+    instanceNumber: 02
+  ${{ if eq(parameters.imageType, 'windows2019') }}:
+    instanceNumber: 03
+  ${{ if eq(parameters.imageType, 'ubuntu2004') }}:
+    instanceNumber: 04
+  
 
 extends:
-  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
       - name: 'snd1'
-        serviceConnection: AZD-CDO-SND1-VMSS
+        serviceConnection: AZD-CDO-SSV3
         deploymentBranches:
           - '*'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
-    groupedTemplates:
-      - name: build_agent
-        templates:
-          - name: build-agent
-            path: infra/vmss
-            resourceGroupName: $(servicesResourceGroup)
+    scriptsList:
+      - displayName: Deploy Build Agent - ${{ parameters.imageType }}
+        scriptPath: /scripts/ADO-Build-Agent.ps1
+        scriptArguments: >
+          -imageGalleryTenant ${{ variables.imageGalleryTenant }}
+          -tenantId ${{ variables.tenantId }}
+          -subscriptionName ${{ variables.subscriptionName }}
+          -resourceGroup ${{ variables.servicesResourceGroup }}
+          -vmssName ${{ parameters.infraResourceNamePrefix }}${{ parameters.nc_resource_virtualmachine_scalesets }}${{ variables.nc_instance_regionid }}${{ variables.instanceNumber }}
+          -imageType ${{ parameters.imageType }}
+          -subnetId /subscriptions/${{ variables.subscriptionId }}/resourceGroups/${{ variables.virtualNetworkResourceGroup }}/providers/Microsoft.Network/virtualNetworks/${{ variables.virtualNetworkName }}/subnets/${{ variables.networkResourceNamePrefix }}${{ variables.nc_resource_subnet }}${{ variables.nc_instance_regionid }}03
+          -imageId /subscriptions/${{ variables.imageGallerySubscription }}/resourceGroups/${{ variables.imageGalleryResourceGroup }}/providers/Microsoft.Compute/galleries/${{ variables.imageGalleryName }}/images/${{ parameters.imageType }}
+          -adoAgentPassword $(ADO-BuildAgent-Password)
+        type: AzureCLI
