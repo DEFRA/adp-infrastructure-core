@@ -57,27 +57,23 @@ try {
     Write-Host "${functionName}:Finished getting Grafana Dashboard"
 
     [array]$linkedWorkspaces = @()
-    [object]$azureMonitorWorkspaceIntegrationObject = @{}
 
     if ($null -eq $grafana) {
-        $azureMonitorWorkspaceIntegrationObject = New-AzGrafanaMonitorWorkspaceIntegrationObject -AzureMonitorWorkspaceResourceId $WorkspaceResourceId
-        $linkedWorkspaces += $azureMonitorWorkspaceIntegrationObject
+        $linkedWorkspaces += $WorkspaceResourceId
     }
     else {
-        $linkedWorkspaces = $grafana.GrafanaIntegrationAzureMonitorWorkspaceIntegration
+        $linkedWorkspaces = $grafana.GrafanaIntegrationAzureMonitorWorkspaceIntegration.AzureMonitorWorkspaceResourceId
         Write-Debug "${functionName}:linkedWorkspaces=$linkedWorkspaces"
 
         [string]$workspaceAlreadyLinked = $linkedWorkspaces -Match "$WorkspaceResourceId"
 
         if ([string]::IsNullOrEmpty($workspaceAlreadyLinked) -or $workspaceAlreadyLinked -eq 'False') {
-            [object]$azureMonitorWorkspaceIntegrationObject = New-AzGrafanaMonitorWorkspaceIntegrationObject -AzureMonitorWorkspaceResourceId $WorkspaceResourceId
-            $linkedWorkspaces += $azureMonitorWorkspaceIntegrationObject
+            $linkedWorkspaces += $WorkspaceResourceId
         }
     }
 
-    [array]$linkedWorkspacesResourceIds = $linkedWorkspaces.AzureMonitorWorkspaceResourceId
-    Write-Host "##vso[task.setvariable variable=azureMonitorWorkspaceResourceIds]$linkedWorkspacesResourceIds"
-    Write-Host $linkedWorkspacesResourceIds
+    Write-Host "##vso[task.setvariable variable=azureMonitorWorkspaceResourceIds]$linkedWorkspaces"
+    Write-Host $linkedWorkspaces
     $exitCode = 0
 
 }

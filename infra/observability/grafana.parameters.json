@@ -21,7 +21,7 @@
         "value": "#{{ environment }}"
       },
       "azureMonitorWorkspaceResourceIds": {
-        "value": #{{ noescape(grafanaLinkToAzureMonitorWorkspace) }}
+        "value": "#{{ azureMonitorWorkspaceResourceIds }}"
       }
     }
   }
