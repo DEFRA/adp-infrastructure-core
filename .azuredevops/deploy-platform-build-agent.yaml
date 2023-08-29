@@ -67,13 +67,13 @@ extends:
       - displayName: Deploy Build Agent - ${{ parameters.imageType }}
         scriptPath: /scripts/ADO-Build-Agent.ps1
         scriptArguments: >
-          -imageGalleryTenant ${{ variables.imageGalleryTenant }}
-          -tenantId ${{ variables.tenantId }}
-          -subscriptionName ${{ variables.subscriptionName }}
-          -resourceGroup ${{ variables.servicesResourceGroup }}
-          -vmssName ${{ variables.infraResourceNamePrefix }}${{ variables.nc_resource_virtualmachine_scalesets }}${{ variables.nc_instance_regionid }}${{ variables.instanceNumber }}
+          -imageGalleryTenant $(imageGalleryTenant)
+          -tenantId $(tenantId)
+          -subscriptionName $(subscriptionName)
+          -resourceGroup $(servicesResourceGroup)
+          -vmssName $(infraResourceNamePrefix)$(nc_resource_virtualmachine_scalesets)$(nc_instance_regionid)$(instanceNumber)
           -imageType ${{ parameters.imageType }}
-          -subnetId /subscriptions/${{ variables.subscriptionId }}/resourceGroups/${{ variables.virtualNetworkResourceGroup }}/providers/Microsoft.Network/virtualNetworks/${{ variables.virtualNetworkName }}/subnets/${{ variables.networkResourceNamePrefix }}${{ variables.nc_resource_subnet }}${{ variables.nc_instance_regionid }}03
-          -imageId /subscriptions/${{ variables.imageGallerySubscription }}/resourceGroups/${{ variables.imageGalleryResourceGroup }}/providers/Microsoft.Compute/galleries/${{ variables.imageGalleryName }}/images/${{ parameters.imageType }}
+          -subnetId /subscriptions/$(subscriptionId)/resourceGroups/$(virtualNetworkResourceGroup)/providers/Microsoft.Network/virtualNetworks/$(virtualNetworkName)/subnets/$(networkResourceNamePrefix)$(nc_resource_subnet)$(nc_instance_regionid)03
+          -imageId /subscriptions/$(imageGallerySubscription)/resourceGroups/$(imageGalleryResourceGroup)/providers/Microsoft.Compute/galleries/$(imageGalleryName)/images/${{ parameters.imageType }}
           -adoAgentPassword $(ADO-BuildAgent-Password)
         type: AzureCLI
