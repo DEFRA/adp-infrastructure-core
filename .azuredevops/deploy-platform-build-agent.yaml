@@ -71,7 +71,7 @@ extends:
           -tenantId ${{ variables.tenantId }}
           -subscriptionName ${{ variables.subscriptionName }}
           -resourceGroup ${{ variables.servicesResourceGroup }}
-          -vmssName ${{ parameters.infraResourceNamePrefix }}${{ parameters.nc_resource_virtualmachine_scalesets }}${{ variables.nc_instance_regionid }}${{ variables.instanceNumber }}
+          -vmssName ${{ variables.infraResourceNamePrefix }}${{ variables.nc_resource_virtualmachine_scalesets }}${{ variables.nc_instance_regionid }}${{ variables.instanceNumber }}
           -imageType ${{ parameters.imageType }}
           -subnetId /subscriptions/${{ variables.subscriptionId }}/resourceGroups/${{ variables.virtualNetworkResourceGroup }}/providers/Microsoft.Network/virtualNetworks/${{ variables.virtualNetworkName }}/subnets/${{ variables.networkResourceNamePrefix }}${{ variables.nc_resource_subnet }}${{ variables.nc_instance_regionid }}03
           -imageId /subscriptions/${{ variables.imageGallerySubscription }}/resourceGroups/${{ variables.imageGalleryResourceGroup }}/providers/Microsoft.Compute/galleries/${{ variables.imageGalleryName }}/images/${{ parameters.imageType }}
