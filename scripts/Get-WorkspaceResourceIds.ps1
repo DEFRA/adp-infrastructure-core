@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-Link Azure Monitor Workspace to Grafana Dashboard
+Get Azure Monitor Workspace ResourceIds and pass them to Grafana Dashboard bicep template
 .DESCRIPTION
-Link Azure Monitor Workspace to Shared Grafana Dashboard in the SSV subscriptions
+Get Azure Monitor Workspace ResourceIds and set variable with values which are then used by the Grafana Dashboard bicep template.
 .PARAMETER ResourceGroupName
 Mandatory. Resource Group Name.
 .PARAMETER GrafanaName
