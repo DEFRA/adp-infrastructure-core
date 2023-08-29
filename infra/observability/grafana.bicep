@@ -34,7 +34,7 @@ param environment string
 param createdDate string = utcNow('yyyy-MM-dd')
 
 @description('The resourceIds of Azure Monitor Workspaces which will be linked to Grafana')
-param azureMonitorWorkspaceResourceIds object
+param azureMonitorWorkspaceResourceIds array
 
 var commonTags = {
   Location: location

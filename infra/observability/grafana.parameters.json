@@ -14,9 +14,6 @@
       "managedServiceIdentityType": {
         "value": "SystemAssigned"
       },
-      "azureMonitorWorkspaceResourceIds": {
-        "value": "#{{ azureMonitorWorkspaceResourceIds }}"
-      },
       "location": {
         "value": "#{{ location }}"
       },  
