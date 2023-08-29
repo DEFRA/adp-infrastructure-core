@@ -56,7 +56,7 @@ extends:
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
       - name: 'snd1'
-        serviceConnection: AZD-CDO-SSV3
+        serviceConnection: AZD-CDO-SND1-VMSS
         deploymentBranches:
           - '*'
         developmentEnvironment: true
