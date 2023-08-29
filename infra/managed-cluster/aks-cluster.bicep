@@ -58,7 +58,7 @@ var azureMonitorWorkspaceTags = {
   Purpose: 'Azure Monitor Workspace'
 }
 
-resource monitor 'Microsoft.Monitor/accounts@2023-04-03' = {
+resource azureMonitorWorkSpaceResource 'Microsoft.Monitor/accounts@2023-04-03' = {
   location: location
   name: azureMonitorWorkspaceName
   tags: azureMonitorWorkspaceTags
