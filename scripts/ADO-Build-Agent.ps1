@@ -11,8 +11,6 @@ param(
     [Parameter(Mandatory)]
     [string] $vmssName,
     [Parameter(Mandatory)]
-    [string] $imageType,
-    [Parameter(Mandatory)]
     [string] $subnetId,
     [Parameter(Mandatory)]
     [string] $imageId,
@@ -32,16 +30,16 @@ az account get-access-token
 
 az account set --subscription $subscriptionName
 
-az vmss create \
-    --resource-group $resourceGroup \
-    --name $vmssName \
-    --computer-name-prefix $vmssName \
-    --vm-sku Standard_D4s_v4 \
-    --instance-count 2 \
-    --subnet $subnetId \
-    --image "$imageId" \
-    --authentication-type password \
-    --admin-username azureuser \
-    --admin-password "$adoAgentPassword" \
-    --disable-overprovision \
+az vmss create `
+    --resource-group $resourceGroup `
+    --name $vmssName `
+    --computer-name-prefix $vmssName `
+    --vm-sku Standard_D4s_v4 `
+    --instance-count 2 `
+    --subnet $subnetId `
+    --image "$imageId" `
+    --authentication-type password `
+    --admin-username azureuser `
+    --admin-password "$adoAgentPassword" `
+    --disable-overprovision `
     --upgrade-policy-mode Manual
