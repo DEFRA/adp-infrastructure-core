@@ -72,7 +72,7 @@ extends:
           -subscriptionName $(subscriptionName)
           -resourceGroup SND$(servicesResourceGroup)
           -vmssName SND$(infraResourceNamePrefix)$(nc_resource_virtualmachine_scalesets)$(nc_instance_regionid)$(instanceNumber)
-          -subnetId /subscriptions/$(subscriptionId)/resourceGroups/$(virtualNetworkResourceGroup)/providers/Microsoft.Network/virtualNetworks/$(virtualNetworkName)/subnets/$(networkResourceNamePrefix)$(nc_resource_subnet)$(nc_instance_regionid)03
+          -subnetId /subscriptions/$(subscriptionId)/resourceGroups/SND$(virtualNetworkResourceGroup)/providers/Microsoft.Network/virtualNetworks/SND$(virtualNetworkName)/subnets/SND$(networkResourceNamePrefix)$(nc_resource_subnet)$(nc_instance_regionid)03
           -imageId /subscriptions/$(imageGallerySubscription)/resourceGroups/$(imageGalleryResourceGroup)/providers/Microsoft.Compute/galleries/$(imageGalleryName)/images/${{ parameters.imageType }}
           -adoAgentPassword $(ADO-BuildAgent-Password)
         type: AzureCLI
