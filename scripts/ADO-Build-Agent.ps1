@@ -18,28 +18,30 @@ param(
     [string] $adoAgentPassword
 )
 
-az account clear
+Get-ChildItem -Path Env:\ | Format-List
 
-if ($imageGalleryTenant -ne $tenantId) {
-    az login --service-principal -u $env:servicePrincipalId -p $env:servicePrincipalKey --tenant $imageGalleryTenant
-    az account get-access-token    
-}
+# az account clear
 
-az login --service-principal -u $env:servicePrincipalId -p $env:servicePrincipalKey --tenant $tenantId
-az account get-access-token
+# if ($imageGalleryTenant -ne $tenantId) {
+#     az login --service-principal -u $env:servicePrincipalId -p $env:servicePrincipalKey --tenant $imageGalleryTenant
+#     az account get-access-token    
+# }
 
-az account set --subscription $subscriptionName
+# az login --service-principal -u $env:servicePrincipalId -p $env:servicePrincipalKey --tenant $tenantId
+# az account get-access-token
 
-az vmss create `
-    --resource-group $resourceGroup `
-    --name $vmssName `
-    --computer-name-prefix $vmssName `
-    --vm-sku Standard_D4s_v4 `
-    --instance-count 2 `
-    --subnet $subnetId `
-    --image "$imageId" `
-    --authentication-type password `
-    --admin-username azureuser `
-    --admin-password "$adoAgentPassword" `
-    --disable-overprovision `
-    --upgrade-policy-mode Manual
+# az account set --subscription $subscriptionName
+
+# az vmss create `
+#     --resource-group $resourceGroup `
+#     --name $vmssName `
+#     --computer-name-prefix $vmssName `
+#     --vm-sku Standard_D4s_v4 `
+#     --instance-count 2 `
+#     --subnet $subnetId `
+#     --image "$imageId" `
+#     --authentication-type password `
+#     --admin-username azureuser `
+#     --admin-password "$adoAgentPassword" `
+#     --disable-overprovision `
+#     --upgrade-policy-mode Manual
