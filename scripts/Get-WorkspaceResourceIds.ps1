@@ -62,11 +62,13 @@ try {
         $linkedWorkspaces += $WorkspaceResourceId
     }
     else {
-        $linkedWorkspaces = $grafana.GrafanaIntegrationAzureMonitorWorkspaceIntegration.AzureMonitorWorkspaceResourceId
+        $linkedWorkspacesObjectExists = $($grafana.GrafanaIntegrationAzureMonitorWorkspaceIntegration).psobject.BaseObject -match "azureMonitorWorkspaceResourceId"
+        if (-not [string]::IsNullOrEmpty($linkedWorkspacesObjectExists)) {
+            $linkedWorkspaces = $grafana.GrafanaIntegrationAzureMonitorWorkspaceIntegration.AzureMonitorWorkspaceResourceId
+        }
         Write-Debug "${functionName}:linkedWorkspaces=$linkedWorkspaces"
 
         [string]$workspaceAlreadyLinked = $linkedWorkspaces -Match "$WorkspaceResourceId"
-
         if ([string]::IsNullOrEmpty($workspaceAlreadyLinked) -or $workspaceAlreadyLinked -eq 'False') {
             $linkedWorkspaces += $WorkspaceResourceId
         }
