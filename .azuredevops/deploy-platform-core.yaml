@@ -60,6 +60,6 @@ extends:
           - name: front-door
             path: infra/front-door
             resourceGroupName: $(frontDoorResourceGroup)
-          - name: front-door-waf
+          - name: azure-waf
             path: infra/front-door
             resourceGroupName: $(frontDoorResourceGroup)                 
