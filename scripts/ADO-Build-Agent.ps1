@@ -15,7 +15,7 @@ param(
     [Parameter(Mandatory)]
     [string] $imageId,
     [Parameter(Mandatory)] 
-    [securestring] $adoAgentPassword
+    [string] $adoAgentPassword
 )
 
 az account clear
