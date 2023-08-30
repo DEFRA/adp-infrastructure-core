@@ -80,7 +80,7 @@ module frontDoorWafPolicy 'br/SharedDefraRegistry:network.front-door-web-applica
       mode: policySettings.mode
       redirectUrl: null
       customBlockResponseStatusCode: 403
-      customBlockResponseBody: customBlockResponseBody
+      customBlockResponseBody: base64(customBlockResponseBody)
       requestBodyCheck: 'Enabled'
     }
     customRules: {
