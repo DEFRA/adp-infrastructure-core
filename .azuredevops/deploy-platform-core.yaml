@@ -117,6 +117,9 @@ extends:
           - name: front-door
             path: infra/front-door
             resourceGroupName: $(frontDoorResourceGroup)
+          - name: azure-waf
+            path: infra/front-door
+            resourceGroupName: $(frontDoorResourceGroup)  
       - name: application_infra
         templates:
           - name: configuration-store
@@ -142,4 +145,4 @@ extends:
             resourceGroupName: $(servicesResourceGroup)
             privateEndpointDnsRecordsForResources:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
-                resourceGroupName: $(servicesResourceGroup)
+                resourceGroupName: $(servicesResourceGroup)           
