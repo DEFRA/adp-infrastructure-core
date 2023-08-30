@@ -12,6 +12,7 @@
         "value": [
             {
             "name" : "#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
+            "purpose" : "AKS Subnet",
             "securityRules":[{
                 "name": "AllowHttpHttpsInboundVnet",
                 "properties": {
@@ -27,6 +28,23 @@
                         "443",
                         "80"
                     ],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
+                "name": "AllowAnyUdpInboundVnet",
+                "properties": {
+                    "protocol": "Udp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "*",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "VirtualNetwork",
+                    "access": "Allow",
+                    "priority": 2010,
+                    "direction": "Inbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
                     "sourceAddressPrefixes": [],
                     "destinationAddressPrefixes": []
                 }

@@ -13,8 +13,7 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 var commonTags = {
   Location: location
   CreatedDate: createdDate
-  Environment: environment
-  Purpose: 'ADP-NSG'
+  Environment: environment 
   Tier: 'Shared'
 }
 var tags = union(loadJsonContent('../default-tags.json'), commonTags)
@@ -25,7 +24,7 @@ module networksecuritygroup 'br/SharedDefraRegistry:network.network-security-gro
     name: nsg.name
     lock: 'CanNotDelete'
     location: location
-    tags: tags
+    tags: union(tags, { Purpose: 'ADP NSG ${nsg.purpose}'})
     securityRules: nsg.securityRules 
   }
 }]
