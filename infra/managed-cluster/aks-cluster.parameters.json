@@ -85,6 +85,9 @@
                     }
                 }
             }
+        },
+        "azureMonitorWorkspaceName": {
+            "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_azuremonitorworkspace }}#{{ nc_instance_regionid }}01"
         }
     }
 }

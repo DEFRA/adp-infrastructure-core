@@ -1,0 +1,25 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "grafana": {
+            "value": {
+                "name": "#{{ ssvResourceNamePrefix }}#{{ nc_resource_grafana }}#{{ nc_shared_instance_regionid }}01",
+                "publicNetworkAccess": "#{{ grafanaPublicNetworkAccess }}",
+                "resourceSku": "#{{ grafanaResourceSku }}"
+            }
+        },
+        "location": {
+            "value": "#{{ location }}"
+        },
+        "environment": {
+            "value": "#{{ environment }}"
+        },
+        "azureMonitorWorkspaceResourceIds": {
+            "value": "#{{ azureMonitorWorkspaceResourceIds }}"
+        },
+        "grafanaAdminsGroupObjectId": {
+            "value": "#{{ grafanaAdminGroupObjectId }}"
+        }
+    }
+}
