@@ -33,6 +33,23 @@
                 }
             },
             {
+                "name": "AllowAnyUdpInboundVnet",
+                "properties": {
+                    "protocol": "Udp",
+                    "sourcePortRange": "*",
+                    "destinationPortRange": "*",
+                    "sourceAddressPrefix": "VirtualNetwork",
+                    "destinationAddressPrefix": "VirtualNetwork",
+                    "access": "Allow",
+                    "priority": 2010,
+                    "direction": "Inbound",
+                    "sourcePortRanges": [],
+                    "destinationPortRanges": [],
+                    "sourceAddressPrefixes": [],
+                    "destinationAddressPrefixes": []
+                }
+            },
+            {
                 "name": "AllowAnyInboundFromAzLB",
                 "properties": {
                     "protocol": "*",

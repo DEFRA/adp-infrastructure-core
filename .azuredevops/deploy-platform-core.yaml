@@ -101,6 +101,11 @@ extends:
             privateEndpointDnsRecordsForResources:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
                 resourceGroupName: $(servicesResourceGroup)
+      - name: front_door
+        templates:
+          - name: front-door
+            path: infra/front-door
+            resourceGroupName: $(frontDoorResourceGroup)
       - name: application_infra
         templates:
           - name: configuration-store
