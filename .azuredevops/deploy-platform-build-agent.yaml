@@ -86,5 +86,6 @@ extends:
           -vmssName $(infraResourceNamePrefix)$(nc_resource_virtualmachine_scalesets)$(nc_instance_regionid)$(instanceNumber)
           -subnetId /subscriptions/$(subscriptionId)/resourceGroups/$(virtualNetworkResourceGroup)/providers/Microsoft.Network/virtualNetworks/$(virtualNetworkName)/subnets/$(networkResourceNamePrefix)$(nc_resource_subnet)$(nc_instance_regionid)03
           -imageId /subscriptions/$(imageGallerySubscription)/resourceGroups/$(imageGalleryResourceGroup)/providers/Microsoft.Compute/galleries/$(imageGalleryName)/images/${{ parameters.imageType }}
+          -adoAgentUser $(ADO-BuildAgent-User)
           -adoAgentPass $(ADO-BuildAgent-Password)
         type: AzureCLI

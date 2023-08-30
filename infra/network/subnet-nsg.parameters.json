@@ -609,6 +609,171 @@
                                     "223.229.135.250"
                                 ]
                             }
+                        },
+                        {
+                            "name": "Allow_Internal_Traffic",
+                            "properties": {
+                                "description": "Allow vnet traffic",
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 100,
+                                "direction": "Inbound"
+                            }
+                        },
+                        {
+                            "name": "Allow_OpenVPN",
+                            "properties": {
+                                "description": "Allow inbound from OPS subnet where APS and OPS VPNs live",
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "10.204.0.0/26",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 110,
+                                "direction": "Inbound"
+                            }
+                        },
+                        {
+                            "name": "Allow_AGW_Subnet_Inbound",
+                            "properties": {
+                                "description": "Allow inbound connectivity from the application gateway via HTTPS",
+                                "protocol": "Tcp",
+                                "sourcePortRange": "*",
+                                "sourceAddressPrefix": "127.0.0.1/32",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 300,
+                                "direction": "Inbound",
+                                "destinationPortRanges": [
+                                    "80",
+                                    "443"
+                                ]
+                            }
+                        },
+                        {
+                            "name": "Allow_private_AGW_Subnet_Inbound",
+                            "properties": {
+                                "description": "Allow inbound connectivity from the private application gateway via HTTPS",
+                                "protocol": "Tcp",
+                                "sourcePortRange": "*",
+                                "sourceAddressPrefix": "127.0.0.1/32",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 302,
+                                "direction": "Inbound",
+                                "destinationPortRanges": [
+                                    "80",
+                                    "443"
+                                ]
+                            }
+                        },
+                        {
+                            "name": "AllowGWM",
+                            "properties": {
+                                "description": "Allow all inbound Gateway Management ports",
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "65200-65535",
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "*",
+                                "access": "Allow",
+                                "priority": 400,
+                                "direction": "Inbound"
+                            }
+                        },
+                        {
+                            "name": "AllowAKSInternal",
+                            "properties": {
+                                "description": "Allow the AKS address ranges for cluster comms",
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "172.0.0.0/8",
+                                "destinationAddressPrefix": "*",
+                                "access": "Allow",
+                                "priority": 410,
+                                "direction": "Inbound"
+                            }
+                        },
+                        {
+                            "name": "AllowVnetToAKSInternal",
+                            "id": "[resourceId('Microsoft.Network/networkSecurityGroups/securityRules', parameters('networkSecurityGroups_SNDFFCNSNET2001_name'), 'AllowVnetToAKSInternal')]",
+                            "type": "Microsoft.Network/networkSecurityGroups/securityRules",
+                            "properties": {
+                                "description": "Allow the AKS address ranges for cluster comms",
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationAddressPrefix": "172.0.0.0/8",
+                                "access": "Allow",
+                                "priority": 411,
+                                "direction": "Inbound",
+                                "destinationPortRanges": [
+                                    "80",
+                                    "443"
+                                ]
+                            }
+                        },
+                        {
+                            "name": "Allow_Azure_Load_Balancer_Inbound",
+                            "properties": {
+                                "description": "Allow Azure LB above Deny All",
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "AzureLoadBalancer",
+                                "destinationAddressPrefix": "*",
+                                "access": "Allow",
+                                "priority": 1000,
+                                "direction": "Inbound"
+                            }
+                        },
+                        {
+                            "name": "denyAll",
+                            "properties": {
+                                "description": "Deny all other traffic",
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "*",
+                                "access": "Deny",
+                                "priority": 4096,
+                                "direction": "Inbound"
+                            }
+                        },
+                        {
+                            "name": "Allow_Internal_Traffic_Outbound",
+                            "properties": {
+                                "description": "Allow internal vnet outbound",
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 100,
+                                "direction": "Outbound"
+                            }
+                        },
+                        {
+                            "name": "Allow_NTP_Outbound_To_Azure",
+                            "properties": {
+                                "description": "Allow outbound NTP to AzureCloud",
+                                "protocol": "Udp",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "123",
+                                "sourceAddressPrefix": "*",
+                                "destinationAddressPrefix": "AzureCloud",
+                                "access": "Allow",
+                                "priority": 200,
+                                "direction": "Outbound"
+                            }
                         }
                     ]
                 }

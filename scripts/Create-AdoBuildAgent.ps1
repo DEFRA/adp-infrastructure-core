@@ -39,7 +39,9 @@ param(
     [string] $subnetId,
     [Parameter(Mandatory)]
     [string] $imageId,
-    [Parameter(Mandatory)] 
+    [Parameter(Mandatory)]
+    [string] $adoAgentUser,
+    [Parameter(Mandatory)]
     [string] $adoAgentPass
 )
 
@@ -68,6 +70,7 @@ Write-Debug "${functionName}:resourceGroup=$resourceGroup"
 Write-Debug "${functionName}:vmssName=$vmssName"
 Write-Debug "${functionName}:subnetId=$subnetId"
 Write-Debug "${functionName}:imageId=$imageId"
+Write-Debug "${functionName}:adoAgentUser=$adoAgentUser"
 Write-Debug "${functionName}:adoAgentPass=$adoAgentPass"
 
 try {
@@ -97,7 +100,7 @@ try {
         --subnet $subnetId `
         --image "$imageId" `
         --authentication-type password `
-        --admin-username azureuser `
+        --admin-username $adoAgentUser `
         --admin-password "$adoAgentPass" `
         --disable-overprovision `
         --upgrade-policy-mode Manual `
