@@ -88,9 +88,9 @@ extends:
         dependsOnGroupedTemplates:
           - network
         templates:
-          - name: aks-cluster
-            path: infra/managed-cluster
-            resourceGroupName: $(aksResourceGroup)
+          #- name: aks-cluster
+          #  path: infra/managed-cluster
+          #  resourceGroupName: $(aksResourceGroup)
           - name: grafana
             serviceConnectionVariableName: ssvServiceConnection
             path: infra/observability
