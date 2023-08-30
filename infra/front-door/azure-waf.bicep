@@ -10,21 +10,16 @@ param microsoftDefaultRuleSetRuleGroupOverrides array = []
 @description('Optional. The list of exclusions to be configured on the Default Microsoft managed rule set.')
 param microsoftDefaultRuleSetExclusions array = []
 
-
 @description('Optional. The list of RuleSetExclusions to be configured on the Default Microsoft Bot Manager rule set')
 param microsoftBotManagerRuleSetRuleGroupOverrides array = []
 
 @description('Optional. The list of exclusions to be configured for Microsoft Bot Manager ruleset  ')
 param microsoftBotManagerRuleSetExclusions array = []
 
-@description('Optional. The PolicySettings for policy.')
+@description('Optional. The PolicySettings object (enabledState,mode) for policy.')
 param policySettings object = {
   enabledState: 'Enabled'
   mode: 'Prevention'
-  redirectUrl: null
-  customBlockResponseStatusCode: 403
-  customBlockResponseBody: null
-  requestBodyCheck: 'Enabled'
 }
 
 @description('Required. Environment name.')
@@ -70,6 +65,8 @@ var frontDoorWafTags = {
   Tier: 'Shared'
 }
 
+var customBlockResponseBody = '<!DOCTYPE html> <html> <head> <title> Defra - 403 Forbidden</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <style> body {background-color:#ffffff;background-repeat:no-repeat;background-position:top left;background-attachment:fixed;} h1{text-align:center;font-family:Arial, sans-serif;color:#ff0a0a;background-color:#ffffff;} p {text-align:left;font-family:Georgia, serif;font-size:14px;font-style:normal;font-weight:normal;color:#000000;background-color:#ffffff;} </style> </head> <body> <h1>Unfortunately, there is a problem with your request</h1> <br /> <p><b>Your request has been blocked.</b> Please contact the site administrator or the Defra helpdesk with the following information. </p> <p></p> <p><b>Tracking Request ID</b>: {{azure-ref}}</p> </body> </html>'
+
 module frontDoorWafPolicy 'br/SharedDefraRegistry:network.front-door-web-application-firewall-policy:0.4.1-prerelease' = {
   name: 'fdwaf-${deploymentDate}'
   params: {
@@ -78,7 +75,14 @@ module frontDoorWafPolicy 'br/SharedDefraRegistry:network.front-door-web-applica
     lock: 'CanNotDelete'
     tags: union(tags, frontDoorWafTags)
     sku: 'Premium_AzureFrontDoor' // The Microsoft-managed WAF rule sets require the premium SKU of Front Door.
-    policySettings: policySettings
+    policySettings: {
+      enabledState: policySettings.enabledState
+      mode: policySettings.mode
+      redirectUrl: null
+      customBlockResponseStatusCode: 403
+      customBlockResponseBody: customBlockResponseBody
+      requestBodyCheck: 'Enabled'
+    }
     customRules: {
       rules: customRules
     }
