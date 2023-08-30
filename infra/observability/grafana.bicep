@@ -28,7 +28,7 @@ var azureMonitorWorkspaceResourceIdObject = [for azureMonitorWorkspaceResourceId
   azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId
 }]
 
-resource graphanaDashboardResource 'Microsoft.Dashboard/grafana@2022-08-01' = {
+resource grafanaDashboardResource 'Microsoft.Dashboard/grafana@2022-08-01' = {
   name: grafana.name
   location: location
   tags: tags
@@ -48,7 +48,7 @@ resource graphanaDashboardResource 'Microsoft.Dashboard/grafana@2022-08-01' = {
 
 resource grafanaRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(resourceGroup().id, 'GrafanaAdmin', grafanaAdminsGroupObjectId)
-  scope: graphanaDashboardResource
+  scope: grafanaDashboardResource
   properties: {
     principalId: grafanaAdminsGroupObjectId
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '22926164-76b3-42b3-bc55-97df8dab3e41') // Grafana Admin
