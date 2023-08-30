@@ -77,9 +77,9 @@ extends:
     keyVaultName: $(ssvPlatformKeyVaultName)
     scriptsList:
       - displayName: Deploy Build Agent - ${{ parameters.imageType }}
-        scriptPath: /scripts/ADO-Build-Agent.ps1
+        scriptPath: /scripts/Create-AdoBuildAgent.ps1
         scriptArguments: >
-          -imageGalleryTenant $(imageGalleryTenant)
+          -imageGalleryTenantId $(imageGalleryTenant)
           -tenantId $(tenantId)
           -subscriptionName $(subscriptionName)
           -resourceGroup $(servicesResourceGroup)
