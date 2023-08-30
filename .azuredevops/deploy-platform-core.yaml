@@ -15,7 +15,6 @@ pr:
     exclude:
     - infra/config/app-registrations/*
     - infra/config/service-connections/*
-    - infra/vmss/*
     - scripts/service-connection/*
     - scripts/Assign-RBAC-Subscription.ps1
 
@@ -31,7 +30,6 @@ trigger:
     exclude:
     - infra/config/app-registrations/*
     - infra/config/service-connections/*
-    - infra/vmss/*
     - scripts/service-connection/*
     - scripts/Assign-RBAC-Subscription.ps1
 

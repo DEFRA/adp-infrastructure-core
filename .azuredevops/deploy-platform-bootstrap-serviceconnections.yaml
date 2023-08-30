@@ -52,14 +52,14 @@ extends:
         outputTemplateChange: Skip
         serviceConnection: AZD-CDO-SSV3    
         deploymentBranches:
-          - '*'
+          - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd3'
         outputTemplateChange: Skip
         serviceConnection: AZD-CDO-SSV3    
         deploymentBranches:
-          - '*'
+          - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'  
     groupedTemplates:
