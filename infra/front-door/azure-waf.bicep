@@ -1,4 +1,4 @@
-@description('Required. The name of the Front Door endpoint to create. This must be globally unique.')
+@description('Required. The name of the Front Door WAF Policy to create.')
 param wafPolicyName string
 
 @description('Optional. The list of custom rule sets to configure on the WAF.')
