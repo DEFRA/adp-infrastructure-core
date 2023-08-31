@@ -50,7 +50,7 @@ extends:
           primary: 'UKSouth'
     scriptsList:
       - displayName: Publish Nginx Image to ACR
-        scriptPath: 'scripts/nginxplus/Publish-NginxPlus-Acr.ps1'
+        scriptPath: 'scripts/Publish-NginxPlus-Acr.ps1'
         scriptArguments: >
           -AcrName $(ssvSharedAcrName)
           -AzureSubscription $(ssv3Subscription)
