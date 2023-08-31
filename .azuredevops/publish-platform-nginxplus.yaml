@@ -38,10 +38,10 @@ variables:
 extends:
   template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
   parameters:
-    privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
+    privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
-      - name: 'snd1'
+      - name: 'ssv3'
         serviceConnection: $(ssv3Subscription)
         deploymentBranches:
           - 'refs/heads/main'

@@ -191,8 +191,6 @@ try {
     Write-Host "${functionName}:Connecting to Azure..."
     [SecureString]$SecuredPassword = ConvertTo-SecureString -AsPlainText -String $env:servicePrincipalKey
     [PSCredential]$Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:servicePrincipalId, $SecuredPassword
-    $SecuredPassword.GetType()
-    $Credential.GetType()
     $null = Connect-AzAccount -ServicePrincipal -TenantId $env:tenantId -Credential $Credential
     $null = Set-AzContext -Subscription $AzureSubscription
     Write-Host "${functionName}:Connected to Azure and set context to '$AzureSubscription'"
