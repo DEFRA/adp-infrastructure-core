@@ -42,7 +42,7 @@ extends:
     deployFromFeature: ${{ parameters.deployFromFeature }}  
     environments:
       - name: 'snd1'
-        serviceConnection: AZD-CDO-SSV3
+        serviceConnection: ${{ variables.ssv3SubscriptionName }}
         deploymentBranches:
           - '*'
         developmentEnvironment: true
@@ -50,14 +50,14 @@ extends:
           primary: 'UKSouth'
       - name: 'snd2'
         outputTemplateChange: Skip
-        serviceConnection: AZD-CDO-SSV3    
+        serviceConnection: ${{ variables.ssv3SubscriptionName }}
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd3'
         outputTemplateChange: Skip
-        serviceConnection: AZD-CDO-SSV3    
+        serviceConnection: ${{ variables.ssv3SubscriptionName }}
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
