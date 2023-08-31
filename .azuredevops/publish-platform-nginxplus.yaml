@@ -41,7 +41,7 @@ extends:
     privateAgentName: 'DEFRA-COMMON-ubuntu2004-SSV3'
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
-      - name: 'ssv3'
+      - name: 'snd1'
         serviceConnection: $(ssv3Subscription)
         deploymentBranches:
           - 'refs/heads/main'
