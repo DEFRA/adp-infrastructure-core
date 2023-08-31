@@ -3,6 +3,9 @@ parameters:
     displayName: "Deploy from Feature Branch"
     type: boolean
     default: false
+  - name: nginxVersion
+    type: string
+    default: 3.2.0
 
 pr:
   branches:
