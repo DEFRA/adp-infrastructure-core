@@ -58,7 +58,7 @@ extends:
           primary: 'UKSouth'
       - name: 'snd2'
         serviceConnection: ${{ variables.subscriptionName }}
-        privateAgentName: 'DEFRA-ADP-SND2-ubuntu2204'
+        privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
