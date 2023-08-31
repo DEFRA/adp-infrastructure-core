@@ -38,7 +38,7 @@ variables:
 extends:
   template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
   parameters:
-    privateAgentName: 'DEFRA-COMMON-ubuntu2004-SSV3'
+    privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
       - name: 'snd1'
@@ -60,6 +60,7 @@ extends:
           -NGINXVersion: ${{ parameters.nginxVersion }}
           -CertFilesPath $(Build.ArtifactStagingDirectory)
         type: AzureCLI
+        azureCLIScriptType: 'pscore'
                 
             
 
