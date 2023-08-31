@@ -30,7 +30,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: nginx-variables
+      ref: pp/nginx-variables
 variables:
   - name: ssv3Subscription
     value: AZD-CDO-SSV3
