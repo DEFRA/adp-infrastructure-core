@@ -45,17 +45,20 @@ extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
     projectName: $(projectName)
+    privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
       - name: 'snd1'
-        serviceConnection: AZD-CDO-SND1
+        serviceConnection: $(subscriptionName)
+        privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
         deploymentBranches:
           - '*'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd2'
-        serviceConnection: AZD-CDO-SND2
+        serviceConnection: $(subscriptionName)
+        privateAgentName: 'DEFRA-ADP-SND2-ubuntu2204'
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:

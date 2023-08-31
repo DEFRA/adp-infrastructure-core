@@ -91,4 +91,20 @@ extends:
                 ScriptArguments: >
                   -ServiceEndpointJsonPath 'infra/config/service-connections/tier2-service-connection.json'
                   -WorkingDirectory $(Pipeline.Workspace)\s\self           
-                
+
+      - name: network
+        dependsOnGroupedTemplates:
+          - SharedResources
+        templates:
+          - name: route-table
+            path: infra/network
+            serviceConnectionVariableName: 'subscriptionName'
+            resourceGroupName: $(virtualNetworkResourceGroup)
+          - name: subnet-nsg
+            path: infra/network
+            serviceConnectionVariableName: 'subscriptionName'
+            resourceGroupName: $(virtualNetworkResourceGroup)            
+          - name: virtual-network
+            path: infra/network
+            serviceConnectionVariableName: 'subscriptionName'
+            resourceGroupName: $(virtualNetworkResourceGroup)
