@@ -17,9 +17,8 @@ param createdDate string = utcNow('yyyy-MM-dd')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 @description('Required. The parameter object for configuring flux with the aks cluster. The object must contain the fluxCore  and fluxServices values.')
 param fluxConfig object
-@description('Azure Monitor Log Analytics Resource')
-param monitoringWorkspace object
-
+@description('Optional. Resource ID of the monitoring log analytics workspace.')
+param monitoringWorkspaceId object
 
 var commonTags = {
   Location: location
@@ -115,7 +114,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     nodeResourceGroup: cluster.nodeResourceGroup
     enableDefaultTelemetry: false
     omsAgentEnabled: true
-    monitoringWorkspace: resourceId(monitoringWorkspace.resourceGroup, 'Microsoft.OperationalInsights/workspaces', monitoringWorkspace.name) 
+    monitoringWorkspaceId: resourceId(monitoringWorkspaceId.resourceGroup, 'Microsoft.OperationalInsights/workspaces', monitoringWorkspaceId.name) 
     enableRBAC: true
     aadProfileManaged: true
     disableLocalAccounts: true
