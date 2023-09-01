@@ -14,6 +14,8 @@ pr:
     - infra/config/service-connections/*
     - scripts/service-connection/*
     - scripts/Assign-RBAC-Subscription.ps1
+    exclude:
+    - scripts/Create-AdoBuildAgent.ps1
 
 trigger:
   batch: true
@@ -26,6 +28,8 @@ trigger:
     - infra/config/service-connections/*
     - scripts/service-connection/*
     - scripts/Assign-RBAC-Subscription.ps1
+    exclude:
+    - scripts/Create-AdoBuildAgent.ps1
 
 resources:
   repositories:
@@ -33,7 +37,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: features/variable-update
+      ref: main
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon

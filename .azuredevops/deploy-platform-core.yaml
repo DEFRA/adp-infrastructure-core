@@ -17,6 +17,7 @@ pr:
     - infra/config/service-connections/*
     - scripts/service-connection/*
     - scripts/Assign-RBAC-Subscription.ps1
+    - scripts/Create-AdoBuildAgent.ps1
 
 trigger:
   batch: true
@@ -32,6 +33,7 @@ trigger:
     - infra/config/service-connections/*
     - scripts/service-connection/*
     - scripts/Assign-RBAC-Subscription.ps1
+    - scripts/Create-AdoBuildAgent.ps1
 
 resources:
   repositories:
