@@ -131,11 +131,10 @@ function Publish-Image {
 
     process {
 
-        Write-Host "Logging in to $($AcrName)"
-        az acr login --name  $AcrName
-        if ($LASTEXITCODE -ne 0) {
-            throw "Failed to login to $($AcrName)"
-        }
+        [string]$acrLoginCommand = "az acr login --name $AcrName"
+        Write-Host $acrLoginCommand
+        [string]$acrLoginOutput = Invoke-CommandLine -Command $acrLoginCommand
+        Write-Debug $acrLoginOutput
 
         [string]$publishingTarget = '{0}.azurecr.io/{1}:{2}' -f $AcrName, "image/nginx-plus-ingress", $NGINXVersion
         Write-Host "Creating tag $publishingTarget"
@@ -157,9 +156,6 @@ function Publish-Image {
     }
 }
 
-Install-Module -Name "Az.Accounts" -RequiredVersion "2.2.3" -Force -SkipPublisherCheck -AllowClobber
-Install-Module -Name "Az.KeyVault" -RequiredVersion "4.10.2" -Force -SkipPublisherCheck -AllowClobber
-
 Set-StrictMode -Version 3.0
 
 [string]$functionName = $MyInvocation.MyCommand
@@ -177,6 +173,7 @@ if ($enableDebug) {
     Set-Variable -Name DebugPreference -Value Continue -Scope global
 }
 
+
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
 Write-Debug "${functionName}:AcrName=$AcrName"
 Write-Debug "${functionName}:AzureSubscription=$AzureSubscription"
@@ -187,6 +184,16 @@ Write-Debug "${functionName}:CertFilesPath=$CertFilesPath"
 Write-Debug "${functionName}:NGINXVersion=$NGINXVersion"
 
 try {
+
+    Install-Module -Name "Az.Accounts" -RequiredVersion "2.2.3" -Force -SkipPublisherCheck -AllowClobber
+    Install-Module -Name "Az.KeyVault" -RequiredVersion "4.10.2" -Force -SkipPublisherCheck -AllowClobber
+
+    [System.IO.DirectoryInfo]$scriptDir = $PSCommandPath | Split-Path -Parent
+    Write-Debug "${functionName}:scriptDir.FullName=$scriptDir.FullName"
+
+    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $scriptDir.FullName -ChildPath "modules/ps-helpers"
+    Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
+    Import-Module $moduleDir.FullName -Force
 
     Write-Host "${functionName}:Connecting to Azure..."
     [SecureString]$SecuredPassword = ConvertTo-SecureString -AsPlainText -String $env:servicePrincipalKey
