@@ -19,7 +19,7 @@ param createdDate string = utcNow('yyyy-MM-dd')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 @description('Required. The parameter object for configuring flux with the aks cluster. The object must contain the fluxCore  and fluxServices values.')
 param fluxConfig object
-@description('Optional. Resource ID of the monitoring log analytics workspace.')
+@description('Optional. Resource ID of the monitoringWorkspace.')
 param monitoringWorkspaceId object
 
 var commonTags = {
