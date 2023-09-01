@@ -16,6 +16,7 @@ pr:
     - infra/config/app-registrations/*
     - infra/config/service-connections/*
     - scripts/service-connection/*
+    - scripts/Publish-NginxPlus-Acr.ps1
     - scripts/Assign-RBAC-Subscription.ps1
 
 trigger:
@@ -31,6 +32,7 @@ trigger:
     - infra/config/app-registrations/*
     - infra/config/service-connections/*
     - scripts/service-connection/*
+    - scripts/Publish-NginxPlus-Acr.ps1
     - scripts/Assign-RBAC-Subscription.ps1
 
 resources:
