@@ -395,9 +395,9 @@ Function New-BuildRun() {
         [Object]$headers = Get-DefaultHeadersWithAccessToken
 
         $uriPostRunPipeline = "$($organisationUri)/$($projectName)/_apis/pipelines/$($buildDefinitionId)/runs?api-version=6.0"
-        Write-Output "uriPostRunPipeline: $uriPostRunPipeline"
+        Write-Host "uriPostRunPipeline: $uriPostRunPipeline"
 
-        [Object]$pipelineRun = Invoke-RestMethod -Uri $uriPostRunPipeline -Method Post -Headers $headers -Body $requestBody -ContentType "application/json"
+        [Object]$pipelineRun = Invoke-RestMethod -Uri $uriPostRunPipeline -Method Post -Headers $headers -Body $requestBody
         if ($LASTEXITCODE -ne 0) {
             throw "Error queuing the build for the definitionid '$buildDefinitionId' for project '$projectName' command with exit code $LASTEXITCODE"
         }
@@ -415,11 +415,11 @@ Function New-BuildRun() {
                 throw "Error reading the pipeline runId '$($pipelineRun.id)' status with exit code $LASTEXITCODE"
             }
             $currentState = $pipelinerundetails.state
-            Write-Output "Current state of pipeline runId $($pipelineRun.id): $($currentState)"
-            Write-Output "Running state check..."
+            Write-Host "Current state of pipeline runId $($pipelineRun.id): $($currentState)"
+            Write-Host "Running state check..."
             if ($currentState -ne "inProgress") {
                 $piplineRunResult = $pipelinerundetails.result
-                Write-Output "Current state: $($currentState)"
+                Write-Host "Current state: $($currentState)"
                 break
             }
         } until ($currentState -ne "inProgress" -or $totalSleepinSec -ge $pipelineStateCheckMaxWaitTimeOutInSec)
@@ -427,7 +427,7 @@ Function New-BuildRun() {
         #report pipeline status
         if ($piplineRunResult -eq "succeeded") {
             $successmsg = "$($pipelinerundetails.pipeline.name) pipeline with runId $($pipelinerundetails.id) has completed successfully."
-            Write-Output "$($successmsg)"
+            Write-Host "$($successmsg)"
         }
         else {
             if ($totalSleepinSec -ge $pipelineStateCheckMaxWaitTimeOutInSec) {
@@ -436,7 +436,7 @@ Function New-BuildRun() {
             else {
                 $errormsg = "$($pipelinerundetails.pipeline.name) pipeline with runId $($pipelinerundetails.id) has failed."
             }
-            Write-Output "##vso[task.logissue type=error]$($errormsg)"
+            Write-Host "##vso[task.logissue type=error]$($errormsg)"
             exit 1
         }
     }
