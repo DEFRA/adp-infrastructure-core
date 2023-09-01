@@ -56,7 +56,7 @@
         "environment": {
             "value": "#{{ environment }}"
         },
-        "monitoringWorkspaceId": {
+        "monitoringWorkspace": {
             "value": {
                 "name": "#{{ logAnalyticsWorkspace }}",
                 "resourceGroup": "#{{ servicesResourceGroup }}"
