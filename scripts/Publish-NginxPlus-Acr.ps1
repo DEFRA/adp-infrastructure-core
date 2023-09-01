@@ -80,32 +80,27 @@ function Get-Image {
         Save-SecretToFile -VaultName $KeyVaultName -SecretName $NGINXKeySecretName -OutputFilePath $clientKeyPath
 
         [string]$dockerCertDir = "/etc/docker/certs.d/private-registry.nginx.com"
-
-        Write-Host "Creating directory $dockerCertDir"
-        sudo mkdir -p $dockerCertDir
-        if ($LASTEXITCODE -ne 0) {
-            throw "Failed to create directory $dockerCertDir"
-        }
+        [string]$mkdirCommand = "sudo mkdir -p $dockerCertDir"
+        Write-Host $mkdirCommand
+        [string]$mkdirOutput = Invoke-CommandLine -Command $mkdirCommand
+        Write-Debug $mkdirOutput
 
         [string]$dockerClientCertPath = Join-Path -Path $dockerCertDir -ChildPath "client.cert"
-        Write-Host "Moving $clientCertPath to $dockerClientCertPath"
-        sudo mv $clientCertPath $dockerClientCertPath
-        if ($LASTEXITCODE -ne 0) {
-            throw "Failed to move $clientCertPath to $dockerClientCertPath"
-        }
+        [string]$mvClientCertCommand = "sudo mv $clientCertPath $dockerClientCertPath"
+        Write-Host $mvClientCertCommand
+        [string]$mvClientCertOutput = Invoke-CommandLine -Command $mvClientCertCommand
+        Write-Debug $mvClientCertOutput
             
         [string]$dockerClientKeyPath = Join-Path -Path "/etc/docker/certs.d/private-registry.nginx.com" -ChildPath "client.key"
-        Write-Host "Moving $clientKeyPath to $dockerClientKeyPath"
-        sudo mv $clientKeyPath $dockerClientKeyPath
-        if ($LASTEXITCODE -ne 0) {
-            throw "Failed to move $clientKeyPath to $dockerClientKeyPath"
-        }
-
-        Write-Host "Pulling nginx-plus-ingress image from private-registry.nginx.com/nginx-ic/nginx-plus-ingress:$NGINXVersion"
-        $(docker pull private-registry.nginx.com/nginx-ic/nginx-plus-ingress:$NGINXVersion)
-        if ($LASTEXITCODE -ne 0) {
-            throw "Failed to pull nginx-plus-ingress image from private-registry.nginx.com/nginx-ic/nginx-plus-ingress:$NGINXVersion"
-        }
+        [string]$mvKeyCertCommand = "sudo mv $clientKeyPath $dockerClientKeyPath"
+        Write-Host $mvKeyCertCommand
+        [string]$mvKeyCertOutput = Invoke-CommandLine -Command $mvKeyCertCommand
+        Write-Debug $mvKeyCertOutput
+        
+        [string]$dockerPullCommand = "docker pull private-registry.nginx.com/nginx-ic/nginx-plus-ingress:$NGINXVersion"
+        Write-Host $dockerPullCommand
+        [string]$dockerPullOutput = Invoke-CommandLine -Command $dockerPullCommand
+        Write-Debug $dockerPullOutput
     }
     
     end {
@@ -137,20 +132,18 @@ function Publish-Image {
         Write-Debug $acrLoginOutput
 
         [string]$publishingTarget = '{0}.azurecr.io/{1}:{2}' -f $AcrName, "image/nginx-plus-ingress", $NGINXVersion
-        Write-Host "Creating tag $publishingTarget"
-        $(docker tag private-registry.nginx.com/nginx-ic/nginx-plus-ingress:$NGINXVersion $publishingTarget)
-        if ($LASTEXITCODE -ne 0) {
-            throw "Failed to tag nginx-plus-ingress image as $publishingTarget"
-        }
+        [string]$dockerTagCommand = "docker tag private-registry.nginx.com/nginx-ic/nginx-plus-ingress:$NGINXVersion $publishingTarget"
+        Write-Host $dockerTagCommand
+        [string]$dokerTagOutput = Invoke-CommandLine -Command $dockerTagCommand
+        Write-Debug $dokerTagOutput
 
         if ($PSCmdlet.ShouldProcess("Publish NGINX Image to Acr, Publish target:$($publishingTarget)", 'Publish')) {
-            $(docker push $publishingTarget)
-            if ($LASTEXITCODE -ne 0) {
-                throw "Failed to push nginx-plus-ingress image to $publishingTarget"
-            }
+            [string]$dockerPushCommand = "docker push $publishingTarget"
+            Write-Host $dockerPushCommand
+            [string]$dockerPushOutput = Invoke-CommandLine -Command $dockerPushCommand
+            Write-Debug $dockerPushOutput
         }
     }
-    
     end {
         Write-Debug "${functionName}:Exited"
     }
@@ -172,7 +165,6 @@ if ($enableDebug) {
     Set-Variable -Name VerbosePreference -Value Continue -Scope global
     Set-Variable -Name DebugPreference -Value Continue -Scope global
 }
-
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
 Write-Debug "${functionName}:AcrName=$AcrName"
