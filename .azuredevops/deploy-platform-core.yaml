@@ -8,6 +8,7 @@ parameters:
     type: string
     default: All
     values:
+      - network
       - monitoring
       - security
       - cluster
