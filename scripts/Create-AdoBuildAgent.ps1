@@ -43,9 +43,9 @@ param(
     [Parameter(Mandatory)]
     [string] $imageId,
     [Parameter(Mandatory)]
-    [securestring] $adoAgentUser,
+    [string] $adoAgentUser,
     [Parameter(Mandatory)]
-    [securestring] $adoAgentPass
+    [string] $adoAgentPass
 )
 
 Set-StrictMode -Version 3.0
