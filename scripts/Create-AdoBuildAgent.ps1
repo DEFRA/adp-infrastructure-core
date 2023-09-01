@@ -43,9 +43,9 @@ param(
     [Parameter(Mandatory)]
     [string] $imageId,
     [Parameter(Mandatory)]
-    [string] $adoAgentUser,
+    [securestring] $adoAgentUser,
     [Parameter(Mandatory)]
-    [string] $adoAgentPass
+    [securestring] $adoAgentPass
 )
 
 Set-StrictMode -Version 3.0
@@ -73,8 +73,6 @@ Write-Debug "${functionName}:resourceGroup=$resourceGroup"
 Write-Debug "${functionName}:vmssName=$vmssName"
 Write-Debug "${functionName}:subnetId=$subnetId"
 Write-Debug "${functionName}:imageId=$imageId"
-Write-Debug "${functionName}:adoAgentUser=$adoAgentUser"
-Write-Debug "${functionName}:adoAgentPass=$adoAgentPass"
 
 try {
     az account clear
@@ -83,32 +81,38 @@ try {
         $output = az login --service-principal -u $env:servicePrincipalId -p $env:servicePrincipalKey --tenant $imageGalleryTenantId
         Write-Debug ([array]$output | Out-String)
         $output = az account get-access-token
-        Write-Debug ([array]$output | Out-String)
     }
 
     $output = az login --service-principal -u $env:servicePrincipalId -p $env:servicePrincipalKey --tenant $tenantId
     Write-Debug ([array]$output | Out-String)
     $output = az account get-access-token
-    Write-Debug ([array]$output | Out-String)
 
     $output = az account set --subscription $subscriptionName
     Write-Debug ([array]$output | Out-String)
 
-    $output = az vmss create `
-        --resource-group $resourceGroup `
-        --name $vmssName `
-        --computer-name-prefix $vmssName `
-        --vm-sku Standard_D4s_v4 `
-        --instance-count 2 `
-        --subnet $subnetId `
-        --image "$imageId" `
-        --authentication-type password `
-        --admin-username $adoAgentUser `
-        --admin-password "$adoAgentPass" `
-        --disable-overprovision `
-        --upgrade-policy-mode Manual `
-        --public-ip-address '""'
-    Write-Debug ([array]$output | Out-String)
+    $instances = az vmss list --resource-group $resourceGroup | ConvertFrom-Json
+    if (-not ($instances.name -contains $vmssName)) {
+        Write-Host "Creating VMSS: $vmssName..."
+        $output = az vmss create `
+            --resource-group $resourceGroup `
+            --name $vmssName `
+            --computer-name-prefix $vmssName `
+            --vm-sku Standard_D4s_v4 `
+            --instance-count 2 `
+            --subnet $subnetId `
+            --image "$imageId" `
+            --authentication-type password `
+            --admin-username $adoAgentUser `
+            --admin-password "$adoAgentPass" `
+            --disable-overprovision `
+            --upgrade-policy-mode Manual `
+            --public-ip-address '""' `
+            --tags ServiceName='ADP' ServiceCode='CDO' Name=$vmssName Purpose='ADO Build Agent'
+        Write-Debug ([array]$output | Out-String)
+    }
+    else {
+        Write-Host "VMSS: $vmssName already exists!"
+    }
 
     $exitCode = 0
 }

@@ -21,7 +21,7 @@ pr:
     include:
     - scripts/Create-AdoBuildAgent.ps1
     exclude:
-    - infra/vmss/*
+    - infra/*
 
 trigger:
   batch: true
@@ -32,7 +32,7 @@ trigger:
     include:
     - scripts/Create-AdoBuildAgent.ps1
     exclude:
-    - infra/vmss/*
+    - infra/*
 
 resources:
   repositories:
