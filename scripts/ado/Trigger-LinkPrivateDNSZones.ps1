@@ -52,14 +52,11 @@ Write-Debug "${functionName}:tenantId=$tenantId"
 
 try {
     [System.IO.DirectoryInfo]$scriptDir = $PSCommandPath | Split-Path -Parent
-    Write-Debug "${functionName}:scriptDir.FullName=$scriptDir.FullName"
+    Write-Debug "${functionName}:scriptDir.FullName=$($scriptDir.FullName)"
 
     [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $scriptDir.FullName -ChildPath "../modules/ado"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
-
-    [System.IO.DirectoryInfo]$scriptDir = $PSCommandPath | Split-Path -Parent
-    Write-Debug "${functionName}:scriptDir.FullName=$scriptDir.FullName"
 
     [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $scriptDir.FullName -ChildPath "../modules/ps-helpers"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
@@ -80,7 +77,7 @@ try {
     $runPipelineRequestBodyWithDefaultConfig.templateParameters.Tenant = $tenantId
     [string]$requestBodyJson = $runPipelineRequestBodyWithDefaultConfig | ConvertTo-Json -Depth 100
 
-    New-BuildRun -OrganisationName $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI -projectName "CCoE-Infrastructure" -buildDefinitionId 4634 -requestBody $requestBodyJson
+    New-BuildRun -organisationUri $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI -projectName "CCoE-Infrastructure" -buildDefinitionId 4634 -requestBody $requestBodyJson
 
     $exitCode = 0
 }

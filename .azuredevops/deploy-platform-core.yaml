@@ -73,12 +73,12 @@ extends:
                 -resourceGroupName $(aksResourceGroup)
                 -subscriptionName $(subscriptionName)
                 -tenantId $(tenantId)
-          - name: subnet-nsg
-            path: infra/network
-            resourceGroupName: $(virtualNetworkResourceGroup)            
-          - name: virtual-network
-            path: infra/network
-            resourceGroupName: $(virtualNetworkResourceGroup)
+          # - name: subnet-nsg
+          #   path: infra/network
+          #   resourceGroupName: $(virtualNetworkResourceGroup)            
+          # - name: virtual-network
+          #   path: infra/network
+          #   resourceGroupName: $(virtualNetworkResourceGroup)
       # - name: monitoring
       #   templates:
       #     - name: workspace
