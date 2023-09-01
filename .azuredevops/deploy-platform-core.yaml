@@ -49,7 +49,7 @@ extends:
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
       - name: 'snd1'
-        serviceConnection: ${{ variables.subscriptionName }}
+        serviceConnection: AZD-CDO-SND1
         privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
         deploymentBranches:
           - '*'
@@ -57,7 +57,7 @@ extends:
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd2'
-        serviceConnection: ${{ variables.subscriptionName }}
+        serviceConnection: AZD-CDO-SND2
         privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
         deploymentBranches:
           - 'refs/heads/main'
