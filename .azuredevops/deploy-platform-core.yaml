@@ -65,7 +65,7 @@ extends:
             path: infra/network
             resourceGroupName: $(virtualNetworkResourceGroup)
             postDeployScriptsList:
-            - displayName: Get Azure Monitor Workspace Resource IDs to link to Grafana Dashboard
+            - displayName: Link the Private DNS Zone to Central networks
               scriptPath: scripts/ado/Trigger-LinkPrivateDNSZones.ps1
               type: AzurePowerShell
               scriptArguments: >
