@@ -65,7 +65,7 @@ Function Initialize-ProxyRequestBody() {
         Write-Debug "${functionName}:Entered"
     }
 
-    process {        
+    process {
         Write-Debug "Building Service endpoint proxy Body..."
         [PSCustomObject]$serviceEndpointProxyDefaultConfig = Get-Content -Raw -Path '.\scripts\ado\request-body\endpointproxy-request-body.json' | ConvertFrom-Json
         Write-Debug "serviceEndpointProxyDefaultConfig = $($serviceEndpointProxyDefaultConfig | ConvertTo-Json -Depth 10)"

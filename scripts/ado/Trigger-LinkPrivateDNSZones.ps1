@@ -54,14 +54,14 @@ try {
     [System.IO.DirectoryInfo]$scriptDir = $PSCommandPath | Split-Path -Parent
     Write-Debug "${functionName}:scriptDir.FullName=$scriptDir.FullName"
 
-    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $scriptDir.FullName -ChildPath "modules/ado"
+    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $scriptDir.FullName -ChildPath "../modules/ado"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
 
     [System.IO.DirectoryInfo]$scriptDir = $PSCommandPath | Split-Path -Parent
     Write-Debug "${functionName}:scriptDir.FullName=$scriptDir.FullName"
 
-    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $scriptDir.FullName -ChildPath "modules/ps-helpers"
+    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $scriptDir.FullName -ChildPath "../modules/ps-helpers"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
 
