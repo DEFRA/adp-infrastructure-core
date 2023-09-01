@@ -394,7 +394,7 @@ Function New-BuildRun() {
     process {    
         [Object]$headers = Get-DefaultHeadersWithAccessToken
 
-        $uriPostRunPipeline = "$($organisationUri)/$($projectName)/_apis/pipelines/$($buildDefinitionId)/runs?api-version=6.0"
+        $uriPostRunPipeline = "$($organisationUri)$($projectName)/_apis/pipelines/$($buildDefinitionId)/runs?api-version=6.0"
         Write-Host "uriPostRunPipeline: $uriPostRunPipeline"
 
         [Object]$pipelineRun = Invoke-RestMethod -Uri $uriPostRunPipeline -Method Post -Headers $headers -Body $requestBody
