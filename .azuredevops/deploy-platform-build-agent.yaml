@@ -19,6 +19,8 @@ pr:
     - main
   paths:
     include:
+    - scripts/Create-AdoBuildAgent.ps1
+    exclude:
     - infra/vmss/*
 
 trigger:
@@ -28,6 +30,8 @@ trigger:
       - '*'
   paths:
     include:
+    - scripts/Create-AdoBuildAgent.ps1
+    exclude:
     - infra/vmss/*
 
 resources:
