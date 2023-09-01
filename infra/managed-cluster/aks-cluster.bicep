@@ -1,15 +1,11 @@
 @description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and subnetClusterNodes values.')
 param vnet object
-
 @description('Required. The parameter object for the cluster. The object must contain the name,skuTier,nodeResourceGroup,miControlPlane,adminAadGroupObjectId and monitoringWorkspace values.')
 param cluster object
-
 @description('Required. The prefix for the private DNS zone.')
 param privateDnsZone object
-
 @description('Required. The Name of the Azure Monitor Workspace.')
 param azureMonitorWorkspaceName string
-
 @allowed([
   'UKSouth'
 ])
@@ -23,6 +19,8 @@ param createdDate string = utcNow('yyyy-MM-dd')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 @description('Required. The parameter object for configuring flux with the aks cluster. The object must contain the fluxCore  and fluxServices values.')
 param fluxConfig object
+@description('Optional. The parameter object for the monitoringWorkspace. The object must contain name of the name and resourceGroup.')
+param monitoringWorkspace object
 
 var commonTags = {
   Location: location
@@ -30,28 +28,25 @@ var commonTags = {
   Environment: environment
 }
 var tags = union(loadJsonContent('../default-tags.json'), commonTags)
-
 var tagsMi = {
   Name: cluster.miControlPlane
   Purpose: 'AKS Control Plane Managed Identity'
   Tier: 'Security'
 }
-
 var aksTags = {
   Name: cluster.name
   Purpose: 'AKS Cluster'
   Tier: 'Shared'
 }
-
 var pdnsTags = {
   Name: privateDnsZoneName
   Purpose: 'AKS Private DNS Zone'
 }
-
 var pdnsVnetLinksTags = {
   Name: vnet.name
   Purpose: 'AKS Private DNS Zone VNet Link'
 }
+var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io')
 
 var azureMonitorWorkspaceTags = {
   Name: azureMonitorWorkspaceName
@@ -73,8 +68,6 @@ module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assig
     tags: union(tags, tagsMi)
   }
 }
-
-var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io')
 
 module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zones:0.5.7' = {
   name: 'aks-private-dns-zone-${deploymentDate}'
@@ -134,7 +127,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     nodeResourceGroup: cluster.nodeResourceGroup
     enableDefaultTelemetry: false
     omsAgentEnabled: true
-    monitoringWorkspaceId: ''
+    monitoringWorkspaceId: resourceId(monitoringWorkspace.resourceGroup, 'Microsoft.OperationalInsights/workspaces', monitoringWorkspace.name) 
     enableRBAC: true
     aadProfileManaged: true
     disableLocalAccounts: true

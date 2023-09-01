@@ -56,6 +56,12 @@
         "environment": {
             "value": "#{{ environment }}"
         },
+        "monitoringWorkspace": {
+            "value": {
+                "name": "#{{ logAnalyticsWorkspace }}",
+                "resourceGroup": "#{{ servicesResourceGroup }}"
+            }
+        },
         "fluxConfig": {
             "value": {
                 "fluxCore": {
