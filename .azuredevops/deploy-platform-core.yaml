@@ -67,7 +67,8 @@ extends:
             postDeployScriptsList:
             - displayName: Link the Private DNS Zone to Central networks
               scriptPath: scripts/ado/Trigger-LinkPrivateDNSZones.ps1
-              type: AzurePowerShell
+              type: PowerShell
+              useSystemAccessToken: true
               scriptArguments: >
                 -privateDnsZoneName $(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01
                 -resourceGroupName $(aksResourceGroup)
