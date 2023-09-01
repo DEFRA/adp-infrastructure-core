@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-Get Azure Monitor Workspace ResourceIds and pass them to Grafana Dashboard bicep template
+Create Virtual Machine Scale-set
 .DESCRIPTION
-Get Azure Monitor Workspace ResourceIds and set variable with values which are then used by the Grafana Dashboard bicep template.
+Create Virtual Machine Scale-set for private build agent using image from the shared compute gallery.
 .PARAMETER imageGalleryTenantId
 Mandatory. Image Gallery Tenant Id.
 .PARAMETER tenantId
@@ -17,10 +17,13 @@ Mandatory. Virtual Machine Scale-Set name.
 Mandatory. Subnet ResourceId.
 .PARAMETER imageId
 Mandatory. Shared Gallery Image Reference Id.
+.PARAMETER adoAgentUser
+Mandatory. VM instance login user name.
 .PARAMETER adoAgentPass
 Mandatory. VM instance login password.
 .EXAMPLE
-.\Create-AdoBuildAgent.ps1 -ResourceGroupName <ResourceGroupName> -GrafanaName <GrafanaName> -WorkspaceResourceId <WorkspaceResourceId>
+.\Create-AdoBuildAgent.ps1  -imageGalleryTenantId <imageGalleryTenantId> -tenantId <tenantId> -subscriptionName <subscriptionName> -resourceGroup <resourceGroup> `
+                            -vmssName <vmssName> -subnetId <subnetId> -imageId <imageId> -adoAgentUser <adoAgentUser> -adoAgentPass <adoAgentPass>
 #> 
 
 [CmdletBinding()]
