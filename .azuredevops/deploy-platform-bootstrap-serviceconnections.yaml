@@ -14,6 +14,8 @@ pr:
     - infra/config/service-connections/*
     - scripts/service-connection/*
     - scripts/Assign-RBAC-Subscription.ps1
+    exclude:
+    - scripts/Create-AdoBuildAgent.ps1
 
 trigger:
   batch: true
@@ -26,6 +28,8 @@ trigger:
     - infra/config/service-connections/*
     - scripts/service-connection/*
     - scripts/Assign-RBAC-Subscription.ps1
+    exclude:
+    - scripts/Create-AdoBuildAgent.ps1
 
 resources:
   repositories:
@@ -33,7 +37,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main 
+      ref: main
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -50,14 +54,14 @@ extends:
           primary: 'UKSouth'
       - name: 'snd2'
         outputTemplateChange: Skip
-        serviceConnection: AZD-CDO-SSV3    
+        serviceConnection: AZD-CDO-SSV3
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd3'
         outputTemplateChange: Skip
-        serviceConnection: AZD-CDO-SSV3    
+        serviceConnection: AZD-CDO-SSV3
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
@@ -91,4 +95,20 @@ extends:
                 ScriptArguments: >
                   -ServiceEndpointJsonPath 'infra/config/service-connections/tier2-service-connection.json'
                   -WorkingDirectory $(Pipeline.Workspace)\s\self           
-                
+
+      - name: network
+        dependsOnGroupedTemplates:
+          - SharedResources
+        templates:
+          - name: route-table
+            path: infra/network
+            serviceConnectionVariableName: 'subscriptionName'
+            resourceGroupName: $(virtualNetworkResourceGroup)
+          - name: subnet-nsg
+            path: infra/network
+            serviceConnectionVariableName: 'subscriptionName'
+            resourceGroupName: $(virtualNetworkResourceGroup)            
+          - name: virtual-network
+            path: infra/network
+            serviceConnectionVariableName: 'subscriptionName'
+            resourceGroupName: $(virtualNetworkResourceGroup)
