@@ -344,3 +344,103 @@ Function Test-ServiceEndpoint() {
         Write-Debug "${functionName}:Exited"
     }    
 }
+
+
+
+<#
+.SYNOPSIS
+Trigger a new Build.
+
+.DESCRIPTION
+This function will trigger a new build and wait till it's completed.
+
+.PARAMETER organisationUri
+Mandatory. Azure devops project Orgnization Uri
+
+.PARAMETER projectName
+Mandatory. Azure devops project name
+
+.PARAMETER buildDefinitionId
+Mandatory. Build Definition Id
+
+.PARAMETER requestBody
+Mandatory. Request Body
+
+.EXAMPLE
+.\New-BuildRun -organisationUri <organisationUri> -projectName <projectName> -buildDefinitionId <buildDefinitionId> -requestBody <requestBody>
+#> 
+Function New-BuildRun() {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory)]
+        [string]$organisationUri,
+        [Parameter(Mandatory)]
+        [string]$projectName,
+        [Parameter(Mandatory)]
+        [int]$buildDefinitionId,
+        [Parameter(Mandatory)]
+        [string]$requestBody
+    )
+
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand
+        Write-Host "${functionName} started at $($startTime.ToString('u'))"
+        Write-Debug "${functionName}:organisationUri=$organisationUri"
+        Write-Debug "${functionName}:projectName=$projectName"
+        Write-Debug "${functionName}:buildDefinitionId=$buildDefinitionId"
+        Write-Debug "${functionName}:requestBody=$requestBody"
+    }
+
+    process {    
+        [Object]$headers = Get-DefaultHeadersWithAccessToken
+
+        $uriPostRunPipeline = "$($organisationUri)/$($projectName)/_apis/pipelines/$($buildDefinitionId)/runs?api-version=6.0"
+        Write-Output "uriPostRunPipeline: $uriPostRunPipeline"
+
+        [Object]$pipelineRun = Invoke-RestMethod -Uri $uriPostRunPipeline -Method Post -Headers $headers -Body $requestBody -ContentType "application/json"
+        if ($LASTEXITCODE -ne 0) {
+            throw "Error queuing the build for the definitionid '$buildDefinitionId' for project '$projectName' command with exit code $LASTEXITCODE"
+        }
+        Write-Debug ($pipelineRun | Out-String)
+        Write-Debug "Pipeline runId $($pipelineRun.id) triggered sucessfully. Current state: $($pipelineRun.state)"
+
+        $piplineRunResult = [string]::Empty
+        $totalSleepinSec = 0
+        $pipelineStateCheckMaxWaitTimeOutInSec = 600
+        do {
+            Start-Sleep -Seconds 60
+            $gerPipelineRunStateUri = "$($azureDevopsProjectBaseUrl)/_apis/pipelines/$($buildDefinitionId)/runs/$($pipelineRun.id)?api-version=6.0"
+            $pipelinerundetails = Invoke-RestMethod -Uri $gerPipelineRunStateUri -Method Get -Headers $headers
+            if ($LASTEXITCODE -ne 0) {
+                throw "Error reading the pipeline runId '$($pipelineRun.id)' status with exit code $LASTEXITCODE"
+            }
+            $currentState = $pipelinerundetails.state
+            Write-Output "Current state of pipeline runId $($pipelineRun.id): $($currentState)"
+            Write-Output "Running state check..."
+            if ($currentState -ne "inProgress") {
+                $piplineRunResult = $pipelinerundetails.result
+                Write-Output "Current state: $($currentState)"
+                break
+            }
+        } until ($currentState -ne "inProgress" -or $totalSleepinSec -ge $pipelineStateCheckMaxWaitTimeOutInSec)
+
+        #report pipeline status
+        if ($piplineRunResult -eq "succeeded") {
+            $successmsg = "$($pipelinerundetails.pipeline.name) pipeline with runId $($pipelinerundetails.id) has completed successfully."
+            Write-Output "$($successmsg)"
+        }
+        else {
+            if ($totalSleepinSec -ge $pipelineStateCheckMaxWaitTimeOutInSec) {
+                $errorMsg += "Excecution of pipeline has stopped due to max timeout of $($pipelineStateCheckMaxWaitTimeOutInSec) sec."
+            }
+            else {
+                $errormsg = "$($pipelinerundetails.pipeline.name) pipeline with runId $($pipelinerundetails.id) has failed."
+            }
+            Write-Output "##vso[task.logissue type=error]$($errormsg)"
+            exit 1
+        }
+    }
+    end {
+        Write-Debug "${functionName}:Exited"
+    }
+}
