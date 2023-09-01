@@ -1,0 +1,68 @@
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+  - name: nginxVersion
+    type: string
+    default: 3.2.0
+
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+      - scripts/Publish-NginxPlus-Acr.ps1
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+      - scripts/Publish-NginxPlus-Acr.ps1
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: main
+variables:
+  - name: ssv3Subscription
+    value: AZD-CDO-SSV3
+
+extends:
+  template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
+  parameters:
+    privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
+    deployFromFeature: ${{ parameters.deployFromFeature }}
+    environments:
+      - name: 'ssv3'
+        serviceConnection: $(ssv3Subscription)
+        deploymentBranches:
+          - 'refs/heads/main'
+        developmentEnvironment: true
+        azureRegions:
+          primary: 'UKSouth'
+    scriptsList:
+      - displayName: Publish Nginx Image to ACR
+        scriptPath: 'scripts/Publish-NginxPlus-Acr.ps1'
+        scriptArguments: >
+          -AcrName $(ssvSharedAcrName)
+          -AzureSubscription $(ssv3Subscription)
+          -KeyVaultName $(ssvPlatformKeyVaultName)
+          -NGINXCertSecretName $(nginxCertSecretName)
+          -NGINXKeySecretName $(nginxKeySecretName)
+          -NGINXVersion: ${{ parameters.nginxVersion }}
+          -CertFilesPath $(Build.ArtifactStagingDirectory)
+        type: AzureCLI
+        azureCLIScriptType: 'pscore'
+                
+            
+
+
+
