@@ -409,7 +409,7 @@ Function New-BuildRun() {
         $pipelineStateCheckMaxWaitTimeOutInSec = 600
         do {
             Start-Sleep -Seconds 60
-            $gerPipelineRunStateUri = "$($azureDevopsProjectBaseUrl)/_apis/pipelines/$($buildDefinitionId)/runs/$($pipelineRun.id)?api-version=7.0"
+            $gerPipelineRunStateUri = "$($organisationUri)$($projectName)/_apis/pipelines/$($buildDefinitionId)/runs/$($pipelineRun.id)?api-version=7.0"
             $pipelinerundetails = Invoke-RestMethod -Uri $gerPipelineRunStateUri -Method Get -Headers $headers
             if ($LASTEXITCODE -ne 0) {
                 throw "Error reading the pipeline runId '$($pipelineRun.id)' status with exit code $LASTEXITCODE"
