@@ -1,0 +1,54 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "wafPolicyName": {
+      "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_frontdoorwaf }}#{{ nc_instance_regionid }}01"
+    },
+    "policySettings": {
+      "value": {
+        "enabledState": "Enabled",
+        "mode": "Prevention"
+      }
+    },
+    "purpose": {
+      "value": "ADP Core Baseline Front Door WAF"
+    },
+    "environment": {
+      "value": "#{{ environment }}"
+    },
+    "customRules": {
+      "value": [
+        {
+          "name": "ApplyGeoFilter",
+          "priority": 100,
+          "enabledState": "Enabled",
+          "ruleType": "MatchRule",
+          "action": "Block",
+          "matchConditions": [
+            {
+              "matchVariable": "RemoteAddr",
+              "operator": "GeoMatch",
+              "negateCondition": true,
+              "matchValue": [
+                "ZZ"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "microsoftDefaultRuleSetRuleGroupOverrides":{
+      "value": []
+    },
+    "microsoftDefaultRuleSetExclusions": {
+      "value": []
+    },
+    "microsoftBotManagerRuleSetRuleGroupOverrides": {
+      "value": []
+    },
+    "microsoftBotManagerRuleSetExclusions": {
+      "value": []
+    }
+  }
+}

@@ -91,6 +91,19 @@ extends:
           - name: aks-cluster
             path: infra/managed-cluster
             resourceGroupName: $(aksResourceGroup)
+          - name: grafana
+            serviceConnectionVariableName: ssvServiceConnection
+            path: infra/observability
+            resourceGroupName: $(ssvSharedResourceGroup)
+            preDeployScriptsList:
+            - displayName: Get Azure Monitor Workspace Resource IDs to link to Grafana Dashboard
+              scriptPath: scripts/Get-WorkspaceResourceIds.ps1
+              serviceConnectionVariableName: ssvServiceConnection
+              type: AzurePowerShell
+              scriptArguments: >
+                -ResourceGroupName $(ssvSharedResourceGroup)
+                -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
+                -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(aksResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
       - name: service_bus
         templates:
           - name: namespace
@@ -99,6 +112,14 @@ extends:
             privateEndpointDnsRecordsForResources:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
                 resourceGroupName: $(servicesResourceGroup)
+      - name: front_door
+        templates:
+          - name: front-door
+            path: infra/front-door
+            resourceGroupName: $(frontDoorResourceGroup)
+          - name: azure-waf
+            path: infra/front-door
+            resourceGroupName: $(frontDoorResourceGroup)  
       - name: application_infra
         templates:
           - name: configuration-store
@@ -118,10 +139,10 @@ extends:
             resourceGroupName: $(dbsResourceGroup)
           - name: redis-cache
             path: infra/redis-cache
-            resourceGroupName: $(servicesResourceGroup)                         
+            resourceGroupName: $(servicesResourceGroup)                        
           - name: application-storage-account
             path: infra/storage-account
             resourceGroupName: $(servicesResourceGroup)
             privateEndpointDnsRecordsForResources:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
-                resourceGroupName: $(servicesResourceGroup)
+                resourceGroupName: $(servicesResourceGroup)           
