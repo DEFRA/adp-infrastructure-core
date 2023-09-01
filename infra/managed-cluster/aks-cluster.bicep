@@ -7,6 +7,9 @@ param cluster object
 @description('Required. The prefix for the private DNS zone.')
 param privateDnsZone object
 
+@description('Required. The Name of the Azure Monitor Workspace.')
+param azureMonitorWorkspaceName string
+
 @allowed([
   'UKSouth'
 ])
@@ -48,6 +51,17 @@ var pdnsTags = {
 var pdnsVnetLinksTags = {
   Name: vnet.name
   Purpose: 'AKS Private DNS Zone VNet Link'
+}
+
+var azureMonitorWorkspaceTags = {
+  Name: azureMonitorWorkspaceName
+  Purpose: 'Azure Monitor Workspace'
+}
+
+resource azureMonitorWorkSpaceResource 'Microsoft.Monitor/accounts@2023-04-03' = {
+  location: location
+  name: azureMonitorWorkspaceName
+  tags: azureMonitorWorkspaceTags
 }
 
 module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
