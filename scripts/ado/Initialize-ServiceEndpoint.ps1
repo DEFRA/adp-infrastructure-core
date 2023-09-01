@@ -45,7 +45,7 @@ Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
     #Import modules
-    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/service-connection"
+    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ado"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
 
     Import-Module $moduleDir.FullName -Force

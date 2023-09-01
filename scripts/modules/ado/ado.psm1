@@ -67,7 +67,7 @@ Function Initialize-ProxyRequestBody() {
 
     process {        
         Write-Debug "Building Service endpoint proxy Body..."
-        [PSCustomObject]$serviceEndpointProxyDefaultConfig = Get-Content -Raw -Path '.\scripts\service-connection\request-body\endpointproxy-request-body.json' | ConvertFrom-Json
+        [PSCustomObject]$serviceEndpointProxyDefaultConfig = Get-Content -Raw -Path '.\scripts\ado\request-body\endpointproxy-request-body.json' | ConvertFrom-Json
         Write-Debug "serviceEndpointProxyDefaultConfig = $($serviceEndpointProxyDefaultConfig | ConvertTo-Json -Depth 10)"
 
         $serviceEndpointProxyDefaultConfig.serviceEndpointDetails = ($ServiceEndpointRequestBody | ConvertFrom-Json)
@@ -125,7 +125,7 @@ Function Initialize-RequestBody() {
 
     process {        
         Write-Debug "Building Service connection Body for $($ArmServiceConnection.displayName)..."
-        [PSCustomObject]$serviceEndpointDefaultConfig = Get-Content -Raw -Path '.\scripts\service-connection\request-body\arm-serviceendpoint-request-body.json' | ConvertFrom-Json
+        [PSCustomObject]$serviceEndpointDefaultConfig = Get-Content -Raw -Path '.\scripts\ado\request-body\arm-serviceendpoint-request-body.json' | ConvertFrom-Json
         Write-Debug "serviceEndpointDefaultConfig = $($serviceEndpointDefaultConfig | ConvertTo-Json -Depth 10)"
 
         $serviceEndpointDefaultConfig.name = $ArmServiceConnection.displayName

@@ -51,7 +51,7 @@ Write-Debug "${functionName}:subscriptionName=$subscriptionName"
 Write-Debug "${functionName}:tenantId=$tenantId"
 
 try {
-    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/service-connection"
+    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ado"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
 
     Import-Module $moduleDir.FullName -Force

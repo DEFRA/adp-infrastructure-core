@@ -47,7 +47,7 @@ extends:
                 useSystemAccessToken: true
                 filePathsForTransform:
                   - 'infra/config/service-connections/tier2-service-connection.json'
-                scriptPath: 'scripts/service-connection/Initialize-ServiceEndpoint.ps1'
+                scriptPath: 'scripts/ado/Initialize-ServiceEndpoint.ps1'
                 ScriptArguments: >
                   -ServiceEndpointJsonPath 'infra/config/service-connections/tier2-service-connection.json'
                   -WorkingDirectory $(Pipeline.Workspace)\s\self      
