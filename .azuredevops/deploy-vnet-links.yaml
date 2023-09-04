@@ -27,7 +27,6 @@ extends:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
-    keyVaultName: $(ssvPlatformKeyVaultName)
     scriptsList:
       - displayName: Link the Private DNS Zone to Central networks
         scriptPath: /scripts/ado/Trigger-LinkPrivateDNSZones.ps1
