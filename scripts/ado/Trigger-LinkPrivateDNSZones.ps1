@@ -58,12 +58,7 @@ try {
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
 
-    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $scriptDir.FullName -ChildPath "../modules/ps-helpers"
-    Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
-    Import-Module $moduleDir.FullName -Force
-
     [object]$runPipelineRequestBodyWithDefaultConfig = '{
-        "variables": {},
         "templateParameters": {
             "PrivateDnsZoneName": "",
             "ResourceGroup": "",
@@ -75,10 +70,14 @@ try {
     $runPipelineRequestBodyWithDefaultConfig.templateParameters.ResourceGroup = $resourceGroupName
     $runPipelineRequestBodyWithDefaultConfig.templateParameters.Subscription = $subscriptionName
     $runPipelineRequestBodyWithDefaultConfig.templateParameters.Tenant = $tenantId
-    [string]$requestBodyJson = $runPipelineRequestBodyWithDefaultConfig | ConvertTo-Json -Depth 100
+    [string]$requestBodyJson = $($runPipelineRequestBodyWithDefaultConfig | ConvertTo-Json)
 
     New-BuildRun -organisationUri $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI -projectName "CCoE-Infrastructure" -buildDefinitionId 4634 -requestBody $requestBodyJson
-    # New-BuildRun -organisationUri $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI -projectName "CCoE-Infrastructure" -buildDefinitionId 4689 -requestBody '{}'
+    # New-BuildRun -organisationUri 'https://dev.azure.com/defragovuk/' -projectName 'DEFRA-FFC' -buildDefinitionId 4689 -requestBody $requestBodyJson
+
+    # [string]$dockerPushCommand = "New-BuildRun -organisationUri 'https://dev.azure.com/defragovuk/' -projectName 'DEFRA-FFC' -buildDefinitionId 4689 -requestBody $requestBodyJson"
+    # Write-Host $dockerPushCommand
+    # Invoke-CommandLine -Command $dockerPushCommand -ReturnExitCode
 
     $exitCode = 0
 }
