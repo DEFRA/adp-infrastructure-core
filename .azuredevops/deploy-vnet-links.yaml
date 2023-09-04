@@ -2,10 +2,17 @@ trigger: none
 
 pr: none
 
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: main
+
 extends:
   template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
   parameters:
-    deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
       - name: 'snd1'
         serviceConnection: AZD-CDO-SND1
