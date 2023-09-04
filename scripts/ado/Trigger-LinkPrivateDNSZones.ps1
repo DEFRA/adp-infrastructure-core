@@ -69,7 +69,7 @@ try {
     $runPipelineRequestBodyWithDefaultConfig.templateParameters.PrivateDnsZoneName = $privateDnsZoneName
     $runPipelineRequestBodyWithDefaultConfig.templateParameters.ResourceGroup = $resourceGroupName
     $runPipelineRequestBodyWithDefaultConfig.templateParameters.Subscription = $subscriptionName
-    $runPipelineRequestBodyWithDefaultConfig.templateParameters.Tenant = $tenantId
+    $runPipelineRequestBodyWithDefaultConfig.templateParameters.Tenant = "Defra"
     [string]$requestBodyJson = $($runPipelineRequestBodyWithDefaultConfig | ConvertTo-Json)
 
     New-BuildRun -organisationUri $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI -projectName "CCoE-Infrastructure" -buildDefinitionId 4634 -requestBody $requestBodyJson
