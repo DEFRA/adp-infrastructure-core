@@ -6,6 +6,12 @@
 trigger:
 - none
 
+parameters:
+- name: PrivateDnsZoneName
+- name: ResourceGroup
+- name: Subscription
+- name: Tenant
+
 pool:
   vmImage: ubuntu-latest
 
