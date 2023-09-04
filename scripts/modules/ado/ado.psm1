@@ -400,12 +400,12 @@ Function New-BuildRun() {
         Write-Host "uriPostRunPipeline: $uriPostRunPipeline"
 
         $Body = @{
-            templateParameters = @(
+            templateParameters = @{
                 PrivateDnsZoneName = "SNDCDODNSDZ1401.privatelink.uksouth.azmk8s.io"
                 ResourceGroup = "SNDCDOINFRG1402"
                 Subscription=  "AZD-CDO-SND1"
                 Tenant = "6f504113-6b64-43f2-ade9-242e05780007"
-            )
+            }
         }
 
         [Object]$pipelineRun = Invoke-RestMethod -Uri $uriPostRunPipeline -Method Post -Headers $headers -Body $Body
