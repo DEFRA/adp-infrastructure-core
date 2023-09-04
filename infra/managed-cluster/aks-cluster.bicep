@@ -151,8 +151,8 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     aksClusterServiceCidr: '172.18.0.0/16'
     aksClusterDnsServiceIP: '172.18.255.250'
     aksClusterLoadBalancerSku: 'standard'
-    managedOutboundIPCount: 1
-    aksClusterOutboundType: 'loadBalancer'
+    managedOutboundIPCount: 0
+    aksClusterOutboundType: 'userDefinedRouting'
     aksClusterSkuTier: cluster.skuTier
     aksClusterSshPublicKey: ''
     aksServicePrincipalProfile: {}
