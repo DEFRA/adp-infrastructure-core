@@ -28,6 +28,7 @@ Function Get-DefaultHeadersWithAccessToken() {
     $accessTokenHeaders.Add("Content-Type", "application/json")
     
     if([string]::IsNullOrWhiteSpace($PatToken)) {
+        # $token = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$($env:SYSTEM_ACCESSTOKEN)"))
         $accessTokenHeaders.Add("Authorization", "Bearer $env:SYSTEM_ACCESSTOKEN")
     }
     else {
@@ -398,7 +399,7 @@ Function New-BuildRun() {
         $uriPostRunPipeline = "$($organisationUri)$($projectName)/_apis/pipelines/$($buildDefinitionId)/runs?api-version=7.0"
         Write-Host "uriPostRunPipeline: $uriPostRunPipeline"
 
-        [Object]$pipelineRun = Invoke-RestMethod -Uri $uriPostRunPipeline -Method Post -Headers $headers -Body $requestBody
+        [Object]$pipelineRun = Invoke-RestMethod -Uri $uriPostRunPipeline -Method Post -Headers $headers -Body $($requestBody | ConvertFrom-Json)
         # [string]$command = "Invoke-RestMethod -Uri $uriPostRunPipeline -Method Post -Headers $headers -Body '$requestBody'"
         # Write-Host $command
         # [object]$pipelineRun = Invoke-CommandLine -Command $command
