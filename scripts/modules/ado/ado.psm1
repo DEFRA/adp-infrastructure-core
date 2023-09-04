@@ -28,7 +28,7 @@ Function Get-DefaultHeadersWithAccessToken() {
     $accessTokenHeaders.Add("Content-Type", "application/json")
     
     if([string]::IsNullOrWhiteSpace($PatToken)) {
-        # $token = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$($env:SYSTEM_ACCESSTOKEN)"))
+        $token = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$($env:SYSTEM_ACCESSTOKEN)"))
         $accessTokenHeaders.Add("Authorization", "Bearer $env:SYSTEM_ACCESSTOKEN")
     }
     else {
@@ -399,7 +399,16 @@ Function New-BuildRun() {
         $uriPostRunPipeline = "$($organisationUri)$($projectName)/_apis/pipelines/$($buildDefinitionId)/runs?api-version=7.0"
         Write-Host "uriPostRunPipeline: $uriPostRunPipeline"
 
-        [Object]$pipelineRun = Invoke-RestMethod -Uri $uriPostRunPipeline -Method Post -Headers $headers -Body $($requestBody | ConvertFrom-Json)
+        $Body = @{
+            templateParameters = @(
+                PrivateDnsZoneName = "SNDCDODNSDZ1401.privatelink.uksouth.azmk8s.io"
+                ResourceGroup = "SNDCDOINFRG1402"
+                Subscription=  "AZD-CDO-SND1"
+                Tenant = "6f504113-6b64-43f2-ade9-242e05780007"
+            )
+        }
+
+        [Object]$pipelineRun = Invoke-RestMethod -Uri $uriPostRunPipeline -Method Post -Headers $headers -Body $Body
         # [string]$command = "Invoke-RestMethod -Uri $uriPostRunPipeline -Method Post -Headers $headers -Body '$requestBody'"
         # Write-Host $command
         # [object]$pipelineRun = Invoke-CommandLine -Command $command
