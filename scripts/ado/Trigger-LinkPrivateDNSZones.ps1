@@ -73,8 +73,8 @@ try {
     $runPipelineRequestBodyWithDefaultConfig.templateParameters.Tenant = $tenantId
     [string]$requestBodyJson = $($runPipelineRequestBodyWithDefaultConfig | ConvertTo-Json)
 
-    New-BuildRun -organisationUri $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI -projectName "CCoE-Infrastructure" -buildDefinitionId 4634 -requestBody $requestBodyJson
-    # New-BuildRun -organisationUri 'https://dev.azure.com/defragovuk/' -projectName 'DEFRA-FFC' -buildDefinitionId 4689 -requestBody $requestBodyJson
+    # New-BuildRun -organisationUri $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI -projectName "CCoE-Infrastructure" -buildDefinitionId 4634 -requestBody $requestBodyJson
+    New-BuildRun -organisationUri 'https://dev.azure.com/defragovuk/' -projectName 'DEFRA-FFC' -buildDefinitionId 4689 -requestBody $requestBodyJson
 
     # [string]$dockerPushCommand = "New-BuildRun -organisationUri 'https://dev.azure.com/defragovuk/' -projectName 'DEFRA-FFC' -buildDefinitionId 4689 -requestBody $requestBodyJson"
     # Write-Host $dockerPushCommand
