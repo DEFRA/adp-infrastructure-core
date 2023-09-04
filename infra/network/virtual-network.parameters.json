@@ -22,6 +22,7 @@
             { "service": "Microsoft.ServiceBus" },
             { "service": "Microsoft.KeyVault" }
           ],
+          "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01",
           "networkSecurityGroupId":"/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
           "privateEndpointNetworkPolicies": "Disabled",
           "privateLinkServiceNetworkPolicies": "Disabled"
