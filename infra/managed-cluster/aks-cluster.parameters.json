@@ -86,8 +86,8 @@
                     "kustomizations": {
                         "timeoutInSeconds": 600,
                         "syncIntervalInSeconds": 600,
-                        "clusterPath": "./clusters/#{{ environment }}/01",
-                        "infraPath": "./infra/#{{ environment }}/01"
+                        "clusterPath": "./clusters/#{{ lower(environment) }}/01",
+                        "infraPath": "./infra/#{{ lower(environment) }}/01"
                     }
                 },
                 "services": {
@@ -101,7 +101,7 @@
                         "timeoutInSeconds": 600,
                         "syncIntervalInSeconds": 600,
                         "retryIntervalInSeconds": 120,
-                        "appsPath": "./services/#{{ environment }}/01"
+                        "appsPath": "./services/#{{ lower(environment) }}/01"
                     }
                 }
             }
