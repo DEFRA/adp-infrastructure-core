@@ -392,8 +392,8 @@ Function New-BuildRun() {
     }
 
     process {
-        # [Object]$headers = Get-DefaultHeadersWithAccessToken
-        [Object]$headers = Get-DefaultHeadersWithAccessToken -PatToken 'p4kenbwg2ug6yxgnbwirvtnftrkyfr3uduhuabue4ateaetzd26q'
+        [Object]$headers = Get-DefaultHeadersWithAccessToken
+        # [Object]$headers = Get-DefaultHeadersWithAccessToken -PatToken 'p4kenbwg2ug6yxgnbwirvtnftrkyfr3uduhuabue4ateaetzd26q'
 
         $uriPostRunPipeline = "$($organisationUri)$($projectName)/_apis/pipelines/$($buildDefinitionId)/runs?api-version=7.0"
         Write-Host "uriPostRunPipeline: $uriPostRunPipeline"

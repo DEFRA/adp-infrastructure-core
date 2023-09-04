@@ -70,7 +70,7 @@ extends:
                 type: PowerShell
                 useSystemAccessToken: true
                 scriptArguments: >
-                  -privateDnsZoneName $(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01
+                  -privateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01.privatelink.uksouth.azmk8s.io"
                   -resourceGroupName $(aksResourceGroup)
                   -subscriptionName $(subscriptionName)
                   -tenantId $(tenantId)
