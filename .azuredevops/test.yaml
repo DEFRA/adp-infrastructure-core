@@ -8,9 +8,13 @@ trigger:
 
 parameters:
 - name: PrivateDnsZoneName
+  default: ''
 - name: ResourceGroup
+  default: ''
 - name: Subscription
+  default: ''
 - name: Tenant
+  default: ''
 
 pool:
   vmImage: ubuntu-latest
