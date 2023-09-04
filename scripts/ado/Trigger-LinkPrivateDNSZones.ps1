@@ -59,7 +59,6 @@ try {
     Import-Module $moduleDir.FullName -Force
 
     [object]$runPipelineRequestBodyWithDefaultConfig = '{
-        "variables": {},
         "templateParameters": {
             "PrivateDnsZoneName": "",
             "ResourceGroup": "",
