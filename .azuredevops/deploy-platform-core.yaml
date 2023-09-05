@@ -104,7 +104,7 @@ extends:
                   -privateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01.privatelink.uksouth.azmk8s.io"
                   -resourceGroupName $(aksResourceGroup)
                   -subscriptionName $(subscriptionName)
-                  -tenantId $(tenantName)
+                  -tenantId $(tenantId)
           - name: grafana
             serviceConnectionVariableName: ssvServiceConnection
             path: infra/observability
