@@ -1,6 +1,6 @@
 @description('Required. The parameter object for the managed identity. The object must contain the name and principalId values.')
 param principalId string
-@description('Required. The name of the vnet')
+@description('Required. The name of the container registry.')
 param containerRegistryName string
 
 resource registry 'Microsoft.ContainerRegistry/registries@2023-06-01-preview' existing = {
