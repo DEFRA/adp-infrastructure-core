@@ -24,7 +24,7 @@ trigger:
   batch: true
   branches:
     include:
-      - "*"
+      - '*'
   paths:
     include:
       - infra/*
@@ -51,13 +51,13 @@ extends:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
-      - name: "snd2"
+      - name: 'snd2'
         serviceConnection: AZD-CDO-SND2
         deploymentBranches:
-          - "*"
+          - '*'
         developmentEnvironment: true
         azureRegions:
-          primary: "UKSouth"
+          primary: 'UKSouth'
     groupedTemplates:
       - name: network
         templates:
