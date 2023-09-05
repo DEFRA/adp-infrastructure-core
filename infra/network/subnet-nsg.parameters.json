@@ -15,38 +15,40 @@
                     "purpose": "AKS Subnet",
                     "securityRules": [
                         {
-                            "name": "AllowHttpHttpsInboundVnet",
+                            "name": "AllowAnyTcpInboundCidrRange",
                             "properties": {
                                 "protocol": "Tcp",
                                 "sourcePortRange": "*",
-                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationPortRange": "*",
                                 "destinationAddressPrefix": "VirtualNetwork",
                                 "access": "Allow",
                                 "priority": 2000,
                                 "direction": "Inbound",
                                 "sourcePortRanges": [],
-                                "destinationPortRanges": [
-                                    "443",
-                                    "80"
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [
+                                    "#{{ subnet1AddressPrefix }}",
+                                    "#{{ aksClusterPodCidr }}"
                                 ],
-                                "sourceAddressPrefixes": [],
                                 "destinationAddressPrefixes": []
                             }
                         },
                         {
-                            "name": "AllowAnyUdpInboundVnet",
+                            "name": "AllowAnyUdpInboundCidrRange",
                             "properties": {
                                 "protocol": "Udp",
                                 "sourcePortRange": "*",
                                 "destinationPortRange": "*",
-                                "sourceAddressPrefix": "VirtualNetwork",
                                 "destinationAddressPrefix": "VirtualNetwork",
                                 "access": "Allow",
                                 "priority": 2010,
                                 "direction": "Inbound",
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
-                                "sourceAddressPrefixes": [],
+                                "sourceAddressPrefixes": [
+                                    "#{{ subnet1AddressPrefix }}",
+                                    "#{{ aksClusterPodCidr }}"
+                                ],
                                 "destinationAddressPrefixes": []
                             }
                         },

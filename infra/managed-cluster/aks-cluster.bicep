@@ -6,6 +6,8 @@ param cluster object
 param privateDnsZone object
 @description('Required. The Name of the Azure Monitor Workspace.')
 param azureMonitorWorkspaceName string
+@description('Required. The parameter object for the container registry. The object must contain the name, subscriptionId and resourceGroup values.')
+param containerRegistry object
 @allowed([
   'UKSouth'
 ])
@@ -147,12 +149,12 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     aksClusterNetworkPlugin: 'azure'
     aksClusterNetworkPluginMode: 'overlay'
     aksClusterNetworkPolicy: 'calico'
-    aksClusterPodCidr: '172.16.0.0/16'
-    aksClusterServiceCidr: '172.18.0.0/16'
-    aksClusterDnsServiceIP: '172.18.255.250'
+    aksClusterPodCidr: cluster.podCidr
+    aksClusterServiceCidr: cluster.serviceCidr
+    aksClusterDnsServiceIP: cluster.dnsServiceIp
     aksClusterLoadBalancerSku: 'standard'
-    managedOutboundIPCount: 1
-    aksClusterOutboundType: 'loadBalancer'
+    managedOutboundIPCount: 0
+    aksClusterOutboundType: 'userDefinedRouting'
     aksClusterSkuTier: cluster.skuTier
     aksClusterSshPublicKey: ''
     aksServicePrincipalProfile: {}
@@ -252,59 +254,73 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
       }
       configurations: [
         {
-          namespace: 'flux-core'
+          name: 'config-cluster-flux'
+          namespace: 'config-cluster-flux'
           scope: 'cluster'
           gitRepository: {
             repositoryRef: {
-              branch: 'main'
+              branch: fluxConfig.clusterCore.gitRepository.branch
             }
-            syncIntervalInSeconds: fluxConfig.fluxCore.gitRepository.syncIntervalInSeconds
-            timeoutInSeconds: fluxConfig.fluxCore.gitRepository.timeoutInSeconds
-            url: fluxConfig.fluxCore.gitRepository.url
+            syncIntervalInSeconds: fluxConfig.clusterCore.gitRepository.syncIntervalInSeconds
+            timeoutInSeconds: fluxConfig.clusterCore.gitRepository.timeoutInSeconds
+            url: fluxConfig.clusterCore.gitRepository.url
           }
           kustomizations: {
             cluster: {
-              path: fluxConfig.fluxCore.kustomizations.clusterPath
+              path: fluxConfig.clusterCore.kustomizations.clusterPath
               dependsOn: []
-              timeoutInSeconds: fluxConfig.fluxCore.kustomizations.timeoutInSeconds
-              syncIntervalInSeconds: fluxConfig.fluxCore.kustomizations.syncIntervalInSeconds
+              timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
+              syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
               validation: 'none'
               prune: true
             }
             infra: {
-              path: fluxConfig.fluxCore.kustomizations.infraPath
+              path: fluxConfig.clusterCore.kustomizations.infraPath
+              timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
+              syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
               dependsOn: [
                 'cluster'
               ]
-              timeoutInSeconds: fluxConfig.fluxCore.kustomizations.timeoutInSeconds
-              syncIntervalInSeconds: fluxConfig.fluxCore.kustomizations.syncIntervalInSeconds
               validation: 'none'
               prune: true
             }
-          }
+          } 
         }
         {
-          namespace: 'flux-services'
+          name: 'config-services-flux'
+          namespace: 'config-services-flux'
           scope: 'cluster'
           gitRepository: {
             repositoryRef: {
-              branch: 'main'
+              branch: fluxConfig.services.gitRepository.branch
             }
-            syncIntervalInSeconds: fluxConfig.fluxServices.gitRepository.syncIntervalInSeconds
-            timeoutInSeconds: fluxConfig.fluxServices.gitRepository.timeoutInSeconds
-            url: fluxConfig.fluxServices.gitRepository.url
+            syncIntervalInSeconds: fluxConfig.services.gitRepository.syncIntervalInSeconds
+            timeoutInSeconds: fluxConfig.services.gitRepository.timeoutInSeconds
+            url: fluxConfig.services.gitRepository.url
           }
           kustomizations: {
             apps: {
-              path: fluxConfig.fluxServices.kustomizations.appsPath
-              timeoutInSeconds: fluxConfig.fluxServices.kustomizations.timeoutInSeconds
-              syncIntervalInSeconds: fluxConfig.fluxServices.kustomizations.syncIntervalInSeconds
-              retryIntervalInSeconds: fluxConfig.fluxServices.kustomizations.retryIntervalInSeconds
+              path: fluxConfig.services.kustomizations.appsPath
+              timeoutInSeconds: fluxConfig.services.kustomizations.timeoutInSeconds
+              syncIntervalInSeconds: fluxConfig.services.kustomizations.syncIntervalInSeconds
+              retryIntervalInSeconds: fluxConfig.services.kustomizations.retryIntervalInSeconds
               prune: true
             }
           }
         }
       ]
     }
+  }
+}
+
+module acrPullRoleAssignmentModule '.bicep/acr-pull.bicep' = {
+  name: 'aks-acr-pull-role-assignment-${deploymentDate}'
+  scope: resourceGroup(containerRegistry.subscriptionId, containerRegistry.resourceGroup)
+  dependsOn: [
+    deployAKS
+  ]
+  params: {
+    principalId: deployAKS.outputs.kubeletidentityObjectId
+    containerRegistryName: containerRegistry.name
   }
 }
