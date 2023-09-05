@@ -3,16 +3,22 @@
 Triggers ADO pipeline to Link DNS Zone to central networks
 
 .DESCRIPTION
-This script triggers the Auto-LinkPrivateDNSZonesToCentralVNets ADO pipeline
+This script triggers a pipeline in CCOE-Infrastructure ADO project to link the DNS zone to central networks
 
-.PARAMETER ServiceEndpointJsonPath
-Mandatory. Service connection configuration file.
+.PARAMETER privateDnsZoneName
+Mandatory. Private DNS Zone Name.
 
-.PARAMETER WorkingDirectory
-Optional. Working directory. Default is $PWD.
+.PARAMETER resourceGroupName
+Mandatory. Private DNS Zone Resource Group Name.
+
+.PARAMETER subscriptionName
+Mandatory. Private DNS Zone Subscription Name.
+
+.PARAMETER tenantId
+Mandatory. Private DNS Zone Tenant Id.
 
 .EXAMPLE
-.\Initialize-ServiceEndpoint.ps1 -ServiceEndpointJsonPath <Service endpoint config json path>
+.\Trigger-LinkPrivateDNSZones.ps1 -privateDnsZoneName <private Dns Zone Name> -resourceGroupName <dns zone resource group> -subscriptionName <dns zone subscription name> -tenantId <dns zone tenant id>
 #> 
 
 [CmdletBinding()]
@@ -69,7 +75,7 @@ try {
     $runPipelineRequestBodyWithDefaultConfig.templateParameters.PrivateDnsZoneName = $privateDnsZoneName
     $runPipelineRequestBodyWithDefaultConfig.templateParameters.ResourceGroup = $resourceGroupName
     $runPipelineRequestBodyWithDefaultConfig.templateParameters.Subscription = $subscriptionName
-    $runPipelineRequestBodyWithDefaultConfig.templateParameters.Tenant = "DefraDev"
+    $runPipelineRequestBodyWithDefaultConfig.templateParameters.Tenant = $tenantId
     [string]$requestBodyJson = $($runPipelineRequestBodyWithDefaultConfig | ConvertTo-Json)
 
     New-BuildRun -organisationUri $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI -projectName "CCoE-Infrastructure" -buildDefinitionId 4634 -requestBody $requestBodyJson
