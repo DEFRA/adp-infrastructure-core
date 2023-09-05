@@ -86,13 +86,16 @@ try {
     [string]$commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
     Write-Debug $commandOutput
     
-
     if ($imageGalleryTenantId -ne $tenantId) {
         $command = "az login --service-principal -u $($env:servicePrincipalId) -p $($env:servicePrincipalKey) --tenant $imageGalleryTenantId"
+        $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
+        $command = "az account get-access-token"
         $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
     }
 
     $command = "az login --service-principal -u $($env:servicePrincipalId) -p $($env:servicePrincipalKey) --tenant $tenantId"
+    $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
+    $command = "az account get-access-token"
     $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
 
     $command = "az account set --subscription $subscriptionName"
@@ -100,13 +103,13 @@ try {
 
     Write-Host "Checking if the VMSS $vmssName already exists..."
     $command = "az vmss list --resource-group $resourceGroup"
-    $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
+    $commandOutput = Invoke-CommandLine -Command $command
 
     $instances = $commandOutput | ConvertFrom-Json
     if (-not ($instances.name -contains $vmssName)) {
         Write-Host "Creating VMSS: $vmssName..."
         
-        $command = "az vmss create --resource-group $resourceGroup --name $vmssName --computer-name-prefix $vmssName --vm-sku Standard_D4s_v4 --instance-count 2 --subnet $subnetId --image ""$imageId"" --authentication-type password --admin-username $adoAgentUser --admin-password ""$adoAgentPass"" --disable-overprovision --upgrade-policy-mode Manual --public-ip-address '""' --tags ServiceName='ADP' ServiceCode='CDO' Name=$vmssName Purpose='ADO Build Agent'"
+        $command = "az vmss create --resource-group $resourceGroup --name $vmssName --computer-name-prefix $vmssName --vm-sku Standard_D4s_v4 --instance-count 2 --subnet $subnetId --image $imageId --authentication-type password --admin-username $adoAgentUser --admin-password ""$adoAgentPass"" --disable-overprovision --upgrade-policy-mode Manual --public-ip-address '""'"
         $commandOutput = Invoke-CommandLine -Command $command
     }
     else {
