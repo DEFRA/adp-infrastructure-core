@@ -75,40 +75,45 @@ Write-Debug "${functionName}:subnetId=$subnetId"
 Write-Debug "${functionName}:imageId=$imageId"
 
 try {
-    az account clear
+    [System.IO.DirectoryInfo]$scriptDir = $PSCommandPath | Split-Path -Parent
+    Write-Debug "${functionName}:scriptDir.FullName=$scriptDir.FullName"
+
+    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $scriptDir.FullName -ChildPath "modules/ps-helpers"
+    Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
+    Import-Module $moduleDir.FullName -Force
+
+    [string]$command = "az account clear"
+    [string]$commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
+    Write-Debug $commandOutput
+    
 
     if ($imageGalleryTenantId -ne $tenantId) {
-        $output = az login --service-principal -u $env:servicePrincipalId -p $env:servicePrincipalKey --tenant $imageGalleryTenantId
-        Write-Debug ([array]$output | Out-String)
-        $output = az account get-access-token
+        $command = "az login --service-principal -u $($env:servicePrincipalId) -p $($env:servicePrincipalKey) --tenant $imageGalleryTenantId"
+        $commandOutput = Invoke-CommandLine -Command $loginCommand -ReturnExitCode
+        Write-Debug $commandOutput
     }
 
-    $output = az login --service-principal -u $env:servicePrincipalId -p $env:servicePrincipalKey --tenant $tenantId
-    Write-Debug ([array]$output | Out-String)
-    $output = az account get-access-token
+    $command = "az login --service-principal -u $($env:servicePrincipalId) -p $($env:servicePrincipalKey) --tenant $tenantId"
+    $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
+    Write-Debug $commandOutput
 
-    $output = az account set --subscription $subscriptionName
-    Write-Debug ([array]$output | Out-String)
+    $command = "az account set --subscription $subscriptionName"
+    $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
+    Write-Debug $commandOutput
 
-    $instances = az vmss list --resource-group $resourceGroup | ConvertFrom-Json
+    Write-Host "Checking if the VMSS $vmssName already exists..."
+    $command = "az vmss list --resource-group $resourceGroup"
+    $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
+    Write-Debug $commandOutput
+
+    $instances = $commandOutput | ConvertFrom-Json
     if (-not ($instances.name -contains $vmssName)) {
         Write-Host "Creating VMSS: $vmssName..."
-        $output = az vmss create `
-            --resource-group $resourceGroup `
-            --name $vmssName `
-            --computer-name-prefix $vmssName `
-            --vm-sku Standard_D4s_v4 `
-            --instance-count 2 `
-            --subnet $subnetId `
-            --image "$imageId" `
-            --authentication-type password `
-            --admin-username $adoAgentUser `
-            --admin-password "$adoAgentPass" `
-            --disable-overprovision `
-            --upgrade-policy-mode Manual `
-            --public-ip-address '""' `
-            --tags ServiceName='ADP' ServiceCode='CDO' Name=$vmssName Purpose='ADO Build Agent'
-        Write-Debug ([array]$output | Out-String)
+        
+        $command = "az vmss create --resource-group $resourceGroup --name $vmssName --computer-name-prefix $vmssName --vm-sku Standard_D4s_v4 --instance-count 2 --subnet $subnetId --image ""$imageId"" --authentication-type password --admin-username $adoAgentUser --admin-password ""$adoAgentPass"" --disable-overprovision --upgrade-policy-mode Manual --public-ip-address '""' --tags ServiceName='ADP' ServiceCode='CDO' Name=$vmssName Purpose='ADO Build Agent'"
+        Write-Host $command
+        $commandOutput = Invoke-CommandLine -Command $command
+        Write-Debug $commandOutput
     }
     else {
         Write-Host "VMSS: $vmssName already exists!"

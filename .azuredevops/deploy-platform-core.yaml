@@ -64,16 +64,6 @@ extends:
           - name: route-table
             path: infra/network
             resourceGroupName: $(virtualNetworkResourceGroup)
-            # postDeployScriptsList:
-            #   - displayName: Link the Private DNS Zone to Central networks
-            #     scriptPath: scripts/ado/Trigger-LinkPrivateDNSZones.ps1
-            #     type: PowerShell
-            #     useSystemAccessToken: true
-            #     scriptArguments: >
-            #       -privateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01.privatelink.uksouth.azmk8s.io"
-            #       -resourceGroupName $(aksResourceGroup)
-            #       -subscriptionName $(subscriptionName)
-            #       -tenantId $(tenantId)
           - name: subnet-nsg
             path: infra/network
             resourceGroupName: $(virtualNetworkResourceGroup)
@@ -105,6 +95,16 @@ extends:
           - name: aks-cluster
             path: infra/managed-cluster
             resourceGroupName: $(aksResourceGroup)
+            postDeployScriptsList:
+              - displayName: Link the Private DNS Zone to Central networks
+                scriptPath: /scripts/ado/Trigger-LinkPrivateDNSZones.ps1
+                type: PowerShell
+                useSystemAccessToken: true
+                scriptArguments: >
+                  -privateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01.privatelink.uksouth.azmk8s.io"
+                  -resourceGroupName $(aksResourceGroup)
+                  -subscriptionName $(subscriptionName)
+                  -tenantId $(tenantName)
           - name: grafana
             serviceConnectionVariableName: ssvServiceConnection
             path: infra/observability
