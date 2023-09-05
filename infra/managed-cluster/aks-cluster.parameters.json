@@ -17,6 +17,9 @@
                 "nodeResourceGroup": "#{{ aksResourceGroup }}-Managed",
                 "miControlPlane": "#{{ aksControlPlaneManagedIdentity }}",
                 "adminAadGroupObjectId": "#{{ aksAADProfileAdminGroupObjectId }}",
+                "podCidr": "#{{ aksClusterPodCidr }}",
+                "serviceCidr": "#{{ aksClusterServiceCidr }}",
+                "dnsServiceIp": "#{{ aksClusterDnsServiceIp }}",
                 "npSystem": {
                     "count": 2,
                     "osDiskSizeGB": 80,
@@ -50,44 +53,59 @@
                 "resourceGroup": "#{{ dnsResourceGroup }}"
             }
         },
+        "azureMonitorWorkspaceName": {
+            "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_azuremonitorworkspace }}#{{ nc_instance_regionid }}01"
+        },
+        "containerRegistry":{
+            "value": {
+                "name": "#{{ ssvSharedAcrName }}",
+                "resourceGroup": "#{{ ssvSharedResourceGroup }}",
+                "subscriptionId": "#{{ ssv3subscriptionId }}"
+            } 
+        },
         "location": {
             "value": "#{{ location }}"
         },
         "environment": {
             "value": "#{{ environment }}"
         },
+        "monitoringWorkspace": {
+            "value": {
+                "name": "#{{ logAnalyticsWorkspace }}",
+                "resourceGroup": "#{{ servicesResourceGroup }}"
+            }
+        },
         "fluxConfig": {
             "value": {
-                "fluxCore": {
+                "clusterCore": {
                     "gitRepository": {
                         "syncIntervalInSeconds": 300,
                         "timeoutInSeconds": 180,
-                        "url": "https://github.com/DEFRA/adp-flux-core"
+                        "url": "https://github.com/DEFRA/adp-flux-core",
+                        "branch": "main"
                     },
                     "kustomizations": {
                         "timeoutInSeconds": 600,
                         "syncIntervalInSeconds": 600,
-                        "clusterPath": "./clusters/#{{ environment }}/01",
-                        "infraPath": "./infra/#{{ environment }}/01"
+                        "clusterPath": "./clusters/#{{ lower(environment) }}/01",
+                        "infraPath": "./infra/#{{ lower(environment) }}/01"
                     }
                 },
-                "fluxServices": {
+                "services": {
                     "gitRepository": {
                         "syncIntervalInSeconds": 300,
                         "timeoutInSeconds": 180,
-                        "url": "https://github.com/DEFRA/adp-flux-services"
+                        "url": "https://github.com/DEFRA/adp-flux-services",
+                        "branch": "main"
                     },
                     "kustomizations": {
                         "timeoutInSeconds": 600,
                         "syncIntervalInSeconds": 600,
                         "retryIntervalInSeconds": 120,
-                        "appsPath": "./services/#{{ environment }}/01"
+                        "appsPath": "./services/#{{ lower(environment) }}/01"
                     }
                 }
             }
-        },
-        "azureMonitorWorkspaceName": {
-            "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_azuremonitorworkspace }}#{{ nc_instance_regionid }}01"
         }
     }
 }
