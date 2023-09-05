@@ -412,9 +412,9 @@ Function New-BuildRun() {
             Start-Sleep -Seconds 60
             $gerPipelineRunStateUri = "$($organisationUri)$($projectName)/_apis/pipelines/$($buildDefinitionId)/runs/$($pipelineRun.id)?api-version=7.0"
             $pipelinerundetails = Invoke-RestMethod -Uri $gerPipelineRunStateUri -Method Get -Headers $headers
-            if ($LASTEXITCODE -ne 0) {
-                throw "Error reading the pipeline runId '$($pipelineRun.id)' status with exit code $LASTEXITCODE"
-            }
+            # if ($LASTEXITCODE -ne 0) {
+            #     throw "Error reading the pipeline runId '$($pipelineRun.id)' status with exit code $LASTEXITCODE"
+            # }
             $currentState = $pipelinerundetails.state
             Write-Host "Current state of pipeline runId $($pipelineRun.id): $($currentState)"
             Write-Host "Running state check..."
