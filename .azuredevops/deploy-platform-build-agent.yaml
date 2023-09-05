@@ -44,9 +44,9 @@ resources:
 
 variables:
   imageType: ${{ parameters.imageType }}
-  ${{ if eq(parameters.imageType, 'windows2022') }}:
-    instanceNumber: 01
   ${{ if eq(parameters.imageType, 'ubuntu2204') }}:
+    instanceNumber: 01
+  ${{ if eq(parameters.imageType, 'windows2022') }}:
     instanceNumber: 02
   ${{ if eq(parameters.imageType, 'windows2019') }}:
     instanceNumber: 03
