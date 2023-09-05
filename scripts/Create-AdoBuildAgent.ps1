@@ -89,31 +89,25 @@ try {
 
     if ($imageGalleryTenantId -ne $tenantId) {
         $command = "az login --service-principal -u $($env:servicePrincipalId) -p $($env:servicePrincipalKey) --tenant $imageGalleryTenantId"
-        $commandOutput = Invoke-CommandLine -Command $loginCommand -ReturnExitCode
-        Write-Debug $commandOutput
+        $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
     }
 
     $command = "az login --service-principal -u $($env:servicePrincipalId) -p $($env:servicePrincipalKey) --tenant $tenantId"
     $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
-    Write-Debug $commandOutput
 
     $command = "az account set --subscription $subscriptionName"
     $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
-    Write-Debug $commandOutput
 
     Write-Host "Checking if the VMSS $vmssName already exists..."
     $command = "az vmss list --resource-group $resourceGroup"
     $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
-    Write-Debug $commandOutput
 
     $instances = $commandOutput | ConvertFrom-Json
     if (-not ($instances.name -contains $vmssName)) {
         Write-Host "Creating VMSS: $vmssName..."
         
         $command = "az vmss create --resource-group $resourceGroup --name $vmssName --computer-name-prefix $vmssName --vm-sku Standard_D4s_v4 --instance-count 2 --subnet $subnetId --image ""$imageId"" --authentication-type password --admin-username $adoAgentUser --admin-password ""$adoAgentPass"" --disable-overprovision --upgrade-policy-mode Manual --public-ip-address '""' --tags ServiceName='ADP' ServiceCode='CDO' Name=$vmssName Purpose='ADO Build Agent'"
-        Write-Host $command
         $commandOutput = Invoke-CommandLine -Command $command
-        Write-Debug $commandOutput
     }
     else {
         Write-Host "VMSS: $vmssName already exists!"
