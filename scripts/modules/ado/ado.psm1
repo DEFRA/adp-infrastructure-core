@@ -398,10 +398,10 @@ Function New-BuildRun() {
 
         [Object]$pipelineRun = Invoke-RestMethod -Uri $uriPostRunPipeline -Method Post -Headers $headers -Body $requestBody
         
-        if ($LASTEXITCODE -ne 0) {
-            Write-Error ($pipelineRun | Out-String)
-            throw "Error queuing the build for the definitionid '$buildDefinitionId' for project '$projectName' command with exit code $LASTEXITCODE"
-        }
+        # if ($LASTEXITCODE -ne 0) {
+        #     Write-Error ($pipelineRun | Out-String)
+        #     throw "Error queuing the build for the definitionid '$buildDefinitionId' for project '$projectName' command with exit code $LASTEXITCODE"
+        # }
         Write-Debug ($pipelineRun | Out-String)
         Write-Debug "Pipeline runId $($pipelineRun.id) triggered sucessfully. Current state: $($pipelineRun.state)"
 
