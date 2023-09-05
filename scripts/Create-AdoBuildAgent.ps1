@@ -109,7 +109,7 @@ try {
     if (-not ($instances.name -contains $vmssName)) {
         Write-Host "Creating VMSS: $vmssName..."
         
-        $command = "az vmss create --resource-group $resourceGroup --name $vmssName --computer-name-prefix $vmssName --vm-sku Standard_D4s_v4 --instance-count 2 --subnet $subnetId --image $imageId --authentication-type password --admin-username $adoAgentUser --admin-password ""$adoAgentPass"" --disable-overprovision --upgrade-policy-mode Manual --public-ip-address '""""'"
+        $command = "az vmss create --resource-group $resourceGroup --name $vmssName --computer-name-prefix $vmssName --vm-sku Standard_D4s_v4 --instance-count 2 --subnet '$subnetId' --image '$imageId' --authentication-type password --admin-username $adoAgentUser --admin-password '$adoAgentPass' --disable-overprovision --upgrade-policy-mode Manual --public-ip-address '""""'"
         $commandOutput = Invoke-CommandLine -Command $command
     }
     else {
