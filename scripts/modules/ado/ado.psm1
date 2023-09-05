@@ -398,11 +398,7 @@ Function New-BuildRun() {
 
         [Object]$pipelineRun = Invoke-RestMethod -Uri $uriPostRunPipeline -Method Post -Headers $headers -Body $requestBody
         
-        # if ($LASTEXITCODE -ne 0) {
-        #     Write-Error ($pipelineRun | Out-String)
-        #     throw "Error queuing the build for the definitionid '$buildDefinitionId' for project '$projectName' command with exit code $LASTEXITCODE"
-        # }
-        Write-Debug ($pipelineRun | Out-String)
+        Write-Debug $pipelineRun
         Write-Debug "Pipeline runId $($pipelineRun.id) triggered sucessfully. Current state: $($pipelineRun.state)"
 
         $piplineRunResult = [string]::Empty
@@ -412,9 +408,6 @@ Function New-BuildRun() {
             Start-Sleep -Seconds 60
             $gerPipelineRunStateUri = "$($organisationUri)$($projectName)/_apis/pipelines/$($buildDefinitionId)/runs/$($pipelineRun.id)?api-version=7.0"
             $pipelinerundetails = Invoke-RestMethod -Uri $gerPipelineRunStateUri -Method Get -Headers $headers
-            # if ($LASTEXITCODE -ne 0) {
-            #     throw "Error reading the pipeline runId '$($pipelineRun.id)' status with exit code $LASTEXITCODE"
-            # }
             $currentState = $pipelinerundetails.state
             Write-Host "Current state of pipeline runId $($pipelineRun.id): $($currentState)"
             Write-Host "Running state check..."
