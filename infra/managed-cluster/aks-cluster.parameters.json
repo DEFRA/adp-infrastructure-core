@@ -19,6 +19,7 @@
                 "adminAadGroupObjectId": "#{{ aksAADProfileAdminGroupObjectId }}",
                 "podCidr": "#{{ aksClusterPodCidr }}",
                 "serviceCidr": "#{{ aksClusterServiceCidr }}",
+                "dnsServiceIp": "#{{ aksClusterDnsServiceIp }}",
                 "npSystem": {
                     "count": 2,
                     "osDiskSizeGB": 80,

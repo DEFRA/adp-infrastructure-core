@@ -151,7 +151,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     aksClusterNetworkPolicy: 'calico'
     aksClusterPodCidr: cluster.podCidr
     aksClusterServiceCidr: cluster.serviceCidr
-    aksClusterDnsServiceIP: '172.18.255.250'
+    aksClusterDnsServiceIP: cluster.dnsServiceIp
     aksClusterLoadBalancerSku: 'standard'
     managedOutboundIPCount: 0
     aksClusterOutboundType: 'userDefinedRouting'
