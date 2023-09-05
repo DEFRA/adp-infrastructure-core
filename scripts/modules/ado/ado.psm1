@@ -393,14 +393,13 @@ Function New-BuildRun() {
 
     process {
         [Object]$headers = Get-DefaultHeadersWithAccessToken
-        # [Object]$headers = Get-DefaultHeadersWithAccessToken -PatToken 'p4kenbwg2ug6yxgnbwirvtnftrkyfr3uduhuabue4ateaetzd26q'
-
         $uriPostRunPipeline = "$($organisationUri)$($projectName)/_apis/pipelines/$($buildDefinitionId)/runs?api-version=7.0"
         Write-Host "uriPostRunPipeline: $uriPostRunPipeline"
 
         [Object]$pipelineRun = Invoke-RestMethod -Uri $uriPostRunPipeline -Method Post -Headers $headers -Body $requestBody
-
+        
         if ($LASTEXITCODE -ne 0) {
+            Write-Error ($pipelineRun | Out-String)
             throw "Error queuing the build for the definitionid '$buildDefinitionId' for project '$projectName' command with exit code $LASTEXITCODE"
         }
         Write-Debug ($pipelineRun | Out-String)
