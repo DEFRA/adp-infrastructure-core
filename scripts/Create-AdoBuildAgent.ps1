@@ -83,27 +83,27 @@ try {
     Import-Module $moduleDir.FullName -Force
 
     [string]$command = "az account clear"
-    [string]$commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
+    Invoke-CommandLine -Command $command | Out-Null
     Write-Debug $commandOutput
     
     if ($imageGalleryTenantId -ne $tenantId) {
         $command = "az login --service-principal -u $($env:servicePrincipalId) -p $($env:servicePrincipalKey) --tenant $imageGalleryTenantId"
-        $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
+        Invoke-CommandLine -Command $command | Out-Null
         $command = "az account get-access-token"
-        $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
+        Invoke-CommandLine -Command $command | Out-Null
     }
 
     $command = "az login --service-principal -u $($env:servicePrincipalId) -p $($env:servicePrincipalKey) --tenant $tenantId"
-    $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
+    Invoke-CommandLine -Command $command | Out-Null
     $command = "az account get-access-token"
-    $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
+    Invoke-CommandLine -Command $command | Out-Null
 
     $command = "az account set --subscription $subscriptionName"
-    $commandOutput = Invoke-CommandLine -Command $command -ReturnExitCode
+    Invoke-CommandLine -Command $command | Out-Null
 
     Write-Host "Checking if the VMSS $vmssName already exists..."
     $command = "az vmss list --resource-group $resourceGroup"
-    $commandOutput = Invoke-CommandLine -Command $command
+    [string]$commandOutput = Invoke-CommandLine -Command $command
 
     $instances = $commandOutput | ConvertFrom-Json
     if (-not ($instances.name -contains $vmssName)) {
@@ -126,7 +126,7 @@ try {
             --public-ip-address '""' ``
             --tags ServiceName='ADP' ServiceCode='CDO' Name=$vmssName Purpose='ADO Build Agent'
 "@
-        $commandOutput = Invoke-CommandLine -Command $command
+        Invoke-CommandLine -Command $command | Out-Null
     }
     else {
         Write-Host "VMSS: $vmssName already exists!"
