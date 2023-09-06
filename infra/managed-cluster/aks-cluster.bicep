@@ -284,6 +284,16 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
               validation: 'none'
               prune: true
             }
+            services: {
+              path: fluxConfig.clusterCore.kustomizations.servicesPath
+              timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
+              syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
+              dependsOn: [
+                'cluster'
+              ]
+              validation: 'none'
+              prune: true
+            }
           } 
         }
         {
