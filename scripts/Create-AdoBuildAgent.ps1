@@ -84,7 +84,6 @@ try {
 
     [string]$command = "az account clear"
     Invoke-CommandLine -Command $command | Out-Null
-    Write-Debug $commandOutput
     
     if ($imageGalleryTenantId -ne $tenantId) {
         $command = "az login --service-principal -u $($env:servicePrincipalId) -p $($env:servicePrincipalKey) --tenant $imageGalleryTenantId"
