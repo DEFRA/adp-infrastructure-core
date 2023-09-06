@@ -284,30 +284,19 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
               validation: 'none'
               prune: true
             }
-          } 
-        }
-        {
-          name: 'config-services-flux'
-          namespace: 'config-services-flux'
-          scope: 'cluster'
-          gitRepository: {
-            repositoryRef: {
-              branch: fluxConfig.services.gitRepository.branch
-            }
-            syncIntervalInSeconds: fluxConfig.services.gitRepository.syncIntervalInSeconds
-            timeoutInSeconds: fluxConfig.services.gitRepository.timeoutInSeconds
-            url: fluxConfig.services.gitRepository.url
-          }
-          kustomizations: {
-            apps: {
-              path: fluxConfig.services.kustomizations.appsPath
-              timeoutInSeconds: fluxConfig.services.kustomizations.timeoutInSeconds
-              syncIntervalInSeconds: fluxConfig.services.kustomizations.syncIntervalInSeconds
-              retryIntervalInSeconds: fluxConfig.services.kustomizations.retryIntervalInSeconds
+            services: {
+              path: fluxConfig.clusterCore.kustomizations.servicesPath
+              timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
+              syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
+              dependsOn: [
+                'cluster'
+                'infra'
+              ]
+              validation: 'none'
               prune: true
             }
-          }
-        }
+          } 
+        } 
       ]
     }
   }
