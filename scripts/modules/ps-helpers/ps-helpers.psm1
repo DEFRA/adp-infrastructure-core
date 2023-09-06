@@ -40,10 +40,11 @@ function Invoke-CommandLine {
     [string]$outputMessage = ""
     [string]$informationMessage = ""
   
-    [string]$output = Invoke-Expression -Command $Command -ErrorVariable errorMessage -WarningVariable warningMessage -OutVariable outputMessage -InformationVariable informationMessage 
+    $output = Invoke-Expression -Command $Command -ErrorVariable errorMessage -WarningVariable warningMessage -OutVariable outputMessage -InformationVariable informationMessage 
     [int]$errCode = $LASTEXITCODE
   
-    Write-Debug "${functionName}:output=$output"
+    Write-Debug "${functionName}:output="
+    $output | Write-Debug
     Write-Debug "${functionName}:errCode=$errCode"
   
     if (-not [string]::IsNullOrWhiteSpace($outputMessage)) { 
