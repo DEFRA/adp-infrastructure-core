@@ -65,9 +65,9 @@ Function Initialize-ProxyRequestBody() {
         Write-Debug "${functionName}:Entered"
     }
 
-    process {        
+    process {
         Write-Debug "Building Service endpoint proxy Body..."
-        [PSCustomObject]$serviceEndpointProxyDefaultConfig = Get-Content -Raw -Path '.\scripts\service-connection\request-body\endpointproxy-request-body.json' | ConvertFrom-Json
+        [PSCustomObject]$serviceEndpointProxyDefaultConfig = Get-Content -Raw -Path '.\scripts\ado\request-body\endpointproxy-request-body.json' | ConvertFrom-Json
         Write-Debug "serviceEndpointProxyDefaultConfig = $($serviceEndpointProxyDefaultConfig | ConvertTo-Json -Depth 10)"
 
         $serviceEndpointProxyDefaultConfig.serviceEndpointDetails = ($ServiceEndpointRequestBody | ConvertFrom-Json)
@@ -125,7 +125,7 @@ Function Initialize-RequestBody() {
 
     process {        
         Write-Debug "Building Service connection Body for $($ArmServiceConnection.displayName)..."
-        [PSCustomObject]$serviceEndpointDefaultConfig = Get-Content -Raw -Path '.\scripts\service-connection\request-body\arm-serviceendpoint-request-body.json' | ConvertFrom-Json
+        [PSCustomObject]$serviceEndpointDefaultConfig = Get-Content -Raw -Path '.\scripts\ado\request-body\arm-serviceendpoint-request-body.json' | ConvertFrom-Json
         Write-Debug "serviceEndpointDefaultConfig = $($serviceEndpointDefaultConfig | ConvertTo-Json -Depth 10)"
 
         $serviceEndpointDefaultConfig.name = $ArmServiceConnection.displayName
@@ -343,4 +343,98 @@ Function Test-ServiceEndpoint() {
     end {
         Write-Debug "${functionName}:Exited"
     }    
+}
+
+
+
+<#
+.SYNOPSIS
+Trigger a new Build.
+
+.DESCRIPTION
+This function will trigger a new build and wait till it's completed.
+
+.PARAMETER organisationUri
+Mandatory. Azure devops project Orgnization Uri
+
+.PARAMETER projectName
+Mandatory. Azure devops project name
+
+.PARAMETER buildDefinitionId
+Mandatory. Build Definition Id
+
+.PARAMETER requestBody
+Mandatory. Request Body
+
+.EXAMPLE
+.\New-BuildRun -organisationUri <organisationUri> -projectName <projectName> -buildDefinitionId <buildDefinitionId> -requestBody <requestBody>
+#> 
+Function New-BuildRun() {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory)]
+        [string]$organisationUri,
+        [Parameter(Mandatory)]
+        [string]$projectName,
+        [Parameter(Mandatory)]
+        [int]$buildDefinitionId,
+        [Parameter(Mandatory)]
+        [string]$requestBody
+    )
+
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand
+        Write-Host "${functionName} started at $($startTime.ToString('u'))"
+        Write-Debug "${functionName}:organisationUri=$organisationUri"
+        Write-Debug "${functionName}:projectName=$projectName"
+        Write-Debug "${functionName}:buildDefinitionId=$buildDefinitionId"
+        Write-Debug "${functionName}:requestBody=$requestBody"
+    }
+
+    process {
+        [Object]$headers = Get-DefaultHeadersWithAccessToken
+        $uriPostRunPipeline = "$($organisationUri)$($projectName)/_apis/pipelines/$($buildDefinitionId)/runs?api-version=7.0"
+        Write-Host "uriPostRunPipeline: $uriPostRunPipeline"
+
+        [Object]$pipelineRun = Invoke-RestMethod -Uri $uriPostRunPipeline -Method Post -Headers $headers -Body $requestBody
+        
+        Write-Debug $pipelineRun
+        Write-Debug "Pipeline runId $($pipelineRun.id) triggered sucessfully. Current state: $($pipelineRun.state)"
+
+        $piplineRunResult = [string]::Empty
+        $totalSleepinSec = 0
+        $pipelineStateCheckMaxWaitTimeOutInSec = 600
+        do {
+            Start-Sleep -Seconds 60
+            $gerPipelineRunStateUri = "$($organisationUri)$($projectName)/_apis/pipelines/$($buildDefinitionId)/runs/$($pipelineRun.id)?api-version=7.0"
+            $pipelinerundetails = Invoke-RestMethod -Uri $gerPipelineRunStateUri -Method Get -Headers $headers
+            $currentState = $pipelinerundetails.state
+            Write-Host "Current state of pipeline runId $($pipelineRun.id): $($currentState)"
+            Write-Host "Running state check..."
+            if ($currentState -ne "inProgress") {
+                $piplineRunResult = $pipelinerundetails.result
+                Write-Host "Current state: $($currentState)"
+                break
+            }
+        } until ($currentState -ne "inProgress" -or $totalSleepinSec -ge $pipelineStateCheckMaxWaitTimeOutInSec)
+
+        #report pipeline status
+        if ($piplineRunResult -eq "succeeded") {
+            $successmsg = "$($pipelinerundetails.pipeline.name) pipeline with runId $($pipelinerundetails.id) has completed successfully."
+            Write-Host "$($successmsg)"
+        }
+        else {
+            if ($totalSleepinSec -ge $pipelineStateCheckMaxWaitTimeOutInSec) {
+                $errorMsg += "Excecution of pipeline has stopped due to max timeout of $($pipelineStateCheckMaxWaitTimeOutInSec) sec."
+            }
+            else {
+                $errormsg = "$($pipelinerundetails.pipeline.name) pipeline with runId $($pipelinerundetails.id) has failed."
+            }
+            Write-Host "##vso[task.logissue type=error]$($errormsg)"
+            exit 1
+        }
+    }
+    end {
+        Write-Debug "${functionName}:Exited"
+    }
 }

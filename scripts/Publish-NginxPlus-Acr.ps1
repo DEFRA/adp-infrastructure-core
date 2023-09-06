@@ -82,25 +82,21 @@ function Get-Image {
         [string]$dockerCertDir = "/etc/docker/certs.d/private-registry.nginx.com"
         [string]$mkdirCommand = "sudo mkdir -p $dockerCertDir"
         Write-Host $mkdirCommand
-        [string]$mkdirOutput = Invoke-CommandLine -Command $mkdirCommand
-        Write-Debug $mkdirOutput
+        Invoke-CommandLine -Command $mkdirCommand | Out-Null
 
         [string]$dockerClientCertPath = Join-Path -Path $dockerCertDir -ChildPath "client.cert"
         [string]$mvClientCertCommand = "sudo mv $clientCertPath $dockerClientCertPath"
         Write-Host $mvClientCertCommand
-        [string]$mvClientCertOutput = Invoke-CommandLine -Command $mvClientCertCommand
-        Write-Debug $mvClientCertOutput
+        Invoke-CommandLine -Command $mvClientCertCommand | Out-Null
             
         [string]$dockerClientKeyPath = Join-Path -Path "/etc/docker/certs.d/private-registry.nginx.com" -ChildPath "client.key"
         [string]$mvKeyCertCommand = "sudo mv $clientKeyPath $dockerClientKeyPath"
         Write-Host $mvKeyCertCommand
-        [string]$mvKeyCertOutput = Invoke-CommandLine -Command $mvKeyCertCommand
-        Write-Debug $mvKeyCertOutput
+        Invoke-CommandLine -Command $mvKeyCertCommand | Out-Null
         
         [string]$dockerPullCommand = "docker pull private-registry.nginx.com/nginx-ic/nginx-plus-ingress:$NGINXVersion"
         Write-Host $dockerPullCommand
-        [string]$dockerPullOutput = Invoke-CommandLine -Command $dockerPullCommand
-        Write-Debug $dockerPullOutput
+        Invoke-CommandLine -Command $dockerPullCommand | Out-Null
     }
     
     end {
@@ -128,20 +124,17 @@ function Publish-Image {
 
         [string]$acrLoginCommand = "az acr login --name $AcrName"
         Write-Host $acrLoginCommand
-        [string]$acrLoginOutput = Invoke-CommandLine -Command $acrLoginCommand
-        Write-Debug $acrLoginOutput
+        Invoke-CommandLine -Command $acrLoginCommand | Out-Null
 
         [string]$publishingTarget = '{0}.azurecr.io/{1}:{2}' -f $AcrName, "image/nginx-plus-ingress", $NGINXVersion
         [string]$dockerTagCommand = "docker tag private-registry.nginx.com/nginx-ic/nginx-plus-ingress:$NGINXVersion $publishingTarget"
         Write-Host $dockerTagCommand
-        [string]$dokerTagOutput = Invoke-CommandLine -Command $dockerTagCommand
-        Write-Debug $dokerTagOutput
+        Invoke-CommandLine -Command $dockerTagCommand | Out-Null
 
         if ($PSCmdlet.ShouldProcess("Publish NGINX Image to Acr, Publish target:$($publishingTarget)", 'Publish')) {
             [string]$dockerPushCommand = "docker push $publishingTarget"
             Write-Host $dockerPushCommand
-            [string]$dockerPushOutput = Invoke-CommandLine -Command $dockerPushCommand
-            Write-Debug $dockerPushOutput
+            Invoke-CommandLine -Command $dockerPushCommand | Out-Null
         }
     }
     end {
