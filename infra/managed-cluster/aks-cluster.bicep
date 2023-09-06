@@ -290,6 +290,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
               syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
               dependsOn: [
                 'cluster'
+                'infra'
               ]
               validation: 'none'
               prune: true
