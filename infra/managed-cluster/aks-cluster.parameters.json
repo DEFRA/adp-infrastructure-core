@@ -26,7 +26,11 @@
           "maxCount": 4,
           "minCount": 1,
           "maxPods": 80,
-          "availabilityZones": ["1", "2", "3"]
+          "availabilityZones": [
+            "1",
+            "2",
+            "3"
+          ]
         },
         "npUser": {
           "count": 2,
@@ -35,7 +39,11 @@
           "minCount": 2,
           "maxPods": 80,
           "minPods": 2,
-          "availabilityZones": ["1", "2", "3"]
+          "availabilityZones": [
+            "1",
+            "2",
+            "3"
+          ]
         }
       }
     },
