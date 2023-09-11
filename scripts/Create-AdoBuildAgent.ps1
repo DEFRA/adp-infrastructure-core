@@ -126,6 +126,7 @@ try {
             --disable-overprovision ``
             --upgrade-policy-mode Manual ``
             --public-ip-address '""' ``
+            --load-balancer '""' ``
             --tags ServiceName='ADP' ServiceCode='CDO' Name=$vmssName Purpose='ADO Build Agent'
 "@
         Invoke-CommandLine -Command $command | Out-Null
