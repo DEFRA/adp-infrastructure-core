@@ -69,7 +69,7 @@ extends:
       - name: 'snd2'
         serviceConnection: AZD-CDO-SND2-VMSS
         deploymentBranches:
-          - 'refs/heads/main'
+          - '*'
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd3'
