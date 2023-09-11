@@ -105,7 +105,7 @@ try {
     [string]$commandOutput = Invoke-CommandLine -Command $command
 
     $instances = $commandOutput | ConvertFrom-Json
-    if (-not ($instances.name -contains $vmssName)) {
+    if ($instances -and $instances.count -gt 0 -and -not ($instances.name -contains $vmssName)) {
         Write-Host "Creating VMSS: $vmssName..."
         
         $command = @"
