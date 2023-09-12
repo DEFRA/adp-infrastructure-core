@@ -45,70 +45,16 @@ extends:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}  
     environments:
-      - name: 'snd1'
-        serviceConnection: AZD-CDO-SSV3
+      - name: 'ssv3'
+        serviceConnection: $(ssv3Subscription)
         deploymentBranches:
-          - '*'
+          - 'refs/heads/main'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
-      - name: 'snd2'
-        outputTemplateChange: Skip
-        serviceConnection: AZD-CDO-SSV3
-        deploymentBranches:
-          - 'refs/heads/main'
-        azureRegions:
-          primary: 'UKSouth'
-      - name: 'snd3'
-        outputTemplateChange: Skip
-        serviceConnection: AZD-CDO-SSV3
-        deploymentBranches:
-          - 'refs/heads/main'
-        azureRegions:
-          primary: 'UKSouth'  
     groupedTemplates:
       - name: SharedResources 
         templates:
           - name: platform-key-vault
-            path: infra/key-vault
+            path: infra/bootstrap/key-vault
             resourceGroupName: $(ssvSharedResourceGroup)
-            postDeployScriptsList:
-              - displayName: Create Tier 2 App Registrations
-                filePathsForTransform:
-                  - 'infra/config/app-registrations/tier2-app-registration.json'
-                scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
-                ScriptArguments: >
-                  -AppRegJsonPath 'infra/config/app-registrations/tier2-app-registration.json'
-              - displayName: Setup RBAC on Subscriptions
-                Type: AzurePowerShell
-                scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
-                ScriptArguments: >
-                  -SubscriptionName $(subscriptionName) 
-                  -KeyVaultName $(ssvPlatformKeyVaultName)
-                  -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)       
-              - displayName: Create or Update AzureRm Service Endpoint(Service Connection)
-                Type: AzureCLI
-                useSystemAccessToken: true
-                filePathsForTransform:
-                  - 'infra/config/service-connections/tier2-service-connection.json'
-                scriptPath: 'scripts/ado/Initialize-ServiceEndpoint.ps1'
-                ScriptArguments: >
-                  -ServiceEndpointJsonPath 'infra/config/service-connections/tier2-service-connection.json'
-                  -WorkingDirectory $(Pipeline.Workspace)\s\self           
-
-      - name: network
-        dependsOnGroupedTemplates:
-          - SharedResources
-        templates:
-          - name: route-table
-            path: infra/network
-            serviceConnectionVariableName: 'subscriptionName'
-            resourceGroupName: $(virtualNetworkResourceGroup)
-          - name: subnet-nsg
-            path: infra/network
-            serviceConnectionVariableName: 'subscriptionName'
-            resourceGroupName: $(virtualNetworkResourceGroup)            
-          - name: virtual-network
-            path: infra/network
-            serviceConnectionVariableName: 'subscriptionName'
-            resourceGroupName: $(virtualNetworkResourceGroup)

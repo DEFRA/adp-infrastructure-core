@@ -10,16 +10,8 @@ pr:
       - main
   paths:
     include:
-      - infra/*
-      - scripts/*
-    exclude:
-      - infra/config/app-registrations/*
-      - infra/config/service-connections/*
-      - scripts/ado/*
-      - scripts/Publish-NginxPlus-Acr.ps1
-      - scripts/Assign-RBAC-Subscription.ps1
-      - scripts/Create-AdoBuildAgent.ps1
-
+      - infra/core/*
+      - infra/common/*
 trigger:
   batch: true
   branches:
@@ -27,15 +19,8 @@ trigger:
       - '*'
   paths:
     include:
-      - infra/*
-      - scripts/*
-    exclude:
-      - infra/config/app-registrations/*
-      - infra/config/service-connections/*
-      - scripts/ado/*
-      - scripts/Publish-NginxPlus-Acr.ps1
-      - scripts/Assign-RBAC-Subscription.ps1
-      - scripts/Create-AdoBuildAgent.ps1
+      - infra/core/*
+      - infra/common/*
 
 resources:
   repositories:
@@ -62,28 +47,28 @@ extends:
       - name: network
         templates:
           - name: route-table
-            path: infra/network
+            path: infra/common/network
             resourceGroupName: $(virtualNetworkResourceGroup)
           - name: subnet-nsg
-            path: infra/network
+            path: infra/common/network
             resourceGroupName: $(virtualNetworkResourceGroup)
           - name: virtual-network
-            path: infra/network
+            path: infra/common/network
             resourceGroupName: $(virtualNetworkResourceGroup)
       - name: monitoring
         templates:
           - name: workspace
-            path: infra/operational-insights
+            path: infra/core/operational-insights
             resourceGroupName: $(servicesResourceGroup)
           - name: component
-            path: infra/insights
+            path: infra/core/insights
             resourceGroupName: $(servicesResourceGroup)
       - name: security
         dependsOnGroupedTemplates:
           - network
         templates:
           - name: application-key-vault
-            path: infra/key-vault
+            path: infra/core/key-vault
             resourceGroupName: $(servicesResourceGroup)
             privateEndpointDnsRecordsForResources:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
@@ -93,11 +78,11 @@ extends:
           - network
         templates:
           - name: aks-cluster
-            path: infra/managed-cluster
+            path: infra/core/managed-cluster
             resourceGroupName: $(aksResourceGroup)
             postDeployScriptsList:
               - displayName: Link the Private DNS Zone to Central networks
-                scriptPath: /scripts/ado/Trigger-LinkPrivateDNSZones.ps1
+                scriptPath: scripts/Trigger-LinkPrivateDNSZones.ps1
                 type: PowerShell
                 useSystemAccessToken: true
                 scriptArguments: >
@@ -107,7 +92,7 @@ extends:
                   -tenantId $(tenantId)
           - name: grafana
             serviceConnectionVariableName: ssvServiceConnection
-            path: infra/observability
+            path: infra/core/observability
             resourceGroupName: $(ssvSharedResourceGroup)
             preDeployScriptsList:
               - displayName: Get Azure Monitor Workspace Resource IDs to link to Grafana Dashboard
@@ -121,7 +106,7 @@ extends:
       - name: service_bus
         templates:
           - name: namespace
-            path: infra/service-bus
+            path: infra/core/service-bus
             resourceGroupName: $(servicesResourceGroup)
             privateEndpointDnsRecordsForResources:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
@@ -129,33 +114,33 @@ extends:
       - name: front_door
         templates:
           - name: front-door
-            path: infra/front-door
+            path: infra/core/front-door
             resourceGroupName: $(frontDoorResourceGroup)
           - name: azure-waf
-            path: infra/front-door
+            path: infra/core/front-door
             resourceGroupName: $(frontDoorResourceGroup)
       - name: application_infra
         templates:
           - name: configuration-store
-            path: infra/app-configuration
+            path: infra/core/app-configuration
             resourceGroupName: $(servicesResourceGroup)
             privateEndpointDnsRecordsForResources:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                 resourceGroupName: $(servicesResourceGroup)
           - name: application-container-registry
-            path: infra/container-registry
+            path: infra/core/container-registry
             resourceGroupName: $(servicesResourceGroup)
             privateEndpointDnsRecordsForResources:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
                 resourceGroupName: $(servicesResourceGroup)
           - name: flexible-server
-            path: infra/postgre-sql
+            path: infra/core/postgre-sql
             resourceGroupName: $(dbsResourceGroup)
           - name: redis-cache
-            path: infra/redis-cache
+            path: infra/core/redis-cache
             resourceGroupName: $(servicesResourceGroup)
           - name: application-storage-account
-            path: infra/storage-account
+            path: infra/core/storage-account
             resourceGroupName: $(servicesResourceGroup)
             privateEndpointDnsRecordsForResources:
               - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01

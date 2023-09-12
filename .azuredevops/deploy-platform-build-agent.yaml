@@ -19,9 +19,7 @@ pr:
     - main
   paths:
     include:
-    - scripts/Create-AdoBuildAgent.ps1
-    exclude:
-    - infra/*
+    - infra/build-agent/*
 
 trigger:
   batch: true
@@ -30,9 +28,7 @@ trigger:
       - '*'
   paths:
     include:
-    - scripts/Create-AdoBuildAgent.ps1
-    exclude:
-    - infra/*
+    - infra/build-agent/*
 
 resources:
   repositories:
@@ -81,7 +77,7 @@ extends:
     keyVaultName: $(ssvPlatformKeyVaultName)
     scriptsList:
       - displayName: Deploy Build Agent - ${{ parameters.imageType }}
-        scriptPath: /scripts/Create-AdoBuildAgent.ps1
+        scriptPath: infra/build-agent/Create-AdoBuildAgent.ps1
         scriptArguments: >
           -imageGalleryTenantId $(imageGalleryTenant)
           -tenantId $(tenantId)
