@@ -32,7 +32,7 @@ var redisCacheTags = {
   Tier: 'Shared'
 }
 
-module redisCacheResource 'br/SharedDefraRegistry:cache.redis:0.5.7' = {
+module redisCacheResource 'br/SharedDefraRegistry:cache.redis:0.5.10' = {
   name: 'redis-cache-${deploymentDate}'
   params: {
     name: redisCache.name

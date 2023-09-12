@@ -40,7 +40,7 @@ var containerRegistryPrivateEndpointTags = {
   Tier: 'Shared'
 }
 
-module registry 'br/SharedDefraRegistry:container-registry.registries:0.5.6' = {
+module registry 'br/SharedDefraRegistry:container-registry.registry:0.5.5' = {
   name: 'app-containerregistry-${deploymentDate}'
   params: {
     name: containerRegistry.name

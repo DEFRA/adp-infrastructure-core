@@ -18,7 +18,7 @@ var commonTags = {
 }
 var tags = union(loadJsonContent('../default-tags.json'), commonTags)
 
-module networksecuritygroup 'br/SharedDefraRegistry:network.network-security-groups:0.4.7' = [for nsg in nsgList:  {
+module networksecuritygroup 'br/SharedDefraRegistry:network.network-security-group:0.4.2' = [for nsg in nsgList:  {
   name: '${nsg.name}-${deploymentDate}'
   params: {
     name: nsg.name

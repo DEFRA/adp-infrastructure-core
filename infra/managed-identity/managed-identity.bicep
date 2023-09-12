@@ -30,7 +30,7 @@ var managedIdentityTags = {
   Tier: 'Shared'
 }
 
-module managedIdentities 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
+module managedIdentities 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'managed-identity-${deploymentDate}'
   params: {
     name: managedIdentity.name

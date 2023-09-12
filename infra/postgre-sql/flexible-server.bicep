@@ -26,7 +26,7 @@ var customTags = {
 
 var defaultTags = union(json(loadTextContent('../default-tags.json')), customTags)
 
-module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-servers:0.4.3-prerelease' = {
+module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-server:0.4.5-prerelease' = {
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
     name: toLower(server.name)
@@ -47,7 +47,6 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     diagnosticLogCategoriesToEnable: diagnostics.diagnosticLogCategoriesToEnable
     diagnosticMetricsToEnable: diagnostics.diagnosticMetricsToEnable
     diagnosticSettingsName:''
-    diagnosticLogsRetentionInDays: 90
     administrators: []
     configurations:[]
     delegatedSubnetResourceId : ''

@@ -23,7 +23,7 @@ var customTags = {
 }
 var tags = union(loadJsonContent('../default-tags.json'), customTags)
 
-module appInsightsResource 'br/SharedDefraRegistry:insights.components:0.4.5' = {
+module appInsightsResource 'br/SharedDefraRegistry:insights.component:0.4.2' = {
   name: 'app-insights-${deploymentDate}'
   params: {
     name: appInsights.name

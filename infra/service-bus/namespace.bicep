@@ -35,7 +35,7 @@ var serviceBusPrivateEndpointTags = {
   Tier: 'Shared'
 }
 
-module serviceBusResource 'br/SharedDefraRegistry:service-bus.namespaces:0.5.7' = {
+module serviceBusResource 'br/SharedDefraRegistry:service-bus.namespace:0.5.3' = {
   name: 'service-bus-${deploymentDate}'
   params: {
     name: serviceBus.namespaceName

@@ -61,7 +61,7 @@ resource azureMonitorWorkSpaceResource 'Microsoft.Monitor/accounts@2023-04-03' =
   tags: azureMonitorWorkspaceTags
 }
 
-module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assigned-identities:0.4.6' = {
+module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'aks-cluster-mi-${deploymentDate}'
   params: {
     name: cluster.miControlPlane
@@ -71,7 +71,7 @@ module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assig
   }
 }
 
-module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zones:0.5.7' = {
+module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5.2' = {
   name: 'aks-private-dns-zone-${deploymentDate}'
   dependsOn: [
     managedIdentityModule
@@ -115,7 +115,7 @@ module networkContributorModule '.bicep/network-contributor.bicep' = {
   }
 }
 
-module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.13-prerelease' = {
+module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
     networkContributorModule
@@ -125,7 +125,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     location: location
     lock: 'CanNotDelete'
     tags: union(tags, aksTags)
-    aksClusterKubernetesVersion: cluster.kubernetesVersion
+    kubernetesVersion: cluster.kubernetesVersion
     nodeResourceGroup: cluster.nodeResourceGroup
     enableDefaultTelemetry: false
     omsAgentEnabled: true
@@ -137,7 +137,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     userAssignedIdentities: {
       '${managedIdentityModule.outputs.resourceId}': {}
     }
-    enableSecurityProfileWorkloadIdentity: true
+    enableWorkloadIdentity: true
     azurePolicyEnabled: true
     azurePolicyVersion: 'v2'
     enableOidcIssuerProfile: true
@@ -146,17 +146,17 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-clusters:0.5.
     privateDNSZone: privateDnsZoneModule.outputs.resourceId
     disableRunCommand: false
     enablePrivateClusterPublicFQDN: false
-    aksClusterNetworkPlugin: 'azure'
-    aksClusterNetworkPluginMode: 'overlay'
-    aksClusterNetworkPolicy: 'calico'
-    aksClusterPodCidr: cluster.podCidr
-    aksClusterServiceCidr: cluster.serviceCidr
-    aksClusterDnsServiceIP: cluster.dnsServiceIp
-    aksClusterLoadBalancerSku: 'standard'
+    networkPlugin: 'azure'
+    networkPluginMode: 'overlay'
+    networkPolicy: 'calico'
+    podCidr: cluster.podCidr
+    serviceCidr: cluster.serviceCidr
+    dnsServiceIP: cluster.dnsServiceIp
+    loadBalancerSku: 'standard'
     managedOutboundIPCount: 0
-    aksClusterOutboundType: 'userDefinedRouting'
-    aksClusterSkuTier: cluster.skuTier
-    aksClusterSshPublicKey: ''
+    outboundType: 'userDefinedRouting'
+    skuTier: cluster.skuTier
+    sshPublicKey: ''
     aksServicePrincipalProfile: {}
     aadProfileClientAppID: ''
     aadProfileServerAppID: ''

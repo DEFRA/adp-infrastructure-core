@@ -20,7 +20,7 @@ var commonTags = {
 }
 var tags = union(loadJsonContent('../default-tags.json'), commonTags)
 
-module route 'br/SharedDefraRegistry:network.route-tables:0.4.7' = {
+module route 'br/SharedDefraRegistry:network.route-table:0.4.2' = {
   name: 'route-table-${deploymentDate}'
   params: {
     name: routeTable.name

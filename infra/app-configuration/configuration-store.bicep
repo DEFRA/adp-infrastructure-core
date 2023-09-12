@@ -42,7 +42,7 @@ var appConfigPrivateEndpointTags = {
   Tier: 'Shared'
 }
 
-module appConfigResource 'br/SharedDefraRegistry:app-configuration.configuration-stores:0.3.6' = {
+module appConfigResource 'br/SharedDefraRegistry:app-configuration.configuration-store:0.3.3' = {
   name: 'app-config-${deploymentDate}'
   params: {
     name: appConfig.name

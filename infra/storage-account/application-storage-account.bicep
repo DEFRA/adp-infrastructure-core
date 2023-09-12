@@ -46,7 +46,7 @@ var storageAccountPrivateEndpointTags = {
   Tier: 'Shared'
 }
 
-module storageAccounts 'br/SharedDefraRegistry:storage.storage-accounts:0.5.8' = {
+module storageAccounts 'br/SharedDefraRegistry:storage.storage-account:0.5.3' = {
   name: 'app-storageAccount-${deploymentDate}'
   params: {
     name: toLower(storageAccount.name)

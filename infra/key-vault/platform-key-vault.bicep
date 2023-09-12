@@ -43,7 +43,7 @@ var customTags = {
 }
 var tags = union(loadJsonContent('../default-tags.json'), customTags)
 
-module vaults 'br/SharedDefraRegistry:key-vault.vaults:0.5.6' = {
+module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
   name: 'platform-keyvault-${deploymentDate}'
   params: {
     name: keyVaultName
