@@ -1,0 +1,114 @@
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - infra/config/app-registrations/*
+    - infra/config/service-connections/*
+    - scripts/ado/*
+    - scripts/Assign-RBAC-Subscription.ps1
+    exclude:
+    - scripts/Create-AdoBuildAgent.ps1
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+    - infra/config/app-registrations/*
+    - infra/config/service-connections/*
+    - scripts/ado/*
+    - scripts/Assign-RBAC-Subscription.ps1
+    exclude:
+    - scripts/Create-AdoBuildAgent.ps1
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: main
+
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.deployFromFeature }}  
+    environments:
+      - name: 'snd1'
+        serviceConnection: AZD-CDO-SSV3
+        deploymentBranches:
+          - '*'
+        developmentEnvironment: true
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'snd2'
+        outputTemplateChange: Skip
+        serviceConnection: AZD-CDO-SSV3
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'snd3'
+        outputTemplateChange: Skip
+        serviceConnection: AZD-CDO-SSV3
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'  
+    groupedTemplates:
+      - name: SharedResources 
+        templates:
+          - name: platform-key-vault
+            path: infra/key-vault
+            resourceGroupName: $(ssvSharedResourceGroup)
+            postDeployScriptsList:
+              - displayName: Create Tier 2 App Registrations
+                filePathsForTransform:
+                  - 'infra/config/app-registrations/tier2-app-registration.json'
+                scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
+                ScriptArguments: >
+                  -AppRegJsonPath 'infra/config/app-registrations/tier2-app-registration.json'
+              - displayName: Setup RBAC on Subscriptions
+                Type: AzurePowerShell
+                scriptPath: 'scripts/Assign-RBAC-Subscription.ps1'
+                ScriptArguments: >
+                  -SubscriptionName $(subscriptionName) 
+                  -KeyVaultName $(ssvPlatformKeyVaultName)
+                  -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)       
+              - displayName: Create or Update AzureRm Service Endpoint(Service Connection)
+                Type: AzureCLI
+                useSystemAccessToken: true
+                filePathsForTransform:
+                  - 'infra/config/service-connections/tier2-service-connection.json'
+                scriptPath: 'scripts/ado/Initialize-ServiceEndpoint.ps1'
+                ScriptArguments: >
+                  -ServiceEndpointJsonPath 'infra/config/service-connections/tier2-service-connection.json'
+                  -WorkingDirectory $(Pipeline.Workspace)\s\self           
+
+      - name: network
+        dependsOnGroupedTemplates:
+          - SharedResources
+        templates:
+          - name: route-table
+            path: infra/network
+            serviceConnectionVariableName: 'subscriptionName'
+            resourceGroupName: $(virtualNetworkResourceGroup)
+          - name: subnet-nsg
+            path: infra/network
+            serviceConnectionVariableName: 'subscriptionName'
+            resourceGroupName: $(virtualNetworkResourceGroup)            
+          - name: virtual-network
+            path: infra/network
+            serviceConnectionVariableName: 'subscriptionName'
+            resourceGroupName: $(virtualNetworkResourceGroup)
