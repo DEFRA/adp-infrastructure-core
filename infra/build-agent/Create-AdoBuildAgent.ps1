@@ -76,7 +76,7 @@ Write-Debug "${functionName}:imageId=$imageId"
 
 try {
     [System.IO.DirectoryInfo]$scriptDir = $PSCommandPath | Split-Path -Parent
-    Write-Debug "${functionName}:scriptDir.FullName=$scriptDir.FullName"
+    Write-Debug "${functionName}:scriptDir.FullName=$($scriptDir.FullName)"
 
     [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $scriptDir.FullName -ChildPath "scripts/modules/ps-helpers"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
