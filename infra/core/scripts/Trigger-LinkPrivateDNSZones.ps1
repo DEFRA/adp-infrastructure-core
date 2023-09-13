@@ -5,16 +5,16 @@ Triggers ADO pipeline to Link DNS Zone to central networks
 .DESCRIPTION
 This script triggers a pipeline in CCOE-Infrastructure ADO project to link the DNS zone to central networks
 
-.PARAMETER privateDnsZoneName
+.PARAMETER PrivateDnsZoneName
 Mandatory. Private DNS Zone Name.
 
-.PARAMETER resourceGroupName
+.PARAMETER ResourceGroupName
 Mandatory. Private DNS Zone Resource Group Name.
 
-.PARAMETER subscriptionName
+.PARAMETER SubscriptionName
 Mandatory. Private DNS Zone Subscription Name.
 
-.PARAMETER tenantId
+.PARAMETER TenantId
 Mandatory. Private DNS Zone Tenant Id.
 
 .EXAMPLE
@@ -24,13 +24,15 @@ Mandatory. Private DNS Zone Tenant Id.
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)] 
-    [string]$privateDnsZoneName,
+    [string]$PrivateDnsZoneName,
     [Parameter(Mandatory)] 
-    [string]$resourceGroupName,
+    [string]$ResourceGroupName,
     [Parameter(Mandatory)] 
-    [string]$subscriptionName,
+    [string]$SubscriptionName,
     [Parameter(Mandatory)] 
-    [string]$tenantId
+    [string]$TenantId,
+    [Parameter]
+    [string]$WorkingDirectory = $PWD
 )
 
 Set-StrictMode -Version 3.0
@@ -51,16 +53,14 @@ if ($enableDebug) {
 }
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
-Write-Debug "${functionName}:privateDnsZoneName=$privateDnsZoneName"
-Write-Debug "${functionName}:resourceGroupName=$resourceGroupName"
-Write-Debug "${functionName}:subscriptionName=$subscriptionName"
-Write-Debug "${functionName}:tenantId=$tenantId"
+Write-Debug "${functionName}:PrivateDnsZoneName=$PrivateDnsZoneName"
+Write-Debug "${functionName}:ResourceGroupName=$ResourceGroupName"
+Write-Debug "${functionName}:SubscriptionName=$SubscriptionName"
+Write-Debug "${functionName}:TenantId=$TenantId"
+Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
-    [System.IO.DirectoryInfo]$rootDir = (($PSCommandPath | Split-Path -Parent) | Split-Path -Parent) | Split-Path -Parent
-    Write-Debug "${functionName}:rootDir.FullName=$($rootDir.FullName)"
-
-    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $rootDir.FullName -ChildPath "scripts/modules/ado"
+    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ado"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
 
@@ -72,10 +72,10 @@ try {
             "Tenant": ""
         }
     }' | ConvertFrom-Json
-    $runPipelineRequestBodyWithDefaultConfig.templateParameters.PrivateDnsZoneName = $privateDnsZoneName
-    $runPipelineRequestBodyWithDefaultConfig.templateParameters.ResourceGroup = $resourceGroupName
-    $runPipelineRequestBodyWithDefaultConfig.templateParameters.Subscription = $subscriptionName
-    $runPipelineRequestBodyWithDefaultConfig.templateParameters.Tenant = $tenantId
+    $runPipelineRequestBodyWithDefaultConfig.templateParameters.PrivateDnsZoneName = $PrivateDnsZoneName
+    $runPipelineRequestBodyWithDefaultConfig.templateParameters.ResourceGroup = $ResourceGroupName
+    $runPipelineRequestBodyWithDefaultConfig.templateParameters.Subscription = $SubscriptionName
+    $runPipelineRequestBodyWithDefaultConfig.templateParameters.Tenant = $TenantId
     [string]$requestBodyJson = $($runPipelineRequestBodyWithDefaultConfig | ConvertTo-Json)
 
     New-BuildRun -organisationUri $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI -projectName "CCoE-Infrastructure" -buildDefinitionId 4634 -requestBody $requestBodyJson

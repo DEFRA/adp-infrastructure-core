@@ -13,7 +13,9 @@ param(
     [Parameter(Mandatory)]
     [string] $CertFilesPath,
     [Parameter(Mandatory)]
-    [string] $NGINXVersion
+    [string] $NGINXVersion,
+    [Parameter]
+    [string]$WorkingDirectory = $PWD
 )
 
 function Save-SecretToFile {
@@ -167,16 +169,14 @@ Write-Debug "${functionName}:NGINXCertSecretName=$NGINXCertSecretName"
 Write-Debug "${functionName}:NGINXKeySecretName=$NGINXKeySecretName"
 Write-Debug "${functionName}:CertFilesPath=$CertFilesPath"
 Write-Debug "${functionName}:NGINXVersion=$NGINXVersion"
+Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
 
     Install-Module -Name "Az.Accounts" -RequiredVersion "2.2.3" -Force -SkipPublisherCheck -AllowClobber
     Install-Module -Name "Az.KeyVault" -RequiredVersion "4.10.2" -Force -SkipPublisherCheck -AllowClobber
 
-    [System.IO.DirectoryInfo]$rootDir = ($PSCommandPath | Split-Path -Parent) | Split-Path -Parent
-    Write-Debug "${functionName}:rootDir.FullName=$($rootDir.FullName)"
-
-    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $rootDir.FullName -ChildPath "scripts/modules/ps-helpers"
+    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ps-helpers"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
 

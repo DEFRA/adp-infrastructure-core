@@ -3,49 +3,51 @@
 Create Virtual Machine Scale-set
 .DESCRIPTION
 Create Virtual Machine Scale-set for private build agent using image from the shared compute gallery.
-.PARAMETER imageGalleryTenantId
+.PARAMETER ImageGalleryTenantId
 Mandatory. Image Gallery Tenant Id.
-.PARAMETER tenantId
+.PARAMETER TenantId
 Mandatory. Tenant Id.
-.PARAMETER subscriptionName
+.PARAMETER SubscriptionName
 Mandatory. Subscription Name.
-.PARAMETER resourceGroup
+.PARAMETER ResourceGroup
 Mandatory. Resource Group Name.
-.PARAMETER vmssName
+.PARAMETER VMSSName
 Mandatory. Virtual Machine Scale-Set name.
-.PARAMETER subnetId
+.PARAMETER SubnetId
 Mandatory. Subnet ResourceId.
-.PARAMETER imageId
+.PARAMETER ImageId
 Mandatory. Shared Gallery Image Reference Id.
-.PARAMETER adoAgentUser
+.PARAMETER AdoAgentUser
 Mandatory. VM instance login user name.
-.PARAMETER adoAgentPass
+.PARAMETER AdoAgentPass
 Mandatory. VM instance login password.
 .EXAMPLE
-.\Create-AdoBuildAgent.ps1  -imageGalleryTenantId <imageGalleryTenantId> -tenantId <tenantId> -subscriptionName <subscriptionName> -resourceGroup <resourceGroup> `
-                            -vmssName <vmssName> -subnetId <subnetId> -imageId <imageId> -adoAgentUser <adoAgentUser> -adoAgentPass <adoAgentPass>
+.\Create-AdoBuildAgent.ps1  -imageGalleryTenantId <ImageGalleryTenantId> -tenantId <TenantId> -subscriptionName <SubscriptionName> -resourceGroup <ResourceGroup> `
+                            -vmssName <VMSSName> -subnetId <SubnetId> -imageId <ImageId> -adoAgentUser <AdoAgentUser> -adoAgentPass <AdoAgentPass>
 #> 
 
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)]
-    [string] $imageGalleryTenantId,
+    [string] $ImageGalleryTenantId,
     [Parameter(Mandatory)]
-    [string] $tenantId,
+    [string] $TenantId,
     [Parameter(Mandatory)]
-    [string] $subscriptionName,
+    [string] $SubscriptionName,
     [Parameter(Mandatory)]
-    [string] $resourceGroup,
+    [string] $ResourceGroup,
     [Parameter(Mandatory)]
-    [string] $vmssName,
+    [string] $VMSSName,
     [Parameter(Mandatory)]
-    [string] $subnetId,
+    [string] $SubnetId,
     [Parameter(Mandatory)]
-    [string] $imageId,
+    [string] $ImageId,
     [Parameter(Mandatory)]
-    [string] $adoAgentUser,
+    [string] $AdoAgentUser,
     [Parameter(Mandatory)]
-    [string] $adoAgentPass
+    [string] $AdoAgentPass,
+    [Parameter]
+    [string]$WorkingDirectory = $PWD
 )
 
 Set-StrictMode -Version 3.0
@@ -66,70 +68,69 @@ if ($enableDebug) {
 }
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
-Write-Debug "${functionName}:imageGalleryTenantId=$imageGalleryTenantId"
-Write-Debug "${functionName}:tenantId=$tenantId"
-Write-Debug "${functionName}:subscriptionName=$subscriptionName"
-Write-Debug "${functionName}:resourceGroup=$resourceGroup"
-Write-Debug "${functionName}:vmssName=$vmssName"
-Write-Debug "${functionName}:subnetId=$subnetId"
-Write-Debug "${functionName}:imageId=$imageId"
+Write-Debug "${functionName}:ImageGalleryTenantId=$ImageGalleryTenantId"
+Write-Debug "${functionName}:TenantId=$TenantId"
+Write-Debug "${functionName}:SubscriptionName=$SubscriptionName"
+Write-Debug "${functionName}:ResourceGroup=$ResourceGroup"
+Write-Debug "${functionName}:VMSSName=$VMSSName"
+Write-Debug "${functionName}:SubnetId=$SubnetId"
+Write-Debug "${functionName}:ImageId=$ImageId"
+Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
+
 
 try {
 
-    [System.IO.DirectoryInfo]$rootDir = (($PSCommandPath | Split-Path -Parent) | Split-Path -Parent) | Split-Path -Parent
-    Write-Debug "${functionName}:rootDir.FullName=$($rootDir.FullName)"
-
-    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $rootDir.FullName -ChildPath "scripts/modules/ps-helpers"
+    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ps-helpers"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
 
     [string]$command = "az account clear"
     Invoke-CommandLine -Command $command | Out-Null
     
-    if ($imageGalleryTenantId -ne $tenantId) {
-        $command = "az login --service-principal -u $($env:servicePrincipalId) -p $($env:servicePrincipalKey) --tenant $imageGalleryTenantId"
+    if ($ImageGalleryTenantId -ne $TenantId) {
+        $command = "az login --service-principal -u $($env:servicePrincipalId) -p $($env:servicePrincipalKey) --tenant $ImageGalleryTenantId"
         Invoke-CommandLine -Command $command | Out-Null
         $command = "az account get-access-token"
         Invoke-CommandLine -Command $command | Out-Null
     }
 
-    $command = "az login --service-principal -u $($env:servicePrincipalId) -p $($env:servicePrincipalKey) --tenant $tenantId"
+    $command = "az login --service-principal -u $($env:servicePrincipalId) -p $($env:servicePrincipalKey) --tenant $TenantId"
     Invoke-CommandLine -Command $command | Out-Null
     $command = "az account get-access-token"
     Invoke-CommandLine -Command $command | Out-Null
 
-    $command = "az account set --subscription $subscriptionName"
+    $command = "az account set --subscription $SubscriptionName"
     Invoke-CommandLine -Command $command | Out-Null
 
-    Write-Host "Checking if the VMSS $vmssName already exists..."
-    $command = "az vmss list --resource-group $resourceGroup"
+    Write-Host "Checking if the VMSS $VMSSName already exists..."
+    $command = "az vmss list --resource-group $ResourceGroup"
     [string]$commandOutput = Invoke-CommandLine -Command $command
 
     $instances = $commandOutput | ConvertFrom-Json
-    if (-not ($instances.name -contains $vmssName)) {
-        Write-Host "Creating VMSS: $vmssName..."
+    if (-not ($instances.name -contains $VMSSName)) {
+        Write-Host "Creating VMSS: $VMSSName..."
         
         $command = @"
             az vmss create ``
-            --resource-group $resourceGroup ``
-            --name $vmssName ``
-            --computer-name-prefix $vmssName ``
+            --resource-group $ResourceGroup ``
+            --name $VMSSName ``
+            --computer-name-prefix $VMSSName ``
             --vm-sku Standard_D4s_v4 ``
             --instance-count 2 ``
-            --subnet '$subnetId' ``
-            --image '$imageId' ``
+            --subnet '$SubnetId' ``
+            --image '$ImageId' ``
             --authentication-type password ``
-            --admin-username $adoAgentUser ``
-            --admin-password '$adoAgentPass' ``
+            --admin-username $AdoAgentUser ``
+            --admin-password '$AdoAgentPass' ``
             --disable-overprovision ``
             --upgrade-policy-mode Manual ``
             --public-ip-address '""' ``
-            --tags ServiceName='ADP' ServiceCode='CDO' Name=$vmssName Purpose='ADO Build Agent'
+            --tags ServiceName='ADP' ServiceCode='CDO' Name=$VMSSName Purpose='ADO Build Agent'
 "@
         Invoke-CommandLine -Command $command | Out-Null
     }
     else {
-        Write-Host "VMSS: $vmssName already exists!"
+        Write-Host "VMSS: $VMSSName already exists!"
     }
 
     $exitCode = 0
