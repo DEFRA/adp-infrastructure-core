@@ -14,8 +14,8 @@ param(
     [string] $CertFilesPath,
     [Parameter(Mandatory)]
     [string] $NGINXVersion,
-    [Parameter]
-    [string]$WorkingDirectory = $PWD.Path
+    [Parameter()]
+    [string]$WorkingDirectory = $PWD
 )
 
 function Save-SecretToFile {

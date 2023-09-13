@@ -19,7 +19,8 @@ Optional. Working directory. Default is $PWD.
 param(
     [Parameter(Mandatory)] 
     [string]$ServiceEndpointJsonPath,
-    [string]$WorkingDirectory = $PWD.Path
+    [Parameter()]
+    [string]$WorkingDirectory = $PWD
 )
 
 Set-StrictMode -Version 3.0
