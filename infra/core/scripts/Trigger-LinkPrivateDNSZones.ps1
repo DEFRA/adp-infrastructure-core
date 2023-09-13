@@ -32,7 +32,7 @@ param(
     [Parameter(Mandatory)] 
     [string]$TenantId,
     [Parameter]
-    [string]$WorkingDirectory = $PWD
+    [string]$WorkingDirectory = $PWD.Path
 )
 
 Set-StrictMode -Version 3.0

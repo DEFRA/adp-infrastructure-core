@@ -86,10 +86,10 @@ extends:
                 type: PowerShell
                 useSystemAccessToken: true
                 scriptArguments: >
-                  -privateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01.privatelink.$(location).azmk8s.io"
-                  -resourceGroupName $(aksResourceGroup)
-                  -subscriptionName $(subscriptionName)
-                  -tenantId $(tenantId)
+                  -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01.privatelink.$(location).azmk8s.io"
+                  -ResourceGroupName $(aksResourceGroup)
+                  -SubscriptionName $(subscriptionName)
+                  -TenantId $(tenantId)
           - name: grafana
             serviceConnectionVariableName: ssvServiceConnection
             path: infra/core/observability

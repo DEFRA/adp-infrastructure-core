@@ -15,7 +15,7 @@ param(
     [Parameter(Mandatory)]
     [string] $NGINXVersion,
     [Parameter]
-    [string]$WorkingDirectory = $PWD
+    [string]$WorkingDirectory = $PWD.Path
 )
 
 function Save-SecretToFile {

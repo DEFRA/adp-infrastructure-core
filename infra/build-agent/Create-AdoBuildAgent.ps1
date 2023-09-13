@@ -47,7 +47,7 @@ param(
     [Parameter(Mandatory)]
     [string] $AdoAgentPass,
     [Parameter]
-    [string]$WorkingDirectory = $PWD
+    [string]$WorkingDirectory = $PWD.Path
 )
 
 Set-StrictMode -Version 3.0
