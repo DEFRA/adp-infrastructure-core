@@ -13,7 +13,7 @@ pr:
     - main
   paths:
     include:
-      - scripts/Publish-NginxPlus-Acr.ps1
+      - nginxplus/*
 
 trigger:
   batch: true
@@ -22,7 +22,7 @@ trigger:
       - '*'
   paths:
     include:
-      - scripts/Publish-NginxPlus-Acr.ps1
+      - nginxplus/*
 
 resources:
   repositories:
@@ -50,7 +50,7 @@ extends:
           primary: 'UKSouth'
     scriptsList:
       - displayName: Publish Nginx Image to ACR
-        scriptPath: 'scripts/Publish-NginxPlus-Acr.ps1'
+        scriptPath: 'nginxplus/Publish-NginxPlus-Acr.ps1'
         scriptArguments: >
           -AcrName $(ssvSharedAcrName)
           -AzureSubscription $(ssv3Subscription)
