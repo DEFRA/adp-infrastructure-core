@@ -125,7 +125,7 @@ Function Initialize-RequestBody() {
 
     process {        
         Write-Debug "Building Service connection Body for $($ArmServiceConnection.displayName)..."
-        [PSCustomObject]$serviceEndpointDefaultConfig = Get-Content -Raw -Path (Join-Path -Path $PSScriptRoot -ChildPath "request-body/arm-serviceendpoint-request-body") | ConvertFrom-Json
+        [PSCustomObject]$serviceEndpointDefaultConfig = Get-Content -Raw -Path (Join-Path -Path $PSScriptRoot -ChildPath "request-body/arm-serviceendpoint-request-body.json") | ConvertFrom-Json
         Write-Debug "serviceEndpointDefaultConfig = $($serviceEndpointDefaultConfig | ConvertTo-Json -Depth 10)"
 
         $serviceEndpointDefaultConfig.name = $ArmServiceConnection.displayName
