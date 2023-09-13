@@ -79,7 +79,7 @@ try {
     [System.IO.DirectoryInfo]$rootDir = ($PSCommandPath | Split-Path -Parent) | Split-Path -Parent
     Write-Debug "${functionName}:rootDir.FullName=$($rootDir.FullName)"
 
-    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $scriptDir.FullName -ChildPath "scripts/modules/ps-helpers"
+    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $rootDir.FullName -ChildPath "scripts/modules/ps-helpers"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
 
