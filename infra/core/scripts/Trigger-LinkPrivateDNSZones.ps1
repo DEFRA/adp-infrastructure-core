@@ -57,8 +57,8 @@ Write-Debug "${functionName}:subscriptionName=$subscriptionName"
 Write-Debug "${functionName}:tenantId=$tenantId"
 
 try {
-    [System.IO.DirectoryInfo]$scriptDir = $PSCommandPath | Split-Path -Parent
-    Write-Debug "${functionName}:scriptDir.FullName=$($scriptDir.FullName)"
+    [System.IO.DirectoryInfo]$rootDir = (($PSCommandPath | Split-Path -Parent) | Split-Path -Parent) | Split-Path -Parent
+    Write-Debug "${functionName}:rootDir.FullName=$($rootDir.FullName)"
 
     [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $scriptDir.FullName -ChildPath "scripts/modules/ado"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"

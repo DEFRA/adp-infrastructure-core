@@ -173,8 +173,8 @@ try {
     Install-Module -Name "Az.Accounts" -RequiredVersion "2.2.3" -Force -SkipPublisherCheck -AllowClobber
     Install-Module -Name "Az.KeyVault" -RequiredVersion "4.10.2" -Force -SkipPublisherCheck -AllowClobber
 
-    [System.IO.DirectoryInfo]$scriptDir = $PSCommandPath | Split-Path -Parent
-    Write-Debug "${functionName}:scriptDir.FullName=$($scriptDir.FullName)"
+    [System.IO.DirectoryInfo]$rootDir = (($PSCommandPath | Split-Path -Parent) | Split-Path -Parent) | Split-Path -Parent
+    Write-Debug "${functionName}:rootDir.FullName=$($rootDir.FullName)"
 
     [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $scriptDir.FullName -ChildPath "scripts/modules/ps-helpers"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
