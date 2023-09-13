@@ -107,16 +107,8 @@ try {
     [string]$commandOutput = Invoke-CommandLine -Command $command
 
     $instances = $commandOutput | ConvertFrom-Json
-<<<<<<< HEAD:scripts/Create-AdoBuildAgent.ps1
-    if ($instances -and $instances.count -gt 0 -and ($instances.name -contains $vmssName)) {
-        Write-Host "VMSS: $vmssName already exists!"
-    }
-    else {
-        Write-Host "Creating VMSS: $vmssName..."
-=======
     if (-not ($instances.name -contains $VMSSName)) {
         Write-Host "Creating VMSS: $VMSSName..."
->>>>>>> main:infra/build-agent/Create-AdoBuildAgent.ps1
         
         $command = @"
             az vmss create ``
@@ -133,13 +125,6 @@ try {
             --disable-overprovision ``
             --upgrade-policy-mode Manual ``
             --public-ip-address '""' ``
-<<<<<<< HEAD:scripts/Create-AdoBuildAgent.ps1
-            --load-balancer '""' ``
-            --tags ServiceName='ADP' ServiceCode='CDO' Name=$vmssName Purpose='ADO Build Agent'
-"@
-        Invoke-CommandLine -Command $command | Out-Null
-    }
-=======
             --tags ServiceName='ADP' ServiceCode='CDO' Name=$VMSSName Purpose='ADO Build Agent'
 "@
         Invoke-CommandLine -Command $command | Out-Null
@@ -147,7 +132,6 @@ try {
     else {
         Write-Host "VMSS: $VMSSName already exists!"
     }
->>>>>>> main:infra/build-agent/Create-AdoBuildAgent.ps1
 
     $exitCode = 0
 }
