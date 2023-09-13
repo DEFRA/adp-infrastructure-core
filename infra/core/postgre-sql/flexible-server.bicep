@@ -26,7 +26,7 @@ var customTags = {
 
 var defaultTags = union(json(loadTextContent('../../common/default-tags.json')), customTags)
 
-module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-server:0.4.5-prerelease' = {
+module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-server:0.4.4' = {
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
     name: toLower(server.name)
