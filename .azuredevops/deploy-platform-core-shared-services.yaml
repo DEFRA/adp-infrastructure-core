@@ -55,6 +55,3 @@ extends:
     groupedTemplates:
       - name: SharedResources 
         templates:
-          - name: platform-key-vault
-            path: infra/bootstrap/key-vault
-            resourceGroupName: $(ssvSharedResourceGroup)
