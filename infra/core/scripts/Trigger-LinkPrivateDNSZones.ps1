@@ -31,8 +31,8 @@ param(
     [string]$SubscriptionName,
     [Parameter(Mandatory)] 
     [string]$TenantId,
-    [Parameter]
-    [string]$WorkingDirectory = $PWD.Path
+    [Parameter()]
+    [string]$WorkingDirectory = $PWD
 )
 
 Set-StrictMode -Version 3.0
