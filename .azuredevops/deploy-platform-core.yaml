@@ -28,7 +28,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref:  pp/acr-service-connection
+      ref:  main
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
