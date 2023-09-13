@@ -1,0 +1,57 @@
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - infra/config/app-registrations/*
+    - infra/config/service-connections/*
+    - scripts/ado/*
+    - scripts/Assign-RBAC-Subscription.ps1
+    exclude:
+    - scripts/Create-AdoBuildAgent.ps1
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+    - infra/config/app-registrations/*
+    - infra/config/service-connections/*
+    - scripts/ado/*
+    - scripts/Assign-RBAC-Subscription.ps1
+    exclude:
+    - scripts/Create-AdoBuildAgent.ps1
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: main
+
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.deployFromFeature }}  
+    environments:
+      - name: 'ssv3'
+        serviceConnection: $(ssv3Subscription)
+        deploymentBranches:
+          - 'refs/heads/main'
+        developmentEnvironment: true
+        azureRegions:
+          primary: 'UKSouth'
+    groupedTemplates:
+      - name: SharedResources 
+        templates:
