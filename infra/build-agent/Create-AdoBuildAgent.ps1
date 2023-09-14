@@ -17,13 +17,15 @@ Mandatory. Virtual Machine Scale-Set name.
 Mandatory. Subnet ResourceId.
 .PARAMETER ImageId
 Mandatory. Shared Gallery Image Reference Id.
-.PARAMETER AdoAgentUser
-Mandatory. VM instance login user name.
-.PARAMETER AdoAgentPass
-Mandatory. VM instance login password.
+.PARAMETER Location
+Mandatory. Location.
+.PARAMETER KeyVaultName
+Mandatory. Key Vault Name.
+.PARAMETER Environment
+Mandatory. Environment.
 .EXAMPLE
-.\Create-AdoBuildAgent.ps1  -imageGalleryTenantId <ImageGalleryTenantId> -tenantId <TenantId> -subscriptionName <SubscriptionName> -resourceGroup <ResourceGroup> `
-                            -vmssName <VMSSName> -subnetId <SubnetId> -imageId <ImageId> -adoAgentUser <AdoAgentUser> -adoAgentPass <AdoAgentPass>
+.\Create-AdoBuildAgent.ps1  -ImageGalleryTenantId <ImageGalleryTenantId> -TenantId <TenantId> -SubscriptionName <SubscriptionName> -ResourceGroup <ResourceGroup> `
+                            -VMSSName <VMSSName> -SubnetId <SubnetId> -ImageId <ImageId> -Location <Location> -KeyVaultName <KeyVaultName> -Environment <Environment>
 #> 
 
 [CmdletBinding()]
@@ -43,14 +45,57 @@ param(
     [Parameter(Mandatory)]
     [string] $ImageId,
     [Parameter(Mandatory)]
-    [string] $AdoAgentUser,
     [Parameter(Mandatory)]
-    [string] $AdoAgentPass,
-    [Parameter()]
     [string] $Location,
+    [Parameter(Mandatory)]
+    [string] $KeyVaultName,
+    [Parameter(Mandatory)]
+    [string] $Environment,
     [Parameter()]
     [string]$WorkingDirectory = $PWD
 )
+
+function New-RandomAdminUsername {
+    [CmdletBinding()]
+    param ()
+
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand
+        Write-Debug "${functionName}:Entered"
+    }
+
+    process {
+        $adminUsername = "adminuser$(Get-Random -Minimum 1000 -Maximum 9999)"
+        return $adminUsername
+    }
+
+    end {
+        Write-Debug "${functionName}:Exited"
+    }
+}
+
+function New-RandomPassword {
+    [CmdletBinding()]
+    param (
+        [int]$Length = 12
+    )
+
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand
+        Write-Debug "${functionName}:Entered"
+        Write-Debug "${functionName}:Length=$Length"
+    }
+
+    process {
+        $validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-="
+        $password = -join ((Get-Random -Count $Length -InputObject $validChars.ToCharArray()) | Get-Random -Count $Length)
+        return $password
+    }
+
+    end {
+        Write-Debug "${functionName}:Exited"
+    }
+}
 
 Set-StrictMode -Version 3.0
 
@@ -78,6 +123,7 @@ Write-Debug "${functionName}:VMSSName=$VMSSName"
 Write-Debug "${functionName}:SubnetId=$SubnetId"
 Write-Debug "${functionName}:ImageId=$ImageId"
 Write-Debug "${functionName}:Location=$Location"
+Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
@@ -86,7 +132,7 @@ try {
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
 
-    if (!(Invoke-CommandLine -Command "az group show --name $ResourceGroup --output none --query id")) {
+    if (!(Invoke-CommandLine -Command "az group show --name $ResourceGroup --output none --query id" -IgnoreErrorCode)) {
         Invoke-CommandLine "az group create --name $ResourceGroup --location $location" | Out-Null
         Write-Host "Resource Group '$ResourceGroup' created successfully."
     }
@@ -120,6 +166,8 @@ try {
     if (-not ($instances.name -contains $VMSSName)) {
         Write-Host "Creating VMSS: $VMSSName..."
         
+        $adminUsername = New-RandomAdminUsername
+        $adminPassword = New-RandomPassword -Length 12
         $command = @"
             az vmss create ``
             --resource-group $ResourceGroup ``
@@ -130,14 +178,24 @@ try {
             --subnet '$SubnetId' ``
             --image '$ImageId' ``
             --authentication-type password ``
-            --admin-username $AdoAgentUser ``
-            --admin-password '$AdoAgentPass' ``
+            --admin-username $adminUsername ``
+            --admin-password '$adminPassword' ``
             --disable-overprovision ``
             --upgrade-policy-mode Manual ``
             --public-ip-address '""' ``
             --tags ServiceName='ADP' ServiceCode='ADP' Name=$VMSSName Purpose='ADO Build Agent'
 "@
         Invoke-CommandLine -Command $command | Out-Null
+
+        $AdminUsernamekvSecretName =  "{0}-ADO-BuildAgent-User" -f $Environment
+        Write-Debug "${functionName}:AdminUsernamekvSecretName=$AdminUsernamekvSecretName"
+
+        $AdminPwdkvSecretName = "{0}-ADO-BuildAgent-Password" -f $Environment
+        Write-Debug "${functionName}:AdminPwdkvSecretName=$AdminPwdkvSecretName"
+
+        Invoke-CommandLine -Command "az keyvault secret set --name $AdminUsernamekvSecretName --vault-name $KeyVaultName --content-type 'User Name' --value $adminUsername" | Out-Null
+
+        Invoke-CommandLine "az keyvault secret set --name $AdminPwdkvSecretName --vault-name $KeyVaultName --content-type 'password' --value $adminPassword" | Out-Null
     }
     else {
         Write-Host "VMSS: $VMSSName already exists!"
