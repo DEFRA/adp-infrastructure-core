@@ -29,7 +29,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: pp/adp-variables
+      ref: pp/adp-variables 
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -86,21 +86,4 @@ extends:
                 scriptPath: 'infra/bootstrap/scripts/ado/Initialize-ServiceEndpoint.ps1'
                 ScriptArguments: >
                   -ServiceEndpointJsonPath 'infra/bootstrap/config/service-connections/tier2-service-connection.json'
-                  -WorkingDirectory $(Pipeline.Workspace)\s\self           
-
-      - name: network
-        dependsOnGroupedTemplates:
-          - SharedResources
-        templates:
-          - name: route-table
-            path: infra/common/network
-            serviceConnectionVariableName: 'subscriptionName'
-            resourceGroupName: $(virtualNetworkResourceGroup)
-          - name: subnet-nsg
-            path: infra/common/network
-            serviceConnectionVariableName: 'subscriptionName'
-            resourceGroupName: $(virtualNetworkResourceGroup)            
-          - name: virtual-network
-            path: infra/common/network
-            serviceConnectionVariableName: 'subscriptionName'
-            resourceGroupName: $(virtualNetworkResourceGroup)
+                  -WorkingDirectory $(Pipeline.Workspace)\s\self 
