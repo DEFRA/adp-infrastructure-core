@@ -14,21 +14,21 @@ parameters:
 pr:
   branches:
     include:
-    - main
+      - main
   paths:
     include:
-    - infra/bootstrap/*
-    - infra/common/*
+      - infra/bootstrap/*
+      - infra/common/*
 
 trigger:
   batch: true
   branches:
     include:
-      - '*'
+      - "*"
   paths:
     include:
-    - infra/bootstrap/*
-    - infra/common/*
+      - infra/bootstrap/*
+      - infra/common/*
 
 resources:
   repositories:
@@ -36,63 +36,81 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: pp/adp-variables 
+      ref: pp/adp-variables
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
     projectName: $(projectName)
-    deployFromFeature: ${{ parameters.deployFromFeature }}  
+    deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
-      - name: 'snd1'
+      - name: "snd1"
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - '*'
+          - "*"
         developmentEnvironment: true
         azureRegions:
-          primary: 'UKSouth'
-      - name: 'snd2'
+          primary: "UKSouth"
+      - name: "snd2"
         outputTemplateChange: Skip
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - 'refs/heads/main'
+          - "refs/heads/main"
         azureRegions:
-          primary: 'UKSouth'
-      - name: 'snd3'
+          primary: "UKSouth"
+      - name: "snd3"
         outputTemplateChange: Skip
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - 'refs/heads/main'
+          - "refs/heads/main"
         azureRegions:
-          primary: 'UKSouth'  
+          primary: "UKSouth"
 
     groupedTemplates:
-      ${{ if eq(parameters.deployResources, 'all') }}:
-        - name: SharedResources 
-          templates:
-            - name: platform-key-vault
-              path: infra/bootstrap/key-vault
-              resourceGroupName: $(ssvSharedResourceGroup)
-              postDeployScriptsList:
-                - displayName: Create Tier 2 App Registrations
-                  filePathsForTransform:
-                    - 'infra/bootstrap/config/app-registrations/tier2-app-registration.json'
-                  scriptPath: 'Add-AdAppRegistrations.ps1@PipelineCommon'
-                  ScriptArguments: >
-                    -AppRegJsonPath 'infra/bootstrap/config/app-registrations/tier2-app-registration.json'
-                - displayName: Setup RBAC on Subscriptions
-                  Type: AzurePowerShell
-                  scriptPath: 'infra/bootstrap/scripts/Assign-RBAC-Subscription.ps1'
-                  ScriptArguments: >
-                    -SubscriptionName $(subscriptionName) 
-                    -KeyVaultName $(ssvPlatformKeyVaultName)
-                    -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)       
-                - displayName: Create or Update AzureRm Service Endpoint(Service Connection)
-                  Type: AzureCLI
-                  useSystemAccessToken: true
-                  filePathsForTransform:
-                    - 'infra/bootstrap/config/service-connections/tier2-service-connection.json'
-                  scriptPath: 'infra/bootstrap/scripts/ado/Initialize-ServiceEndpoint.ps1'
-                  ScriptArguments: >
-                    -ServiceEndpointJsonPath 'infra/bootstrap/config/service-connections/tier2-service-connection.json'
-                    -WorkingDirectory $(Pipeline.Workspace)\s\self           
+      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'service-connections')) }}
+        : - name: SharedResources
+            templates:
+              - name: platform-key-vault
+                path: infra/bootstrap/key-vault
+                resourceGroupName: $(ssvSharedResourceGroup)
+                postDeployScriptsList:
+                  - displayName: Create Tier 2 App Registrations
+                    filePathsForTransform:
+                      - "infra/bootstrap/config/app-registrations/tier2-app-registration.json"
+                    scriptPath: "Add-AdAppRegistrations.ps1@PipelineCommon"
+                    ScriptArguments: >
+                      -AppRegJsonPath 'infra/bootstrap/config/app-registrations/tier2-app-registration.json'
+                  - displayName: Setup RBAC on Subscriptions
+                    Type: AzurePowerShell
+                    scriptPath: "infra/bootstrap/scripts/Assign-RBAC-Subscription.ps1"
+                    ScriptArguments: >
+                      -SubscriptionName $(subscriptionName) 
+                      -KeyVaultName $(ssvPlatformKeyVaultName)
+                      -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)
+                  - displayName: Create or Update AzureRm Service Endpoint(Service Connection)
+                    Type: AzureCLI
+                    useSystemAccessToken: true
+                    filePathsForTransform:
+                      - "infra/bootstrap/config/service-connections/tier2-service-connection.json"
+                    scriptPath: "infra/bootstrap/scripts/ado/Initialize-ServiceEndpoint.ps1"
+                    ScriptArguments: >
+                      -ServiceEndpointJsonPath 'infra/bootstrap/config/service-connections/tier2-service-connection.json'
+                      -WorkingDirectory $(Pipeline.Workspace)\s\self
+
+      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}
+        : - name: network
+            dependsOnGroupedTemplates:
+              - SharedResources
+            templates:
+              - name: route-table
+                path: infra/common/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: subnet-nsg
+                path: infra/common/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: virtual-network
+                path: infra/common/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(virtualNetworkResourceGroup)
