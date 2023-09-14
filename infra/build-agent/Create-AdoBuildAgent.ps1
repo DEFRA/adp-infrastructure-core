@@ -86,8 +86,8 @@ try {
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
 
-    if (!(Get-AzResourceGroup -Name $ResourceGroup -ErrorAction SilentlyContinue)) {
-        New-AzResourceGroup -Name $ResourceGroup -Location $Location
+    if (!(Invoke-CommandLine -Command "az group show --name $ResourceGroup --output none --query id")) {
+        Invoke-CommandLine "az group create --name $ResourceGroup --location $location" | Out-Null
         Write-Host "Resource Group '$ResourceGroup' created successfully."
     }
     else {
