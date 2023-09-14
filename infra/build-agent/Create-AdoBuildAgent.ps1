@@ -64,7 +64,13 @@ function New-AdminUsernameRandom {
     }
 
     process {
-        [string]$adminUsername = "adminuser$(Get-Random -Minimum 1000 -Maximum 9999)"
+        [string]$lowerCase = "abcdefghijklmnopqrstuvwxyz"
+        [string]$adminUsername = ""
+        for ($i = 0; $i -lt 9; $i++) {
+            $adminUsername += Get-Random -Count 1 -InputObject $lowerCase.ToCharArray()
+        }
+
+        $adminUsername+= $(Get-Random -Minimum 1000 -Maximum 9999)
         return $adminUsername
     }
 
@@ -216,7 +222,7 @@ try {
         Write-Debug "${functionName}:adminUsernamekvSecretName=$adminUsernamekvSecretName"
 
         [string]$adminPwdkvSecretName = "{0}-ADO-BuildAgent-Password" -f $Environment
-        Write-Debug "${functionName}:adminPwdkvSecretName=$adminPwdkvSecretNamec"
+        Write-Debug "${functionName}:adminPwdkvSecretName=$adminPwdkvSecretName"
 
         Invoke-CommandLine -Command "az keyvault secret set --name $adminUsernamekvSecretName --vault-name $KeyVaultName --content-type 'User Name' --value $adminUsername" | Out-Null
 
