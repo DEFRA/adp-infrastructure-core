@@ -67,7 +67,6 @@ extends:
           primary: 'UKSouth'  
 
     groupedTemplates:
-    ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'service-connections')) }}:
       - name: SharedResources 
         templates:
           - name: platform-key-vault
