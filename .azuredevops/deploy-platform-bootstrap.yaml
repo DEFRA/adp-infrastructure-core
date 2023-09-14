@@ -6,11 +6,10 @@ parameters:
   - name: deployResources
     displayName: "Select Resources to Deploy"
     type: string
-    default: "all"
     values:
-    - "all"
-    - "service-connections"
-    - "network"
+      - "all"
+      - "service-connections"
+      - "network"
 
 pr:
   branches:
