@@ -36,8 +36,8 @@ extends:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
-      - name: 'snd2'
-        serviceConnection: AZD-ADP-SND2
+      - name: 'snd1'
+        serviceConnection: AZD-ADP-SND1
         deploymentBranches:
           - '*'
         developmentEnvironment: true
