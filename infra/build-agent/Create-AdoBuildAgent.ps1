@@ -64,7 +64,7 @@ function New-AdminUsernameRandom {
     }
 
     process {
-        $adminUsername = "adminuser$(Get-Random -Minimum 1000 -Maximum 9999)"
+        [string]$adminUsername = "adminuser$(Get-Random -Minimum 1000 -Maximum 9999)"
         return $adminUsername
     }
 
@@ -87,11 +87,11 @@ function New-PasswordRandom {
 
     process {
 
-        $validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-="
-        $lowerCase = "abcdefghijklmnopqrstuvwxyz"
-        $upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        $numbers = "0123456789"
-        $specialChars = "!@#$%^&*()_+-="
+        [string]$validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-="
+        [string]$lowerCase = "abcdefghijklmnopqrstuvwxyz"
+        [string]$upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        [string]$numbers = "0123456789"
+        [string]$specialChars = "!@#$%^&*()_+-="
     
         if ($length -lt 12) {
             $length = 12
@@ -99,7 +99,7 @@ function New-PasswordRandom {
             $length = 72
         }
     
-        $password = ""
+        [string]$password = ""
         $password += Get-Random -Count 1 -InputObject $lowerCase.ToCharArray()
         $password += Get-Random -Count 1 -InputObject $upperCase.ToCharArray()
         $password += Get-Random -Count 1 -InputObject $numbers.ToCharArray()
@@ -110,6 +110,7 @@ function New-PasswordRandom {
         }
     
         $password = -join ($password.ToCharArray() | Get-Random -Count $length)
+        return $password
     }
 
     end {
@@ -189,9 +190,9 @@ try {
     else {
         Write-Host "Creating VMSS: $VMSSName..."
         
-        $adminUsername = New-AdminUsernameRandom
-        $adminPassword = New-PasswordRandom -Length 12
-        $command = @"
+        [string]$adminUsername = New-AdminUsernameRandom
+        [string]$adminPassword = New-PasswordRandom -Length 12
+        [string]$command = @"
             az vmss create ``
             --resource-group $ResourceGroup ``
             --name $VMSSName ``
@@ -209,17 +210,17 @@ try {
             --load-balancer '""' ``
             --tags ServiceName='ADP' ServiceCode='ADP' Name=$VMSSName Purpose='ADO Build Agent'
 "@
-        Invoke-CommandLine -Command $command | Out-Null
+        Invoke-CommandLine -Command $command -IsSensitive | Out-Null
 
-        $AdminUsernamekvSecretName =  "{0}-ADO-BuildAgent-User" -f $Environment
-        Write-Debug "${functionName}:AdminUsernamekvSecretName=$AdminUsernamekvSecretName"
+        [string]$adminUsernamekvSecretName =  "{0}-ADO-BuildAgent-User" -f $Environment
+        Write-Debug "${functionName}:adminUsernamekvSecretName=$adminUsernamekvSecretName"
 
-        $AdminPwdkvSecretName = "{0}-ADO-BuildAgent-Password" -f $Environment
-        Write-Debug "${functionName}:AdminPwdkvSecretName=$AdminPwdkvSecretName"
+        [string]$adminPwdkvSecretName = "{0}-ADO-BuildAgent-Password" -f $Environment
+        Write-Debug "${functionName}:adminPwdkvSecretName=$adminPwdkvSecretNamec"
 
-        Invoke-CommandLine -Command "az keyvault secret set --name $AdminUsernamekvSecretName --vault-name $KeyVaultName --content-type 'User Name' --value $adminUsername" | Out-Null
+        Invoke-CommandLine -Command "az keyvault secret set --name $adminUsernamekvSecretName --vault-name $KeyVaultName --content-type 'User Name' --value $adminUsername" | Out-Null
 
-        Invoke-CommandLine "az keyvault secret set --name $AdminPwdkvSecretName --vault-name $KeyVaultName --content-type 'Password' --value $adminPassword" | Out-Null
+        Invoke-CommandLine "az keyvault secret set --name $adminPwdkvSecretName --vault-name $KeyVaultName --content-type 'Password' --value $adminPassword" | Out-Null
     }
 
     $exitCode = 0
