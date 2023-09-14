@@ -30,7 +30,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: pp/variables
+      ref: pp/adp-variables
 variables:
   - name: ssv3Subscription
     value: AZD-ADP-SSV3

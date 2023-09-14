@@ -29,7 +29,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: pp/variables
+      ref: pp/adp-variables
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
