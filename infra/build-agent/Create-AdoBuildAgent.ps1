@@ -162,7 +162,10 @@ try {
     [string]$commandOutput = Invoke-CommandLine -Command $command
 
     $instances = $commandOutput | ConvertFrom-Json
-    if (-not ($instances.name -contains $VMSSName)) {
+    if ($instances -and $instances.count -gt 0 -and ($instances.name -contains $VMSSName)) {
+        Write-Host "VMSS: $VMSSName already exists!"
+    }
+    else {
         Write-Host "Creating VMSS: $VMSSName..."
         
         $adminUsername = New-AdminUsernameRandom
@@ -182,10 +185,11 @@ try {
             --disable-overprovision ``
             --upgrade-policy-mode Manual ``
             --public-ip-address '""' ``
+            --load-balancer '""' ``
             --tags ServiceName='ADP' ServiceCode='ADP' Name=$VMSSName Purpose='ADO Build Agent'
 "@
         Invoke-CommandLine -Command $command | Out-Null
-
+        
         $AdminUsernamekvSecretName =  "{0}-ADO-BuildAgent-User" -f $Environment
         Write-Debug "${functionName}:AdminUsernamekvSecretName=$AdminUsernamekvSecretName"
 
@@ -195,9 +199,6 @@ try {
         Invoke-CommandLine -Command "az keyvault secret set --name $AdminUsernamekvSecretName --vault-name $KeyVaultName --content-type 'User Name' --value $adminUsername" | Out-Null
 
         Invoke-CommandLine "az keyvault secret set --name $AdminPwdkvSecretName --vault-name $KeyVaultName --content-type 'Password' --value $adminPassword" | Out-Null
-    }
-    else {
-        Write-Host "VMSS: $VMSSName already exists!"
     }
 
     $exitCode = 0
