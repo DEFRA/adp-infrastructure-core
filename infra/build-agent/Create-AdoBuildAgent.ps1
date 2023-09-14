@@ -86,9 +86,30 @@ function New-PasswordRandom {
     }
 
     process {
+
         $validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-="
-        $password = -join ((Get-Random -Count $Length -InputObject $validChars.ToCharArray()) | Get-Random -Count $Length)
-        return $password
+        $lowerCase = "abcdefghijklmnopqrstuvwxyz"
+        $upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        $numbers = "0123456789"
+        $specialChars = "!@#$%^&*()_+-="
+    
+        if ($length -lt 12) {
+            $length = 12
+        } elseif ($length -gt 72) {
+            $length = 72
+        }
+    
+        $password = ""
+        $password += Get-Random -Count 1 -InputObject $lowerCase.ToCharArray()
+        $password += Get-Random -Count 1 -InputObject $upperCase.ToCharArray()
+        $password += Get-Random -Count 1 -InputObject $numbers.ToCharArray()
+        $password += Get-Random -Count 1 -InputObject $specialChars.ToCharArray()
+    
+        for ($i = 0; $i -lt ($length - 4); $i++) {
+            $password += Get-Random -Count 1 -InputObject $validChars.ToCharArray()
+        }
+    
+        $password = -join ($password.ToCharArray() | Get-Random -Count $length)
     }
 
     end {
@@ -189,7 +210,7 @@ try {
             --tags ServiceName='ADP' ServiceCode='ADP' Name=$VMSSName Purpose='ADO Build Agent'
 "@
         Invoke-CommandLine -Command $command | Out-Null
-        
+
         $AdminUsernamekvSecretName =  "{0}-ADO-BuildAgent-User" -f $Environment
         Write-Debug "${functionName}:AdminUsernamekvSecretName=$AdminUsernamekvSecretName"
 
