@@ -38,7 +38,7 @@ var customTags = {
   Location: location
   CreatedDate: createdDate
   Environment: environment
-  Purpose: 'CDO Platform KeyVault Store'
+  Purpose: 'ADP Platform KeyVault Store'
   Tier: 'Shared'
 }
 var tags = union(loadJsonContent('../../common/default-tags.json'), customTags)

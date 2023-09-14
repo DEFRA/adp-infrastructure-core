@@ -29,7 +29,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: pp/variables
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -38,7 +38,7 @@ extends:
     deployFromFeature: ${{ parameters.deployFromFeature }}  
     environments:
       - name: 'snd1'
-        serviceConnection: AZD-CDO-SSV3
+        serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - '*'
         developmentEnvironment: true
@@ -46,14 +46,14 @@ extends:
           primary: 'UKSouth'
       - name: 'snd2'
         outputTemplateChange: Skip
-        serviceConnection: AZD-CDO-SSV3
+        serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd3'
         outputTemplateChange: Skip
-        serviceConnection: AZD-CDO-SSV3
+        serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:

@@ -30,10 +30,10 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: pp/variables
 variables:
   - name: ssv3Subscription
-    value: AZD-CDO-SSV3
+    value: AZD-ADP-SSV3
 
 extends:
   template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
