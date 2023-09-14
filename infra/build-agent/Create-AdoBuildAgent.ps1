@@ -45,7 +45,6 @@ param(
     [Parameter(Mandatory)]
     [string] $ImageId,
     [Parameter(Mandatory)]
-    [Parameter(Mandatory)]
     [string] $Location,
     [Parameter(Mandatory)]
     [string] $KeyVaultName,
@@ -55,7 +54,7 @@ param(
     [string]$WorkingDirectory = $PWD
 )
 
-function New-RandomAdminUsername {
+function New-AdminUsernameRandom {
     [CmdletBinding()]
     param ()
 
@@ -74,7 +73,7 @@ function New-RandomAdminUsername {
     }
 }
 
-function New-RandomPassword {
+function New-PasswordRandom {
     [CmdletBinding()]
     param (
         [int]$Length = 12
@@ -166,8 +165,8 @@ try {
     if (-not ($instances.name -contains $VMSSName)) {
         Write-Host "Creating VMSS: $VMSSName..."
         
-        $adminUsername = New-RandomAdminUsername
-        $adminPassword = New-RandomPassword -Length 12
+        $adminUsername = New-AdminUsernameRandom
+        $adminPassword = New-PasswordRandom -Length 12
         $command = @"
             az vmss create ``
             --resource-group $ResourceGroup ``
@@ -195,7 +194,7 @@ try {
 
         Invoke-CommandLine -Command "az keyvault secret set --name $AdminUsernamekvSecretName --vault-name $KeyVaultName --content-type 'User Name' --value $adminUsername" | Out-Null
 
-        Invoke-CommandLine "az keyvault secret set --name $AdminPwdkvSecretName --vault-name $KeyVaultName --content-type 'password' --value $adminPassword" | Out-Null
+        Invoke-CommandLine "az keyvault secret set --name $AdminPwdkvSecretName --vault-name $KeyVaultName --content-type 'Password' --value $adminPassword" | Out-Null
     }
     else {
         Write-Host "VMSS: $VMSSName already exists!"
