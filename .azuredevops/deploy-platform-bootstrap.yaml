@@ -99,8 +99,9 @@ extends:
 
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}
         : - name: network
-            dependsOnGroupedTemplates:
-              - SharedResources
+            ${{ if eq(parameters.deployResources, 'all') }}:
+              dependsOnGroupedTemplates:
+                - SharedResources
             templates:
               - name: route-table
                 path: infra/common/network
