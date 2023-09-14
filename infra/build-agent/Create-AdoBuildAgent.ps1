@@ -21,11 +21,11 @@ Mandatory. Shared Gallery Image Reference Id.
 Mandatory. Location.
 .PARAMETER KeyVaultName
 Mandatory. Key Vault Name.
-.PARAMETER Environment
-Mandatory. Environment.
+.PARAMETER SecretsPrefix
+Mandatory. Secrets Prefix.
 .EXAMPLE
 .\Create-AdoBuildAgent.ps1  -ImageGalleryTenantId <ImageGalleryTenantId> -TenantId <TenantId> -SubscriptionName <SubscriptionName> -ResourceGroup <ResourceGroup> `
-                            -VMSSName <VMSSName> -SubnetId <SubnetId> -ImageId <ImageId> -Location <Location> -KeyVaultName <KeyVaultName> -Environment <Environment>
+                            -VMSSName <VMSSName> -SubnetId <SubnetId> -ImageId <ImageId> -Location <Location> -KeyVaultName <KeyVaultName> -SecretsPrefix <SecretsPrefix>
 #> 
 
 [CmdletBinding()]
@@ -49,7 +49,7 @@ param(
     [Parameter(Mandatory)]
     [string] $KeyVaultName,
     [Parameter(Mandatory)]
-    [string] $Environment,
+    [string] $SecretsPrefix,
     [Parameter()]
     [string]$WorkingDirectory = $PWD
 )
@@ -218,10 +218,10 @@ try {
 "@
         Invoke-CommandLine -Command $command -IsSensitive | Out-Null
 
-        [string]$adminUsernamekvSecretName =  "{0}-ADO-BuildAgent-User" -f $Environment
+        [string]$adminUsernamekvSecretName =  "{0}-ADO-BuildAgent-User" -f $SecretsPrefix
         Write-Debug "${functionName}:adminUsernamekvSecretName=$adminUsernamekvSecretName"
 
-        [string]$adminPwdkvSecretName = "{0}-ADO-BuildAgent-Password" -f $Environment
+        [string]$adminPwdkvSecretName = "{0}-ADO-BuildAgent-Password" -f $SecretsPrefix
         Write-Debug "${functionName}:adminPwdkvSecretName=$adminPwdkvSecretName"
 
         Invoke-CommandLine -Command "az keyvault secret set --name $adminUsernamekvSecretName --vault-name $KeyVaultName --content-type 'User Name' --value $adminUsername" | Out-Null
