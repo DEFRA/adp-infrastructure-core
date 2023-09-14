@@ -197,7 +197,7 @@ try {
         Write-Host "Creating VMSS: $VMSSName..."
         
         [string]$adminUsername = New-AdminUsernameRandom
-        [string]$adminPassword = New-PasswordRandom -Length 12
+        [securestring]$adminPassword = ConvertTo-SecureString -String (New-PasswordRandom -Length 12) -AsPlainText -Force
         [string]$command = @"
             az vmss create ``
             --resource-group $ResourceGroup ``
