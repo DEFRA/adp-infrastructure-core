@@ -107,7 +107,10 @@ try {
     [string]$commandOutput = Invoke-CommandLine -Command $command
 
     $instances = $commandOutput | ConvertFrom-Json
-    if (-not ($instances.name -contains $VMSSName)) {
+    if ($instances -and $instances.count -gt 0 -and ($instances.name -contains $VMSSName)) {
+        Write-Host "VMSS: $VMSSName already exists!"
+    }
+    else {
         Write-Host "Creating VMSS: $VMSSName..."
         
         $command = @"
@@ -125,12 +128,10 @@ try {
             --disable-overprovision ``
             --upgrade-policy-mode Manual ``
             --public-ip-address '""' ``
+            --load-balancer '""' ``
             --tags ServiceName='ADP' ServiceCode='CDO' Name=$VMSSName Purpose='ADO Build Agent'
 "@
         Invoke-CommandLine -Command $command | Out-Null
-    }
-    else {
-        Write-Host "VMSS: $VMSSName already exists!"
     }
 
     $exitCode = 0
