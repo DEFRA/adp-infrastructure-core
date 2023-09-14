@@ -88,4 +88,5 @@ extends:
           -ImageId /subscriptions/$(imageGallerySubscription)/resourceGroups/$(imageGalleryResourceGroup)/providers/Microsoft.Compute/galleries/$(imageGalleryName)/images/${{ parameters.imageType }}
           -AdoAgentUser $(ADO-BuildAgent-User)
           -AdoAgentPass $(ADO-BuildAgent-Password)
+          -Location $(location)
         type: AzureCLI

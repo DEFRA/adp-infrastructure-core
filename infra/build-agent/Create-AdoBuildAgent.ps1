@@ -47,6 +47,8 @@ param(
     [Parameter(Mandatory)]
     [string] $AdoAgentPass,
     [Parameter()]
+    [string] $Location,
+    [Parameter()]
     [string]$WorkingDirectory = $PWD
 )
 
@@ -75,14 +77,22 @@ Write-Debug "${functionName}:ResourceGroup=$ResourceGroup"
 Write-Debug "${functionName}:VMSSName=$VMSSName"
 Write-Debug "${functionName}:SubnetId=$SubnetId"
 Write-Debug "${functionName}:ImageId=$ImageId"
+Write-Debug "${functionName}:Location=$Location"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
-
 
 try {
 
     [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ps-helpers"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
+
+    if (!(Get-AzResourceGroup -Name $ResourceGroup -ErrorAction SilentlyContinue)) {
+        New-AzResourceGroup -Name $ResourceGroup -Location $Location
+        Write-Host "Resource Group '$ResourceGroup' created successfully."
+    }
+    else {
+        Write-Host "Resource Group '$ResourceGroup' already exists."
+    }
 
     [string]$command = "az account clear"
     Invoke-CommandLine -Command $command | Out-Null
