@@ -11,22 +11,6 @@ parameters:
       - "service-connections"
       - "network"
 
-  - name: runEnvironments
-    displayName: "Run Environments"
-    type: object
-    default: 
-      snd1: true
-    properties:
-    snd1:
-      type: boolean
-      displayName: "SND1"
-    snd2:
-      type: boolean
-      displayName: "SND2"
-    snd3:
-      type: boolean
-      displayName: "SND2"
-
 pr:
   branches:
     include:
