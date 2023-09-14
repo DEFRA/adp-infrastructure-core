@@ -87,5 +87,5 @@ extends:
           -ImageId /subscriptions/$(imageGallerySubscription)/resourceGroups/$(imageGalleryResourceGroup)/providers/Microsoft.Compute/galleries/$(imageGalleryName)/images/${{ parameters.imageType }}
           -KeyVaultName $(ssvPlatformKeyVaultName)
           -Location $(location)
-          -Environment $(environment)
+          -Environment $(environment)$(environmentNumber)
         type: AzureCLI
