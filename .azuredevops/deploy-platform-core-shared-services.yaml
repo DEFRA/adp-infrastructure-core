@@ -36,7 +36,7 @@ extends:
     deployFromFeature: ${{ parameters.deployFromFeature }}  
     environments:
       - name: 'ssv3'
-        serviceConnection: $(ssv3Subscription)
+        serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - 'refs/heads/main'
         developmentEnvironment: true
