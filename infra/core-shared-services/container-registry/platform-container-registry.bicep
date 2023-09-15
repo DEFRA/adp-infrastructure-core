@@ -31,7 +31,7 @@ var containerRegistryTags = {
 }
 
 module registry 'br/SharedDefraRegistry:container-registry.registry:0.5.5' = {
-  name: 'app-containerregistry-${deploymentDate}'
+  name: 'platform-containerregistry-${deploymentDate}'
   params: {
     name: containerRegistry.name
     acrSku: containerRegistry.acrSku
@@ -40,6 +40,7 @@ module registry 'br/SharedDefraRegistry:container-registry.registry:0.5.5' = {
     softDeletePolicyDays: int(containerRegistry.softDeletePolicyDays)
     tags: union(defaultTags, containerRegistryTags)
     dataEndpointEnabled: dataEndpointEnabled
+    exportPolicyStatus: 'enabled'
     publicNetworkAccess: 'Enabled'
   }
 }
