@@ -226,7 +226,7 @@ try {
 
         Invoke-CommandLine -Command "az keyvault secret set --name $adminUsernamekvSecretName --vault-name $KeyVaultName --content-type 'User Name' --value $adminUsername" | Out-Null
 
-        Invoke-CommandLine "az keyvault secret set --name $adminPwdkvSecretName --vault-name $KeyVaultName --content-type 'Password' --value $adminPassword" | Out-Null
+        Invoke-CommandLine -Command "az keyvault secret set --name $adminPwdkvSecretName --vault-name $KeyVaultName --content-type 'Password' --value $adminPassword" | Out-Null
     }
 
     $exitCode = 0

@@ -10,12 +10,7 @@ pr:
     - main
   paths:
     include:
-    - infra/config/app-registrations/*
-    - infra/config/service-connections/*
-    - scripts/ado/*
-    - scripts/Assign-RBAC-Subscription.ps1
-    exclude:
-    - scripts/Create-AdoBuildAgent.ps1
+      - infra/core-shared-services/*
 
 trigger:
   batch: true
@@ -24,12 +19,7 @@ trigger:
       - '*'
   paths:
     include:
-    - infra/config/app-registrations/*
-    - infra/config/service-connections/*
-    - scripts/ado/*
-    - scripts/Assign-RBAC-Subscription.ps1
-    exclude:
-    - scripts/Create-AdoBuildAgent.ps1
+      - infra/core-shared-services/*
 
 resources:
   repositories:
@@ -37,7 +27,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref:  pp/adp-variables
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
