@@ -41,20 +41,18 @@ module redisCacheResource 'br/SharedDefraRegistry:cache.redis:0.5.10' = {
     location: location
     lock: 'CanNotDelete'
     subnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.rediscachesubnet)
-    
     tags: union(tags, redisCacheTags)
   }
 }
 
-resource redisCacheParent 'Microsoft.Cache/redis@2022-06-01' existing = {
-  name: redisCache.name
+module redisCacheFirewallRules '.bicep/firewall-rules.bicep' = {
+  name: 'redis-cache-firewall-rules-${deploymentDate}'
+  dependsOn: [
+    redisCacheResource
+  ]
+  params: {
+    redisCacheName: redisCache.name
+    redisCacheSkuName: redisCache.skuName
+    firewallRules: firewallRules
+  }
 }
-
-resource redisCacheFirewallRule 'Microsoft.Cache/redis/firewallRules@2022-06-01' = [for rule in firewallRules: if (startsWith(redisCache.skuName, 'Premium')) {
-  name: rule.name
-  parent: redisCacheParent
-  properties: {
-    endIP: parseCidr(rule.addressprefix).lastUsable
-    startIP: parseCidr(rule.addressprefix).firstUsable
-  }  
-}]
