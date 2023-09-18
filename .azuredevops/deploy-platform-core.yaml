@@ -39,6 +39,7 @@ parameters:
       - frontdoor
       - flexibleserver
       - grafana
+<<<<<<< HEAD
   - name: deployNetworkResourceType
     displayName: Resource Type to deploy
     type: string
@@ -75,6 +76,9 @@ parameters:
     values:
      - azurewaf
      - frontdoor
+=======
+
+>>>>>>> 92c778f53f5b1637b97cb6e9cbe9687e420fa310
 pr:
   branches:
     include:
@@ -137,6 +141,10 @@ extends:
           primary: 'UKSouth'
     groupedTemplates:
       - ${{ if eq(variables.deployAllResources, true) }}:
+<<<<<<< HEAD
+=======
+        - ${{ each resource in variables.deployResourceType }}:  
+>>>>>>> 92c778f53f5b1637b97cb6e9cbe9687e420fa310
           - name: network
             templates:
               - name: route-table
@@ -238,6 +246,7 @@ extends:
                 privateEndpointDnsRecordsForResources:
                   - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
                     resourceGroupName: $(servicesResourceGroup)
+<<<<<<< HEAD
       - ${{ if eq(parameters.deployNetworkResourceType, true) }}:
           - name: network
             templates:
@@ -265,6 +274,44 @@ extends:
                       - name: virtual-network
                         path: infra/common/network
                         resourceGroupName: $(virtualNetworkResourceGroup)
+=======
+      - ${{ if eq(variables.deployUDR, true) }}:
+          - name: network
+            templates:
+              - name: route-table
+                path: infra/common/network
+                resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: subnet-nsg
+                path: infra/common/network
+                resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: virtual-network
+                path: infra/common/network
+                resourceGroupName: $(virtualNetworkResourceGroup)
+      - ${{ if eq(variables.deployNSG, true) }}:
+          - name: network
+            templates:
+              - name: route-table
+                path: infra/common/network
+                resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: subnet-nsg
+                path: infra/common/network
+                resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: virtual-network
+                path: infra/common/network
+                resourceGroupName: $(virtualNetworkResourceGroup)
+      - ${{ if eq(variables.deployVNET, true) }}:
+          - name: network
+            templates:
+              - name: route-table
+                path: infra/common/network
+                resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: subnet-nsg
+                path: infra/common/network
+                resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: virtual-network
+                path: infra/common/network
+                resourceGroupName: $(virtualNetworkResourceGroup)
+>>>>>>> 92c778f53f5b1637b97cb6e9cbe9687e420fa310
       - ${{ if eq(variables.deployWorkspace, true) }}:
           - name: monitoring
             templates:
