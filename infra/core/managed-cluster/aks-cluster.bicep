@@ -67,6 +67,9 @@ module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assig
 module privateDnsZoneContributorModule '.bicep/zone-contributor.bicep' ={
   name: 'aks-cluster-private-dns-zone-contributor-${deploymentDate}'
   scope: resourceGroup(privateDnsZone.resourceGroup)
+  dependsOn: [
+    managedIdentityModule
+  ]
   params: {
     managedIdentity: {
       name: cluster.miControlPlane
@@ -80,7 +83,7 @@ module networkContributorModule '.bicep/network-contributor.bicep' = {
   name: 'aks-cluster-network-contributor-${deploymentDate}'
   scope: resourceGroup(vnet.resourceGroup)
   dependsOn: [
-    privateDnsZoneContributorModule
+    managedIdentityModule
   ]
   params: {
     managedIdentity: {
@@ -94,7 +97,8 @@ module networkContributorModule '.bicep/network-contributor.bicep' = {
 module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
-    managedIdentityModule
+    privateDnsZoneContributorModule
+    networkContributorModule
   ]
   params: {
     name: cluster.name
