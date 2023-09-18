@@ -8,7 +8,7 @@ resource msiVnetRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-
   scope: privateDnsZone
   properties: {
     principalId: managedIdentity.principalId
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'befefa01-2a29-4197-83a8-272ff33ce314') // DNS Zone Contributor
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b12aa53e-6015-4669-85d0-8515ebb3ae7f') // Private DNS Zone Contributor
     principalType: 'ServicePrincipal'
   }
 }
@@ -19,4 +19,3 @@ resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' existing 
 
 @description('The resource id of the private DNS zone.')
 output privateDnsZoneResourceId string = privateDnsZone.id
-
