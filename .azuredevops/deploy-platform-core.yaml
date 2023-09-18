@@ -77,9 +77,9 @@ extends:
         dependsOnGroupedTemplates:
           - network
         templates:
-          - name: aks-cluster
-            path: infra/core/managed-cluster
-            resourceGroupName: $(aksResourceGroup)
+          - name: aks-cluster-zone
+            path: infra/core/private-dns-zone
+            resourceGroupName: $(dnsResourceGroup)
             postDeployScriptsList:
               - displayName: Link the Private DNS Zone to Central networks
                 scriptPath: infra/core/scripts/Trigger-LinkPrivateDNSZones.ps1
@@ -87,9 +87,13 @@ extends:
                 useSystemAccessToken: true
                 scriptArguments: >
                   -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01.privatelink.$(location).azmk8s.io"
-                  -ResourceGroupName $(aksResourceGroup)
+                  -ResourceGroupName $(dnsResourceGroup)
                   -SubscriptionName $(subscriptionName)
                   -TenantId $(tenantId)
+
+          - name: aks-cluster
+            path: infra/core/managed-cluster
+            resourceGroupName: $(aksResourceGroup)
           - name: grafana
             serviceConnectionVariableName: ssvServiceConnection
             path: infra/core/observability
