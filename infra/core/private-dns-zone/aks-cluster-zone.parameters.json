@@ -8,11 +8,8 @@
         "resourceGroup": "#{{ virtualNetworkResourceGroup }}"
       }
     },
-    "privateDnsZone": {
-      "value": {
-        "prefix": "#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}01",
-        "resourceGroup": "#{{ dnsResourceGroup }}"
-      }
+    "privateDnsZonePrefix": {
+      "value": "#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}01"
     },
     "location": {
       "value": "#{{ location }}"
