@@ -39,7 +39,42 @@ parameters:
       - frontdoor
       - flexibleserver
       - grafana
-
+  - name: deployNetworkResourceType
+    displayName: Resource Type to deploy
+    type: string
+    values:
+      #- ''  # no particular resource
+      - nsg
+      - udr
+      - vnet
+  - name: deployMonitoringResourceType
+    displayName: Resource Type to deploy
+    type: string
+    values:
+      #- ''  # no particular resource
+      - workspace
+      - components
+  - name: deployFrontDoorResourceType
+    displayName: Resource Type to deploy
+    type: string
+    values:
+     - azurewaf
+     - frontdoor
+  - name: deployApplicationInfraResourceType
+    displayName: Resource Type to deploy
+    type: string
+    values:
+     - configurationstore
+     - applicationcontainerregistry
+     - flexibleserver
+     - rediscache
+     - applicationstorageaccount
+  - name: deployManagedClusterResourceType
+    displayName: Resource Type to deploy
+    type: string
+    values:
+     - azurewaf
+     - frontdoor
 pr:
   branches:
     include:
@@ -102,7 +137,6 @@ extends:
           primary: 'UKSouth'
     groupedTemplates:
       - ${{ if eq(variables.deployAllResources, true) }}:
-        - ${{ each resource in variables.deployResourceType }}:  
           - name: network
             templates:
               - name: route-table
@@ -204,42 +238,33 @@ extends:
                 privateEndpointDnsRecordsForResources:
                   - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
                     resourceGroupName: $(servicesResourceGroup)
-      - ${{ if eq(variables.deployUDR, true) }}:
+      - ${{ if eq(parameters.deployNetworkResourceType, true) }}:
           - name: network
             templates:
-              - name: route-table
-                path: infra/common/network
-                resourceGroupName: $(virtualNetworkResourceGroup)
-              - name: subnet-nsg
-                path: infra/common/network
-                resourceGroupName: $(virtualNetworkResourceGroup)
-              - name: virtual-network
-                path: infra/common/network
-                resourceGroupName: $(virtualNetworkResourceGroup)
-      - ${{ if eq(variables.deployNSG, true) }}:
-          - name: network
-            templates:
-              - name: route-table
-                path: infra/common/network
-                resourceGroupName: $(virtualNetworkResourceGroup)
-              - name: subnet-nsg
-                path: infra/common/network
-                resourceGroupName: $(virtualNetworkResourceGroup)
-              - name: virtual-network
-                path: infra/common/network
-                resourceGroupName: $(virtualNetworkResourceGroup)
-      - ${{ if eq(variables.deployVNET, true) }}:
-          - name: network
-            templates:
-              - name: route-table
-                path: infra/common/network
-                resourceGroupName: $(virtualNetworkResourceGroup)
-              - name: subnet-nsg
-                path: infra/common/network
-                resourceGroupName: $(virtualNetworkResourceGroup)
-              - name: virtual-network
-                path: infra/common/network
-                resourceGroupName: $(virtualNetworkResourceGroup)
+              - ${{ if eq(variables.deployNetworkResources, true) }}:
+                - name: route-table
+                  path: infra/common/network
+                  resourceGroupName: $(virtualNetworkResourceGroup)
+                - name: subnet-nsg
+                  path: infra/common/network
+                  resourceGroupName: $(virtualNetworkResourceGroup)
+                - name: virtual-network
+                  path: infra/common/network
+                  resourceGroupName: $(virtualNetworkResourceGroup)
+              - ${{ if eq(variables.deployUDR, true) }}:
+                - name: route-table
+                  path: infra/common/network
+                  resourceGroupName: $(virtualNetworkResourceGroup)
+              - ${{ if eq(variables.deployNSG, true) }}:
+                - name: subnet-nsg
+                  path: infra/common/network
+                  resourceGroupName: $(virtualNetworkResourceGroup)
+              - ${{ if eq(variables.deployVNET, true) }}:
+                  - name: network
+                    templates:
+                      - name: virtual-network
+                        path: infra/common/network
+                        resourceGroupName: $(virtualNetworkResourceGroup)
       - ${{ if eq(variables.deployWorkspace, true) }}:
           - name: monitoring
             templates:
