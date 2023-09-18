@@ -203,7 +203,7 @@ extends:
               privateEndpointDnsRecordsForResources:
                 - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
                   resourceGroupName: $(servicesResourceGroup)
-      - ${{ if or(eq(eq(variables.deployUDR, true), eq(variables.deployNSG, true), eq(variables.deployVNET, true)) }}:
+      - ${{ if or(eq(variables.deployUDR, true), eq(variables.deployNSG, true), eq(variables.deployVNET, true)) }}:
         - name: network
           templates:
             - ${{ if eq(variables.deployUDR, true) }}:
@@ -218,7 +218,7 @@ extends:
               - name: virtual-network
                 path: infra/common/network
                 resourceGroupName: $(virtualNetworkResourceGroup)
-      - ${{ if or(eq(eq(variables.deployWorkspace, true), eq(variables.deployComponents, true)) }}:
+      - ${{ if or(eq(variables.deployWorkspace, true), eq(variables.deployComponents, true)) }}:
         - name: monitoring
           templates:
             - ${{ eq(variables.deployWorkspace, true) }}:
@@ -229,7 +229,7 @@ extends:
               - name: component
                 path: infra/core/insights
                 resourceGroupName: $(servicesResourceGroup)
-      - ${{ if or(eq(eq(variables.deployFrontDoor, true), eq(variables.deployAzureWaf, true)) }}:
+      - ${{ if or(eq(variables.deployFrontDoor, true), eq(variables.deployAzureWaf, true)) }}:
         - name: front_door
           templates:
             - ${{ if eq(variables.deployFrontDoor, true) }}:
@@ -240,7 +240,7 @@ extends:
               - name: azure-waf
                 path: infra/core/front-door
                 resourceGroupName: $(frontDoorResourceGroup)
-      - ${{ if or(eq(eq(variables.deployConfigurationStore, true), eq(variables.deployApplicationContainerRegistry, true), eq(variables.deployApplicationFlexibleServer, true), eq(variables.deployApplicationRedisCache, true), eq(variables.deployApplicationApplicationStorageAccount, true)) }}:
+      - ${{ if or(eq(variables.deployConfigurationStore, true), eq(variables.deployApplicationContainerRegistry, true), eq(variables.deployApplicationFlexibleServer, true), eq(variables.deployApplicationRedisCache, true), eq(variables.deployApplicationApplicationStorageAccount, true)) }}:
         - name: application_infra
           templates:
             - ${{ if eq(variables.deployConfigurationStore, true) }}:
@@ -272,7 +272,7 @@ extends:
                 privateEndpointDnsRecordsForResources:
                   - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
                     resourceGroupName: $(servicesResourceGroup)
-      - ${{ if or(eq(eq(variables.deployAksCluster, true), eq(variables.deployGrafana, true)) }}:
+      - ${{ if or(eq(variables.deployAksCluster, true), eq(variables.deployGrafana, true)) }}:
         - name: managed_cluster
           dependsOnGroupedTemplates:
             - network
