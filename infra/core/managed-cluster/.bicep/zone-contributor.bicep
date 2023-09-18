@@ -13,9 +13,10 @@ resource msiVnetRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-
   }
 }
 
-resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
+resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
   name: privateDnsZoneName
 }
 
-output privateDnsZoneId string = privateDnsZone.id
+@description('The resource id of the private DNS zone.')
+output privateDnsZoneResourceId string = privateDnsZone.id
 
