@@ -43,6 +43,13 @@ extends:
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
+      - name: 'snd2'
+        serviceConnection: AZD-ADP-SND2
+        deploymentBranches:
+          - 'refs/heads/main'
+          - 'refs/pull/*/merge'
+        azureRegions:
+          primary: 'UKSouth'
     groupedTemplates:
       - name: network
         templates:

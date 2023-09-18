@@ -54,7 +54,7 @@ resource azureMonitorWorkSpaceResource 'Microsoft.Monitor/accounts@2023-04-03' =
   tags: azureMonitorWorkspaceTags
 }
 
-module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
+module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'aks-cluster-mi-${deploymentDate}'
   params: {
     name: cluster.miControlPlane
@@ -64,31 +64,31 @@ module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assig
   }
 }
 
-module privateDnsZoneContributorModule '.bicep/zone-contributor.bicep' ={
+module privateDnsZoneContributor '.bicep/private-dns-zone-contributor.bicep' ={
   name: 'aks-cluster-private-dns-zone-contributor-${deploymentDate}'
   scope: resourceGroup(privateDnsZone.resourceGroup)
   dependsOn: [
-    managedIdentityModule
+    managedIdentity
   ]
   params: {
     managedIdentity: {
       name: cluster.miControlPlane
-      principalId: managedIdentityModule.outputs.principalId
+      principalId: managedIdentity.outputs.principalId
     }
     privateDnsZoneName: privateDnsZoneName
   }
 }
 
-module networkContributorModule '.bicep/network-contributor.bicep' = {
+module networkContributor '.bicep/network-contributor.bicep' = {
   name: 'aks-cluster-network-contributor-${deploymentDate}'
   scope: resourceGroup(vnet.resourceGroup)
   dependsOn: [
-    managedIdentityModule
+    managedIdentity
   ]
   params: {
     managedIdentity: {
       name: cluster.miControlPlane
-      principalId: managedIdentityModule.outputs.principalId
+      principalId: managedIdentity.outputs.principalId
     }
     vnetName: vnet.name
   }
@@ -97,8 +97,8 @@ module networkContributorModule '.bicep/network-contributor.bicep' = {
 module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
-    privateDnsZoneContributorModule
-    networkContributorModule
+    privateDnsZoneContributor
+    networkContributor
   ]
   params: {
     name: cluster.name
@@ -115,7 +115,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
     disableLocalAccounts: true
     systemAssignedIdentity: false
     userAssignedIdentities: {
-      '${managedIdentityModule.outputs.resourceId}': {}
+      '${managedIdentity.outputs.resourceId}': {}
     }
     enableWorkloadIdentity: true
     azurePolicyEnabled: true
@@ -123,7 +123,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
     enableOidcIssuerProfile: true
     aadProfileAdminGroupObjectIDs: array(cluster.adminAadGroupObjectId)
     enablePrivateCluster: true
-    privateDNSZone: privateDnsZoneContributorModule.outputs.privateDnsZoneResourceId
+    privateDNSZone: privateDnsZoneContributor.outputs.privateDnsZoneResourceId
     disableRunCommand: false
     enablePrivateClusterPublicFQDN: false
     networkPlugin: 'azure'
@@ -282,7 +282,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
   }
 }
 
-module acrPullRoleAssignmentModule '.bicep/acr-pull.bicep' = {
+module acrPullRoleAssignment '.bicep/acr-pull.bicep' = {
   name: 'aks-acr-pull-role-assignment-${deploymentDate}'
   scope: resourceGroup(containerRegistry.subscriptionId, containerRegistry.resourceGroup)
   dependsOn: [
