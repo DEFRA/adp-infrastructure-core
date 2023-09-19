@@ -89,9 +89,9 @@ variables:
 
 
 extends:
-  ${{ if eq(variables.deployNone, true) }}:
+  ${{ if eq(variables.deployNone, null) }}:
     template: none
-  ${{ if eq(variables.deployNone, false) }}:
+  ${{ if ne(variables.deployNone, null) }}:
     template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
     parameters:
       projectName: $(projectName)
