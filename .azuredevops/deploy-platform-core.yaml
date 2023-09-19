@@ -63,7 +63,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref:  main
+      ref:  refs/heads/oo/231059-infrapipeline-enhancements
 
 variables: 
   deployAll: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceType}}',  '1-all')) ]
