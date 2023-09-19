@@ -6,7 +6,7 @@ parameters:
   - name: deployResourceCategory
     displayName: Resource Category to deploy
     type: string
-    default: null
+    default: ''
     values:
       - all
       - network
@@ -14,13 +14,13 @@ parameters:
       - frontdoor
       - applicationinfra
       - managedcluster
-      - null   # no category
+      - ''   # no category
   - name: deployResourceType
     displayName: Resource Type to deploy
     type: string
-    default: null
+    default: ''
     values:
-      - null   # no category
+      - ''   # no category
       - nsg
       - udr
       - vnet
@@ -84,7 +84,7 @@ variables:
   deployGrafana: ${{ and(eq(parameters.deployResourceCategory,'managedcluster'), eq(parameters.deployResourceType, 'grafana')) }}
   deployApplicationKeyVault: ${{ and(eq(parameters.deployResourceCategory, ''), eq(parameters.deployResourceType, 'applicationkeyvault')) }}
   deloyManagedIdentity: ${{ and(eq(parameters.deployResourceCategory, ''), eq(parameters.deployResourceType, 'managedidentity')) }}
-  deployNamespace: $[ and(eq(${{parameters.deployResourceCategory}}, null), eq(${{parameters.deployResourceType}}, 'namespace')) ]
+  deployNamespace: $[ and(eq(${{parameters.deployResourceCategory}}, ''), eq(${{parameters.deployResourceType}}, 'namespace')) ]
   deployNone:  ${{ and(eq(parameters.deployResourceCategory, ''), eq(parameters.deployResourceType, '')) }}
 
 
