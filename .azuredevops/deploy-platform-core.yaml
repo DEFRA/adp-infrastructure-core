@@ -115,12 +115,11 @@ extends:
         azureRegions:
           primary: 'UKSouth'    
     groupedTemplates:
-      - ${{ if eq(variables.deployNone, true) }}:
-        - name: echo
-          templates:
-            - name: echo
-              path: infra/core/echo
-              resourceGroupName: $(servicesResourceGroup)
+      - name: echo
+        templates:
+          - name: echo
+            path: infra/core/echo
+            resourceGroupName: $(servicesResourceGroup)
       - ${{ if eq(variables.deployNetworkGroup, true) }}:
         - name: network
           templates:
