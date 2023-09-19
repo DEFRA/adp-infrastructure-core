@@ -2,7 +2,7 @@
 param vnet object
 @description('Required. The parameter object for the cluster. The object must contain the name,skuTier,nodeResourceGroup,miControlPlane,adminAadGroupObjectId and monitoringWorkspace values.')
 param cluster object
-@description('Required. The prefix for the private DNS zone.')
+@description('Required. The parameter object for private dns zone. The object must contain the prefix and resourceGroup values')
 param privateDnsZone object
 @description('Required. The Name of the Azure Monitor Workspace.')
 param azureMonitorWorkspaceName string
@@ -40,20 +40,13 @@ var aksTags = {
   Purpose: 'AKS Cluster'
   Tier: 'Shared'
 }
-var pdnsTags = {
-  Name: privateDnsZoneName
-  Purpose: 'AKS Private DNS Zone'
-}
-var pdnsVnetLinksTags = {
-  Name: vnet.name
-  Purpose: 'AKS Private DNS Zone VNet Link'
-}
-var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io')
 
 var azureMonitorWorkspaceTags = {
   Name: azureMonitorWorkspaceName
   Purpose: 'Azure Monitor Workspace'
 }
+
+var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io')
 
 resource azureMonitorWorkSpaceResource 'Microsoft.Monitor/accounts@2023-04-03' = {
   location: location
@@ -61,7 +54,7 @@ resource azureMonitorWorkSpaceResource 'Microsoft.Monitor/accounts@2023-04-03' =
   tags: azureMonitorWorkspaceTags
 }
 
-module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
+module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'aks-cluster-mi-${deploymentDate}'
   params: {
     name: cluster.miControlPlane
@@ -71,45 +64,31 @@ module managedIdentityModule 'br/SharedDefraRegistry:managed-identity.user-assig
   }
 }
 
-module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5.2' = {
-  name: 'aks-private-dns-zone-${deploymentDate}'
+module privateDnsZoneContributor '.bicep/private-dns-zone-contributor.bicep' ={
+  name: 'aks-cluster-private-dns-zone-contributor-${deploymentDate}'
+  scope: resourceGroup(privateDnsZone.resourceGroup)
   dependsOn: [
-    managedIdentityModule
-  ]
-  params: {
-   name: privateDnsZoneName
-   lock: 'CanNotDelete'
-   tags: union(tags, pdnsTags)
-   roleAssignments: [
-    {
-      roleDefinitionIdOrName: 'Private DNS Zone Contributor'
-      principalIds: [
-        managedIdentityModule.outputs.principalId
-      ]
-      principalType: 'ServicePrincipal'
-    }
-   ]
-   virtualNetworkLinks: [
-    {
-      name: vnet.name
-      virtualNetworkResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks', vnet.name)
-      registrationEnabled: true
-      tags: union(tags, pdnsVnetLinksTags)
-    }
-   ]
-  }
-}
-
-module networkContributorModule '.bicep/network-contributor.bicep' = {
-  name: 'aks-cluster-network-contributor-${deploymentDate}'
-  scope: resourceGroup(vnet.resourceGroup)
-  dependsOn: [
-    privateDnsZoneModule
+    managedIdentity
   ]
   params: {
     managedIdentity: {
       name: cluster.miControlPlane
-      principalId: managedIdentityModule.outputs.principalId
+      principalId: managedIdentity.outputs.principalId
+    }
+    privateDnsZoneName: privateDnsZoneName
+  }
+}
+
+module networkContributor '.bicep/network-contributor.bicep' = {
+  name: 'aks-cluster-network-contributor-${deploymentDate}'
+  scope: resourceGroup(vnet.resourceGroup)
+  dependsOn: [
+    managedIdentity
+  ]
+  params: {
+    managedIdentity: {
+      name: cluster.miControlPlane
+      principalId: managedIdentity.outputs.principalId
     }
     vnetName: vnet.name
   }
@@ -118,7 +97,8 @@ module networkContributorModule '.bicep/network-contributor.bicep' = {
 module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
-    networkContributorModule
+    privateDnsZoneContributor
+    networkContributor
   ]
   params: {
     name: cluster.name
@@ -135,7 +115,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
     disableLocalAccounts: true
     systemAssignedIdentity: false
     userAssignedIdentities: {
-      '${managedIdentityModule.outputs.resourceId}': {}
+      '${managedIdentity.outputs.resourceId}': {}
     }
     enableWorkloadIdentity: true
     azurePolicyEnabled: true
@@ -143,7 +123,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
     enableOidcIssuerProfile: true
     aadProfileAdminGroupObjectIDs: array(cluster.adminAadGroupObjectId)
     enablePrivateCluster: true
-    privateDNSZone: privateDnsZoneModule.outputs.resourceId
+    privateDNSZone: privateDnsZoneContributor.outputs.privateDnsZoneResourceId
     disableRunCommand: false
     enablePrivateClusterPublicFQDN: false
     networkPlugin: 'azure'
@@ -302,7 +282,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
   }
 }
 
-module acrPullRoleAssignmentModule '.bicep/acr-pull.bicep' = {
+module acrPullRoleAssignment '.bicep/acr-pull.bicep' = {
   name: 'aks-acr-pull-role-assignment-${deploymentDate}'
   scope: resourceGroup(containerRegistry.subscriptionId, containerRegistry.resourceGroup)
   dependsOn: [

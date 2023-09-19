@@ -56,25 +56,24 @@ extends:
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
       - name: 'snd1'
-        serviceConnection: AZD-CDO-SND1-VMSS
+        serviceConnection: AZD-ADP-SND1-VMSS
         deploymentBranches:
           - '*'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd2'
-        serviceConnection: AZD-CDO-SND2-VMSS
+        serviceConnection: AZD-ADP-SND2-VMSS
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd3'
-        serviceConnection: AZD-CDO-SND3-VMSS
+        serviceConnection: AZD-ADP-SND3-VMSS
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
-    keyVaultName: $(ssvPlatformKeyVaultName)
     scriptsList:
       - displayName: Deploy Build Agent - ${{ parameters.imageType }}
         scriptPath: infra/build-agent/Create-AdoBuildAgent.ps1
@@ -86,6 +85,7 @@ extends:
           -VMSSName $(infraResourceNamePrefix)$(nc_resource_virtualmachine_scalesets)$(nc_instance_regionid)$(instanceNumber)
           -SubnetId /subscriptions/$(subscriptionId)/resourceGroups/$(virtualNetworkResourceGroup)/providers/Microsoft.Network/virtualNetworks/$(virtualNetworkName)/subnets/$(networkResourceNamePrefix)$(nc_resource_subnet)$(nc_instance_regionid)03
           -ImageId /subscriptions/$(imageGallerySubscription)/resourceGroups/$(imageGalleryResourceGroup)/providers/Microsoft.Compute/galleries/$(imageGalleryName)/images/${{ parameters.imageType }}
-          -AdoAgentUser $(ADO-BuildAgent-User)
-          -AdoAgentPass $(ADO-BuildAgent-Password)
+          -KeyVaultName $(ssvPlatformKeyVaultName)
+          -Location $(location)
+          -SecretsPrefix $(environment)$(nc_instance_regionid)-$(instanceNumber)
         type: AzureCLI

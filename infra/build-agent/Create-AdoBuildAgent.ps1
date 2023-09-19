@@ -17,13 +17,15 @@ Mandatory. Virtual Machine Scale-Set name.
 Mandatory. Subnet ResourceId.
 .PARAMETER ImageId
 Mandatory. Shared Gallery Image Reference Id.
-.PARAMETER AdoAgentUser
-Mandatory. VM instance login user name.
-.PARAMETER AdoAgentPass
-Mandatory. VM instance login password.
+.PARAMETER Location
+Mandatory. Location.
+.PARAMETER KeyVaultName
+Mandatory. Key Vault Name.
+.PARAMETER SecretsPrefix
+Mandatory. Secrets Prefix.
 .EXAMPLE
-.\Create-AdoBuildAgent.ps1  -imageGalleryTenantId <ImageGalleryTenantId> -tenantId <TenantId> -subscriptionName <SubscriptionName> -resourceGroup <ResourceGroup> `
-                            -vmssName <VMSSName> -subnetId <SubnetId> -imageId <ImageId> -adoAgentUser <AdoAgentUser> -adoAgentPass <AdoAgentPass>
+.\Create-AdoBuildAgent.ps1  -ImageGalleryTenantId <ImageGalleryTenantId> -TenantId <TenantId> -SubscriptionName <SubscriptionName> -ResourceGroup <ResourceGroup> `
+                            -VMSSName <VMSSName> -SubnetId <SubnetId> -ImageId <ImageId> -Location <Location> -KeyVaultName <KeyVaultName> -SecretsPrefix <SecretsPrefix>
 #> 
 
 [CmdletBinding()]
@@ -43,12 +45,84 @@ param(
     [Parameter(Mandatory)]
     [string] $ImageId,
     [Parameter(Mandatory)]
-    [string] $AdoAgentUser,
+    [string] $Location,
     [Parameter(Mandatory)]
-    [string] $AdoAgentPass,
+    [string] $KeyVaultName,
+    [Parameter(Mandatory)]
+    [string] $SecretsPrefix,
     [Parameter()]
     [string]$WorkingDirectory = $PWD
 )
+
+function New-AdminUsernameRandom {
+    [CmdletBinding()]
+    param ()
+
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand
+        Write-Debug "${functionName}:Entered"
+    }
+
+    process {
+        [string]$lowerCase = "abcdefghijklmnopqrstuvwxyz"
+        [string]$adminUsername = ""
+        for ($i = 0; $i -lt 9; $i++) {
+            $adminUsername += Get-Random -Count 1 -InputObject $lowerCase.ToCharArray()
+        }
+
+        $adminUsername+= $(Get-Random -Minimum 1000 -Maximum 9999)
+        return $adminUsername
+    }
+
+    end {
+        Write-Debug "${functionName}:Exited"
+    }
+}
+
+function New-PasswordRandom {
+    [CmdletBinding()]
+    param (
+        [int]$Length = 12
+    )
+
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand
+        Write-Debug "${functionName}:Entered"
+        Write-Debug "${functionName}:Length=$Length"
+    }
+
+    process {
+
+        [string]$validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-="
+        [string]$lowerCase = "abcdefghijklmnopqrstuvwxyz"
+        [string]$upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        [string]$numbers = "0123456789"
+        [string]$specialChars = "!@#$%^&*()_+-="
+    
+        if ($length -lt 12) {
+            $length = 12
+        } elseif ($length -gt 72) {
+            $length = 72
+        }
+    
+        [string]$password = ""
+        $password += Get-Random -Count 1 -InputObject $lowerCase.ToCharArray()
+        $password += Get-Random -Count 1 -InputObject $upperCase.ToCharArray()
+        $password += Get-Random -Count 1 -InputObject $numbers.ToCharArray()
+        $password += Get-Random -Count 1 -InputObject $specialChars.ToCharArray()
+    
+        for ($i = 0; $i -lt ($length - 4); $i++) {
+            $password += Get-Random -Count 1 -InputObject $validChars.ToCharArray()
+        }
+    
+        $password = -join ($password.ToCharArray() | Get-Random -Count $length)
+        return $password
+    }
+
+    end {
+        Write-Debug "${functionName}:Exited"
+    }
+}
 
 Set-StrictMode -Version 3.0
 
@@ -75,14 +149,23 @@ Write-Debug "${functionName}:ResourceGroup=$ResourceGroup"
 Write-Debug "${functionName}:VMSSName=$VMSSName"
 Write-Debug "${functionName}:SubnetId=$SubnetId"
 Write-Debug "${functionName}:ImageId=$ImageId"
+Write-Debug "${functionName}:Location=$Location"
+Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
-
 
 try {
 
     [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ps-helpers"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
+
+    if (!(Invoke-CommandLine -Command "az group show --name $ResourceGroup --output none --query id" -IgnoreErrorCode)) {
+        Invoke-CommandLine "az group create --name $ResourceGroup --location $location" | Out-Null
+        Write-Host "Resource Group '$ResourceGroup' created successfully."
+    }
+    else {
+        Write-Host "Resource Group '$ResourceGroup' already exists."
+    }
 
     [string]$command = "az account clear"
     Invoke-CommandLine -Command $command | Out-Null
@@ -113,7 +196,9 @@ try {
     else {
         Write-Host "Creating VMSS: $VMSSName..."
         
-        $command = @"
+        [string]$adminUsername = New-AdminUsernameRandom
+        [securestring]$adminPassword = ConvertTo-SecureString -String (New-PasswordRandom -Length 12) -AsPlainText -Force
+        [string]$command = @"
             az vmss create ``
             --resource-group $ResourceGroup ``
             --name $VMSSName ``
@@ -123,15 +208,25 @@ try {
             --subnet '$SubnetId' ``
             --image '$ImageId' ``
             --authentication-type password ``
-            --admin-username $AdoAgentUser ``
-            --admin-password '$AdoAgentPass' ``
+            --admin-username $adminUsername ``
+            --admin-password '$adminPassword' ``
             --disable-overprovision ``
             --upgrade-policy-mode Manual ``
             --public-ip-address '""' ``
             --load-balancer '""' ``
-            --tags ServiceName='ADP' ServiceCode='CDO' Name=$VMSSName Purpose='ADO Build Agent'
+            --tags ServiceName='ADP' ServiceCode='ADP' Name=$VMSSName Purpose='ADO Build Agent'
 "@
-        Invoke-CommandLine -Command $command | Out-Null
+        Invoke-CommandLine -Command $command -IsSensitive | Out-Null
+
+        [string]$adminUsernamekvSecretName =  "{0}-ADO-BuildAgent-User" -f $SecretsPrefix
+        Write-Debug "${functionName}:adminUsernamekvSecretName=$adminUsernamekvSecretName"
+
+        [string]$adminPwdkvSecretName = "{0}-ADO-BuildAgent-Password" -f $SecretsPrefix
+        Write-Debug "${functionName}:adminPwdkvSecretName=$adminPwdkvSecretName"
+
+        Invoke-CommandLine -Command "az keyvault secret set --name $adminUsernamekvSecretName --vault-name $KeyVaultName --content-type 'User Name' --value $adminUsername" | Out-Null
+
+        Invoke-CommandLine -Command "az keyvault secret set --name $adminPwdkvSecretName --vault-name $KeyVaultName --content-type 'Password' --value $adminPassword" | Out-Null
     }
 
     $exitCode = 0

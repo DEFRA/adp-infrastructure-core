@@ -33,7 +33,7 @@ resources:
       ref: main
 variables:
   - name: ssv3Subscription
-    value: AZD-CDO-SSV3
+    value: AZD-ADP-SSV3
 
 extends:
   template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
