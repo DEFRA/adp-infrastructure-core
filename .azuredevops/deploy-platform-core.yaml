@@ -87,8 +87,8 @@ variables:
   deployNamespace: and(eq(parameters.deployResourceCategory, null), eq(parameters.deployResourceType, 'namespace'))
   deployNone:  and(eq(parameters.deployResourceCategory, null), eq(parameters.deployResourceType, null))
 
-extends:
-  ${{ if eq(variables.deployNone, false) }}:
+${{ if eq(variables.deployNone, false) }}:
+  extends:
     template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
     parameters:
       projectName: $(projectName)
@@ -350,3 +350,6 @@ extends:
                   - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
                     resourceGroupName: $(servicesResourceGroup)
 
+${{ if eq(variables.deployNone, true) }}:
+   - bash: |
+       echo 'Nothing to deploy'
