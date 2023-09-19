@@ -352,8 +352,3 @@ extends:
                 privateEndpointDnsRecordsForResources:
                   - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
                     resourceGroupName: $(servicesResourceGroup)
-
-${{ if eq(variables.deployNone, true) }}:
-  steps:
-    - bash: |
-        echo 'Nothing to deploy'
