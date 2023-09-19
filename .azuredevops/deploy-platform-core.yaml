@@ -66,12 +66,12 @@ resources:
       ref:  main
 
 variables: 
-  deployAll: ${{ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceType}}',  '1-all')) }}
+  deployAll: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceType}}',  '1-all')) ]
 
-  deployNetworkGroup: ${{ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '2-network'), eq('${{parameters.deployResourceCategory}}', '6-managedcluster'),eq('${{parameters.deployResourceType}}', '7.1-applicationkeyvault')) }}
-  deployNSG: ${{ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', '2.1-nsg')) }}
-  deployUDR: ${{ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', '2.2-udr')) }} 
-  deployVNET: ${{ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', '2.3-vnet')) }}
+  deployNetworkGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '2-network'), eq('${{parameters.deployResourceCategory}}', '6-managedcluster'),eq('${{parameters.deployResourceType}}', '7.1-applicationkeyvault')) ]
+  deployNSG: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', '2.1-nsg')) ]
+  deployUDR: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', '2.2-udr')) ]
+  deployVNET: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', '2.3-vnet')) ]
 
   deployMonitoringGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '3-monitoring')) ]
   deployWorkspace: $[ or(eq(variables.deployMonitoringGroup, true), eq('${{parameters.deployResourceType}}', '3.1-workspace')) ]
@@ -98,7 +98,7 @@ variables:
   deloyManagedIdentity: $[ and(eq(variables.deployOthersGroup, true), eq('${{parameters.deployResourceType}}', '7.3-managedidentity')) ]
   
 
-  deployNone:  ${{ and(eq('${{parameters.deployResourceCategory}}',  '7-others'), eq('${{parameters.deployResourceType}}',  '1-all')) }}
+  deployNone:  $[ and(eq('${{parameters.deployResourceCategory}}',  '7-others'), eq('${{parameters.deployResourceType}}',  '1-all')) ]
 
 
 extends:
@@ -120,22 +120,22 @@ extends:
           - name: echo
             path: infra/core/echo
             resourceGroupName: $(servicesResourceGroup)
-      - ${{ if eq(variables.deployNetworkGroup, true) }}:
+      - $[ if eq(variables.deployNetworkGroup, true) ]:
         - name: network
           templates:
-            - ${{ if eq(variables.deployUDR, true) }}:
+            - $[ if eq(variables.deployUDR, true) ]:
               - name: route-table
                 path: infra/common/network
                 resourceGroupName: $(virtualNetworkResourceGroup)
-            - ${{ if eq(variables.deployNSG, true) }}:
+            - $[ if eq(variables.deployNSG, true) ]:
               - name: subnet-nsg
                 path: infra/common/network
                 resourceGroupName: $(virtualNetworkResourceGroup)
-            - ${{ if eq(variables.deployVNET, true) }}:
+            - $[ if eq(variables.deployVNET, true) ]:
               - name: virtual-network
                 path: infra/common/network
                 resourceGroupName: $(virtualNetworkResourceGroup)
-      - ${{ if eq(variables.deployMonitoringGroup, true) }}:
+      - $[ if eq(variables.deployMonitoringGroup, true) ]:
         - name: monitoring
           templates:
             - name: workspace
@@ -144,7 +144,7 @@ extends:
             - name: component
               path: infra/core/insights
               resourceGroupName: $(servicesResourceGroup)
-      - ${{ if eq(variables.deployManagedClusterGroup, true) }}:
+      - $[ if eq(variables.deployManagedClusterGroup, true) ]:
         - name: managed_cluster
           dependsOnGroupedTemplates:
             - network
@@ -175,7 +175,7 @@ extends:
                     -ResourceGroupName $(ssvSharedResourceGroup)
                     -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
                     -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(aksResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
-      - ${{ if eq(variables.deployOthersGroup, true) }}:                    
+      - $[ if eq(variables.deployOthersGroup, true) ]:                    
         - name: service_bus
           templates:
             - name: namespace
@@ -184,7 +184,7 @@ extends:
               privateEndpointDnsRecordsForResources:
                 - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
                   resourceGroupName: $(servicesResourceGroup)
-      - ${{ if eq(variables.deployFrontDoorGroup, true) }}:
+      - $[ if eq(variables.deployFrontDoorGroup, true) ]:
         - name: front_door
           templates:
             - name: front-door
@@ -193,7 +193,7 @@ extends:
             - name: azure-waf
               path: infra/core/front-door
               resourceGroupName: $(frontDoorResourceGroup)
-      - ${{ if eq(variables.deployApplicationInfraGroup, true) }}:
+      - $[ if eq(variables.deployApplicationInfraGroup, true) ]:
         - name: application_infra
           templates:
             - name: configuration-store
@@ -220,7 +220,7 @@ extends:
               privateEndpointDnsRecordsForResources:
                 - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
                   resourceGroupName: $(servicesResourceGroup)
-      - ${{ if eq(variables.deployApplicationKeyVault, true) }}:
+      - $[ if eq(variables.deployApplicationKeyVault, true) ]:
         - name: security
           dependsOnGroupedTemplates:
             - network
