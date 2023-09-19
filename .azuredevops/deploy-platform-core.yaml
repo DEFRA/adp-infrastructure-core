@@ -68,10 +68,10 @@ resources:
 variables: 
   deployAll: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceType}}',  '1-all')) ]
 
-  deployNetworkGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '2-network'), eq('${{parameters.deployResourceCategory}}', '6-managedcluster')),eq('${{parameters.deployResourceType}}', '7.1-applicationkeyvault')) ]
-  deployUDR: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', 'udr')) ]
-  deployNSG: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', 'nsg')) ]
-  deployVNET: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', 'vnet')) ]
+  deployNetworkGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '2-network'), eq('${{parameters.deployResourceCategory}}', '6-managedcluster'),eq('${{parameters.deployResourceType}}', '7.1-applicationkeyvault')) ]
+  deployNSG: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', '2.1-nsg')) ]
+  deployUDR: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', '2.2-udr')) ]  
+  deployVNET: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', '2.3-vnet')) ]
 
   deployMonitoringGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '3-monitoring')) ]
   deployWorkspace: $[ or(eq(variables.deployMonitoringGroup, true), eq('${{parameters.deployResourceType}}', '3.1-workspace')) ]
