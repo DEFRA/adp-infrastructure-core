@@ -68,7 +68,7 @@ resources:
 variables: 
   deployAll: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceType}}',  '1-all')) ]
 
-  deployNetworkGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '2-network'), eq('${{parameters.deployResourceCategory}}', '6-managedcluster')]
+  deployNetworkGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '2-network'), eq('${{parameters.deployResourceCategory}}', '6-managedcluster')) ]
   deployUDR: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', 'udr')) ]
   deployNSG: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', 'nsg')) ]
   deployVNET: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', 'vnet')) ]
@@ -96,7 +96,7 @@ variables:
   deployApplicationKeyVault: $[ and(eq('${{parameters.deployResourceCategory}}',  '7-others'), eq('${{parameters.deployResourceType}}', 'applicationkeyvault')) ]
   deloyManagedIdentity: $[ and(eq('${{parameters.deployResourceCategory}}',  '7-others'), eq('${{parameters.deployResourceType}}', 'managedidentity')) ]
   deployNamespace: $[ and(eq('${{parameters.deployResourceCategory}}', '7-others'), eq('${{parameters.deployResourceType}}', 'namespace')) ]
-  
+
   deployNone:  $[ and(eq('${{parameters.deployResourceCategory}}',  '7-others'), eq('${{parameters.deployResourceType}}',  '1-all')) ]
 
 
