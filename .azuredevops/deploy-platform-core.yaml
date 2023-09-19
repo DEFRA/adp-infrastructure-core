@@ -19,26 +19,29 @@ parameters:
     displayName: Resource Type to deploy
     type: string
     default: null
-    values:
-      - null   # no category
-      - nsg
-      - udr
-      - vnet
-      - configurationstore
-      - applicationcontainerregistry
-      - applicationkeyvault
-      - akscluster
-      - managedidentity
-      - observability
-      - rediscache
-      - namespace
-      - applicationstorageaccount
-      - workspace
-      - components
-      - azurewaf
-      - frontdoor
-      - flexibleserver
-      - grafana
+    $[ if eq('${{ parameters.deployResourceCategory }}, 'network') ]:
+      values:
+        - nsg
+        - udr
+        - vnet
+    $[ else ]:
+      values:
+        - null   # no category
+        - configurationstore
+        - applicationcontainerregistry
+        - applicationkeyvault
+        - akscluster
+        - managedidentity
+        - observability
+        - rediscache
+        - namespace
+        - applicationstorageaccount
+        - workspace
+        - components
+        - azurewaf
+        - frontdoor
+        - flexibleserver
+        - grafana
 
 pr:
   branches:
