@@ -2,7 +2,7 @@
 param vnet object
 @description('Required. The parameter object for the cluster. The object must contain the name,skuTier,nodeResourceGroup,miControlPlane,adminAadGroupObjectId and monitoringWorkspace values.')
 param cluster object
-@description('Required. The paramter object for private dns zone. The opject must contain the prefix and resourceGroup values')
+@description('Required. The parameter object for private dns zone. The object must contain the prefix and resourceGroup values')
 param privateDnsZone object
 @description('Required. The Name of the Azure Monitor Workspace.')
 param azureMonitorWorkspaceName string
