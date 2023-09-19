@@ -87,8 +87,11 @@ variables:
   deployNamespace: and(eq(parameters.deployResourceCategory, null), eq(parameters.deployResourceType, 'namespace'))
   deployNone:  and(eq(parameters.deployResourceCategory, null), eq(parameters.deployResourceType, null))
 
-${{ if eq(variables.deployNone, false) }}:
-  extends:
+
+extends:
+  ${{ if eq(variables.deployNone, true) }}:
+    template: none
+  ${{ if eq(variables.deployNone, false) }}:
     template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
     parameters:
       projectName: $(projectName)
@@ -351,5 +354,6 @@ ${{ if eq(variables.deployNone, false) }}:
                     resourceGroupName: $(servicesResourceGroup)
 
 ${{ if eq(variables.deployNone, true) }}:
-   - bash: |
-       echo 'Nothing to deploy'
+  steps:
+    - bash: |
+        echo 'Nothing to deploy'
