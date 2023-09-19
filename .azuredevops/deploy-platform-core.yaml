@@ -87,7 +87,6 @@ variables:
   deployNamespace: $[ and(eq('${{parameters.deployResourceCategory}}', 'null'), eq('${{parameters.deployResourceType}}', 'namespace')) ]
   deployNone:  $[ and(eq('${{parameters.deployResourceCategory}}',  'null'), eq('${{parameters.deployResourceType}}',  'null')) ]
 
-
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
@@ -109,7 +108,7 @@ extends:
             resourceGroupName: $(servicesResourceGroup)
       - $[ if eq(variables.deployAllResources, true) ]:
         - name: network
-          templates:
+          templates: 
             - name: route-table
               path: infra/common/network
               resourceGroupName: $(virtualNetworkResourceGroup)
@@ -324,19 +323,19 @@ extends:
                       -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(aksResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
       - $[ if eq(variables.deployApplicationKeyVault, true) ]: 
         - name: network
-          templates:
-            - name: route-table
-              path: infra/common/network
-              resourceGroupName: $(virtualNetworkResourceGroup)
-            - name: subnet-nsg
-              path: infra/common/network
-              resourceGroupName: $(virtualNetworkResourceGroup)
-            - name: virtual-network
-              path: infra/common/network
-              resourceGroupName: $(virtualNetworkResourceGroup)
-        - name: security
-          dependsOnGroupedTemplates:
-            - network
+        #   templates:
+        #     - name: route-table
+        #       path: infra/common/network
+        #       resourceGroupName: $(virtualNetworkResourceGroup)
+        #     - name: subnet-nsg
+        #       path: infra/common/network
+        #       resourceGroupName: $(virtualNetworkResourceGroup)
+        #     - name: virtual-network
+        #       path: infra/common/network
+        #       resourceGroupName: $(virtualNetworkResourceGroup)
+        # - name: security
+        #   dependsOnGroupedTemplates:
+            # - network
           templates:
             - name: application-key-vault
               path: infra/core/key-vault
