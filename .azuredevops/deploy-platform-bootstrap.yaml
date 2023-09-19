@@ -6,6 +6,7 @@ parameters:
   - name: deployResources
     displayName: "Resources to Deploy"
     type: string
+    default: "all"
     values:
       - "all"
       - "service-connections"
