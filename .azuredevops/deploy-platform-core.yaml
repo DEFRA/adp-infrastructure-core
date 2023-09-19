@@ -28,28 +28,13 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref:  pp/adp-variables
+      ref:  main
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
-    environments:
-      - name: 'snd1'
-        serviceConnection: AZD-ADP-SND1
-        deploymentBranches:
-          - '*'
-        developmentEnvironment: true
-        azureRegions:
-          primary: 'UKSouth'
-      - name: 'snd2'
-        serviceConnection: AZD-ADP-SND2
-        deploymentBranches:
-          - 'refs/heads/main'
-          - 'refs/pull/*/merge'
-        azureRegions:
-          primary: 'UKSouth'
     groupedTemplates:
       - name: network
         templates:
