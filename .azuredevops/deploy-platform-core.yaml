@@ -84,7 +84,7 @@ variables:
   deployGrafana: ${{ and(eq(parameters.deployResourceCategory,'managedcluster'), eq(parameters.deployResourceType, 'grafana')) }}
   deployApplicationKeyVault: ${{ and(eq(parameters.deployResourceCategory, ''), eq(parameters.deployResourceType, 'applicationkeyvault')) }}
   deloyManagedIdentity: ${{ and(eq(parameters.deployResourceCategory, ''), eq(parameters.deployResourceType, 'managedidentity')) }}
-  deployNamespace: ${{ eq(parameters.deployResourceType, 'namespace')) }}
+  deployNamespace: $[ and(eq(${{parameters.deployResourceCategory}}, ''), eq(${{parameters.deployResourceType}}, 'namespace')) ]
   deployNone:  ${{ and(eq(parameters.deployResourceCategory, ''), eq(parameters.deployResourceType, '')) }}
 
 
