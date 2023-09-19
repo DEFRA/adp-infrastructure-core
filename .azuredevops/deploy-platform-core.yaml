@@ -37,7 +37,7 @@ parameters:
       - 6.2-grafana      
       - 7.1-applicationkeyvault
       - 7.2-namespace
-      - 7.1-managedidentity
+      - 7.3-managedidentity
 
 pr:
   branches:
@@ -68,34 +68,35 @@ resources:
 variables: 
   deployAll: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceType}}',  '1-all')) ]
 
-  deployNetworkGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '2-network'), eq('${{parameters.deployResourceCategory}}', '6-managedcluster')) ]
+  deployNetworkGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '2-network'), eq('${{parameters.deployResourceCategory}}', '6-managedcluster')),eq('${{parameters.deployResourceType}}', '7.1-applicationkeyvault')) ]
   deployUDR: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', 'udr')) ]
   deployNSG: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', 'nsg')) ]
   deployVNET: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', 'vnet')) ]
 
-  deployMonitoringGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '3-monitoring')]
-  deployWorkspace: $[ or(eq('${{parameters.deployResourceCategory}}', '3-monitoring'), eq('${{parameters.deployResourceType}}', '3.1-workspace')) ]
-  deployComponents: $[ or(eq('${{parameters.deployResourceCategory}}', '3-monitoring'), eq('${{parameters.deployResourceType}}', '3.2-components')) ]
+  deployMonitoringGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '3-monitoring')) ]
+  deployWorkspace: $[ or(eq(variables.deployMonitoringGroup, true), eq('${{parameters.deployResourceType}}', '3.1-workspace')) ]
+  deployComponents: $[ or(eq(variables.deployMonitoringGroup, true), eq('${{parameters.deployResourceType}}', '3.2-components')) ]
 
-  deployFrontDoorGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '4-frontdoor')]
-  deployFrontDoor: $[ or(eq('${{parameters.deployResourceCategory}}', '4-frontdoor'), eq('${{parameters.deployResourceType}}', 'frontdoor')) ]
-  deployAzureWaf: $[ or(eq('${{parameters.deployResourceCategory}}', '4-frontdoor'), eq('${{parameters.deployResourceType}}', 'azurewaf')) ]
+  deployFrontDoorGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '4-frontdoor')) ]
+  deployAzureWaf: $[ or(eq(variables.deployFrontDoorGroup, true), eq('${{parameters.deployResourceType}}', '4.1-azurewaf')) ]
+  deployFrontDoor: $[ or(eq(variables.deployFrontDoorGroup, true), eq('${{parameters.deployResourceType}}', '4.2-frontdoor')) ]
 
-  deployApplicationInfraGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '5-applicationinfra')]
-  deployConfigurationStore: $[ or(eq('${{parameters.deployResourceCategory}}', '5-applicationinfra'), eq('${{parameters.deployResourceType}}', 'configurationstore')) ]
-  deployApplicationContainerRegistry: $[ or(eq('${{parameters.deployResourceCategory}}', '5-applicationinfra'), eq('${{parameters.deployResourceType}}', 'applicationcontainerregistry')) ]
-  deployApplicationFlexibleServer: $[ or(eq('${{parameters.deployResourceCategory}}', '5-applicationinfra'), eq('${{parameters.deployResourceType}}', 'flexibleserver')) ]
-  deployApplicationRedisCache: $[ or(eq('${{parameters.deployResourceCategory}}', '5-applicationinfra'), eq('${{parameters.deployResourceType}}', 'rediscache')) ]
-  deployApplicationApplicationStorageAccount: $[ or(eq('${{parameters.deployResourceCategory}}', '5-applicationinfra'), eq('${{parameters.deployResourceType}}', 'applicationstorageaccount')) ]
+  deployApplicationInfraGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '5-applicationinfra')) ]
+  deployConfigurationStore: $[ or(eq(variables.deployApplicationInfraGroup, true), eq('${{parameters.deployResourceType}}', '5.1-configurationstore')) ]
+  deployApplicationContainerRegistry: $[ or(eq(variables.deployApplicationInfraGroup, true), eq('${{parameters.deployResourceType}}', '5.2-applicationcontainerregistry')) ]
+  deployApplicationFlexibleServer: $[ or(eq(variables.deployApplicationInfraGroup, true), eq('${{parameters.deployResourceType}}', '5.3-flexibleserver')) ]
+  deployApplicationRedisCache: $[ or(eq(variables.deployApplicationInfraGroup, true), eq('${{parameters.deployResourceType}}', '5.4-rediscache')) ]
+  deployApplicationApplicationStorageAccount: $[ or(eq(variables.deployApplicationInfraGroup, true), eq('${{parameters.deployResourceType}}', '5.5-applicationstorageaccount')) ]
   
-  deployManagedClusterGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '6-managedcluster')]
-  deployAksCluster: $[ and(eq('${{parameters.deployResourceCategory}}', 'managedcluster'), eq('${{parameters.deployResourceType}}', 'akscluster')) ]
-  deployGrafana: $[ and(eq('${{parameters.deployResourceCategory}}','managedcluster'), eq('${{parameters.deployResourceType}}', 'grafana')) ]
+  deployManagedClusterGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '6-managedcluster')) ]
+  deployAksCluster: $[ and(eq(variables.deployManagedClusterGroup, true), eq('${{parameters.deployResourceType}}', '6.1-akscluster')) ]
+  deployGrafana: $[ and(eq(variables.deployManagedClusterGroup, true), eq('${{parameters.deployResourceType}}', '6.2-grafana ')) ]
   
-  deployOthersGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '7-others')]
-  deployApplicationKeyVault: $[ and(eq('${{parameters.deployResourceCategory}}',  '7-others'), eq('${{parameters.deployResourceType}}', 'applicationkeyvault')) ]
-  deloyManagedIdentity: $[ and(eq('${{parameters.deployResourceCategory}}',  '7-others'), eq('${{parameters.deployResourceType}}', 'managedidentity')) ]
-  deployNamespace: $[ and(eq('${{parameters.deployResourceCategory}}', '7-others'), eq('${{parameters.deployResourceType}}', 'namespace')) ]
+  deployOthersGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '7-others')) ]
+  deployApplicationKeyVault: $[ and(eq(variables.deployOthersGroup, true), eq('${{parameters.deployResourceType}}', '7.1-applicationkeyvault')) ]
+  deployNamespace: $[ and(eq(variables.deployOthersGroup, true), eq('${{parameters.deployResourceType}}', '7.2-namespace')) ]
+  deloyManagedIdentity: $[ and(eq(variables.deployOthersGroup, true), eq('${{parameters.deployResourceType}}', '7.3-managedidentity')) ]
+  
 
   deployNone:  $[ and(eq('${{parameters.deployResourceCategory}}',  '7-others'), eq('${{parameters.deployResourceType}}',  '1-all')) ]
 
@@ -220,6 +221,7 @@ extends:
               privateEndpointDnsRecordsForResources:
                 - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
                   resourceGroupName: $(servicesResourceGroup)
+      - $[ if eq(variables.deployApplicationKeyVault, true) ]:
         - name: security
           dependsOnGroupedTemplates:
             - network
