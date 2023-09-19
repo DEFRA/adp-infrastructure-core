@@ -44,27 +44,27 @@ extends:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
-      - name: "snd1"
+      - name: 'snd1'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - "*"
+          - '*'
         developmentEnvironment: true
         azureRegions:
-          primary: "UKSouth"
-      - name: "snd2"
+          primary: 'UKSouth'
+      - name: 'snd2'
         outputTemplateChange: Skip
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
-          primary: "UKSouth"
-      - name: "snd3"
+          primary: 'UKSouth'
+      - name: 'snd3'
         outputTemplateChange: Skip
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
-          primary: "UKSouth"
+          primary: 'UKSouth'
 
     groupedTemplates:
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'service-connections')) }}
