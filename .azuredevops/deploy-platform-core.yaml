@@ -345,7 +345,7 @@ extends:
                 - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
                   resourceGroupName: $(servicesResourceGroup)
       # - ${{ if eq(variables.deloyManagedIdentity, true) }}:  # not initially included in the deployment for all
-      - ${{ if eq(variables.deployNamespace, true) }}:
+      - ${{ and(eq(parameters.deployResourceCategory, ''), eq(parameters.deployResourceType, 'namespace')) }}:
         - name: service_bus
           templates:
             - name: namespace
