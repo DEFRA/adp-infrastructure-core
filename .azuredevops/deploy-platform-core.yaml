@@ -102,13 +102,12 @@ extends:
           primary: 'UKSouth'    
     groupedTemplates:      
       # - ${{ if eq(variables.deloyManagedIdentity, true) }}:  # not initially included in the deployment for all
-      - ${{ if eq(variables.deployNamespace, true) }}:
-        - name: service_bus
-          templates:
-            - name: namespace
-              path: infra/core/service-bus
-              resourceGroupName: $(servicesResourceGroup)
-              privateEndpointDnsRecordsForResources:
-                - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
-                  resourceGroupName: $(servicesResourceGroup)
+      - name: service_bus
+        templates:
+          - name: namespace
+            path: infra/core/service-bus
+            resourceGroupName: $(servicesResourceGroup)
+            privateEndpointDnsRecordsForResources:
+              - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
+                resourceGroupName: $(servicesResourceGroup)
 
