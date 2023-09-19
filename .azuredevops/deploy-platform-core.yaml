@@ -87,20 +87,20 @@ variables:
   deployNamespace: and(eq(parameters.deployResourceCategory, null), eq(parameters.deployResourceType, 'namespace'))
   deployNone:  and(eq(parameters.deployResourceCategory, null), eq(parameters.deployResourceType, null))
 
-extends:
-  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
-  parameters:
-    projectName: $(projectName)
-    deployFromFeature: ${{ parameters.deployFromFeature }}
-    environments:
-      - name: 'snd2'
-        serviceConnection: AZD-CDO-SND2
-        deploymentBranches:
-          - '*'
-        developmentEnvironment: true
-        azureRegions:
-          primary: 'UKSouth' 
-    ${{ if ne(variables.deployNone, true) }}:    
+${{ if ne(variables.deployNone, true) }}:  
+  extends:
+    template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+    parameters:
+      projectName: $(projectName)
+      deployFromFeature: ${{ parameters.deployFromFeature }}
+      environments:
+        - name: 'snd2'
+          serviceConnection: AZD-CDO-SND2
+          deploymentBranches:
+            - '*'
+          developmentEnvironment: true
+          azureRegions:
+            primary: 'UKSouth'       
       groupedTemplates:
         - ${{ if eq(variables.deployAllResources, true) }}:
           - name: network
@@ -349,7 +349,4 @@ extends:
                 privateEndpointDnsRecordsForResources:
                   - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
                     resourceGroupName: $(servicesResourceGroup)
-    ${{ if eq(variables.deployNone, true) }}:
-      - bash: |
-          echo 'Nothing to deploy'   
-        displayName: 'No resourceCategory or ResourceType to deploy'
+
