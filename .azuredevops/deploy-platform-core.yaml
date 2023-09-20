@@ -12,7 +12,7 @@ parameters:
       - Network - All
       - Network - VNET
       - Network - NSGs
-      - Network - Route tables
+      - Network - Route Tables
       - Monitoring - All
       - Monitoring - Workspace
       - Monitoring - Insights
@@ -43,7 +43,7 @@ variables:
   - name: IsNetworkNsg
     value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - NSGs')) }}
   - name: IsNetworkRouteTable
-    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - Route tables')) }}
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - Route Tables')) }}
 
   - name: IsMonitoring
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Monitoring')) }}
@@ -55,41 +55,41 @@ variables:
     value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Monitoring - Insights')) }}
 
   - name: IsManagedCluster
-    value: ${{ or(eq(variables.IsNetworkAll,true), startsWith(parameters.deployResources,'Managed Cluster')) }}
+    value: ${{ or(eq(variables.IsNetworkAll,true), startsWith(parameters.deployResources, 'Managed Cluster')) }}
   - name: IsManagedClusterAll
-    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Managed Cluster - All')) }}
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources, 'Managed Cluster - All')) }}
   - name: IsManagedClusterPrivateDNSZone
-    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Managed Cluster - Private DNS Zone')) }}
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources, 'Managed Cluster - Private DNS Zone')) }}
   - name: IsManagedClusterCluster
-    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Managed Cluster - Cluster')) }}
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources, 'Managed Cluster - Cluster')) }}
   
   - name: IsFrontDoor
-    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Front Door')) }}
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Front Door')) }}
   - name: IsFrontDoorAll
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Front Door - All')) }}
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Front Door - All')) }}
   - name: IsFrontDoorCore
-    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources,'Front Door - Core')) }}
+    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - Core')) }}
   - name: IsFrontDoorWAF
-    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources,'Network - WAF')) }}
+    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Network - WAF')) }}
 
   - name: IsApplication
-    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Application')) }}
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application')) }}
   - name: IsApplicationAll
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Application - All')) }}
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Application - All')) }}
   - name: IsApplicationAppConfig
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - App Configuration')) }}
   - name: IsApplicationContainerRegistry
-    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Application - Apps Container Registry')) }}
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Apps Container Registry')) }}
   - name: IsApplicationPostgreSqlServer
-    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Application - PostgreSql Server')) }}
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - PostgreSql Server')) }}
   - name: IsApplicationRedisCache
-    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Application - Redis Cache')) }}
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Redis Cache')) }}
   - name: IsApplicationStorageAccount
-    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Application - Storage Account')) }}
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Storage Account')) }}
   - name: IsApplicationServiceBus
-    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Application - Service Bus')) }}
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Service Bus')) }}
   - name: IsApplicationKeyVault
-    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Application - Key Vault')) }}
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
 
 
 pr:
