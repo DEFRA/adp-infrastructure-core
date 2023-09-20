@@ -59,42 +59,6 @@ resources:
       type: github
       ref:  refs/heads/oo/231059-infrapipeline-enhancements
 
-variables: 
-  deployAll: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceType}}',  '1-all')) ]
-
-  deployNetworkGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '2-network'), eq('${{parameters.deployResourceCategory}}', '6-managedcluster'),eq('${{parameters.deployResourceType}}', '7.1-applicationkeyvault')) ]
-  deployNSG: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', '2.1-nsg')) ]
-  deployUDR: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', '2.2-udr')) ]
-  deployVNET: $[ or(eq(variables.deployNetworkGroup, true), eq('${{parameters.deployResourceType}}', '2.3-vnet')) ]
-
-  deployMonitoringGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '3-monitoring')) ]
-  deployWorkspace: $[ or(eq(variables.deployMonitoringGroup, true), eq('${{parameters.deployResourceType}}', '3.1-workspace')) ]
-  deployComponents: $[ or(eq(variables.deployMonitoringGroup, true), eq('${{parameters.deployResourceType}}', '3.2-components')) ]
-
-  deployFrontDoorGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '4-frontdoor')) ]
-  deployAzureWaf: $[ or(eq(variables.deployFrontDoorGroup, true), eq('${{parameters.deployResourceType}}', '4.1-azurewaf')) ]
-  deployFrontDoor: $[ or(eq(variables.deployFrontDoorGroup, true), eq('${{parameters.deployResourceType}}', '4.2-frontdoor')) ]
-
-  deployApplicationInfraGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '5-applicationinfra')) ]
-  deployConfigurationStore: $[ or(eq(variables.deployApplicationInfraGroup, true), eq('${{parameters.deployResourceType}}', '5.1-configurationstore')) ]
-  deployApplicationContainerRegistry: $[ or(eq(variables.deployApplicationInfraGroup, true), eq('${{parameters.deployResourceType}}', '5.2-applicationcontainerregistry')) ]
-  deployApplicationFlexibleServer: $[ or(eq(variables.deployApplicationInfraGroup, true), eq('${{parameters.deployResourceType}}', '5.3-flexibleserver')) ]
-  deployApplicationRedisCache: $[ or(eq(variables.deployApplicationInfraGroup, true), eq('${{parameters.deployResourceType}}', '5.4-rediscache')) ]
-  deployApplicationApplicationStorageAccount: $[ or(eq(variables.deployApplicationInfraGroup, true), eq('${{parameters.deployResourceType}}', '5.5-applicationstorageaccount')) ]
-  
-  deployManagedClusterGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '6-managedcluster')) ]
-  deployAksCluster: $[ and(eq(variables.deployManagedClusterGroup, true), eq('${{parameters.deployResourceType}}', '6.1-akscluster')) ]
-  deployGrafana: $[ and(eq(variables.deployManagedClusterGroup, true), eq('${{parameters.deployResourceType}}', '6.2-grafana ')) ]
-  
-  deployOthersGroup: $[ or(eq('${{parameters.deployResourceCategory}}', '1-all'), eq('${{parameters.deployResourceCategory}}', '7-others')) ]
-  deployApplicationKeyVault: $[ and(eq(variables.deployOthersGroup, true), eq('${{parameters.deployResourceType}}', '7.1-applicationkeyvault')) ]
-  deployNamespace: $[ and(eq(variables.deployOthersGroup, true), eq('${{parameters.deployResourceType}}', '7.2-namespace')) ]
-  deloyManagedIdentity: $[ and(eq(variables.deployOthersGroup, true), eq('${{parameters.deployResourceType}}', '7.3-managedidentity')) ]
-  
-
-  deployNone:  $[ and(eq('${{parameters.deployResourceCategory}}',  '7-others'), eq('${{parameters.deployResourceType}}',  '1-all')) ]
-
-
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
