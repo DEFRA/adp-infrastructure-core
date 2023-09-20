@@ -9,7 +9,6 @@ parameters:
     default: "all"
     values:
       - "all"
-      - "------------------------------------"
       - "service-connections"
       - "network"
 
