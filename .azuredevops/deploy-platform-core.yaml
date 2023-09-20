@@ -244,7 +244,7 @@ extends:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
               - ${{ if eq(variables.IsApplicationServiceBus, true) }}:                                         
-                - name: service_bus
+                - name: namespace
                   path: infra/core/service-bus
                   resourceGroupName: $(servicesResourceGroup)
                   privateEndpointDnsRecordsForResources:
