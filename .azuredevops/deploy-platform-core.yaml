@@ -77,16 +77,21 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Application')) }}
   - name: IsApplicationAll
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Application - All')) }}
+  - name: IsApplicationAppConfig
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - App Configuration')) }}
   - name: IsApplicationContainerRegistry
-    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Application - Apps Container Registry')) }}
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Application - Apps Container Registry')) }}
   - name: IsApplicationPostgreSqlServer
-    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Application - PostgreSql Server')) }}
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Application - PostgreSql Server')) }}
   - name: IsApplicationRedisCache
-    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Application - Redis Cache')) }}
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Application - Redis Cache')) }}
   - name: IsApplicationStorageAccount
-    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Application - Storage Account')) }}
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Application - Storage Account')) }}
+  - name: IsApplicationServiceBus
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Application - Service Bus')) }}
   - name: IsApplicationKeyVault
-    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Application - Key Vault')) }}
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Application - Key Vault')) }}
+
 
 pr:
   branches:
@@ -154,6 +159,8 @@ extends:
                 resourceGroupName: $(servicesResourceGroup)
         - ${{ if eq(variables.IsManagedCluster, true) }}:  
           - name: managed_cluster
+            dependsOnGroupedTemplates:
+              - network
             templates:
               - ${{ if eq(variables.IsManagedClusterPrivateDNSZone, true) }}:
                 - name: aks-cluster-zone
@@ -182,51 +189,62 @@ extends:
                         -ResourceGroupName $(ssvSharedResourceGroup)
                         -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
                         -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(aksResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
-        
-        - name: front_door
-          templates:
-            - name: front-door
-              path: infra/core/front-door
-              resourceGroupName: $(frontDoorResourceGroup)
-            - name: azure-waf
-              path: infra/core/front-door
-              resourceGroupName: $(frontDoorResourceGroup)
+        - ${{ if eq(variables.IsFrontDoor, true) }}:  
+          - name: front_door
+            templates:
+              - ${{ if eq(variables.IsFrontDoorCore, true) }}: 
+                - name: front-door
+                  path: infra/core/front-door
+                  resourceGroupName: $(frontDoorResourceGroup)
+              - ${{ if eq(variables.IsFrontDoorWAF, true) }}: 
+                - name: azure-waf
+                  path: infra/core/front-door
+                  resourceGroupName: $(frontDoorResourceGroup)
         - ${{ if eq(variables.IsApplication, true) }}:  
           - name: application_infra
+            dependsOnGroupedTemplates:
+            - network
             templates:
-              - name: configuration-store
-                path: infra/core/app-configuration
-                resourceGroupName: $(servicesResourceGroup)
-                privateEndpointDnsRecordsForResources:
-                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                    resourceGroupName: $(servicesResourceGroup)
-              - name: application-container-registry
-                path: infra/core/container-registry
-                resourceGroupName: $(servicesResourceGroup)
-                privateEndpointDnsRecordsForResources:
-                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
-                    resourceGroupName: $(servicesResourceGroup)
-              - name: flexible-server
-                path: infra/core/postgre-sql
-                resourceGroupName: $(dbsResourceGroup)
-              - name: redis-cache
-                path: infra/core/redis-cache
-                resourceGroupName: $(servicesResourceGroup)
-              - name: application-storage-account
-                path: infra/core/storage-account
-                resourceGroupName: $(servicesResourceGroup)
-                privateEndpointDnsRecordsForResources:
-                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
-                    resourceGroupName: $(servicesResourceGroup)
-              - name: service_bus
-                path: infra/core/service-bus
-                resourceGroupName: $(servicesResourceGroup)
-                privateEndpointDnsRecordsForResources:
-                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
-                    resourceGroupName: $(servicesResourceGroup)
-              - name: application-key-vault
-                path: infra/core/key-vault
-                resourceGroupName: $(servicesResourceGroup)
-                privateEndpointDnsRecordsForResources:
-                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
-                    resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsApplicationAppConfig, true) }}:  
+                - name: configuration-store
+                  path: infra/core/app-configuration
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsApplicationContainerRegistry, true) }}:  
+                - name: application-container-registry
+                  path: infra/core/container-registry
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsApplicationPostgreSqlServer, true) }}:  
+                - name: flexible-server
+                  path: infra/core/postgre-sql
+                  resourceGroupName: $(dbsResourceGroup)
+              - ${{ if eq(variables.IsApplicationRedisCache, true) }}:                    
+                - name: redis-cache
+                  path: infra/core/redis-cache
+                  resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsApplicationStorageAccount, true) }}:                    
+                - name: application-storage-account
+                  path: infra/core/storage-account
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsApplicationServiceBus, true) }}:                                         
+                - name: service_bus
+                  path: infra/core/service-bus
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsApplicationKeyVault, true) }}:                    
+                - name: application-key-vault
+                  path: infra/core/key-vault
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)
