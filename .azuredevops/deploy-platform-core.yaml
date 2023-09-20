@@ -20,7 +20,7 @@ parameters:
       - Security - Application key vault
       - Managed Cluster - All
       - Managed Cluster - Private DNS Zone
-      - Managed Cluster - Cluster    
+      - Managed Cluster - Cluster
 
 variables:
   - name: IsAll
@@ -28,9 +28,9 @@ variables:
   - name: IsNetwork
     value: ${{ startWith(parameters.deployResources,'Network') }}
   - name: IsNetworkAll
-    value: ${{ or(eq(variables.IsAll), eq(parameters.deployResources,'Network - All')) }}
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Network - All')) }}
   - name: IsNetworkVnet
-    value: ${{ or(eq(variables.IsNetworkAll),eq(parameters.deployResources,'Network - VNET')) }}
+    value: ${{ or(eq(variables.IsNetworkAll,true),eq(parameters.deployResources,'Network - VNET')) }}
 pr:
   branches:
     include:
@@ -43,7 +43,7 @@ trigger:
   batch: true
   branches:
     include:
-      - '*'
+      - "*"
   paths:
     include:
       - infra/core/*
@@ -55,7 +55,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref:  main
+      ref: main
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -63,121 +63,121 @@ extends:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
-      - name: 'snd1'
+      - name: "snd1"
         serviceConnection: AZD-ADP-SND1
         deploymentBranches:
-          - 'refs/heads/main'
+          - "refs/heads/main"
         developmentEnvironment: true
         azureRegions:
-          primary: 'UKSouth'
+          primary: "UKSouth"
     groupedTemplates:
       - ${{ if or(eq(variables.IsAll, true), eq(variables.IsNetwork, true)) }}:
-        - name: network
-          templates:
-            - ${{ if eq(variables.IsNetworkVnet, true) }}:
+          - name: network
+            templates:
+              - ${{ if eq(variables.IsNetworkVnet, true) }}:
+                  - name: virtual-network
+                    path: infra/common/network
+                    resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: route-table
+                path: infra/common/network
+                resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: subnet-nsg
+                path: infra/common/network
+                resourceGroupName: $(virtualNetworkResourceGroup)
               - name: virtual-network
                 path: infra/common/network
                 resourceGroupName: $(virtualNetworkResourceGroup)
-            - name: route-table
-              path: infra/common/network
-              resourceGroupName: $(virtualNetworkResourceGroup)
-            - name: subnet-nsg
-              path: infra/common/network
-              resourceGroupName: $(virtualNetworkResourceGroup)
-            - name: virtual-network
-              path: infra/common/network
-              resourceGroupName: $(virtualNetworkResourceGroup)
-        - name: monitoring
-          templates:
-            - name: workspace
-              path: infra/core/operational-insights
-              resourceGroupName: $(servicesResourceGroup)
-            - name: component
-              path: infra/core/insights
-              resourceGroupName: $(servicesResourceGroup)
-        - name: security
-          dependsOnGroupedTemplates:
-            - network
-          templates:
-            - name: application-key-vault
-              path: infra/core/key-vault
-              resourceGroupName: $(servicesResourceGroup)
-              privateEndpointDnsRecordsForResources:
-                - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
-                  resourceGroupName: $(servicesResourceGroup)
-        - name: managed_cluster
-          dependsOnGroupedTemplates:
-            - network
-          templates:
-            - name: aks-cluster-zone
-              path: infra/core/private-dns-zone
-              resourceGroupName: $(dnsResourceGroup)
-              postDeployScriptsList:
-                - displayName: Link the Private DNS Zone to Central networks
-                  scriptPath: infra/core/scripts/Trigger-LinkPrivateDNSZones.ps1
-                  type: PowerShell
-                  useSystemAccessToken: true
-                  scriptArguments: >
-                    -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01.privatelink.$(location).azmk8s.io"
-                    -ResourceGroupName $(dnsResourceGroup)
-                    -SubscriptionName $(subscriptionName)
-                    -TenantId $(tenantId)
+          - name: monitoring
+            templates:
+              - name: workspace
+                path: infra/core/operational-insights
+                resourceGroupName: $(servicesResourceGroup)
+              - name: component
+                path: infra/core/insights
+                resourceGroupName: $(servicesResourceGroup)
+          - name: security
+            dependsOnGroupedTemplates:
+              - network
+            templates:
+              - name: application-key-vault
+                path: infra/core/key-vault
+                resourceGroupName: $(servicesResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
+                    resourceGroupName: $(servicesResourceGroup)
+          - name: managed_cluster
+            dependsOnGroupedTemplates:
+              - network
+            templates:
+              - name: aks-cluster-zone
+                path: infra/core/private-dns-zone
+                resourceGroupName: $(dnsResourceGroup)
+                postDeployScriptsList:
+                  - displayName: Link the Private DNS Zone to Central networks
+                    scriptPath: infra/core/scripts/Trigger-LinkPrivateDNSZones.ps1
+                    type: PowerShell
+                    useSystemAccessToken: true
+                    scriptArguments: >
+                      -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01.privatelink.$(location).azmk8s.io"
+                      -ResourceGroupName $(dnsResourceGroup)
+                      -SubscriptionName $(subscriptionName)
+                      -TenantId $(tenantId)
 
-            - name: aks-cluster
-              path: infra/core/managed-cluster
-              resourceGroupName: $(aksResourceGroup)
-            - name: grafana
-              serviceConnectionVariableName: ssvServiceConnection
-              path: infra/core/observability
-              resourceGroupName: $(ssvSharedResourceGroup)
-              preDeployScriptsList:
-                - displayName: Get Azure Monitor Workspace Resource IDs to link to Grafana Dashboard
-                  scriptPath: infra/core/scripts/Get-WorkspaceResourceIds.ps1
-                  serviceConnectionVariableName: ssvServiceConnection
-                  type: AzurePowerShell
-                  scriptArguments: >
-                    -ResourceGroupName $(ssvSharedResourceGroup)
-                    -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
-                    -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(aksResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
-        - name: service_bus
-          templates:
-            - name: namespace
-              path: infra/core/service-bus
-              resourceGroupName: $(servicesResourceGroup)
-              privateEndpointDnsRecordsForResources:
-                - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
-                  resourceGroupName: $(servicesResourceGroup)
-        - name: front_door
-          templates:
-            - name: front-door
-              path: infra/core/front-door
-              resourceGroupName: $(frontDoorResourceGroup)
-            - name: azure-waf
-              path: infra/core/front-door
-              resourceGroupName: $(frontDoorResourceGroup)
-        - name: application_infra
-          templates:
-            - name: configuration-store
-              path: infra/core/app-configuration
-              resourceGroupName: $(servicesResourceGroup)
-              privateEndpointDnsRecordsForResources:
-                - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                  resourceGroupName: $(servicesResourceGroup)
-            - name: application-container-registry
-              path: infra/core/container-registry
-              resourceGroupName: $(servicesResourceGroup)
-              privateEndpointDnsRecordsForResources:
-                - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
-                  resourceGroupName: $(servicesResourceGroup)
-            - name: flexible-server
-              path: infra/core/postgre-sql
-              resourceGroupName: $(dbsResourceGroup)
-            - name: redis-cache
-              path: infra/core/redis-cache
-              resourceGroupName: $(servicesResourceGroup)
-            - name: application-storage-account
-              path: infra/core/storage-account
-              resourceGroupName: $(servicesResourceGroup)
-              privateEndpointDnsRecordsForResources:
-                - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
-                  resourceGroupName: $(servicesResourceGroup)
+              - name: aks-cluster
+                path: infra/core/managed-cluster
+                resourceGroupName: $(aksResourceGroup)
+              - name: grafana
+                serviceConnectionVariableName: ssvServiceConnection
+                path: infra/core/observability
+                resourceGroupName: $(ssvSharedResourceGroup)
+                preDeployScriptsList:
+                  - displayName: Get Azure Monitor Workspace Resource IDs to link to Grafana Dashboard
+                    scriptPath: infra/core/scripts/Get-WorkspaceResourceIds.ps1
+                    serviceConnectionVariableName: ssvServiceConnection
+                    type: AzurePowerShell
+                    scriptArguments: >
+                      -ResourceGroupName $(ssvSharedResourceGroup)
+                      -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
+                      -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(aksResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
+          - name: service_bus
+            templates:
+              - name: namespace
+                path: infra/core/service-bus
+                resourceGroupName: $(servicesResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
+                    resourceGroupName: $(servicesResourceGroup)
+          - name: front_door
+            templates:
+              - name: front-door
+                path: infra/core/front-door
+                resourceGroupName: $(frontDoorResourceGroup)
+              - name: azure-waf
+                path: infra/core/front-door
+                resourceGroupName: $(frontDoorResourceGroup)
+          - name: application_infra
+            templates:
+              - name: configuration-store
+                path: infra/core/app-configuration
+                resourceGroupName: $(servicesResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                    resourceGroupName: $(servicesResourceGroup)
+              - name: application-container-registry
+                path: infra/core/container-registry
+                resourceGroupName: $(servicesResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
+                    resourceGroupName: $(servicesResourceGroup)
+              - name: flexible-server
+                path: infra/core/postgre-sql
+                resourceGroupName: $(dbsResourceGroup)
+              - name: redis-cache
+                path: infra/core/redis-cache
+                resourceGroupName: $(servicesResourceGroup)
+              - name: application-storage-account
+                path: infra/core/storage-account
+                resourceGroupName: $(servicesResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
+                    resourceGroupName: $(servicesResourceGroup)
