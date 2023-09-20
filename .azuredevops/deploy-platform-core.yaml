@@ -8,19 +8,19 @@ parameters:
     type: string
     default: "Network - All"
     values:
-    - All
-    - Network - All
-    - Network - VNET
-    - Network - NSGs
-    - Network - Route tables
-    - Monitoring - All
-    - Monitoring - Workspace
-    - Monitoring - Insights
-    - Security - All
-    - Security - Application key vault
-    - Managed Cluster - All
-    - Managed Cluster - Private DNS Zone
-    - Managed Cluster - Cluster    
+      - All
+      - Network - All
+      - Network - VNET
+      - Network - NSGs
+      - Network - Route tables
+      - Monitoring - All
+      - Monitoring - Workspace
+      - Monitoring - Insights
+      - Security - All
+      - Security - Application key vault
+      - Managed Cluster - All
+      - Managed Cluster - Private DNS Zone
+      - Managed Cluster - Cluster    
 
 variables:
   - name: IsAll
