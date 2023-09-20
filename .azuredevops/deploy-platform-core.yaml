@@ -6,7 +6,7 @@ parameters:
   - name: deployResource
     displayName: Resources to deploy
     type: string
-    default: 1.all
+    default: 1.0-all
     values:
       - 1.0-all 
       - 2.0-network
