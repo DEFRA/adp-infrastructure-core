@@ -25,7 +25,12 @@ parameters:
 variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'All') }}
-
+  - name: IsNetwork
+    value: ${{ startWith(parameters.deployResources,'Network') }}
+  - name: IsNetworkAll
+    value: ${{ or(eq(variables.IsAll), eq(parameters.deployResources,'Network - All')) }}
+  - name: IsNetworkVnet
+    value: ${{ or(eq(variables.IsNetworkAll),eq(parameters.deployResources,'Network - VNET')) }}
 pr:
   branches:
     include:
@@ -66,9 +71,13 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedTemplates:
-      - ${{ if eq(variables.IsAll, true) }}:
+      - ${{ if or(eq(variables.IsAll, true), eq(variables.IsNetwork, true)) }}:
         - name: network
           templates:
+            - ${{ if eq(variables.IsNetworkVnet, true) }}:
+              - name: virtual-network
+                path: infra/common/network
+                resourceGroupName: $(virtualNetworkResourceGroup)
             - name: route-table
               path: infra/common/network
               resourceGroupName: $(virtualNetworkResourceGroup)
