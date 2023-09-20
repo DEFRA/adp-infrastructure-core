@@ -147,28 +147,28 @@ extends:
               path: infra/core/front-door
               resourceGroupName: $(frontDoorResourceGroup)
         - name: application_infra
-        templates:
-          - name: configuration-store
-            path: infra/core/app-configuration
-            resourceGroupName: $(servicesResourceGroup)
-            privateEndpointDnsRecordsForResources:
-              - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                resourceGroupName: $(servicesResourceGroup)
-          - name: application-container-registry
-            path: infra/core/container-registry
-            resourceGroupName: $(servicesResourceGroup)
-            privateEndpointDnsRecordsForResources:
-              - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
-                resourceGroupName: $(servicesResourceGroup)
-          - name: flexible-server
-            path: infra/core/postgre-sql
-            resourceGroupName: $(dbsResourceGroup)
-          - name: redis-cache
-            path: infra/core/redis-cache
-            resourceGroupName: $(servicesResourceGroup)
-          - name: application-storage-account
-            path: infra/core/storage-account
-            resourceGroupName: $(servicesResourceGroup)
-            privateEndpointDnsRecordsForResources:
-              - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
-                resourceGroupName: $(servicesResourceGroup)
+          templates:
+            - name: configuration-store
+              path: infra/core/app-configuration
+              resourceGroupName: $(servicesResourceGroup)
+              privateEndpointDnsRecordsForResources:
+                - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                  resourceGroupName: $(servicesResourceGroup)
+            - name: application-container-registry
+              path: infra/core/container-registry
+              resourceGroupName: $(servicesResourceGroup)
+              privateEndpointDnsRecordsForResources:
+                - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
+                  resourceGroupName: $(servicesResourceGroup)
+            - name: flexible-server
+              path: infra/core/postgre-sql
+              resourceGroupName: $(dbsResourceGroup)
+            - name: redis-cache
+              path: infra/core/redis-cache
+              resourceGroupName: $(servicesResourceGroup)
+            - name: application-storage-account
+              path: infra/core/storage-account
+              resourceGroupName: $(servicesResourceGroup)
+              privateEndpointDnsRecordsForResources:
+                - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
+                  resourceGroupName: $(servicesResourceGroup)
