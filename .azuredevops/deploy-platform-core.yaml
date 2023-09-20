@@ -25,7 +25,7 @@ parameters:
       - Application - All
       - Application - App Configuration
       - Application - Apps Container Registry
-      - Application - PostFlexible Server
+      - Application - PostgreSql Server
       - Application - Redis Cache
       - Application - Storage Account
       - Application - Service Bus
