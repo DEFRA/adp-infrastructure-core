@@ -26,7 +26,7 @@ variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'All') }}
   - name: IsNetwork
-    value: ${{ startWith(parameters.deployResources,'Network') }}
+    value: ${{ startsWith(parameters.deployResources,'Network') }}
   - name: IsNetworkAll
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Network - All')) }}
   - name: IsNetworkVnet
