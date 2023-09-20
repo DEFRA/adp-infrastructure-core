@@ -17,8 +17,8 @@ parameters:
       - 3.1-workspace
       - 3.2-components
       - 4.0-front-Door
-      - 4.1-azurewaf
-      - 4.2-frontdoor
+      - 4.1-frontdoor
+      - 4.2-azurewaf
       - 5.0-applicationinfra
       - 5.1-configurationstore
       - 5.2-applicationcontainerregistry
@@ -104,68 +104,77 @@ extends:
           dependsOnGroupedTemplates:
             - network
           templates:
-            - name: aks-cluster
-              path: infra/core/managed-cluster
-              resourceGroupName: $(aksResourceGroup)
-              postDeployScriptsList:
-                - displayName: Link the Private DNS Zone to Central networks
-                  scriptPath: infra/core/scripts/Trigger-LinkPrivateDNSZones.ps1
-                  type: PowerShell
-                  useSystemAccessToken: true
-                  scriptArguments: >
-                    -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01.privatelink.$(location).azmk8s.io"
-                    -ResourceGroupName $(aksResourceGroup)
-                    -SubscriptionName $(subscriptionName)
-                    -TenantId $(tenantId)
-            - name: grafana
-              serviceConnectionVariableName: ssvServiceConnection
-              path: infra/core/observability
-              resourceGroupName: $(ssvSharedResourceGroup)
-              preDeployScriptsList:
-                - displayName: Get Azure Monitor Workspace Resource IDs to link to Grafana Dashboard
-                  scriptPath: infra/core/scripts/Get-WorkspaceResourceIds.ps1
-                  serviceConnectionVariableName: ssvServiceConnection
-                  type: AzurePowerShell
-                  scriptArguments: >
-                    -ResourceGroupName $(ssvSharedResourceGroup)
-                    -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
-                    -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(aksResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'      
+            - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '6.0'), startsWith(parameters.deployResource, '6.1') )}}:
+              - name: aks-cluster
+                path: infra/core/managed-cluster
+                resourceGroupName: $(aksResourceGroup)
+                postDeployScriptsList:
+                  - displayName: Link the Private DNS Zone to Central networks
+                    scriptPath: infra/core/scripts/Trigger-LinkPrivateDNSZones.ps1
+                    type: PowerShell
+                    useSystemAccessToken: true
+                    scriptArguments: >
+                      -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01.privatelink.$(location).azmk8s.io"
+                      -ResourceGroupName $(aksResourceGroup)
+                      -SubscriptionName $(subscriptionName)
+                      -TenantId $(tenantId)
+            - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '6.0'), startsWith(parameters.deployResource, '6.2') )}}:
+              - name: grafana
+                serviceConnectionVariableName: ssvServiceConnection
+                path: infra/core/observability
+                resourceGroupName: $(ssvSharedResourceGroup)
+                preDeployScriptsList:
+                  - displayName: Get Azure Monitor Workspace Resource IDs to link to Grafana Dashboard
+                    scriptPath: infra/core/scripts/Get-WorkspaceResourceIds.ps1
+                    serviceConnectionVariableName: ssvServiceConnection
+                    type: AzurePowerShell
+                    scriptArguments: >
+                      -ResourceGroupName $(ssvSharedResourceGroup)
+                      -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
+                      -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(aksResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'      
       - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '4.') )}}:
         - name: front_door
           templates:
-            - name: front-door
-              path: infra/core/front-door
-              resourceGroupName: $(frontDoorResourceGroup)
-            - name: azure-waf
-              path: infra/core/front-door
-              resourceGroupName: $(frontDoorResourceGroup)
+            - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '4.0'), startsWith(parameters.deployResource, '4.1') )}}:
+              - name: front-door
+                path: infra/core/front-door
+                resourceGroupName: $(frontDoorResourceGroup)
+            - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '4.0'), startsWith(parameters.deployResource, '4.2') )}}:
+              - name: azure-waf
+                path: infra/core/front-door
+                resourceGroupName: $(frontDoorResourceGroup)
       - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '5.') )}}:
         - name: application_infra
           templates:
-            - name: configuration-store
-              path: infra/core/app-configuration
-              resourceGroupName: $(servicesResourceGroup)
-              privateEndpointDnsRecordsForResources:
-                - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                  resourceGroupName: $(servicesResourceGroup)
-            - name: application-container-registry
-              path: infra/core/container-registry
-              resourceGroupName: $(servicesResourceGroup)
-              privateEndpointDnsRecordsForResources:
-                - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
-                  resourceGroupName: $(servicesResourceGroup)
-            - name: flexible-server
-              path: infra/core/postgre-sql
-              resourceGroupName: $(dbsResourceGroup)
-            - name: redis-cache
-              path: infra/core/redis-cache
-              resourceGroupName: $(servicesResourceGroup)
-            - name: application-storage-account
-              path: infra/core/storage-account
-              resourceGroupName: $(servicesResourceGroup)
-              privateEndpointDnsRecordsForResources:
-                - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
-                  resourceGroupName: $(servicesResourceGroup)
+            - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '5.0'), startsWith(parameters.deployResource, '5.1') )}}:
+              - name: configuration-store
+                path: infra/core/app-configuration
+                resourceGroupName: $(servicesResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                    resourceGroupName: $(servicesResourceGroup)
+            - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '5.0'), startsWith(parameters.deployResource, '5.2') )}}:
+              - name: application-container-registry
+                path: infra/core/container-registry
+                resourceGroupName: $(servicesResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
+                    resourceGroupName: $(servicesResourceGroup)
+            - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '5.0'), startsWith(parameters.deployResource, '5.3') )}}:
+              - name: flexible-server
+                path: infra/core/postgre-sql
+                resourceGroupName: $(dbsResourceGroup)
+            - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '5.0'), startsWith(parameters.deployResource, '5.4') )}}:
+              - name: redis-cache
+                path: infra/core/redis-cache
+                resourceGroupName: $(servicesResourceGroup)
+            - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '5.0'), startsWith(parameters.deployResource, '5.4') )}}:
+              - name: application-storage-account
+                path: infra/core/storage-account
+                resourceGroupName: $(servicesResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
+                    resourceGroupName: $(servicesResourceGroup)
       - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '7.2') )}}:
         - name: security
           dependsOnGroupedTemplates:
