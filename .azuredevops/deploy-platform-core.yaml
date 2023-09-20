@@ -1,3 +1,5 @@
+name: 1.0.$(BuildID)_${{ parameters.deployResources }}
+
 parameters:
   - name: deployFromFeature
     displayName: "Deploy from Feature Branch"
