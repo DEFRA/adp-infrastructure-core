@@ -73,11 +73,6 @@ extends:
         azureRegions:
           primary: 'UKSouth'    
     groupedTemplates:
-      - name: echo
-        templates:
-          - name: echo
-            path: infra/core/echo
-            resourceGroupName: $(servicesResourceGroup)
       - ${{ if or(startsWith(parameters.deployResource,'1.0'), startsWith(parameters.deployResource,'2.'), startsWith(parameters.deployResource,'6.'), startsWith(parameters.deployResource,'7.2') )}}:
         - name: network
           templates:
