@@ -31,7 +31,6 @@ parameters:
       - Application - Service Bus
       - Application - Key Vault
       
-
 variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'All') }}
@@ -159,8 +158,9 @@ extends:
                 resourceGroupName: $(servicesResourceGroup)
         - ${{ if eq(variables.IsManagedCluster, true) }}:  
           - name: managed_cluster
-            dependsOnGroupedTemplates:
-              - network
+            ${{ if eq(variables.IsAll, true) }}:
+              dependsOnGroupedTemplates:
+                - network
             templates:
               - ${{ if eq(variables.IsManagedClusterPrivateDNSZone, true) }}:
                 - name: aks-cluster-zone
@@ -202,8 +202,9 @@ extends:
                   resourceGroupName: $(frontDoorResourceGroup)
         - ${{ if eq(variables.IsApplication, true) }}:  
           - name: application_infra
-            dependsOnGroupedTemplates:
-            - network
+            ${{ if eq(variables.IsAll, true) }}:
+              dependsOnGroupedTemplates:
+              - network
             templates:
               - ${{ if eq(variables.IsApplicationAppConfig, true) }}:  
                 - name: configuration-store
