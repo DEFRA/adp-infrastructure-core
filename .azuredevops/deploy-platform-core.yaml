@@ -24,7 +24,7 @@ parameters:
 
 variables:
   - name: IsAll
-    value: ${{ parameters.deployResources == 'All' }}
+    value: ${{ eq(parameters.deployResources,'All') }}
 
 pr:
   branches:
@@ -66,7 +66,7 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedTemplates:
-      - ${{ if eq(variables.IsAll, true }}:
+      - ${{ if eq(variables.IsAll, true) }}:
         - name: network
           templates:
             - name: route-table
