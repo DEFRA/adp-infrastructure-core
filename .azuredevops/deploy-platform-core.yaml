@@ -3,38 +3,32 @@ parameters:
     displayName: "Deploy from Feature Branch"
     type: boolean
     default: false
-  - name: deployResourceCategory
-    displayName: Resource Category to deploy
-    type: string
-    default: others
-    values:
-      - 1-all
-      - 2-network
-      - 3-monitoring
-      - 4-frontdoor
-      - 5-applicationinfra
-      - 6-managedcluster
-      - 7-others   # no category
-  - name: deployResourceType
-    displayName: Resource Type to deploy
+  - name: deployResource
+    displayName: Resources to deploy
     type: string
     default: 1.all
     values:
-      - 1.all   # no category
-      - 2.1-nsg
-      - 2.2-udr
+      - 1.0-all 
+      - 2.0-network
+      - 2.1-udr
+      - 2.2-nsg      
       - 2.3-vnet
+      - 3.0-monitoring
       - 3.1-workspace
       - 3.2-components
+      - 4.0-front-Door
       - 4.1-azurewaf
       - 4.2-frontdoor
+      - 5.0-applicationinfra
       - 5.1-configurationstore
       - 5.2-applicationcontainerregistry
       - 5.3-flexibleserver
       - 5.4-rediscache
       - 5.5-applicationstorageaccount
+      - 6.0-managedcluster
       - 6.1-akscluster
-      - 6.2-grafana      
+      - 6.2-grafana
+      - 7.0-others   
       - 7.1-applicationkeyvault
       - 7.2-namespace
       - 7.3-managedidentity
@@ -120,31 +114,33 @@ extends:
           - name: echo
             path: infra/core/echo
             resourceGroupName: $(servicesResourceGroup)
-      - $[ if eq(variables.deployNetworkGroup, true) ]:
+      - ${{ if or(startsWith(parameters.deployResource,'1.0'), startsWith(parameters.deployResource,'2.'), startsWith(parameters.deployResource,'6.'), startsWith(parameters.deployResource,'7.2') )}}:
         - name: network
           templates:
-            - $[ if eq(variables.deployUDR, true) ]:
+            - ${{ if or(startsWith(parameters.deployResource,'1.0'), startsWith(parameters.deployResource,'2.0'), startsWith(parameters.deployResource, '2.1'), startsWith(parameters.deployResource, '6.'), startsWith(parameters.deployResource, '7.2') )}}:
               - name: route-table
                 path: infra/common/network
                 resourceGroupName: $(virtualNetworkResourceGroup)
-            - $[ if eq(variables.deployNSG, true) ]:
+            - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '2.0'), startsWith(parameters.deployResource, '2.2'), startsWith(parameters.deployResource, '6.'), startsWith(parameters.deployResource, '7.2') )}}:
               - name: subnet-nsg
                 path: infra/common/network
                 resourceGroupName: $(virtualNetworkResourceGroup)
-            - $[ if eq(variables.deployVNET, true) ]:
+            - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '2.0'), startsWith(parameters.deployResource, '2.3'), startsWith(parameters.deployResource, '6.'), startsWith(parameters.deployResource, '7.2') )}}:
               - name: virtual-network
                 path: infra/common/network
                 resourceGroupName: $(virtualNetworkResourceGroup)
-      - $[ if eq(variables.deployMonitoringGroup, true) ]:
+      - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '3.') )}}:
         - name: monitoring
           templates:
-            - name: workspace
-              path: infra/core/operational-insights
-              resourceGroupName: $(servicesResourceGroup)
-            - name: component
-              path: infra/core/insights
-              resourceGroupName: $(servicesResourceGroup)
-      - $[ if eq(variables.deployManagedClusterGroup, true) ]:
+            - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '3.0'), startsWith(parameters.deployResource, '3.1') )}}:
+              - name: workspace
+                path: infra/core/operational-insights
+                resourceGroupName: $(servicesResourceGroup)
+            - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '3.0'), startsWith(parameters.deployResource, '3.2') )}}:
+              - name: component
+                path: infra/core/insights
+                resourceGroupName: $(servicesResourceGroup)
+      - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '6.') )}}:
         - name: managed_cluster
           dependsOnGroupedTemplates:
             - network
@@ -174,17 +170,8 @@ extends:
                   scriptArguments: >
                     -ResourceGroupName $(ssvSharedResourceGroup)
                     -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
-                    -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(aksResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
-      - $[ if eq(variables.deployOthersGroup, true) ]:                    
-        - name: service_bus
-          templates:
-            - name: namespace
-              path: infra/core/service-bus
-              resourceGroupName: $(servicesResourceGroup)
-              privateEndpointDnsRecordsForResources:
-                - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
-                  resourceGroupName: $(servicesResourceGroup)
-      - $[ if eq(variables.deployFrontDoorGroup, true) ]:
+                    -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(aksResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'      
+      - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '4.') )}}:
         - name: front_door
           templates:
             - name: front-door
@@ -193,7 +180,7 @@ extends:
             - name: azure-waf
               path: infra/core/front-door
               resourceGroupName: $(frontDoorResourceGroup)
-      - $[ if eq(variables.deployApplicationInfraGroup, true) ]:
+      - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '5.') )}}:
         - name: application_infra
           templates:
             - name: configuration-store
@@ -220,7 +207,7 @@ extends:
               privateEndpointDnsRecordsForResources:
                 - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
                   resourceGroupName: $(servicesResourceGroup)
-      - $[ if eq(variables.deployApplicationKeyVault, true) ]:
+      - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '7.2') )}}:
         - name: security
           dependsOnGroupedTemplates:
             - network
@@ -230,4 +217,13 @@ extends:
               resourceGroupName: $(servicesResourceGroup)
               privateEndpointDnsRecordsForResources:
                 - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
+                  resourceGroupName: $(servicesResourceGroup)
+      - ${{ if or(startsWith(parameters.deployResource, '1.0'), startsWith(parameters.deployResource, '7.1') )}}:           
+        - name: service_bus
+          templates:
+            - name: namespace
+              path: infra/core/service-bus
+              resourceGroupName: $(servicesResourceGroup)
+              privateEndpointDnsRecordsForResources:
+                - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
                   resourceGroupName: $(servicesResourceGroup)
