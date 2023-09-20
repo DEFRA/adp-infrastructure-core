@@ -1,4 +1,4 @@
-name: 1.0.$(BuildID)_${{ parameters.deployResources }}
+name: 1.0.$(BuildID)-${{ parameters.deployResources }}
 
 parameters:
   - name: deployFromFeature
