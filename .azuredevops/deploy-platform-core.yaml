@@ -1,3 +1,5 @@
+name: 1.0.$(BuildID)-${{ parameters.deployResources }}
+
 parameters:
   - name: deployFromFeature
     displayName: "Deploy from Feature Branch"
@@ -50,18 +52,18 @@ variables:
   - name: IsMonitoringAll
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Monitoring - All')) }}
   - name: IsMonitoringWorkspace
-    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Monitoring - Workspace')) }}
+    value: ${{ or(eq(variables.IsMonitoringAll,true), eq(parameters.deployResources,'Monitoring - Workspace')) }}
   - name: IsMonitoringInsights
-    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Monitoring - Insights')) }}
+    value: ${{ or(eq(variables.IsMonitoringAll,true), eq(parameters.deployResources,'Monitoring - Insights')) }}
 
   - name: IsManagedCluster
-    value: ${{ or(eq(variables.IsNetworkAll,true), startsWith(parameters.deployResources, 'Managed Cluster')) }}
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Managed Cluster')) }}
   - name: IsManagedClusterAll
-    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources, 'Managed Cluster - All')) }}
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Managed Cluster - All')) }}
   - name: IsManagedClusterPrivateDNSZone
-    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources, 'Managed Cluster - Private DNS Zone')) }}
+    value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Private DNS Zone')) }}
   - name: IsManagedClusterCluster
-    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources, 'Managed Cluster - Cluster')) }}
+    value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Cluster')) }}
   
   - name: IsFrontDoor
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Front Door')) }}
@@ -147,15 +149,19 @@ extends:
                 - name: subnet-nsg
                   path: infra/common/network
                   resourceGroupName: $(virtualNetworkResourceGroup)
+
         - ${{ if eq(variables.IsMonitoring, true) }}:
           - name: monitoring
             templates:
-              - name: workspace
-                path: infra/core/operational-insights
-                resourceGroupName: $(servicesResourceGroup)
-              - name: component
-                path: infra/core/insights
-                resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsMonitoringWorkspace, true) }}:
+                - name: workspace
+                  path: infra/core/operational-insights
+                  resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsMonitoringInsights, true) }}:
+                - name: component
+                  path: infra/core/insights
+                  resourceGroupName: $(servicesResourceGroup)
+
         - ${{ if eq(variables.IsManagedCluster, true) }}:  
           - name: managed_cluster
             ${{ if eq(variables.IsAll, true) }}:
@@ -189,6 +195,7 @@ extends:
                         -ResourceGroupName $(ssvSharedResourceGroup)
                         -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
                         -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(aksResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
+
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
             templates:
@@ -200,6 +207,7 @@ extends:
                 - name: azure-waf
                   path: infra/core/front-door
                   resourceGroupName: $(frontDoorResourceGroup)
+                  
         - ${{ if eq(variables.IsApplication, true) }}:  
           - name: application_infra
             ${{ if eq(variables.IsAll, true) }}:
@@ -236,7 +244,7 @@ extends:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
               - ${{ if eq(variables.IsApplicationServiceBus, true) }}:                                         
-                - name: service_bus
+                - name: namespace
                   path: infra/core/service-bus
                   resourceGroupName: $(servicesResourceGroup)
                   privateEndpointDnsRecordsForResources:
