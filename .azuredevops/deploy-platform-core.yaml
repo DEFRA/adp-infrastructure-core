@@ -35,14 +35,6 @@ extends:
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
-    environments:
-      - name: 'snd1'
-        serviceConnection: AZD-ADP-SND1
-        deploymentBranches:
-          - 'refs/heads/main'
-        developmentEnvironment: true
-        azureRegions:
-          primary: 'UKSouth'
     groupedTemplates:
       - name: network
         templates:
