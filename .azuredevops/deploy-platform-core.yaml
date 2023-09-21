@@ -106,7 +106,7 @@ trigger:
   batch: true
   branches:
     include:
-      - "*"
+      - '*'
   paths:
     include:
       - infra/core/*
