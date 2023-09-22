@@ -92,7 +92,8 @@ variables:
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Service Bus')) }}
   - name: IsApplicationKeyVault
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
-
+  - name: ssvServiceConnection
+    value: 'AZD-ADP-SSV3'
 
 pr:
   branches:
@@ -111,9 +112,6 @@ trigger:
     include:
       - infra/core/*
       - infra/common/*
-  variables:
-    - name: ssvServiceConnection
-      value: 'AZD-ADP-SSV3'
 
 resources:
   repositories:
