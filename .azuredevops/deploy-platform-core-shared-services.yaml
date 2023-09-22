@@ -49,6 +49,5 @@ extends:
             path: infra/core-shared-services/container-registry
             resourceGroupName: $(ssvSharedResourceGroup)
           - name: grafana
-            serviceConnectionVariableName: ssvServiceConnection
             path: infra/core/observability
             resourceGroupName: $(ssvSharedResourceGroup)

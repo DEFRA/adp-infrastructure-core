@@ -111,6 +111,9 @@ trigger:
     include:
       - infra/core/*
       - infra/common/*
+  variables:
+    - name: ssvServiceConnection
+      value: 'AZD-ADP-SSV3'
 
 resources:
   repositories:
@@ -125,14 +128,6 @@ extends:
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
-    environments:
-      - name: "snd1"
-        serviceConnection: AZD-ADP-SND1
-        deploymentBranches:
-          - "refs/heads/main"
-        developmentEnvironment: true
-        azureRegions:
-          primary: "UKSouth"
     groupedTemplates:
         - ${{ if eq(variables.IsNetwork, true) }}:
           - name: network
