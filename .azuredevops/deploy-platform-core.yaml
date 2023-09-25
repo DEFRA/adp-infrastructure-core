@@ -18,6 +18,7 @@ parameters:
       - Monitoring - All
       - Monitoring - Workspace
       - Monitoring - Insights
+      - Monitoring - Azure Monitor Workspace
       - Monitoring - Grafana
       - Managed Cluster - All
       - Managed Cluster - Private DNS Zone
@@ -97,9 +98,6 @@ variables:
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Service Bus')) }}
   - name: IsApplicationKeyVault
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
-  - name: ssv3ServiceConnection
-    value: AZD-ADP-SSV3
-
 
 pr:
   branches:
@@ -132,14 +130,6 @@ extends:
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
-    environments:
-      - name: "snd1"
-        serviceConnection: AZD-ADP-SND1
-        deploymentBranches:
-          - "refs/heads/main"
-        developmentEnvironment: true
-        azureRegions:
-          primary: "UKSouth"
     groupedTemplates:
         - ${{ if eq(variables.IsNetwork, true) }}:
           - name: network
@@ -168,10 +158,11 @@ extends:
                 - name: component
                   path: infra/core/insights
                   resourceGroupName: $(servicesResourceGroup)
-              - ${{ if eq(variables.IsMonitoringGrafana, true) }}:
+              - ${{ if eq(variables.IsMonitoringAzureMonitorWorkspace, true) }}:
                 - name: azure-monitor-workspace
                   path: infra/core/observability
                   resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsMonitoringGrafana, true) }}:
                 - name: grafana
                   serviceConnectionVariableName: ssvServiceConnection
                   path: infra/core/observability
