@@ -53,9 +53,6 @@
         "resourceGroup": "#{{ dnsResourceGroup }}"
       }
     },
-    "azureMonitorWorkspaceName": {
-      "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_azuremonitorworkspace }}#{{ nc_instance_regionid }}01"
-    },
     "containerRegistry": {
       "value": {
         "name": "#{{ ssvSharedAcrName }}",
