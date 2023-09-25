@@ -67,6 +67,9 @@ try {
             Write-Host "Grafana Dashboard $GrafanaName does not have Azure Monitor Workspace $WorkspaceResourceId linked"
             $linkedWorkspaces += $WorkspaceResourceId
         }
+        else{
+            Write-Host "Grafana Dashboard $GrafanaName already has Azure Monitor Workspace $WorkspaceResourceId linked"
+        }
 
     }
     else{
