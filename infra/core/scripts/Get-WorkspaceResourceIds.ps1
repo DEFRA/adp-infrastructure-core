@@ -52,27 +52,29 @@ try {
         Write-Host "Az.Dashboard Installed Successfully."
     }
 
-    Write-Host "${functionName}:Getting Grafana Dashboard $GrafanaName from Resource Group $ResourceGroupName..."
+    Write-Host "Getting Grafana Dashboard $GrafanaName from Resource Group $ResourceGroupName..."
     [object]$grafana = Get-AzGrafana -ResourceGroupName $ResourceGroupName -GrafanaName $GrafanaName -ErrorAction SilentlyContinue
-    Write-Host "${functionName}:Finished getting Grafana Dashboard"
-
+    
     [array]$linkedWorkspaces = @()
 
-    if ($null -eq $grafana -and $null -ne $grafana.GrafanaIntegrationAzureMonitorWorkspaceIntegration) {
-        $linkedWorkspaces += $WorkspaceResourceId
-    }
-    else {
-        $linkedWorkspacesObjectExists = $($grafana.GrafanaIntegrationAzureMonitorWorkspaceIntegration).psobject.BaseObject -match "azureMonitorWorkspaceResourceId"
-        if (-not [string]::IsNullOrEmpty($linkedWorkspacesObjectExists)) {
+    if($grafana){
+        Write-host "Grafana Dashboard $GrafanaName exists in Resource Group $ResourceGroupName"
+        if ($grafana.GrafanaIntegrationAzureMonitorWorkspaceIntegration) {
             $linkedWorkspaces = $grafana.GrafanaIntegrationAzureMonitorWorkspaceIntegration.AzureMonitorWorkspaceResourceId
         }
-        Write-Debug "${functionName}:linkedWorkspaces=$linkedWorkspaces"
 
-        [string]$workspaceAlreadyLinked = $linkedWorkspaces -Match "$WorkspaceResourceId"
-        if ([string]::IsNullOrEmpty($workspaceAlreadyLinked) -or $workspaceAlreadyLinked -eq 'False') {
+        if($linkedWorkspaces -notcontains $WorkspaceResourceId){
+            Write-Host "Grafana Dashboard $GrafanaName does not have Azure Monitor Workspace $WorkspaceResourceId linked"
             $linkedWorkspaces += $WorkspaceResourceId
         }
+
     }
+    else{
+        Write-Host "Grafana Dashboard $GrafanaName does not exists in Resource Group $ResourceGroupName"
+        $linkedWorkspaces += $WorkspaceResourceId
+    }
+
+    Write-Debug "${functionName}:linkedWorkspaces=$linkedWorkspaces"
 
     Write-Host "##vso[task.setvariable variable=azureMonitorWorkspaceResourceIds]$linkedWorkspaces"
     Write-Host $linkedWorkspaces
