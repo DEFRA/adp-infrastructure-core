@@ -10,7 +10,7 @@ Mandatory. Grafana Dashboard name.
 .PARAMETER WorkspaceResourceId
 Mandatory. Azure Monitor Workspace ResourceId.
 .EXAMPLE
-.\Connect-WorkspaceToGrafana.ps1 -ResourceGroupName <ResourceGroupName> -GrafanaName <GrafanaName> -WorkspaceResourceId <WorkspaceResourceId>
+.\Get-WorkspaceResourceIds.ps1 -ResourceGroupName <ResourceGroupName> -GrafanaName <GrafanaName> -WorkspaceResourceId <WorkspaceResourceId>
 #> 
 
 [CmdletBinding()]
@@ -58,7 +58,7 @@ try {
 
     [array]$linkedWorkspaces = @()
 
-    if ($null -eq $grafana) {
+    if ($null -eq $grafana -and $null -ne $grafana.GrafanaIntegrationAzureMonitorWorkspaceIntegration) {
         $linkedWorkspaces += $WorkspaceResourceId
     }
     else {
