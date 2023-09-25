@@ -229,8 +229,8 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
         'source-controller.enabled': 'true'
         'kustomize-controller.enabled': 'true'
         'notification-controller.enabled': 'true'
-        'image-automation-controller.enabled': 'false'
-        'image-reflector-controller.enabled': 'false'
+        'image-automation-controller.enabled': 'true'
+        'image-reflector-controller.enabled': 'true'
       }
       configurations: [
         {
