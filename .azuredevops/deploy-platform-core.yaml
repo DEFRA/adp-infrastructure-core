@@ -15,6 +15,7 @@ parameters:
       - Network - VNET
       - Network - NSGs
       - Network - Route Tables
+      - Network - Public DNS Zone
       - Monitoring - All
       - Monitoring - Workspace
       - Monitoring - Insights
@@ -34,6 +35,32 @@ parameters:
       - Application - Storage Account
       - Application - Service Bus
       - Application - Key Vault
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra/core/*
+      - infra/common/*
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+      - infra/core/*
+      - infra/common/*
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: main
       
 variables:
   - name: IsAll
@@ -48,6 +75,8 @@ variables:
     value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - NSGs')) }}
   - name: IsNetworkRouteTable
     value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - Route Tables')) }}
+  - name: IsNetworkPublicDNSZone
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - Public DNS Zone')) }}
 
   - name: IsMonitoring
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Monitoring')) }}
@@ -99,32 +128,6 @@ variables:
   - name: IsApplicationKeyVault
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
 
-pr:
-  branches:
-    include:
-      - main
-  paths:
-    include:
-      - infra/core/*
-      - infra/common/*
-trigger:
-  batch: true
-  branches:
-    include:
-      - '*'
-  paths:
-    include:
-      - infra/core/*
-      - infra/common/*
-
-resources:
-  repositories:
-    - repository: ADPPipelineCommon
-      name: DEFRA/adp-pipeline-common
-      endpoint: DEFRA
-      type: github
-      ref: main
-
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
@@ -146,6 +149,10 @@ extends:
                 - name: subnet-nsg
                   path: infra/common/network
                   resourceGroupName: $(virtualNetworkResourceGroup)
+              - ${{ if eq(variables.IsNetworkPublicDNSZone, true) }}:
+                - name: dns-zone
+                  path: infra/core/public-dns-zone
+                  resourceGroupName: $(dnsResourceGroup)
 
         - ${{ if eq(variables.IsMonitoring, true) }}:
           - name: monitoring
