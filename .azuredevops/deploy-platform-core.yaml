@@ -152,6 +152,7 @@ extends:
               - ${{ if eq(variables.IsNetworkPublicDNSZone, true) }}:
                 - name: dns-zone
                   path: infra/core/public-dns-zone
+                  resourceGroupName: $(dnsResourceGroup)
 
         - ${{ if eq(variables.IsMonitoring, true) }}:
           - name: monitoring
