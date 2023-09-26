@@ -25,6 +25,18 @@
     },
     "environment": {
       "value": "#{{ environment }}"
+    },
+    "roleAssignments": {
+      "value": [
+        {
+          "roleDefinitionIdOrName": "App Configuration Data Owner",
+          "description": "App Configuration Data Owner Role Assignment",
+          "principalIds": [
+            "#{{ tier2ServiceConnectionAppRegName }}"
+          ],
+          "principalType": "ServicePrincipal"
+        }
+      ]
     }
   }
 }
