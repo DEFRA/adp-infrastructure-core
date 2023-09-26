@@ -60,7 +60,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: pp/adp-dns-zone
+      ref: main
       
 variables:
   - name: IsAll
