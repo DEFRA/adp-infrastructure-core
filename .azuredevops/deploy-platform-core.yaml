@@ -33,6 +33,32 @@ parameters:
       - Application - Storage Account
       - Application - Service Bus
       - Application - Key Vault
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra/core/*
+      - infra/common/*
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+      - infra/core/*
+      - infra/common/*
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: pp/adp-dns-zone
       
 variables:
   - name: IsAll
@@ -95,33 +121,6 @@ variables:
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Service Bus')) }}
   - name: IsApplicationKeyVault
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
-
-
-pr:
-  branches:
-    include:
-      - main
-  paths:
-    include:
-      - infra/core/*
-      - infra/common/*
-trigger:
-  batch: true
-  branches:
-    include:
-      - '*'
-  paths:
-    include:
-      - infra/core/*
-      - infra/common/*
-
-resources:
-  repositories:
-    - repository: ADPPipelineCommon
-      name: DEFRA/adp-pipeline-common
-      endpoint: DEFRA
-      type: github
-      ref: pp/adp-dns-zone
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
