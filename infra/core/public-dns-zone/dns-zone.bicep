@@ -3,7 +3,7 @@
 param publicDnsZoneName string
 
 @allowed([
-  'UKSouth'
+  'global'
 ])
 @description('Required. The Azure region where the resources will be deployed.')
 param location string
