@@ -15,7 +15,7 @@ var commonTags = {
   Location: location
   CreatedDate: createdDate
   Environment: environment
-  Purpose: 'Azure Monitor Workspace'
+  Purpose: 'Shared Azure Monitor Workspace for Platform'
 }
 var tags = union(loadJsonContent('../../common/default-tags.json'), commonTags)
 
