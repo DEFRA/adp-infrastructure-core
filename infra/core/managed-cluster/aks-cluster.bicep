@@ -4,8 +4,7 @@ param vnet object
 param cluster object
 @description('Required. The parameter object for private dns zone. The object must contain the prefix and resourceGroup values')
 param privateDnsZone object
-@description('Required. The Name of the Azure Monitor Workspace.')
-param azureMonitorWorkspaceName string
+
 @description('Required. The parameter object for the container registry. The object must contain the name, subscriptionId and resourceGroup values.')
 param containerRegistry object
 @allowed([
@@ -41,18 +40,9 @@ var aksTags = {
   Tier: 'Shared'
 }
 
-var azureMonitorWorkspaceTags = {
-  Name: azureMonitorWorkspaceName
-  Purpose: 'Azure Monitor Workspace'
-}
+
 
 var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io')
-
-resource azureMonitorWorkSpaceResource 'Microsoft.Monitor/accounts@2023-04-03' = {
-  location: location
-  name: azureMonitorWorkspaceName
-  tags: azureMonitorWorkspaceTags
-}
 
 module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'aks-cluster-mi-${deploymentDate}'
