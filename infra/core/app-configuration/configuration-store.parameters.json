@@ -29,7 +29,7 @@
         "principalId":{
             "reference": {
                 "keyVault": {
-                    "id": "/subscriptions/#{{ ssvServiceConnection }}/resourceGroups/#{{ ssvSharedResourceGroup }}/providers/Microsoft.KeyVault/vaults/#{{ ssvPlatformKeyVaultName }}"
+                    "id": "/subscriptions/#{{ ssv3subscriptionId }}/resourceGroups/#{{ ssvSharedResourceGroup }}/providers/Microsoft.KeyVault/vaults/#{{ ssvPlatformKeyVaultName }}"
                 },
                 "secretName": "#{{ tier2ApplicationClientIdSecretName }}"
             }
