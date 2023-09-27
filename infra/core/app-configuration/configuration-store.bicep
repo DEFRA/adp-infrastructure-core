@@ -23,8 +23,20 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
-@description('Required. Array of role assignment objects that contain the \'roleDefinitionIdOrName\' and \'principalId\' to define RBAC role assignments on this resource. In the roleDefinitionIdOrName attribute, you can provide either the display name of the role definition, or its fully qualified ID in the following format: \'/providers/Microsoft.Authorization/roleDefinitions/c2f4ef07-c644-48eb-af81-4b1b4947fb11\'.')
-param roleAssignments array
+@description('Required. principalId of service connection')
+@secure()
+param principalId string
+
+var roleAssignments = [
+  {
+    roleDefinitionIdOrName: 'App Configuration Data Owner'
+    description: 'App Configuration Data Owner Role Assignment'
+    principalIds: [
+      principalId
+    ]
+    principalType: 'ServicePrincipal'
+  }
+]
 
 var customTags = {
   Location: location
