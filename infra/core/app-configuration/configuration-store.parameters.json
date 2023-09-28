@@ -31,7 +31,7 @@
                 "keyVault": {
                     "id": "/subscriptions/#{{ ssv3subscriptionId }}/resourceGroups/#{{ ssvSharedResourceGroup }}/providers/Microsoft.KeyVault/vaults/#{{ ssvPlatformKeyVaultName }}"
                 },
-                "secretName": "#{{ tier2ApplicationClientIdSecretName }}"
+                "secretName": "#{{ tier2ApplicationObjectIdSecretName }}"
             }
         }
     }
