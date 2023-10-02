@@ -35,8 +35,19 @@ var frontDoorTags = {
 module frontDoor 'br/SharedDefraRegistry:cdn.profile:0.4.2' = {
   name: 'front-door-${deploymentDate}'
   params: {
+    enableDefaultTelemetry: true
     name: name
     location: location
+    frontendEndpoints: [
+      {
+        name: 'adp-cluster'
+        properties: {
+          hostName: '${name}.${environment().suffixes.azureFrontDoorEndpointSuffix}'
+          sessionAffinityEnabledState: 'Disabled'
+          sessionAffinityTtlSeconds: 60
+        }
+      }
+    ]
     lock: 'CanNotDelete'
     tags: union(tags, frontDoorTags)
     sku: sku
