@@ -8,7 +8,7 @@ parameters:
   - name: deployResources
     displayName: "Resources to Deploy"
     type: string
-    default: "Front Door - Core"
+    default: "All"
     values:
       - All
       - Network - All
