@@ -10,6 +10,9 @@ param sku string
 @description('Required. Environment name.')
 param environment string
 
+@description('Required. Array of objects containing the endpoint details.')
+param endpoints array
+
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
@@ -32,22 +35,13 @@ var frontDoorTags = {
   Tier: 'Shared'
 }
 
-module frontDoor 'br/SharedDefraRegistry:cdn.profile:0.4.2' = {
+module frontDoor 'br/SharedDefraRegistry:cdn.profile:0.4.4-prerelease' = {
   name: 'front-door-${deploymentDate}'
   params: {
     enableDefaultTelemetry: true
     name: name
     location: location
-    frontendEndpoints: [
-      {
-        name: 'adp-cluster'
-        properties: {
-          hostName: '${name}.${environment().suffixes.azureFrontDoorEndpointSuffix}'
-          sessionAffinityEnabledState: 'Disabled'
-          sessionAffinityTtlSeconds: 60
-        }
-      }
-    ]
+    afdEndpoints : endpoints
     lock: 'CanNotDelete'
     tags: union(tags, frontDoorTags)
     sku: sku
