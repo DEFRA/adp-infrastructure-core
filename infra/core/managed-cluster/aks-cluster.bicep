@@ -22,6 +22,8 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 param fluxConfig object
 @description('Optional. The parameter object for the monitoringWorkspace. The object must contain name of the name and resourceGroup.')
 param monitoringWorkspace object
+@description('Required. Azure Service Operator managed identity name')
+param asoPlatformManagedIdentity string
 
 var commonTags = {
   Location: location
@@ -39,8 +41,11 @@ var aksTags = {
   Purpose: 'AKS Cluster'
   Tier: 'Shared'
 }
-
-
+var tagsAsoMi = {
+  Name: asoPlatformManagedIdentity
+  Purpose: 'ADP Platform Azure Service Operator Managed Identity'
+  Tier: 'Shared'
+}
 
 var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io')
 
@@ -51,6 +56,48 @@ module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-id
     location: location
     lock: 'CanNotDelete'
     tags: union(tags, tagsMi)
+  }
+}
+
+module managedIdentityAso 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
+  name: 'aso-managed-identity-${deploymentDate}'
+  params: {
+    name: asoPlatformManagedIdentity
+    tags: union(tags, tagsAsoMi)
+    location: location
+    lock: 'CanNotDelete'
+    federatedIdentityCredentials: [
+      {
+        name: '${asoPlatformManagedIdentity}-fic'
+        audiences: [
+          'api://AzureADTokenExchange'
+        ]
+        issuer: deployAKS.outputs.oidcIssuerUrl
+        subject: 'system:serviceaccount:azureserviceoperator-system:azureserviceoperator-default'
+      }
+    ]
+  }
+}
+
+module contributor '.bicep/contributor.bicep' = {
+  name: 'subscription-contributor-${deploymentDate}'
+  scope: subscription()
+  dependsOn: [
+    managedIdentityAso
+  ]
+  params: {
+      principalId: managedIdentityAso.outputs.principalId
+  }
+}
+
+module userAccessAdministrator '.bicep/userAccessAdministrator.bicep' = {
+  name: 'subscription-userAccessAdministrator-${deploymentDate}'
+  scope: subscription()
+  dependsOn: [
+    managedIdentityAso
+  ]
+  params: {
+      principalId: managedIdentityAso.outputs.principalId
   }
 }
 
