@@ -17,7 +17,7 @@
     "endpoints":{
       "value": [
        {
-        "name": "adp-cluster"
+        "name": "#{{ environment }}#{{ environmentId }}-adp-cluster"
        } 
       ]
     }
