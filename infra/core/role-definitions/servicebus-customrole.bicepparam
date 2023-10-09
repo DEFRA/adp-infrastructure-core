@@ -1,4 +1,4 @@
-using './serviceBusCustomRole.bicep'
+using './servicebus-customrole.bicep'
 
 param roleName = ''
 
