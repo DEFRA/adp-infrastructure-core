@@ -49,6 +49,17 @@ var tagsAsoMi = {
 
 var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io')
 
+var asoPlatformTeamMiRbacs = [
+  {
+    name: 'Contributor'
+    roleDefinitionId: 'b24988ac-6180-42a0-ab88-20f7382dd24c'
+  }
+  {
+    name: 'UserAccessAdministrator'
+    roleDefinitionId: '18d7d88d-d35e-4fb5-a5c3-7773c20a72d9'
+  }
+]
+
 module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'aks-cluster-mi-${deploymentDate}'
   params: {
@@ -79,27 +90,17 @@ module managedIdentityAso 'br/SharedDefraRegistry:managed-identity.user-assigned
   }
 }
 
-module contributor '.bicep/contributor.bicep' = {
-  name: 'subscription-contributor-${deploymentDate}'
+module asoPlatformTeamMiRbacSubscriptionPermissions '.bicep/subscription-rbac.bicep' = [for asoPlatformTeamMiRbac in asoPlatformTeamMiRbacs: {
+  name: 'subscription-${asoPlatformTeamMiRbac.name}-${deploymentDate}'
   scope: subscription()
   dependsOn: [
     managedIdentityAso
   ]
   params: {
       principalId: managedIdentityAso.outputs.principalId
+      roleDefinitionId: asoPlatformTeamMiRbac.roleDefinitionId
   }
-}
-
-module userAccessAdministrator '.bicep/userAccessAdministrator.bicep' = {
-  name: 'subscription-userAccessAdministrator-${deploymentDate}'
-  scope: subscription()
-  dependsOn: [
-    managedIdentityAso
-  ]
-  params: {
-      principalId: managedIdentityAso.outputs.principalId
-  }
-}
+}]
 
 module privateDnsZoneContributor '.bicep/private-dns-zone-contributor.bicep' ={
   name: 'aks-cluster-private-dns-zone-contributor-${deploymentDate}'
