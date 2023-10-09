@@ -79,7 +79,7 @@ module managedIdentityAso 'br/SharedDefraRegistry:managed-identity.user-assigned
     lock: 'CanNotDelete'
     federatedIdentityCredentials: [
       {
-        name: '${asoPlatformManagedIdentity}-fic'
+        name: asoPlatformManagedIdentity
         audiences: [
           'api://AzureADTokenExchange'
         ]
