@@ -1,6 +1,6 @@
 using './servicebus-customrole.bicep'
 
-param roleName = ''
+param roleName = '#{{ serviceBusServicesCustomRole }}'
 
 param actions = [
   'Microsoft.ServiceBus/namespaces/read'
@@ -12,10 +12,10 @@ param actions = [
   'Microsoft.ServiceBus/namespaces/queues/authorizationRules/delete'
   'Microsoft.ServiceBus/namespaces/topics/write'
   'Microsoft.ServiceBus/namespaces/topics/read'
+  'Microsoft.ServiceBus/namespaces/topics/Delete'
   'Microsoft.ServiceBus/namespaces/topics/authorizationRules/write'
   'Microsoft.ServiceBus/namespaces/topics/authorizationRules/read'
   'Microsoft.ServiceBus/namespaces/topics/authorizationRules/delete'
-  'Microsoft.ServiceBus/namespaces/topics/Delete'
   'Microsoft.ServiceBus/namespaces/topics/subscriptions/write'
   'Microsoft.ServiceBus/namespaces/topics/subscriptions/read'
   'Microsoft.ServiceBus/namespaces/topics/subscriptions/Delete'
