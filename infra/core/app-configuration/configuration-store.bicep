@@ -23,6 +23,21 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
+@description('Required. principalId of service connection')
+@secure()
+param principalId string
+
+var roleAssignments = [
+  {
+    roleDefinitionIdOrName: 'App Configuration Data Owner'
+    description: 'App Configuration Data Owner Role Assignment'
+    principalIds: [
+      principalId
+    ]
+    principalType: 'ServicePrincipal'
+  }
+]
+
 var customTags = {
   Location: location
   CreatedDate: createdDate
@@ -60,5 +75,8 @@ module appConfigResource 'br/SharedDefraRegistry:app-configuration.configuration
       }
     ]
     tags: union(tags, appConfigTags)
+    roleAssignments: roleAssignments
   }
 }
+
+
