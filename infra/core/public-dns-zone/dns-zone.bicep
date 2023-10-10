@@ -14,6 +14,9 @@ param environment string
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
+@description('Optional. Date in the format yyyyMMdd-HHmmss.')
+param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
+
 var commonTags = {
   Name: publicDnsZoneName
   Location: location
@@ -23,11 +26,13 @@ var commonTags = {
 }
 var tags = union(loadJsonContent('../../common/default-tags.json'), commonTags)
 
-resource publicDnsZone 'Microsoft.Network/dnsZones@2023-07-01-preview' = {
-  name: publicDnsZoneName
-  location: location
-  tags: tags
-  properties: {
-    zoneType: 'Public'  
+module publicDnsZone 'br/SharedDefraRegistry:network.dns-zone:0.5.2' = {
+  name: 'public-dns-zone-${deploymentDate}'
+  params: {
+    name: publicDnsZoneName
+    location: location
+    tags: tags
+    enableDefaultTelemetry: true
+    lock: 'CanNotDelete'
   }
 }

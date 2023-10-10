@@ -13,6 +13,13 @@
     },
     "environment": {
       "value": "#{{ environment }}"
+    },
+    "endpoints":{
+      "value": [
+       {
+        "name": "#{{ environment }}#{{ environmentId }}-adp-cluster"
+       } 
+      ]
     }
   }
 }
