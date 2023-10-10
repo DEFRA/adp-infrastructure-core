@@ -22,6 +22,8 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 param fluxConfig object
 @description('Optional. The parameter object for the monitoringWorkspace. The object must contain name of the name and resourceGroup.')
 param monitoringWorkspace object
+@description('Required. Azure Service Operator managed identity name')
+param asoPlatformManagedIdentity string
 
 var commonTags = {
   Location: location
@@ -39,10 +41,24 @@ var aksTags = {
   Purpose: 'AKS Cluster'
   Tier: 'Shared'
 }
-
-
+var tagsAsoMi = {
+  Name: asoPlatformManagedIdentity
+  Purpose: 'ADP Platform Azure Service Operator Managed Identity'
+  Tier: 'Shared'
+}
 
 var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io')
+
+var asoPlatformTeamMiRbacs = [
+  {
+    name: 'Contributor'
+    roleDefinitionId: 'b24988ac-6180-42a0-ab88-20f7382dd24c'
+  }
+  {
+    name: 'UserAccessAdministrator'
+    roleDefinitionId: '18d7d88d-d35e-4fb5-a5c3-7773c20a72d9'
+  }
+]
 
 module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'aks-cluster-mi-${deploymentDate}'
@@ -53,6 +69,38 @@ module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-id
     tags: union(tags, tagsMi)
   }
 }
+
+module managedIdentityAso 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
+  name: 'aso-managed-identity-${deploymentDate}'
+  params: {
+    name: asoPlatformManagedIdentity
+    tags: union(tags, tagsAsoMi)
+    location: location
+    lock: 'CanNotDelete'
+    federatedIdentityCredentials: [
+      {
+        name: asoPlatformManagedIdentity
+        audiences: [
+          'api://AzureADTokenExchange'
+        ]
+        issuer: deployAKS.outputs.oidcIssuerUrl
+        subject: 'system:serviceaccount:azureserviceoperator-system:azureserviceoperator-default'
+      }
+    ]
+  }
+}
+
+module asoPlatformTeamMiRbacSubscriptionPermissions '.bicep/subscription-rbac.bicep' = [for asoPlatformTeamMiRbac in asoPlatformTeamMiRbacs: {
+  name: 'subscription-${asoPlatformTeamMiRbac.name}-${deploymentDate}'
+  scope: subscription()
+  dependsOn: [
+    managedIdentityAso
+  ]
+  params: {
+      principalId: managedIdentityAso.outputs.principalId
+      roleDefinitionId: asoPlatformTeamMiRbac.roleDefinitionId
+  }
+}]
 
 module privateDnsZoneContributor '.bicep/private-dns-zone-contributor.bicep' ={
   name: 'aks-cluster-private-dns-zone-contributor-${deploymentDate}'
