@@ -23,7 +23,7 @@ var customTags = {
 }
 var tags = union(loadJsonContent('../../common/default-tags.json'), customTags)
 
-module logAnalyticsWorkspaceResource 'br/SharedDefraRegistry:operational-insights.workspace:0.4.2' = {
+module logAnalyticsWorkspaceResource 'br/SharedDefraRegistry:operational-insights.workspace:0.4.3' = {
   name: 'log-analytics-${deploymentDate}'
   params: {
     name: logAnalytics.name
