@@ -99,9 +99,9 @@
                 "INFRA_RG": "#{{ servicesResourceGroup }}",
                 "TEAM_MI_NAME": "#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01",
                 "CLUSTER_OIDC": "",
-                "TENANT_ID": "#{{ subscriptionName }}",
+                "TENANT_ID": "#{{ tenantId }}",
                 "SUBSCRIPTION_ID": "#{{ subscriptionId }}",
-                "SUBSCRIPTION_NAME": "#{{ tenantId }}"
+                "SUBSCRIPTION_NAME": "#{{ subscriptionName }}"
               }
             }
           }
