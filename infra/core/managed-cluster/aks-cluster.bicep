@@ -269,6 +269,8 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
         'notification-controller.enabled': 'true'
         'image-automation-controller.enabled': 'true'
         'image-reflector-controller.enabled': 'true'
+        'helm-controller.detectDrift': 'true'
+        'useKubeletIdentity': 'true'
       }
       configurations: [
         {
@@ -291,6 +293,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
               syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
               validation: 'none'
               prune: true
+              postBuild: fluxConfig.clusterCore.kustomizations.postBuild
             }
             infra: {
               path: fluxConfig.clusterCore.kustomizations.infraPath
@@ -301,6 +304,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
               ]
               validation: 'none'
               prune: true
+              postBuild: fluxConfig.clusterCore.kustomizations.postBuild
             }
             services: {
               path: fluxConfig.clusterCore.kustomizations.servicesPath
@@ -312,6 +316,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
               ]
               validation: 'none'
               prune: true
+              postBuild: fluxConfig.clusterCore.kustomizations.postBuild
             }
           } 
         } 

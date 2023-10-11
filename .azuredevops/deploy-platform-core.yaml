@@ -189,6 +189,7 @@ extends:
             ${{ if eq(variables.IsAll, true) }}:
               dependsOnGroupedTemplates:
                 - network
+                - application_infra
             templates:
               - ${{ if eq(variables.IsManagedClusterPrivateDNSZone, true) }}:
                 - name: aks-cluster-zone
