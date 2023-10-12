@@ -6,7 +6,7 @@ If this PR closes an issue, add '<AB#213700>' somewhere in the PR summary. As a 
 *Link to the relevant work items: e.g: Relates to ADO Work Item AB#213700 and builds on #3376 (link to ADO Build ID URL)*
 
 # **Special notes for your reviewer**
-*Any specific actions or notes on review?
+*Any specific actions or notes on review?*
 
 # Testing
 *Any relevant testing information and pipeline runs.*
