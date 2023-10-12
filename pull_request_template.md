@@ -1,5 +1,5 @@
 <!--  Thanks for sending a pull request!  Here are some tips for you:
-If this PR closes an issue, add '<AB#213700>' somewhere in the PR summary. As a minimum, please *always* link to the relevant work items e.g. AB#213700 (work item number in Azure DevOps). Follow the format below carefully, guidance found here: https://learn.microsoft.com/en-us/azure/devops/boards/github/link-to-from-github?view=azure-devops. Note: The Title pattern should be `{work item number}: {title}`-->
+If this PR closes an issue, add '<AB#213700>' somewhere in the PR summary. As a minimum, please *always* link to the relevant work items e.g. AB#213700 (work item number in Azure DevOps). Follow the format below carefully, guidance found here: https://learn.microsoft.com/en-us/azure/devops/boards/github/link-to-from-github?view=azure-devops. Note: The Title pattern should be `{work item number}: {title}` -->
 
 # **What this PR does / why we need it**:
 *A brief description of changes being made*
