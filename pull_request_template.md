@@ -21,4 +21,4 @@ If this PR closes an issue, add '<AB#213700>' somewhere in the PR summary. As a 
 
 
 # **How does this PR make you feel**:
-![gif]([https://giphy.com/](https://giphy.com/gifs/dogecoin-g4jDE1JnpUNaw))
+![gif]([https://giphy.com/)
