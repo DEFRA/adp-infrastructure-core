@@ -216,11 +216,11 @@ extends:
               - ${{ if eq(variables.IsFrontDoorCore, true) }}: 
                 - name: front-door
                   path: infra/core/front-door
-                  resourceGroupName: $(frontDoorResourceGroup)
+                  resourceGroupName: $(cdnResourceGroup)
               - ${{ if eq(variables.IsFrontDoorWAF, true) }}: 
                 - name: azure-waf
                   path: infra/core/front-door
-                  resourceGroupName: $(frontDoorResourceGroup)
+                  resourceGroupName: $(cdnResourceGroup)
                   
         - ${{ if eq(variables.IsApplication, true) }}:  
           - name: application_infra
