@@ -67,10 +67,10 @@ extends:
         azureRegions:
           primary: 'UKSouth'
 
-    groupedTemplates:
+    groupedDeployments:
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'service-connections')) }}
         : - name: SharedResources
-            templates:
+            deployments:
               - name: platform-key-vault
                 path: infra/bootstrap/key-vault
                 resourceGroupName: $(ssvSharedResourceGroup)
@@ -101,9 +101,9 @@ extends:
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}
         : - name: network
             ${{ if eq(parameters.deployResources, 'all') }}:
-              dependsOnGroupedTemplates:
+              dependsOnGroupedDeployments:
                 - SharedResources
-            templates:
+            deployments:
               - name: route-table
                 path: infra/common/network
                 serviceConnectionVariableName: "subscriptionName"

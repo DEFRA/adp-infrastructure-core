@@ -42,9 +42,9 @@ extends:
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
-    groupedTemplates:
+    groupedDeployments:
       - name: SharedResources 
-        templates:
+        deployments:
           - name: platform-container-registry
             path: infra/core-shared-services/container-registry
             resourceGroupName: $(ssvSharedResourceGroup)

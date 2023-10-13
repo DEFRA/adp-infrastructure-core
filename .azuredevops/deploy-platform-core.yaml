@@ -133,10 +133,10 @@ extends:
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
-    groupedTemplates:
+    groupedDeployments:
         - ${{ if eq(variables.IsNetwork, true) }}:
           - name: network
-            templates:
+            deployments:
               - ${{ if eq(variables.IsNetworkVnet, true) }}:
                 - name: virtual-network
                   path: infra/common/network
@@ -156,7 +156,7 @@ extends:
 
         - ${{ if eq(variables.IsMonitoring, true) }}:
           - name: monitoring
-            templates:
+            deployments:
               - ${{ if eq(variables.IsMonitoringWorkspace, true) }}:
                 - name: workspace
                   path: infra/core/operational-insights
@@ -187,10 +187,10 @@ extends:
         - ${{ if eq(variables.IsManagedCluster, true) }}:  
           - name: managed_cluster
             ${{ if eq(variables.IsAll, true) }}:
-              dependsOnGroupedTemplates:
+              dependsOnGroupedDeployments:
                 - network
                 - application_infra
-            templates:
+            deployments:
               - ${{ if eq(variables.IsManagedClusterPrivateDNSZone, true) }}:
                 - name: aks-cluster-zone
                   path: infra/core/private-dns-zone
@@ -212,7 +212,7 @@ extends:
 
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
-            templates:
+            deployments:
               - ${{ if eq(variables.IsFrontDoorCore, true) }}: 
                 - name: front-door
                   path: infra/core/front-door
@@ -225,9 +225,9 @@ extends:
         - ${{ if eq(variables.IsApplication, true) }}:  
           - name: application_infra
             ${{ if eq(variables.IsAll, true) }}:
-              dependsOnGroupedTemplates:
+              dependsOnGroupedDeployments:
               - network
-            templates:
+            deployments:
               - ${{ if eq(variables.IsApplicationAppConfig, true) }}:  
                 - name: configuration-store
                   path: infra/core/app-configuration
