@@ -27,7 +27,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref:  pp/grafana-vars-ssv
+      ref:  main
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -47,8 +47,4 @@ extends:
         deployments:
           - name: platform-container-registry
             path: infra/core-shared-services/container-registry
-            resourceGroupName: $(ssvSharedResourceGroup)
-          - name: grafana
-            serviceConnectionVariableName: ssvServiceConnection
-            path: infra/core/observability
             resourceGroupName: $(ssvSharedResourceGroup)
