@@ -59,8 +59,8 @@ resources:
     - repository: ADPPipelineCommon
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
-      type: pp/token-replacement
-      ref: main
+      type: github
+      ref: pp/token-replacement
       
 variables:
   - name: IsAll
