@@ -59,7 +59,7 @@ resources:
     - repository: ADPPipelineCommon
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
-      type: github
+      type: pp/token-replacement
       ref: main
       
 variables:
