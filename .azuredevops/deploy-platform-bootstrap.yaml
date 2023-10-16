@@ -67,10 +67,10 @@ extends:
         azureRegions:
           primary: 'UKSouth'
 
-    groupedTemplates:
+    groupedDeployments:
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'service-connections')) }}
         : - name: SharedResources
-            templates:
+            deployments:
               - name: platform-key-vault
                 path: infra/bootstrap/key-vault
                 resourceGroupName: $(ssvSharedResourceGroup)
@@ -78,7 +78,7 @@ extends:
                   - displayName: Create Tier 2 App Registrations
                     filePathsForTransform:
                       - "infra/bootstrap/config/app-registrations/tier2-app-registration.json"
-                    scriptPath: "Add-AdAppRegistrations.ps1@PipelineCommon"
+                    scriptPath: "$(Pipeline.Workspace)/s/PipelineCommonScripts/PowerShellLibrary/Add-AdAppRegistrations.ps1"
                     ScriptArguments: >
                       -AppRegJsonPath 'infra/bootstrap/config/app-registrations/tier2-app-registration.json'
                   - displayName: Setup RBAC on Subscriptions
@@ -101,9 +101,9 @@ extends:
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}
         : - name: network
             ${{ if eq(parameters.deployResources, 'all') }}:
-              dependsOnGroupedTemplates:
+              dependsOnGroupedDeployments:
                 - SharedResources
-            templates:
+            deployments:
               - name: route-table
                 path: infra/common/network
                 serviceConnectionVariableName: "subscriptionName"

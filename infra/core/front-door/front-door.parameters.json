@@ -6,7 +6,7 @@
       "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_frontdoor }}#{{ nc_instance_regionid }}01"
     },
     "sku": {
-      "value": "Premium_AzureFrontDoor"
+      "value": "#{{ cdnProfileSkuName }}"
     },
     "location": {
       "value": "global"
