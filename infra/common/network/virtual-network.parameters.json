@@ -52,6 +52,14 @@
           "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}05",
           "addressPrefix": "#{{ subnet5AddressPrefix }}",
           "serviceEndpoints": [],
+          "delegations": [
+            {
+              "name": "Microsoft.DBforPostgreSQL.flexibleServers",
+              "properties": {
+                "serviceName": "Microsoft.DBforPostgreSQL/flexibleServers"
+              }
+            }
+          ]
           "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01"
         }
       ]
