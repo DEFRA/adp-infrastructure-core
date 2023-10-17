@@ -4,8 +4,8 @@ param server object
 @description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPostgreSql values.')
 param vnet object
 
-@description('Required. The name of the private DNS zone.')
-param privateDnsZoneName string
+@description('Required. The parameter object for the private Dns zone. The object must contain the name and resourceGroup values')
+param privateDnsZone object
 
 @description('Required. The diagnostic object. The object must contain diagnosticLogCategoriesToEnable and diagnosticMetricsToEnable properties.')
 param diagnostics object
@@ -41,7 +41,8 @@ resource virtual_network 'Microsoft.Network/virtualNetworks@2023-05-01' existing
 }
 
 resource private_dns_zone 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
-  name: privateDnsZoneName
+  name: privateDnsZone.name
+  scope: resourceGroup(privateDnsZone.resourceGroup)
 }
 
 module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-server:0.4.4' = {

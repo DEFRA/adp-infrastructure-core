@@ -4,7 +4,7 @@
     "parameters": {
         "server": {
             "value": {
-                "name": "#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}01A",
+                "name": "#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}01",
                 "storageSizeGB": #{{ postgreSqlStorageSizeGB }},
                 "tier": "#{{ postgreSqlTier }}",
                 "skuName": "#{{ postgreSqlSkuName }}",
@@ -19,8 +19,11 @@
               "subnetPostgreSql": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}05"
             }
         },
-        "privateDnsZoneName":{
-            "value": "#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}02.private.postgres.database.azure.com"
+        "privateDnsZone":{
+            "value": { 
+                "name":"#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}02.private.postgres.database.azure.com",
+                "resourceGroup":"#{{ dnsResourceGroup }}"
+        }
         },
         "diagnostics": {
             "value": {

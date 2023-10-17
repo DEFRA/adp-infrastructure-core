@@ -34,7 +34,6 @@ module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5
   name: 'postgresql-private-dns-zone-${deploymentDate}'
   params: {
    name: privateDnsZoneName  
-   lock: 'CanNotDelete'
    tags: union(tags, dnsTags)
    virtualNetworkLinks: [
     {
