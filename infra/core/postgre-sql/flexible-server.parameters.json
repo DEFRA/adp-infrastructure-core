@@ -12,6 +12,16 @@
                 "availabilityZone": "#{{ postgreSqlAvailabilityZone }}"
             }
         },
+        "vnet": {
+            "value": {
+              "name": "#{{ virtualNetworkName }}",
+              "resourceGroup": "#{{ virtualNetworkResourceGroup }}",
+              "subnetPostgreSql": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}05"
+            }
+        },
+        "privateDnsZoneName":{
+            "value": "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)02.private.postgres.database.azure.com"
+        },
         "diagnostics": {
             "value": {
                 "diagnosticLogCategoriesToEnable": [

@@ -1,6 +1,12 @@
 @description('Required. The object of the PostgreSQL Flexible Server. The object must contain name,storageSizeGB and highAvailability properties.')
 param server object
 
+@description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPostgreSql values.')
+param vnet object
+
+@description('Required. The name of the private DNS zone.')
+param privateDnsZoneName string
+
 @description('Required. The diagnostic object. The object must contain diagnosticLogCategoriesToEnable and diagnosticMetricsToEnable properties.')
 param diagnostics object
 
@@ -26,6 +32,17 @@ var customTags = {
 
 var defaultTags = union(json(loadTextContent('../../common/default-tags.json')), customTags)
 
+resource virtual_network 'Microsoft.Network/virtualNetworks@2023-05-01' existing = {
+  name: vnet.name
+  resource subnet 'subnets@2023-05-01' existing = {
+    name: vnet.subnetPostgreSql
+  }
+}
+
+resource private_dns_zone 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
+  name: privateDnsZoneName
+}
+
 module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-server:0.4.4' = {
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
@@ -49,8 +66,8 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     diagnosticSettingsName:''
     administrators: []
     configurations:[]
-    delegatedSubnetResourceId : ''
-    privateDnsZoneArmResourceId: ''
+    delegatedSubnetResourceId : virtual_network.id
+    privateDnsZoneArmResourceId: private_dns_zone.id
     diagnosticWorkspaceId: ''
   }
 }
