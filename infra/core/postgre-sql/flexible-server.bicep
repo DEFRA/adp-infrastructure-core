@@ -34,6 +34,7 @@ var defaultTags = union(json(loadTextContent('../../common/default-tags.json')),
 
 resource virtual_network 'Microsoft.Network/virtualNetworks@2023-05-01' existing = {
   name: vnet.name
+  scope: resourceGroup(vnet.resourceGroup)
   resource subnet 'subnets@2023-05-01' existing = {
     name: vnet.subnetPostgreSql
   }
@@ -66,7 +67,7 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     diagnosticSettingsName:''
     administrators: []
     configurations:[]
-    delegatedSubnetResourceId : virtual_network.id
+    delegatedSubnetResourceId : virtual_network::subnet.id
     privateDnsZoneArmResourceId: private_dns_zone.id
     diagnosticWorkspaceId: ''
   }
