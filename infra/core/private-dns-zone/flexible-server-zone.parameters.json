@@ -9,7 +9,7 @@
       }
     },
     "privateDnsZonePrefix": {
-      "value": "#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}01"
+      "value": "#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}02"
     },
     "environment": {
       "value": "#{{ environment }}"
