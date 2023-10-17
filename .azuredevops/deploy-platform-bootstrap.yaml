@@ -78,7 +78,8 @@ extends:
                   - displayName: Create Tier 2 App Registrations
                     filePathsForTransform:
                       - "infra/bootstrap/config/app-registrations/tier2-app-registration.json"
-                    scriptPath: "$(Pipeline.Workspace)/s/PipelineCommonScripts/PowerShellLibrary/Add-AdAppRegistrations.ps1"
+                    scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+                    scriptRepo: PipelineCommonScripts
                     ScriptArguments: >
                       -AppRegJsonPath 'infra/bootstrap/config/app-registrations/tier2-app-registration.json'
                   - displayName: Setup RBAC on Subscriptions
