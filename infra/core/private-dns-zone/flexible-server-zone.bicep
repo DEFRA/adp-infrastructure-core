@@ -13,7 +13,7 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-var privateDnsZoneName = toLower('${privateDnsZonePrefix}.postgres.database.azure.com')
+var privateDnsZoneName = toLower('${privateDnsZonePrefix}.private.postgres.database.azure.com')
 var commonTags = {
   Location: 'global'
   CreatedDate: createdDate
