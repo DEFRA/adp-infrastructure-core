@@ -39,7 +39,7 @@ module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5
     {
       name: vnet.name
       virtualNetworkResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks', vnet.name)
-      registrationEnabled: true
+      registrationEnabled: false
       tags: union(tags, dnsVnetLinksTags)
     }
    ]
