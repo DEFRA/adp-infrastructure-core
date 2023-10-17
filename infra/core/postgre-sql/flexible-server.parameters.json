@@ -20,7 +20,7 @@
             }
         },
         "privateDnsZoneName":{
-            "value": "${{ dnsResourceNamePrefix }}${{ nc_resource_dnszone }}${{ nc_instance_regionid }}02.private.postgres.database.azure.com"
+            "value": "#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}02.private.postgres.database.azure.com"
         },
         "diagnostics": {
             "value": {
