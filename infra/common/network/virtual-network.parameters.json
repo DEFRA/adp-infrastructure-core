@@ -59,7 +59,7 @@
                 "serviceName": "Microsoft.DBforPostgreSQL/flexibleServers"
               }
             }
-          ]
+          ],
           "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01"
         }
       ]
