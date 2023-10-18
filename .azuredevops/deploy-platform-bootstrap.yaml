@@ -66,9 +66,9 @@ extends:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
-    filePathsForTransform:
-      - "infra/bootstrap/config/app-registrations/tier2-app-registration.json"
-      - "infra/bootstrap/config/service-connections/tier2-service-connection.json"
+    filePathsForTransform: |
+      infra/bootstrap/config/app-registrations/tier2-app-registration.json
+      infra/bootstrap/config/service-connections/tier2-service-connection.json
     groupedDeployments:
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'service-connections')) }}
         : - name: SharedResources
