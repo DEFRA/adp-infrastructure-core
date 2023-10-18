@@ -48,7 +48,7 @@ extends:
       - name: 'snd1'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - '*'
+          - 'refs/heads/main'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
@@ -56,7 +56,8 @@ extends:
         outputTemplateChange: Skip
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - 'refs/heads/main'
+           - 'refs/heads/main'
+           - 'refs/pull/*/merge'
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd3'
