@@ -77,11 +77,11 @@ extends:
                 postDeployScriptsList:
                   - displayName: Create Tier 2 App Registrations
                     filePathsForTransform:
-                      - "infra/bootstrap/config/app-registrations/tier2-app-registration.json"
+                      - "$(Pipeline.Workspace)/s/self/infra/bootstrap/config/app-registrations/tier2-app-registration.json"
                     scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
                     scriptRepo: PipelineCommonScripts
                     ScriptArguments: >
-                      -AppRegJsonPath 'infra/bootstrap/config/app-registrations/tier2-app-registration.json'
+                      -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/config/app-registrations/tier2-app-registration.json'
                   - displayName: Setup RBAC on Subscriptions
                     Type: AzurePowerShell
                     scriptPath: "infra/bootstrap/scripts/Assign-RBAC-Subscription.ps1"
