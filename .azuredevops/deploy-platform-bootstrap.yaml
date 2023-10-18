@@ -66,7 +66,9 @@ extends:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
-
+    filePathsForTransform:
+      - "infra/bootstrap/config/app-registrations/tier2-app-registration.json"
+      - "infra/bootstrap/config/service-connections/tier2-service-connection.json"
     groupedDeployments:
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'service-connections')) }}
         : - name: SharedResources
@@ -76,8 +78,6 @@ extends:
                 resourceGroupName: $(ssvSharedResourceGroup)
                 postDeployScriptsList:
                   - displayName: Create Tier 2 App Registrations
-                    filePathsForTransform:
-                      - "$(Pipeline.Workspace)/s/self/infra/bootstrap/config/app-registrations/tier2-app-registration.json"
                     scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
                     scriptRepo: PipelineCommonScripts
                     ScriptArguments: >
@@ -91,9 +91,7 @@ extends:
                       -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)
                   - displayName: Create or Update AzureRm Service Endpoint(Service Connection)
                     Type: AzureCLI
-                    useSystemAccessToken: true
-                    filePathsForTransform:
-                      - "infra/bootstrap/config/service-connections/tier2-service-connection.json"
+                    useSystemAccessToken: true                      
                     scriptPath: "infra/bootstrap/scripts/ado/Initialize-ServiceEndpoint.ps1"
                     ScriptArguments: >
                       -ServiceEndpointJsonPath 'infra/bootstrap/config/service-connections/tier2-service-connection.json'
