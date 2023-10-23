@@ -48,7 +48,7 @@ extends:
       - name: 'snd1'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - '*'
+          - 'refs/heads/main'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
@@ -56,7 +56,8 @@ extends:
         outputTemplateChange: Skip
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - 'refs/heads/main'
+           - 'refs/heads/main'
+           - 'refs/pull/*/merge'
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd3'
@@ -66,7 +67,9 @@ extends:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
-
+    filePathsForTransform: |
+      **/bootstrap/config/app-registrations/tier2-app-registration.json
+      **/bootstrap/config/service-connections/tier2-service-connection.json
     groupedDeployments:
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'service-connections')) }}
         : - name: SharedResources
@@ -76,11 +79,10 @@ extends:
                 resourceGroupName: $(ssvSharedResourceGroup)
                 postDeployScriptsList:
                   - displayName: Create Tier 2 App Registrations
-                    filePathsForTransform:
-                      - "infra/bootstrap/config/app-registrations/tier2-app-registration.json"
-                    scriptPath: "$(Pipeline.Workspace)/s/PipelineCommonScripts/PowerShellLibrary/Add-AdAppRegistrations.ps1"
+                    scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+                    scriptRepo: PipelineCommonScripts
                     ScriptArguments: >
-                      -AppRegJsonPath 'infra/bootstrap/config/app-registrations/tier2-app-registration.json'
+                      -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/config/app-registrations/tier2-app-registration.json'
                   - displayName: Setup RBAC on Subscriptions
                     Type: AzurePowerShell
                     scriptPath: "infra/bootstrap/scripts/Assign-RBAC-Subscription.ps1"
@@ -90,9 +92,7 @@ extends:
                       -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)
                   - displayName: Create or Update AzureRm Service Endpoint(Service Connection)
                     Type: AzureCLI
-                    useSystemAccessToken: true
-                    filePathsForTransform:
-                      - "infra/bootstrap/config/service-connections/tier2-service-connection.json"
+                    useSystemAccessToken: true                      
                     scriptPath: "infra/bootstrap/scripts/ado/Initialize-ServiceEndpoint.ps1"
                     ScriptArguments: >
                       -ServiceEndpointJsonPath 'infra/bootstrap/config/service-connections/tier2-service-connection.json'

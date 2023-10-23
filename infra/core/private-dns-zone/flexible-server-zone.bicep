@@ -4,12 +4,6 @@ param vnet object
 @description('Required. The prefix for the private DNS zone.')
 param privateDnsZonePrefix string
 
-@allowed([
-  'UKSouth'
-])
-@description('Required. The Azure region where the resources will be deployed.')
-param location string
-
 @description('Required. Environment name.')
 param environment string
 
@@ -19,9 +13,9 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-var privateDnsZoneName = toLower('${privateDnsZonePrefix}.privatelink.${location}.azmk8s.io')
+var privateDnsZoneName = toLower('${privateDnsZonePrefix}.private.postgres.database.azure.com')
 var commonTags = {
-  Location: location
+  Location: 'global'
   CreatedDate: createdDate
   Environment: environment
 }
@@ -29,18 +23,17 @@ var tags = union(loadJsonContent('../../common/default-tags.json'), commonTags)
 
 var dnsTags = {
   Name: privateDnsZoneName
-  Purpose: 'AKS Private DNS Zone'
+  Purpose: 'ADP PostgreSQL Private DNS Zone'
 }
 var dnsVnetLinksTags = {
   Name: vnet.name
-  Purpose: 'AKS Private DNS Zone VNet Link'
+  Purpose: 'ADP PostgreSQL Private DNS Zone VNet Link'
 }
 
 module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5.2' = {
-  name: 'aks-private-dns-zone-${deploymentDate}'
+  name: 'postgresql-private-dns-zone-${deploymentDate}'
   params: {
    name: privateDnsZoneName  
-   lock: 'CanNotDelete'
    tags: union(tags, dnsTags)
    virtualNetworkLinks: [
     {
