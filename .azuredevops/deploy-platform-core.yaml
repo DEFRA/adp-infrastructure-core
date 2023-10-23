@@ -137,16 +137,16 @@ extends:
         - ${{ if eq(variables.IsNetwork, true) }}:
           - name: network
             deployments:
-              - ${{ if eq(variables.IsNetworkVnet, true) }}:
-                - name: virtual-network
-                  path: infra/common/network
-                  resourceGroupName: $(virtualNetworkResourceGroup)
               - ${{ if eq(variables.IsNetworkRouteTable, true) }}:
                 - name: route-table
                   path: infra/common/network
                   resourceGroupName: $(virtualNetworkResourceGroup)
               - ${{ if eq(variables.IsNetworkNsg, true) }}:
                 - name: subnet-nsg
+                  path: infra/common/network
+                  resourceGroupName: $(virtualNetworkResourceGroup)
+              - ${{ if eq(variables.IsNetworkVnet, true) }}:
+                - name: virtual-network
                   path: infra/common/network
                   resourceGroupName: $(virtualNetworkResourceGroup)
               - ${{ if eq(variables.IsNetworkPublicDNSZone, true) }}:
