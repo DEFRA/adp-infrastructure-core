@@ -60,6 +60,36 @@ var asoPlatformTeamMiRbacs = [
   }
 ]
 
+var systemNodePool = {
+  name: 'npsystem01'
+  mode: 'System'
+  count: cluster.npSystem.count
+  vmSize: 'Standard_DS2_v2'
+  osDiskSizeGB: cluster.npSystem.osDiskSizeGB
+  osDiskType: 'Ephemeral'
+  osType: 'Linux'
+  osSKU: 'Ubuntu'
+  minCount: cluster.npSystem.minCount
+  maxCount: cluster.npSystem.maxCount
+  vnetSubnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnet02Name)
+  enableAutoScaling: true
+  enableCustomCATrust: false
+  enableFIPS: false
+  enableEncryptionAtHost: false
+  type: 'VirtualMachineScaleSets'
+  scaleSetPriority: 'Regular'
+  scaleSetEvictionPolicy: 'Delete'
+  enableNodePublicIP: false
+  maxPods: cluster.npSystem.maxPods
+  availabilityZones: cluster.npSystem.availabilityZones
+  upgradeSettings: {
+    maxSurge: '33%'
+  }
+  nodeTaints: [
+    'CriticalAddonsOnly=true:NoSchedule'
+  ]
+}
+
 module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'aks-cluster-mi-${deploymentDate}'
   params: {
@@ -181,40 +211,12 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
     aadProfileServerAppSecret: ''
     aadProfileTenantId: subscription().tenantId
     primaryAgentPoolProfile: [
-      {
-        name: 'npsystem'
-        mode: 'System'
-        count: cluster.npSystem.count
-        vmSize: 'Standard_DS2_v2'
-        osDiskSizeGB: cluster.npSystem.osDiskSizeGB
-        osDiskType: 'Ephemeral'
-        osType: 'Linux'
-        osSKU: 'Ubuntu'
-        minCount: cluster.npSystem.minCount
-        maxCount: cluster.npSystem.maxCount
-        vnetSubnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnet02Name)
-        enableAutoScaling: true
-        enableCustomCATrust: false
-        enableFIPS: false
-        enableEncryptionAtHost: false
-        type: 'VirtualMachineScaleSets'
-        scaleSetPriority: 'Regular'
-        scaleSetEvictionPolicy: 'Delete'
-        orchestratorVersion: cluster.kubernetesVersion
-        enableNodePublicIP: false
-        maxPods: cluster.npSystem.maxPods
-        availabilityZones: cluster.npSystem.availabilityZones
-        upgradeSettings: {
-          maxSurge: '33%'
-        }
-        nodeTaints: [
-          'CriticalAddonsOnly=true:NoSchedule'
-        ]
-      }
+      systemNodePool
     ]
     agentPools: [
+      union(systemNodePool, { orchestratorVersion: cluster.kubernetesVersion })
       {
-        name: 'npuser01'
+        name: 'npuser01cmn'
         mode: 'User'
         count: cluster.npUser.count
         vmSize: 'Standard_DS3_v2'
