@@ -67,6 +67,7 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [
+                                    "#{{ subnet3AddressPrefix }}",
                                     "#{{ aksClusterPodCidr }}"
                                 ],
                                 "destinationAddressPrefixes": []
@@ -85,6 +86,7 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [
+                                    "#{{ subnet3AddressPrefix }}",
                                     "#{{ aksClusterPodCidr }}"
                                 ],
                                 "destinationAddressPrefixes": []
@@ -331,6 +333,7 @@
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [
                                     "#{{ subnet1AddressPrefix }}",
+                                    "#{{ subnet2AddressPrefix }}",
                                     "#{{ aksClusterPodCidr }}"
                                 ],
                                 "destinationAddressPrefixes": []
@@ -350,6 +353,7 @@
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [
                                     "#{{ subnet1AddressPrefix }}",
+                                    "#{{ subnet2AddressPrefix }}",
                                     "#{{ aksClusterPodCidr }}"
                                 ],
                                 "destinationAddressPrefixes": []
