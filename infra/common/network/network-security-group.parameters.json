@@ -155,7 +155,7 @@
                                 "sourceAddressPrefixes": [],
                                 "destinationAddressPrefixes": []
                             }
-                        }
+                        },
                         {
                             "name": "AllowAzKvltUkwOutbound",
                             "properties": {
