@@ -55,6 +55,42 @@
                     "purpose": "ADP AKS System Node Pool NSG",
                     "securityRules": [
                         {
+                            "name": "AllowAnyTcpInboundCidrRange",
+                            "properties": {
+                                "protocol": "Tcp",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 2000,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [
+                                    "#{{ aksClusterPodCidr }}"
+                                ],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "AllowAnyUdpInboundCidrRange",
+                            "properties": {
+                                "protocol": "Udp",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 2010,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [
+                                    "#{{ aksClusterPodCidr }}"
+                                ],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
                             "name": "AllowAnyInboundFromAzLB",
                             "properties": {
                                 "protocol": "*",
@@ -294,7 +330,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [
-                                    "#{{ subnet1AddressPrefix }}"
+                                    "#{{ subnet1AddressPrefix }}",
+                                    "#{{ aksClusterPodCidr }}"
                                 ],
                                 "destinationAddressPrefixes": []
                             }
@@ -312,7 +349,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [
-                                    "#{{ subnet1AddressPrefix }}"
+                                    "#{{ subnet1AddressPrefix }}",
+                                    "#{{ aksClusterPodCidr }}"
                                 ],
                                 "destinationAddressPrefixes": []
                             }
