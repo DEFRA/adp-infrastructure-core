@@ -37,7 +37,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: pp/new-subnets
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
