@@ -242,7 +242,20 @@ extends:
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
-              - ${{ if eq(variables.IsApplicationPostgreSqlServer, true) }}:  
+              - ${{ if eq(variables.IsApplicationPostgreSqlServer, true) }}:
+                - name: flexible-server-zone
+                  path: infra/core/private-dns-zone
+                  resourceGroupName: $(dnsResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: Link the Private DNS Zone to Central networks
+                      scriptPath: infra/core/scripts/Trigger-LinkPrivateDNSZones.ps1
+                      type: PowerShell
+                      useSystemAccessToken: true
+                      scriptArguments: >
+                        -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)02.private.postgres.database.azure.com"
+                        -ResourceGroupName $(dnsResourceGroup)
+                        -SubscriptionName $(subscriptionName)
+                        -TenantId $(tenantId)
                 - name: flexible-server
                   path: infra/core/postgre-sql
                   resourceGroupName: $(dbsResourceGroup)
