@@ -1,4 +1,4 @@
-@description('Required. The parameter object for the managed identity. The object must contain the name and principalId values.')
+@description('Required. The principal id for the managed identity.')
 param principalId string
 @description('Required. The name of the app configuration service.')
 param appConfigName string
