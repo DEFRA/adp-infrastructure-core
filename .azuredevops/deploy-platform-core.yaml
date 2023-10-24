@@ -142,7 +142,7 @@ extends:
                   path: infra/common/network
                   resourceGroupName: $(virtualNetworkResourceGroup)
               - ${{ if eq(variables.IsNetworkNsg, true) }}:
-                - name: subnet-nsg
+                - name: network-security-group
                   path: infra/common/network
                   resourceGroupName: $(virtualNetworkResourceGroup)
               - ${{ if eq(variables.IsNetworkVnet, true) }}:
