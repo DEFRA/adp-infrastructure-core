@@ -299,6 +299,7 @@ module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.ex
     name: 'flux'
     location: location
     releaseTrain: 'Stable'
+    releaseNamespace: 'flux-system'
     configurationSettings: {
       'helm-controller.enabled': 'true'
       'source-controller.enabled': 'true'
