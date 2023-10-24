@@ -24,6 +24,8 @@ param fluxConfig object
 param monitoringWorkspace object
 @description('Required. Azure Service Operator managed identity name')
 param asoPlatformManagedIdentity string
+@description('Required. The parameter object for the app configuration service. The object must contain name, resourceGroup and managedIdentityName.')
+param appConfig object
 
 var commonTags = {
   Location: location
@@ -44,6 +46,11 @@ var aksTags = {
 var tagsAsoMi = {
   Name: asoPlatformManagedIdentity
   Purpose: 'ADP Platform Azure Service Operator Managed Identity'
+  Tier: 'Shared'
+}
+var tagsAppConfigMi = {
+  Name: appConfig.managedIdentityName
+  Purpose: 'ADP Platform App Configuration Service Managed Identity'
   Tier: 'Shared'
 }
 
@@ -67,6 +74,26 @@ module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-id
     location: location
     lock: 'CanNotDelete'
     tags: union(tags, tagsMi)
+  }
+}
+
+module managedIdentityAppConfig 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
+  name: 'appconfig-mi-${deploymentDate}'
+  params: {
+    name: appConfig.managedIdentityName
+    location: location
+    lock: 'CanNotDelete'
+    tags: union(tags, tagsAppConfigMi)
+    federatedIdentityCredentials: [
+      {
+        name: appConfig.managedIdentityName
+        audiences: [
+          'api://AzureADTokenExchange'
+        ]
+        issuer: deployAKS.outputs.oidcIssuerUrl
+        subject: 'system:serviceaccount:app-config-service:az-appconfig-k8s-provider'
+      }
+    ]
   }
 }
 
@@ -97,12 +124,12 @@ module asoPlatformTeamMiRbacSubscriptionPermissions '.bicep/subscription-rbac.bi
     managedIdentityAso
   ]
   params: {
-      principalId: managedIdentityAso.outputs.principalId
-      roleDefinitionId: asoPlatformTeamMiRbac.roleDefinitionId
+    principalId: managedIdentityAso.outputs.principalId
+    roleDefinitionId: asoPlatformTeamMiRbac.roleDefinitionId
   }
 }]
 
-module privateDnsZoneContributor '.bicep/private-dns-zone-contributor.bicep' ={
+module privateDnsZoneContributor '.bicep/private-dns-zone-contributor.bicep' = {
   name: 'aks-cluster-private-dns-zone-contributor-${deploymentDate}'
   scope: resourceGroup(privateDnsZone.resourceGroup)
   dependsOn: [
@@ -147,7 +174,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
     nodeResourceGroup: cluster.nodeResourceGroup
     enableDefaultTelemetry: false
     omsAgentEnabled: true
-    monitoringWorkspaceId: resourceId(monitoringWorkspace.resourceGroup, 'Microsoft.OperationalInsights/workspaces', monitoringWorkspace.name) 
+    monitoringWorkspaceId: resourceId(monitoringWorkspace.resourceGroup, 'Microsoft.OperationalInsights/workspaces', monitoringWorkspace.name)
     enableRBAC: true
     aadProfileManaged: true
     disableLocalAccounts: true
@@ -259,69 +286,79 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
     autoScalerProfileSkipNodesWithLocalStorage: 'true'
     autoScalerProfileSkipNodesWithSystemPods: 'true'
 
-    fluxExtension: {
-      autoUpgradeMinorVersion: true
-      releaseTrain: 'Stable'
-      configurationSettings: {
-        'helm-controller.enabled': 'true'
-        'source-controller.enabled': 'true'
-        'kustomize-controller.enabled': 'true'
-        'notification-controller.enabled': 'true'
-        'image-automation-controller.enabled': 'true'
-        'image-reflector-controller.enabled': 'true'
-        'helm-controller.detectDrift': 'true'
-        'useKubeletIdentity': 'true'
-      }
-      configurations: [
-        {
-          name: 'config-cluster-flux'
-          namespace: 'config-cluster-flux'
-          scope: 'cluster'
-          gitRepository: {
-            repositoryRef: {
-              branch: fluxConfig.clusterCore.gitRepository.branch
-            }
-            syncIntervalInSeconds: fluxConfig.clusterCore.gitRepository.syncIntervalInSeconds
-            timeoutInSeconds: fluxConfig.clusterCore.gitRepository.timeoutInSeconds
-            url: fluxConfig.clusterCore.gitRepository.url
-          }
-          kustomizations: {
-            cluster: {
-              path: fluxConfig.clusterCore.kustomizations.clusterPath
-              dependsOn: []
-              timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
-              syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
-              validation: 'none'
-              prune: true
-              postBuild: fluxConfig.clusterCore.kustomizations.postBuild
-            }
-            infra: {
-              path: fluxConfig.clusterCore.kustomizations.infraPath
-              timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
-              syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
-              dependsOn: [
-                'cluster'
-              ]
-              validation: 'none'
-              prune: true
-              postBuild: fluxConfig.clusterCore.kustomizations.postBuild
-            }
-            services: {
-              path: fluxConfig.clusterCore.kustomizations.servicesPath
-              timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
-              syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
-              dependsOn: [
-                'cluster'
-                'infra'
-              ]
-              validation: 'none'
-              prune: true
-              postBuild: fluxConfig.clusterCore.kustomizations.postBuild
-            }
-          } 
-        } 
-      ]
+  }
+}
+
+module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.extension:0.4.4-prerelease' = {
+  name: 'flux-extension-${deploymentDate}'
+  params: {
+    clusterName: cluster.name
+    extensionType: 'microsoft.flux'
+    name: 'flux'
+    location: location
+    releaseTrain: 'Stable'
+    configurationSettings: {
+      'helm-controller.enabled': 'true'
+      'source-controller.enabled': 'true'
+      'kustomize-controller.enabled': 'true'
+      'notification-controller.enabled': 'true'
+      'image-automation-controller.enabled': 'true'
+      'image-reflector-controller.enabled': 'true'
+      'helm-controller.detectDrift': 'true'
+      'useKubeletIdentity': 'true'
     }
+    fluxConfigurations: [
+      {
+        name: 'config-cluster-flux'
+        namespace: 'config-cluster-flux'
+        scope: 'cluster'
+        gitRepository: {
+          repositoryRef: {
+            branch: fluxConfig.clusterCore.gitRepository.branch
+          }
+          syncIntervalInSeconds: fluxConfig.clusterCore.gitRepository.syncIntervalInSeconds
+          timeoutInSeconds: fluxConfig.clusterCore.gitRepository.timeoutInSeconds
+          url: fluxConfig.clusterCore.gitRepository.url
+        }
+        kustomizations: {
+          cluster: {
+            path: fluxConfig.clusterCore.kustomizations.clusterPath
+            dependsOn: []
+            timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
+            syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
+            validation: 'none'
+            prune: true
+          }
+          infra: {
+            path: fluxConfig.clusterCore.kustomizations.infraPath
+            timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
+            syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
+            dependsOn: [
+              'cluster'
+            ]
+            validation: 'none'
+            prune: true
+            postBuild: {
+              substitute: {
+                APPCONFIG_NAME: appConfig.name
+                APPCONFIG_MI_CLIENTID: managedIdentityAppConfig.outputs.clientId
+              }
+            }
+          }
+          services: {
+            path: fluxConfig.clusterCore.kustomizations.servicesPath
+            timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
+            syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
+            dependsOn: [
+              'cluster'
+              'infra'
+            ]
+            validation: 'none'
+            prune: true
+          }
+        }
+      }
+    ]
   }
 }
 
@@ -334,5 +371,17 @@ module acrPullRoleAssignment '.bicep/acr-pull.bicep' = {
   params: {
     principalId: deployAKS.outputs.kubeletidentityObjectId
     containerRegistryName: containerRegistry.name
+  }
+}
+
+module appConfigurationDataReaderRoleAssignment '.bicep/app-config-data-reader.bicep' = {
+  name: 'app-config-data-reader-role-assignment-${deploymentDate}'
+  scope: resourceGroup(appConfig.name)
+  dependsOn: [
+    deployAKS
+  ]
+  params: {
+    principalId: managedIdentityAppConfig.outputs.principalId
+    appConfigName: appConfig.name
   }
 }
