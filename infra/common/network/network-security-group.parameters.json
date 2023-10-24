@@ -55,6 +55,61 @@
                     "purpose": "ADP AKS System Node Pool NSG",
                     "securityRules": [
                         {
+                            "name": "AllowAnyTcpInboundCidrRange",
+                            "properties": {
+                                "protocol": "Tcp",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 2000,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [
+                                    "#{{ subnet1AddressPrefix }}",
+                                    "#{{ aksClusterPodCidr }}"
+                                ],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "AllowAnyUdpInboundCidrRange",
+                            "properties": {
+                                "protocol": "Udp",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 2010,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [
+                                    "#{{ subnet1AddressPrefix }}",
+                                    "#{{ aksClusterPodCidr }}"
+                                ],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "AllowAnyInboundFromAzLB",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "AzureLoadBalancer",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 3600,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
                             "name": "DenyAnyOtherInbound",
                             "properties": {
                                 "protocol": "*",
