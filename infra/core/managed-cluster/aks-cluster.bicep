@@ -379,7 +379,7 @@ module acrPullRoleAssignment '.bicep/acr-pull.bicep' = {
 
 module appConfigurationDataReaderRoleAssignment '.bicep/app-config-data-reader.bicep' = {
   name: 'app-config-data-reader-role-assignment-${deploymentDate}'
-  scope: resourceGroup(appConfig.name)
+  scope: resourceGroup(appConfig.resourceGroup)
   dependsOn: [
     deployAKS
   ]
