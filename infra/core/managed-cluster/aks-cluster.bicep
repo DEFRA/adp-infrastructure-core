@@ -265,6 +265,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
       autoUpgradeMinorVersion: true
       releaseTrain: 'Stable'
       configurationSettings: {
+        'toleration-keys': 'CriticalAddonsOnly=true:NoSchedule'
         'helm-controller.enabled': 'true'
         'source-controller.enabled': 'true'
         'kustomize-controller.enabled': 'true'
@@ -274,6 +275,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
         'helm-controller.detectDrift': 'true'
         'useKubeletIdentity': 'true'
       }
+
       configurations: [
         {
           name: 'config-cluster-flux'
