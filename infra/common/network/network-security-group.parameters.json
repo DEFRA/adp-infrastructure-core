@@ -72,6 +72,57 @@
                             }
                         },
                         {
+                            "name": "AllowAnyTcpVNetOutbound",
+                            "properties": {
+                                "protocol": "Tcp",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 2000,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "AllowAnyUdpVNetOutbound",
+                            "properties": {
+                                "protocol": "Udp",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 2010,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
+                            "name": "AllowAADAuthOutbound",
+                            "properties": {
+                                "protocol": "Tcp",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "443",
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationAddressPrefix": "AzureActiveDirectory",
+                                "access": "Allow",
+                                "priority": 2020,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
                             "name": "AllowDevOpsSSHOutbound",
                             "properties": {
                                 "protocol": "Tcp",
