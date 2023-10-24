@@ -294,9 +294,7 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [
-                                    "#{{ subnet1AddressPrefix }}",
-                                    "#{{ subnet2AddressPrefix }}",
-                                    "#{{ aksClusterPodCidr }}"
+                                    "#{{ subnet1AddressPrefix }}"
                                 ],
                                 "destinationAddressPrefixes": []
                             }
@@ -314,9 +312,7 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [
-                                    "#{{ subnet1AddressPrefix }}",
-                                    "#{{ subnet2AddressPrefix }}",
-                                    "#{{ aksClusterPodCidr }}"
+                                    "#{{ subnet1AddressPrefix }}"
                                 ],
                                 "destinationAddressPrefixes": []
                             }
