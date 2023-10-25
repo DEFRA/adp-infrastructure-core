@@ -14,23 +14,7 @@
                     "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
                     "purpose": "ADP AKS ILB NSG",
                     "securityRules": [
-                        {
-                            "name": "AllowAnyInboundFromAzLB",
-                            "properties": {
-                                "protocol": "*",
-                                "sourcePortRange": "*",
-                                "destinationPortRange": "*",
-                                "sourceAddressPrefix": "AzureLoadBalancer",
-                                "destinationAddressPrefix": "VirtualNetwork",
-                                "access": "Allow",
-                                "priority": 3600,
-                                "direction": "Inbound",
-                                "sourcePortRanges": [],
-                                "destinationPortRanges": [],
-                                "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
-                            }
-                        },
+                        
                         {
                             "name": "AllowAnyInboundFromAzLB",
                             "properties": {
@@ -248,6 +232,25 @@
                             }
                         },
                         {
+                            "name": "AllowAzMonitorOutbound",
+                            "properties": {
+                                "protocol": "Tcp",
+                                "sourcePortRange": "*",
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationAddressPrefix": "AzureMonitor",
+                                "access": "Allow",
+                                "priority": 2040,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [
+                                    "443",
+                                    "1886"
+                                ],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
                             "name": "AllowAzAcrUksOutbound",
                             "properties": {
                                 "protocol": "Tcp",
@@ -281,23 +284,7 @@
                                 "destinationAddressPrefixes": []
                             }
                         },
-                        {
-                            "name": "AllowAzAppConfigurationOutbound",
-                            "properties": {
-                                "protocol": "Tcp",
-                                "sourcePortRange": "*",
-                                "destinationPortRange": "443",
-                                "sourceAddressPrefix": "VirtualNetwork",
-                                "destinationAddressPrefix": "AppConfiguration",
-                                "access": "Allow",
-                                "priority": 2080,
-                                "direction": "Outbound",
-                                "sourcePortRanges": [],
-                                "destinationPortRanges": [],
-                                "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
-                            }
-                        },
+                        
                         {
                             "name": "AllowAzKvltUksOutbound",
                             "properties": {
@@ -413,6 +400,25 @@
                             }
                         },
                         {
+                            "name": "AllowAzMonitorOutbound",
+                            "properties": {
+                                "protocol": "Tcp",
+                                "sourcePortRange": "*",
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationAddressPrefix": "AzureMonitor",
+                                "access": "Allow",
+                                "priority": 2040,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [
+                                    "443",
+                                    "1886"
+                                ],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
                             "name": "AllowAnyInboundFromAzLB",
                             "properties": {
                                 "protocol": "*",
@@ -524,23 +530,6 @@
                                 "destinationAddressPrefix": "AzureContainerRegistry.UKWest",
                                 "access": "Allow",
                                 "priority": 2075,
-                                "direction": "Outbound",
-                                "sourcePortRanges": [],
-                                "destinationPortRanges": [],
-                                "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
-                            }
-                        },
-                        {
-                            "name": "AllowAzAppConfigurationOutbound",
-                            "properties": {
-                                "protocol": "Tcp",
-                                "sourcePortRange": "*",
-                                "destinationPortRange": "443",
-                                "sourceAddressPrefix": "VirtualNetwork",
-                                "destinationAddressPrefix": "AppConfiguration",
-                                "access": "Allow",
-                                "priority": 2080,
                                 "direction": "Outbound",
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
