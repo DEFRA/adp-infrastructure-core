@@ -54,12 +54,19 @@
         "resourceGroup": "#{{ dnsResourceGroup }}"
       }
     },
-    "containerRegistry": {
-      "value": {
-        "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
-        "resourceGroup": "#{{ servicesResourceGroup }}",
-        "subscriptionId": "#{{ subscriptionId }}"
-      }
+    "containerRegistries": {
+      "value": [
+        {
+          "name": "#{{ ssvSharedAcrName }}",
+          "resourceGroup": "#{{ ssvSharedResourceGroup }}",
+          "subscriptionId": "#{{ ssv3subscriptionId }}"
+        },
+        {
+          "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
+          "resourceGroup": "#{{ servicesResourceGroup }}",
+          "subscriptionId": "#{{ subscriptionId }}"
+        }
+      ]
     },
     "location": {
       "value": "#{{ location }}"

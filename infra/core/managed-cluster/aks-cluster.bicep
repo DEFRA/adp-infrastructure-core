@@ -6,7 +6,7 @@ param cluster object
 param privateDnsZone object
 
 @description('Required. The parameter object for the container registry. The object must contain the name, subscriptionId and resourceGroup values.')
-param containerRegistry object
+param containerRegistries array
 @allowed([
   'UKSouth'
 ])
@@ -127,12 +127,12 @@ module asoPlatformTeamMiRbacSubscriptionPermissions '.bicep/subscription-rbac.bi
     managedIdentityAso
   ]
   params: {
-      principalId: managedIdentityAso.outputs.principalId
-      roleDefinitionId: asoPlatformTeamMiRbac.roleDefinitionId
+    principalId: managedIdentityAso.outputs.principalId
+    roleDefinitionId: asoPlatformTeamMiRbac.roleDefinitionId
   }
 }]
 
-module privateDnsZoneContributor '.bicep/private-dns-zone-contributor.bicep' ={
+module privateDnsZoneContributor '.bicep/private-dns-zone-contributor.bicep' = {
   name: 'aks-cluster-private-dns-zone-contributor-${deploymentDate}'
   scope: resourceGroup(privateDnsZone.resourceGroup)
   dependsOn: [
@@ -177,7 +177,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
     nodeResourceGroup: cluster.nodeResourceGroup
     enableDefaultTelemetry: false
     omsAgentEnabled: true
-    monitoringWorkspaceId: resourceId(monitoringWorkspace.resourceGroup, 'Microsoft.OperationalInsights/workspaces', monitoringWorkspace.name) 
+    monitoringWorkspaceId: resourceId(monitoringWorkspace.resourceGroup, 'Microsoft.OperationalInsights/workspaces', monitoringWorkspace.name)
     enableRBAC: true
     aadProfileManaged: true
     disableLocalAccounts: true
@@ -322,15 +322,15 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
               prune: true
               postBuild: fluxConfig.clusterCore.kustomizations.postBuild
             }
-          } 
-        } 
+          }
+        }
       ]
     }
   }
 }
 
-module acrPullRoleAssignment '.bicep/acr-pull.bicep' = {
-  name: 'aks-acr-pull-role-assignment-${deploymentDate}'
+module sharedAcrPullRoleAssignment '.bicep/acr-pull.bicep' = [for containerRegistry in containerRegistries: {
+  name: '${containerRegistry.name}-acr-pull-role-${deploymentDate}'
   scope: resourceGroup(containerRegistry.subscriptionId, containerRegistry.resourceGroup)
   dependsOn: [
     deployAKS
@@ -339,4 +339,4 @@ module acrPullRoleAssignment '.bicep/acr-pull.bicep' = {
     principalId: deployAKS.outputs.kubeletidentityObjectId
     containerRegistryName: containerRegistry.name
   }
-}
+}]
