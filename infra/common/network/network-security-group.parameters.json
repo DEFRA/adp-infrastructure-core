@@ -15,6 +15,24 @@
                     "purpose": "ADP AKS ILB NSG",
                     "securityRules": [
                         {
+                            "name": "AllowAnyTcpInboundCidrRange",
+                            "properties": {
+                                "protocol": "Tcp",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 2000,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [
+                                    "#{{ subnet2AddressPrefix }}"
+                                ],
+                                "destinationAddressPrefixes": []
+                            }
+                        },
+                        {
                             "name": "DenyAnyOtherInbound",
                             "properties": {
                                 "protocol": "*",
