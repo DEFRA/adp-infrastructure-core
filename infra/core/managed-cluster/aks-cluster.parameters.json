@@ -87,7 +87,7 @@
             "syncIntervalInSeconds": 300,
             "timeoutInSeconds": 180,
             "url": "https://github.com/DEFRA/adp-flux-core",
-            "branch": "main"
+            "branch": "pp/ingress-subnet"
           },
           "kustomizations": {
             "timeoutInSeconds": 600,
