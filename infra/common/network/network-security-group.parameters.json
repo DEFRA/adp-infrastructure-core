@@ -32,6 +32,24 @@
                             }
                         },
                         {
+                            "name": "AllowAnyTcpOutboundCidrRange",
+                            "properties": {
+                                "protocol": "TCP",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 2080,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": [
+                                    "#{{ subnet3AddressPrefix }}"
+                                ]
+                            }
+                        },
+                        {
                             "name": "DenyAllOtherOutbound",
                             "properties": {
                                 "protocol": "*",
