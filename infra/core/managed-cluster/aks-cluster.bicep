@@ -345,6 +345,9 @@ module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.ex
               substitute: {
                 APPCONFIG_NAME: appConfig.name
                 APPCONFIG_MI_CLIENTID: managedIdentityAppConfig.outputs.clientId
+                ASO_MI_CLIENTID: managedIdentityAso.outputs.clientId
+                SUBSCRIPTION_ID: subscription().subscriptionId
+                TENANT_ID: tenant().tenantId
               }
             }
           }
