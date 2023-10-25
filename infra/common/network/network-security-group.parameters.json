@@ -15,20 +15,19 @@
                     "purpose": "ADP AKS ILB NSG",
                     "securityRules": [
                         {
-                            "name": "AllowAnyTcpInboundCidrRange",
+                            "name": "AllowAnyInboundFromAzLB",
                             "properties": {
-                                "protocol": "Tcp",
+                                "protocol": "*",
                                 "sourcePortRange": "*",
                                 "destinationPortRange": "*",
+                                "sourceAddressPrefix": "AzureLoadBalancer",
                                 "destinationAddressPrefix": "VirtualNetwork",
                                 "access": "Allow",
-                                "priority": 2000,
+                                "priority": 3600,
                                 "direction": "Inbound",
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
-                                "sourceAddressPrefixes": [
-                                    "#{{ subnet2AddressPrefix }}"
-                                ],
+                                "sourceAddressPrefixes": [],
                                 "destinationAddressPrefixes": []
                             }
                         },
@@ -91,44 +90,6 @@
                     "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}02",
                     "purpose": "ADP AKS System Node Pool NSG",
                     "securityRules": [
-                        {
-                            "name": "AllowAnyTcpInboundCidrRange",
-                            "properties": {
-                                "protocol": "Tcp",
-                                "sourcePortRange": "*",
-                                "destinationPortRange": "*",
-                                "destinationAddressPrefix": "VirtualNetwork",
-                                "access": "Allow",
-                                "priority": 2000,
-                                "direction": "Inbound",
-                                "sourcePortRanges": [],
-                                "destinationPortRanges": [],
-                                "sourceAddressPrefixes": [
-                                    "#{{ subnet3AddressPrefix }}",
-                                    "#{{ aksClusterPodCidr }}"
-                                ],
-                                "destinationAddressPrefixes": []
-                            }
-                        },
-                        {
-                            "name": "AllowAnyUdpInboundCidrRange",
-                            "properties": {
-                                "protocol": "Udp",
-                                "sourcePortRange": "*",
-                                "destinationPortRange": "*",
-                                "destinationAddressPrefix": "VirtualNetwork",
-                                "access": "Allow",
-                                "priority": 2010,
-                                "direction": "Inbound",
-                                "sourcePortRanges": [],
-                                "destinationPortRanges": [],
-                                "sourceAddressPrefixes": [
-                                    "#{{ subnet3AddressPrefix }}",
-                                    "#{{ aksClusterPodCidr }}"
-                                ],
-                                "destinationAddressPrefixes": []
-                            }
-                        },
                         {
                             "name": "AllowAnyInboundFromAzLB",
                             "properties": {
@@ -356,46 +317,6 @@
                     "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}03",
                     "purpose": "AKS User Node Pool NSG",
                     "securityRules": [
-                        {
-                            "name": "AllowAnyTcpInboundCidrRange",
-                            "properties": {
-                                "protocol": "Tcp",
-                                "sourcePortRange": "*",
-                                "destinationPortRange": "*",
-                                "destinationAddressPrefix": "VirtualNetwork",
-                                "access": "Allow",
-                                "priority": 2000,
-                                "direction": "Inbound",
-                                "sourcePortRanges": [],
-                                "destinationPortRanges": [],
-                                "sourceAddressPrefixes": [
-                                    "#{{ subnet1AddressPrefix }}",
-                                    "#{{ subnet2AddressPrefix }}",
-                                    "#{{ aksClusterPodCidr }}"
-                                ],
-                                "destinationAddressPrefixes": []
-                            }
-                        },
-                        {
-                            "name": "AllowAnyUdpInboundCidrRange",
-                            "properties": {
-                                "protocol": "Udp",
-                                "sourcePortRange": "*",
-                                "destinationPortRange": "*",
-                                "destinationAddressPrefix": "VirtualNetwork",
-                                "access": "Allow",
-                                "priority": 2010,
-                                "direction": "Inbound",
-                                "sourcePortRanges": [],
-                                "destinationPortRanges": [],
-                                "sourceAddressPrefixes": [
-                                    "#{{ subnet1AddressPrefix }}",
-                                    "#{{ subnet2AddressPrefix }}",
-                                    "#{{ aksClusterPodCidr }}"
-                                ],
-                                "destinationAddressPrefixes": []
-                            }
-                        },
                         {
                             "name": "AllowAnyInboundFromAzLB",
                             "properties": {
