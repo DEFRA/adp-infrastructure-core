@@ -34,7 +34,7 @@
                         {
                             "name": "AllowAnyTcpOutboundCidrRange",
                             "properties": {
-                                "protocol": "TCP",
+                                "protocol": "Tcp",
                                 "sourcePortRange": "*",
                                 "destinationPortRange": "*",
                                 "sourceAddressPrefix": "VirtualNetwork",
@@ -45,7 +45,8 @@
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
                                 "destinationAddressPrefixes": [
-                                    "#{{ subnet3AddressPrefix }}"
+                                    "#{{ subnet3AddressPrefix }}",
+                                    "#{{ aksClusterPodCidr }}"
                                 ]
                             }
                         },
