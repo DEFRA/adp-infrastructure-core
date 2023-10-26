@@ -62,7 +62,7 @@ module appConfigResource 'br/SharedDefraRegistry:app-configuration.configuration
   params: {
     name: appConfig.name
     sku: sku
-    disableLocalAuth: true
+    // disableLocalAuth: true
     softDeleteRetentionInDays: int(appConfig.softDeleteRetentionInDays)
     enablePurgeProtection: bool(appConfig.enablePurgeProtection)
     publicNetworkAccess: 'Disabled'
@@ -86,9 +86,6 @@ module appConfigResource 'br/SharedDefraRegistry:app-configuration.configuration
         name: 'ACR_NAME'
         value: 'sndadpinfcr1401'
         contentType: ''
-        // value: keyValue.value
-        // contentType: contains(keyValue, 'contentType') ? keyValue.contentType : ''
-        // tags: contains(keyValue, 'tags') ? keyValue.tags : {}
       }
     ]
   }
