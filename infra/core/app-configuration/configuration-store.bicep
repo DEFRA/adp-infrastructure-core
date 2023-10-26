@@ -65,7 +65,7 @@ module appConfigResource 'br/SharedDefraRegistry:app-configuration.configuration
     // disableLocalAuth: true
     softDeleteRetentionInDays: int(appConfig.softDeleteRetentionInDays)
     enablePurgeProtection: bool(appConfig.enablePurgeProtection)
-    publicNetworkAccess: 'Disabled'
+    publicNetworkAccess: ''
     privateEndpoints: [
       {
         name: appConfig.privateEndpointName
