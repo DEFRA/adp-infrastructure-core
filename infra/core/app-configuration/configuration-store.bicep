@@ -68,7 +68,7 @@ module appConfigResource 'br/SharedDefraRegistry:app-configuration.configuration
     disableLocalAuth: false
     softDeleteRetentionInDays: int(appConfig.softDeleteRetentionInDays)
     enablePurgeProtection: bool(appConfig.enablePurgeProtection)
-    publicNetworkAccess: null
+    publicNetworkAccess: 'Enabled'
     privateEndpoints: [
       {
         name: appConfig.privateEndpointName
@@ -80,5 +80,16 @@ module appConfigResource 'br/SharedDefraRegistry:app-configuration.configuration
     tags: union(tags, appConfigTags)
     roleAssignments: roleAssignments
     keyValues: keyValues
+  }
+}
+
+module appConfigResourceUpdate 'br/SharedDefraRegistry:app-configuration.configuration-store:0.3.3' = {
+  name: 'app-config-${deploymentDate}'
+  dependsOn: [ appConfigResource ]
+  params: {
+    name: appConfig.name
+    sku: sku
+    disableLocalAuth: true
+    publicNetworkAccess: 'Disabled'
   }
 }
