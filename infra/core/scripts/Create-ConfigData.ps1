@@ -66,11 +66,11 @@ try {
     $settings | ConvertFrom-Json | ForEach-Object {
         az appconfig kv set `
             --name $AppConfigName `
-            --key $_.key `
+            --key $_.name `
             --value $_.value `
-            --content-type $_.contentType `
             --label $_.label
-        # --yes | Out-Null
+            # --content-type $_.contentType `
+            # --yes | Out-Null
     }
 
     # az appconfig kv set --name $appConfigName --key $newKey --value "Value 1"
