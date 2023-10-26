@@ -265,7 +265,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
       autoUpgradeMinorVersion: true
       releaseTrain: 'Stable'
       configurationSettings: {
-        'toleration-keys': 'CriticalAddonsOnly=true:NoSchedule'
+        
         'helm-controller.enabled': 'true'
         'source-controller.enabled': 'true'
         'kustomize-controller.enabled': 'true'
