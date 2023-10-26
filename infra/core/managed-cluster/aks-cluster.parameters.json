@@ -94,30 +94,20 @@
             "syncIntervalInSeconds": 600,
             "clusterPath": "./clusters/#{{ lower(environment) }}/0#{{ environmentId }}",
             "infraPath": "./infra/#{{ lower(environment) }}/0#{{ environmentId }}",
-            "servicesPath": "./services/#{{ lower(environment) }}/0#{{ environmentId }}",
-            "postBuild": {
-              "substitute": {
-                "ENVIRONMENT": "#{{ lower(environment) }}",
-                "ACR_NAME": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
-                "CLUSTER": "0#{{ environmentId }}",
-                "SERVICEBUS_RG": "#{{ servicesResourceGroup }}",
-                "SERVICEBUS_NS": "#{{ infraResourceNamePrefix }}#{{ nc_resource_servicebus }}#{{ nc_instance_regionid }}01",
-                "POSTGRES_SERVER_RG": "#{{ dbsResourceGroup }}",
-                "POSTGRES_SERVER": "#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}01",
-                "INFRA_RG": "#{{ servicesResourceGroup }}",
-                "TEAM_MI_NAME": "#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01",
-                "CLUSTER_OIDC": "",
-                "TENANT_ID": "#{{ tenantId }}",
-                "SUBSCRIPTION_ID": "#{{ subscriptionId }}",
-                "SUBSCRIPTION_NAME": "#{{ subscriptionName }}"
-              }
-            }
+            "servicesPath": "./services/#{{ lower(environment) }}/0#{{ environmentId }}"
           }
         }
       }
     },
     "asoPlatformManagedIdentity": {
       "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-adp-aso-platform"
+    },
+    "appConfig": {
+      "value": {
+        "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_appconfiguration }}#{{ nc_instance_regionid }}01",
+        "resourceGroup": "#{{ servicesResourceGroup }}",
+        "managedIdentityName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-adp-ac-platform"
+      }
     }
   }
 }
