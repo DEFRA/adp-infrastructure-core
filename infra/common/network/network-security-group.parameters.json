@@ -29,7 +29,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Any Inbound From AzLB"
                             }
                         },
                         {
@@ -46,7 +47,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Deny All Other Inbound"
                             }
                         },
                         {
@@ -65,7 +67,8 @@
                                 "destinationAddressPrefixes": [
                                     "#{{ subnet3AddressPrefix }}",
                                     "#{{ aksClusterPodCidr }}"
-                                ]
+                                ],
+                                "description": "Allow Any Tcp Outbound from VirtualNetwork to npUser01cmn and Pod CIDR Ranges"
                             }
                         },
                         {
@@ -82,7 +85,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Deny All Other Outbound"
                             }
                         }
                     ]
@@ -107,7 +111,8 @@
                                     "#{{ subnet3AddressPrefix }}",
                                     "#{{ aksClusterPodCidr }}"
                                 ],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Any Tcp Inbound from npUser01cmn and Pod CIDR Ranges to VirtualNetwork"
                             }
                         },
                         {
@@ -126,7 +131,8 @@
                                     "#{{ subnet3AddressPrefix }}",
                                     "#{{ aksClusterPodCidr }}"
                                 ],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Any Udp Inbound from npUser01cmn and Pod CIDR Ranges to VirtualNetwork"
                             }
                         },
                         {
@@ -143,7 +149,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Any Inbound From AzLB"
                             }
                         },
                         {
@@ -160,7 +167,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Deny All Other Inbound"
                             }
                         },
                         {
@@ -177,7 +185,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Any Tcp Outbound from VirtualNetwork to VirtualNetwork"
                             }
                         },
                         {
@@ -194,7 +203,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Any Udp Outbound from VirtualNetwork to VirtualNetwork"
                             }
                         },
                         {
@@ -211,7 +221,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow AAD Auth Outbound from VirtualNetwork to AzureActiveDirectory"
                             }
                         },
                         {
@@ -228,7 +239,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow DevOps SSH(Port 22) Outbound  from VirtualNetwork to AzureDevOps"
                             }
                         },
                         {
@@ -247,7 +259,8 @@
                                     "1886"
                                 ],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow AzMonitor Outbound ports(443,1886) from VirtualNetwork to AzureMonitor"
                             }
                         },
                         {
@@ -264,7 +277,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow AzAcr Outbound port(443) from VirtualNetwork to AzureContainerRegistry.UKSouth"
                             }
                         },
                         {
@@ -281,7 +295,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow AzAcr Outbound port(443) from VirtualNetwork to AzureContainerRegistry.UKWest"
                             }
                         },
                         
@@ -299,7 +314,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Az Key vault Outbound port(443) from VirtualNetwork to AzureKeyVault.UKSouth"
                             }
                         },
                         {
@@ -316,7 +332,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Az Key vault Outbound port(443) from VirtualNetwork to AzureKeyVault.UKWest"
                             }
                         },
                         {
@@ -333,7 +350,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Https Outbound port(443) from VirtualNetwork to Internet"
                             }
                         },
                         {
@@ -350,7 +368,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Deny All Other Outbound"
                             }
                         }
                     ]
@@ -376,7 +395,8 @@
                                     "#{{ subnet2AddressPrefix }}",
                                     "#{{ aksClusterPodCidr }}"
                                 ],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Any Tcp Inbound from System, User node pool and Pod CIDR Ranges to VirtualNetwork"
                             }
                         },
                         {
@@ -396,7 +416,8 @@
                                     "#{{ subnet2AddressPrefix }}",
                                     "#{{ aksClusterPodCidr }}"
                                 ],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Any Udp Inbound from System, User node pool and Pod CIDR Ranges to VirtualNetwork"
                             }
                         },
                         {
@@ -415,7 +436,8 @@
                                     "1886"
                                 ],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow AzMonitor Outbound ports(443,1886) from VirtualNetwork to AzureMonitor"
                             }
                         },
                         {
@@ -432,7 +454,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Any Inbound From AzLB"
                             }
                         },
                         {
@@ -449,7 +472,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Deny All Other Inbound"
                             }
                         },
                         {
@@ -466,7 +490,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Any Tcp Outbound from VirtualNetwork to VirtualNetwork"
                             }
                         },
                         {
@@ -483,7 +508,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Any Udp Outbound from VirtualNetwork to VirtualNetwork"
                             }
                         },
                         {
@@ -500,7 +526,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow AAD Auth Outbound port(443) from VirtualNetwork to AzureActiveDirectory"
                             }
                         },
                         {
@@ -517,7 +544,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow AzAcr Outbound port(443) from VirtualNetwork to AzureContainerRegistry.UKSouth"
                             }
                         },
                         {
@@ -534,7 +562,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow AzAcr Outbound port(443) from VirtualNetwork to AzureContainerRegistry.UKWest"
                             }
                         },
                         {
@@ -551,7 +580,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Az Key vault Outbound port(443) from VirtualNetwork to AzureKeyVault.UKSouth"
                             }
                         },
                         {
@@ -568,7 +598,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Az Key vault Outbound port(443) from VirtualNetwork to AzureKeyVault.UKWest"
                             }
                         },
                         {
@@ -585,7 +616,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Https Outbound port(443) from VirtualNetwork to Internet"
                             }
                         },
                         {
@@ -602,7 +634,8 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": []
+                                "destinationAddressPrefixes": [],
+                                "description": "Deny All Other Outbound"
                             }
                         }
                     ]
