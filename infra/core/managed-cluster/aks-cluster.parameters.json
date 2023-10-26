@@ -59,7 +59,7 @@
         {
           "name": "#{{ ssvSharedAcrName }}",
           "resourceGroup": "#{{ ssvSharedResourceGroup }}",
-          "subscriptionId": "#{{ ssv3subscriptionId }}"
+          "subscriptionId": "#{{ ssvSubscriptionId }}"
         },
         {
           "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
