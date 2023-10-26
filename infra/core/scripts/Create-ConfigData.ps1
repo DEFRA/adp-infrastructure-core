@@ -61,15 +61,15 @@ try {
 
     # Publish-Image -AcrName $AcrName.ToLower() -NGINXVersion $NGINXVersion
 
-    $settings = Get-Content $(Join-Path -Path $WorkingDirectory -ChildPath $ConfigDataFilePath)
+    $settings = Get-Content -Path $(Join-Path -Path $WorkingDirectory -ChildPath $ConfigDataFilePath)
 
     $settings | ConvertFrom-Json | ForEach-Object {
         az appconfig kv set `
             --name $AppConfigName `
-            --key $setting.key `
-            --value $setting.value `
-            --content-type $setting.contentType `
-            --label $setting.label
+            --key $_.key `
+            --value $_.value `
+            --content-type $_.contentType `
+            --label $_.label
         # --yes | Out-Null
     }
 
