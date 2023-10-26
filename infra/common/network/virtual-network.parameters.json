@@ -15,13 +15,7 @@
         {
           "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01",
           "addressPrefix": "#{{ subnet1AddressPrefix }}",
-          "serviceEndpoints": [
-            { "service": "Microsoft.ContainerRegistry" },
-            { "service": "Microsoft.Storage" },
-            { "service": "Microsoft.EventHub" },
-            { "service": "Microsoft.ServiceBus" },
-            { "service": "Microsoft.KeyVault" }
-          ],
+          "serviceEndpoints": [],
           "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01",
           "networkSecurityGroupId":"/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
           "privateEndpointNetworkPolicies": "Disabled",
@@ -30,27 +24,56 @@
         {
           "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}02",
           "addressPrefix": "#{{ subnet2AddressPrefix }}",
+          "serviceEndpoints": [
+            { "service": "Microsoft.ContainerRegistry" },
+            { "service": "Microsoft.EventHub" },
+            { "service": "Microsoft.KeyVault" }
+          ],
+          "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01",
+          "networkSecurityGroupId":"/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}02",
+          "privateEndpointNetworkPolicies": "Disabled",
+          "privateLinkServiceNetworkPolicies": "Disabled"
+        },
+        {
+          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}03",
+          "addressPrefix": "#{{ subnet3AddressPrefix }}",
+          "serviceEndpoints": [
+            { "service": "Microsoft.ContainerRegistry" },
+            { "service": "Microsoft.Storage" },
+            { "service": "Microsoft.EventHub" },
+            { "service": "Microsoft.ServiceBus" },
+            { "service": "Microsoft.KeyVault" }
+          ],
+          "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01",
+          "networkSecurityGroupId":"/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}03",
+          "privateEndpointNetworkPolicies": "Disabled",
+          "privateLinkServiceNetworkPolicies": "Disabled"
+        },
+        {
+          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}99",
+          "addressPrefix": "#{{ subnet99AddressPrefix }}",
+          "serviceEndpoints": [],
+          "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01",
+          "networkSecurityGroupId":"/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}99"
+        },
+        {
+          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}98",
+          "addressPrefix": "#{{ subnet98AddressPrefix }}",
           "serviceEndpoints": [],
           "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01",
           "privateEndpointNetworkPolicies": "Enabled",
           "privateLinkServiceNetworkPolicies": "Enabled"
         },
+        
         {
-          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}03",
-          "addressPrefix": "#{{ subnet3AddressPrefix }}",
-          "serviceEndpoints": [],
-          "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01",
-          "networkSecurityGroupId":"/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}02"
-        },
-        {
-          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}04",
-          "addressPrefix": "#{{ subnet4AddressPrefix }}",
+          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}97",
+          "addressPrefix": "#{{ subnet97AddressPrefix }}",
           "serviceEndpoints": [],
           "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01"
         },
         {
-          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}05",
-          "addressPrefix": "#{{ subnet5AddressPrefix }}",
+          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}96",
+          "addressPrefix": "#{{ subnet96AddressPrefix }}",
           "serviceEndpoints": [],
           "delegations": [
             {
@@ -60,7 +83,9 @@
               }
             }
           ],
-          "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01"
+          "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ virtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ networkResourceNamePrefix }}#{{ nc_resource_virtualnetwork }}#{{ nc_instance_regionid }}01",
+          "privateEndpointNetworkPolicies": "Disabled",
+          "privateLinkServiceNetworkPolicies": "Enabled"
         }
       ]
     },

@@ -6,7 +6,8 @@
       "value": {
         "name": "#{{ virtualNetworkName }}",
         "resourceGroup": "#{{ virtualNetworkResourceGroup }}",
-        "subnetClusterNodes": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01"
+        "subnet02Name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}98",
+        "subnet03Name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}03"
       }
     },
     "cluster": {
@@ -53,12 +54,19 @@
         "resourceGroup": "#{{ dnsResourceGroup }}"
       }
     },
-    "containerRegistry": {
-      "value": {
-        "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
-        "resourceGroup": "#{{ servicesResourceGroup }}",
-        "subscriptionId": "#{{ subscriptionId }}"
-      }
+    "containerRegistries": {
+      "value": [
+        {
+          "name": "#{{ ssvSharedAcrName }}",
+          "resourceGroup": "#{{ ssvSharedResourceGroup }}",
+          "subscriptionId": "#{{ ssvSubscriptionId }}"
+        },
+        {
+          "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
+          "resourceGroup": "#{{ servicesResourceGroup }}",
+          "subscriptionId": "#{{ subscriptionId }}"
+        }
+      ]
     },
     "location": {
       "value": "#{{ location }}"

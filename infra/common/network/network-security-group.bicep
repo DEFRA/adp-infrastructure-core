@@ -24,7 +24,7 @@ module networksecuritygroup 'br/SharedDefraRegistry:network.network-security-gro
     name: nsg.name
     lock: 'CanNotDelete'
     location: location
-    tags: union(tags, { Purpose: 'ADP NSG ${nsg.purpose}'})
+    tags: union(tags, { Purpose: nsg.purpose})
     securityRules: nsg.securityRules 
   }
 }]
