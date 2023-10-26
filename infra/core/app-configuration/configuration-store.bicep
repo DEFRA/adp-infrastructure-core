@@ -27,6 +27,9 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @secure()
 param principalId string
 
+@description('Optional. Key-Value pair to be added to the Configuration Store')
+param keyValues array
+
 var roleAssignments = [
   {
     roleDefinitionIdOrName: 'App Configuration Data Owner'
@@ -65,7 +68,7 @@ module appConfigResource 'br/SharedDefraRegistry:app-configuration.configuration
     disableLocalAuth: false
     softDeleteRetentionInDays: int(appConfig.softDeleteRetentionInDays)
     enablePurgeProtection: bool(appConfig.enablePurgeProtection)
-    publicNetworkAccess: 'Enabled'
+    publicNetworkAccess: 'Disabled'
     privateEndpoints: [
       {
         name: appConfig.privateEndpointName
@@ -76,15 +79,6 @@ module appConfigResource 'br/SharedDefraRegistry:app-configuration.configuration
     ]
     tags: union(tags, appConfigTags)
     roleAssignments: roleAssignments
-    keyValues: [
-      {
-        name: 'ENVIRONMENT'
-        value: toLower(environment)
-      }
-      {
-        name: 'ACR_NAME'
-        value: 'sndadpinfcr1401'
-      }
-    ]
+    keyValues: keyValues
   }
 }
