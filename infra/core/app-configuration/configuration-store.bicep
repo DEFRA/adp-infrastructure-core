@@ -81,17 +81,11 @@ module appConfigResource 'br/SharedDefraRegistry:app-configuration.configuration
         name: 'ENVIRONMENT'
         value: toLower(environment)
         contentType: ''
-        tags: {
-          'Platform'
-        }
       }
       {
         name: 'ACR_NAME'
         value: 'sndadpinfcr1401'
         contentType: ''
-        tags: {
-          'Platform'
-        }
         // value: keyValue.value
         // contentType: contains(keyValue, 'contentType') ? keyValue.contentType : ''
         // tags: contains(keyValue, 'tags') ? keyValue.tags : {}
