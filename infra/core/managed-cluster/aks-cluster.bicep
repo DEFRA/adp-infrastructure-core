@@ -343,8 +343,6 @@ module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.ex
             prune: true
             postBuild: {
               substitute: {
-                APPCONFIG_NAME: appConfig.name
-                APPCONFIG_MI_CLIENTID: managedIdentityAppConfig.outputs.clientId
                 ASO_MI_CLIENTID: managedIdentityAso.outputs.clientId
                 SUBSCRIPTION_ID: subscription().subscriptionId
                 TENANT_ID: tenant().tenantId
@@ -361,6 +359,12 @@ module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.ex
             ]
             validation: 'none'
             prune: true
+            postBuild: {
+              substitute: {
+                APPCONFIG_NAME: appConfig.name
+                APPCONFIG_MI_CLIENTID: managedIdentityAppConfig.outputs.clientId
+              }
+            }
           }
         }
       }
