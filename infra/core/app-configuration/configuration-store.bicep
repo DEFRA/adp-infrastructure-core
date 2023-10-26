@@ -82,14 +82,3 @@ module appConfigResource 'br/SharedDefraRegistry:app-configuration.configuration
     keyValues: keyValues
   }
 }
-
-module appConfigResourceUpdate 'br/SharedDefraRegistry:app-configuration.configuration-store:0.3.3' = {
-  name: 'app-config-${deploymentDate}'
-  dependsOn: [ appConfigResource ]
-  params: {
-    name: appConfig.name
-    sku: sku
-    disableLocalAuth: true
-    publicNetworkAccess: 'Disabled'
-  }
-}
