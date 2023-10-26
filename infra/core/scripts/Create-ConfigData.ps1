@@ -40,7 +40,7 @@ Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
 
-    # Install-Module -Name "Az.Accounts" -RequiredVersion "2.2.3" -Force -SkipPublisherCheck -AllowClobber
+    Install-Module -Name "Az.Accounts" -RequiredVersion "2.2.3" -Force -SkipPublisherCheck -AllowClobber
     # Install-Module -Name "Az.KeyVault" -RequiredVersion "4.10.2" -Force -SkipPublisherCheck -AllowClobber
 
     [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ps-helpers"
