@@ -7,6 +7,8 @@ param(
     [Parameter(Mandatory)]
     [string] $AzureSubscription,
     [Parameter(Mandatory)]
+    [string] $TenantId,
+    [Parameter(Mandatory)]
     [string] $AppConfigName,
     [Parameter(Mandatory)]
     [string] $ConfigDataFilePath,
@@ -34,6 +36,7 @@ if ($enableDebug) {
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
 Write-Debug "${functionName}:ServicePrincipalId=$ServicePrincipalId"
 Write-Debug "${functionName}:AzureSubscription=$AzureSubscription"
+Write-Debug "${functionName}:TenantId=$TenantId"
 Write-Debug "${functionName}:AppConfigName=$AppConfigName"
 Write-Debug "${functionName}:ConfigDataFilePath=$ConfigDataFilePath"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
@@ -50,7 +53,7 @@ try {
     Write-Host "${functionName}:Connecting to Azure..."
     [SecureString]$SecuredPassword = ConvertTo-SecureString -AsPlainText -String $ServicePrincipalKey
     [PSCredential]$Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $ServicePrincipalId, $SecuredPassword
-    $null = Connect-AzAccount -ServicePrincipal -TenantId $env:tenantId -Credential $Credential
+    $null = Connect-AzAccount -ServicePrincipal -TenantId $TenantId -Credential $Credential
     $null = Set-AzContext -Subscription $AzureSubscription
     Write-Host "${functionName}:Connected to Azure and set context to '$AzureSubscription'"
     

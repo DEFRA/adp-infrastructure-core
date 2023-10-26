@@ -244,6 +244,7 @@ extends:
                         -ServicePrincipalId $(ADO-DefraGovUK-ADP-SND1-Cont-ClientId)
                         -ServicePrincipalKey $(ADO-DefraGovUK-ADP-SND1-Cont)
                         -AzureSubscription $(subscriptionName)
+                        -TenantId $(tenantId)
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                         -ConfigDataFilePath "infra/core/app-configuration/config-data/config-data.json"
               - ${{ if eq(variables.IsApplicationContainerRegistry, true) }}:  
