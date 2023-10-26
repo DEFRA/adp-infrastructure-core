@@ -39,43 +39,43 @@ param keyValues = [
     value: 'flux-config'
   }
   {
-    name: 'SERVICEBUS_RG'
+    name: 'SERVICEBUS_RG$Platform'
     value: '#{{ servicesResourceGroup }}'
   }
   {
-    name: 'SERVICEBUS_NS'
+    name: 'SERVICEBUS_NS$Platform'
     value: '#{{ infraResourceNamePrefix }}#{{ nc_resource_servicebus }}#{{ nc_instance_regionid }}01'
   }
   {
-    name: 'POSTGRES_SERVER_RG'
+    name: 'POSTGRES_SERVER_RG$Platform'
     value: '#{{ dbsResourceGroup }}'
   }
   {
-    name: 'POSTGRES_SERVER'
+    name: 'POSTGRES_SERVER$Platform'
     value: '#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}01'
   }
   {
-    name: 'INFRA_RG'
+    name: 'INFRA_RG$Platform'
     value: '#{{ servicesResourceGroup }}'
   }
   {
-    name: 'TEAM_MI_PREFIX'
+    name: 'TEAM_MI_PREFIX$Platform'
     value: '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01'
   }
   {
-    name: 'TENANT_ID'
+    name: 'TENANT_ID$Platform'
     value: '#{{ tenantId }}'
   }
   {
-    name: 'SUBSCRIPTION_ID'
+    name: 'SUBSCRIPTION_ID$Platform'
     value: '#{{ subscriptionId }}'
   }
   {
-    name: 'SUBSCRIPTION_NAME'
+    name: 'SUBSCRIPTION_NAME$Platform'
     value: '#{{ subscriptionName }}'
   }
   {
-    name: 'CLUSTER'
+    name: 'CLUSTER$Platform'
     value: '0#{{ environmentId }}'
   }
 ]
