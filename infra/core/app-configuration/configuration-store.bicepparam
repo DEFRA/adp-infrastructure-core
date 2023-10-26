@@ -1,7 +1,7 @@
 using './configuration-store.bicep'
 
 param appConfig = {
-  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_appconfiguration }}#{{ nc_instance_regionid }}01'
+  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_appconfiguration }}#{{ nc_instance_regionid }}02'
   privateEndpointName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}98'
   softDeleteRetentionInDays: '#{{ appConfigurationSoftDeleteRetentionInDays }}'
   enablePurgeProtection: '#{{ appConfigurationEnablePurgeProtection }}'
