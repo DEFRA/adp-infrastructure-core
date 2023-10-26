@@ -134,6 +134,8 @@ extends:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     keyVaultName: "$(ssvPlatformKeyVaultName)"
+    filePathsForTransform: |
+      **/core/app-configuration/config-data/config-data.json
     groupedDeployments:
         - ${{ if eq(variables.IsNetwork, true) }}:
           - name: network
