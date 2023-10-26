@@ -60,7 +60,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: features/test
       
 variables:
   - name: IsAll
@@ -133,6 +133,7 @@ extends:
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
+    keyVaultName: "$(ssvPlatformKeyVaultName)"
     groupedDeployments:
         - ${{ if eq(variables.IsNetwork, true) }}:
           - name: network
@@ -235,6 +236,16 @@ extends:
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: Create Config Values
+                      scriptPath: infra/core/scripts/Create-ConfigData.ps1
+                      type: PowerShell
+                      scriptArguments: >
+                        -ServicePrincipalId $(ADO-DefraGovUK-ADP-SND1-Cont-ClientId)
+                        -ServicePrincipalKey $(ADO-DefraGovUK-ADP-SND1-Cont)
+                        -AzureSubscription $(subscriptionName)
+                        -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                        -ConfigDataFilePath "infra/core/app-configuration/config-data/config-data.json"
               - ${{ if eq(variables.IsApplicationContainerRegistry, true) }}:  
                 - name: application-container-registry
                   path: infra/core/container-registry
