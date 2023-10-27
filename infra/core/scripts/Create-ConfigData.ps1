@@ -61,7 +61,7 @@ try {
     Invoke-CommandLine -Command "az appconfig update --name $AppConfigName --disable-local-auth $false" -NoOutput
     
     if ($ConfigData) {
-        $config = $ConfigData | ConvertFrom-Json
+        $config = $ConfigData | ConvertTo-Json
         $settings = $config.configuration.value
     }
     if ($ConfigDataFilePath) {
