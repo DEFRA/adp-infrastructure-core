@@ -3,6 +3,7 @@ using './aks-cluster.bicep'
 param vnet = {
   name: '#{{ virtualNetworkName }}'
   resourceGroup: '#{{ virtualNetworkResourceGroup }}'
+  subnet01Name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01'
   subnet02Name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}98'
   subnet03Name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}03'
 }

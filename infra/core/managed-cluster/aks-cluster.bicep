@@ -346,6 +346,8 @@ module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.ex
                 ASO_MI_CLIENTID: managedIdentityAso.outputs.clientId
                 SUBSCRIPTION_ID: subscription().subscriptionId
                 TENANT_ID: tenant().tenantId
+                LOAD_BALANCER_SUBNET: vnet.subnet01Name
+                SHARED_CONTAINER_REGISTRY: containerRegistries[0].name
               }
             }
           }
