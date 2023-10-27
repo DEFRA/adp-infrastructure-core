@@ -11,7 +11,7 @@ param(
     [Parameter(Mandatory)]
     [string] $AppConfigName,
     [Parameter()]
-    [string] $ConfigData,
+    [object] $ConfigData,
     [Parameter()]
     [string] $ConfigDataFilePath,
     [Parameter()]
@@ -60,11 +60,13 @@ try {
     
     Invoke-CommandLine -Command "az appconfig update --name $AppConfigName --disable-local-auth $false" -NoOutput
     
-    $settings = $ConfigData
+    if ($ConfigData) {
+        $settings = $Configdata.configuration
+    }
     if ($ConfigDataFilePath) {
         $settings = Get-Content -Path $(Join-Path -Path $WorkingDirectory -ChildPath $ConfigDataFilePath)
     }
-    
+
     $settings | ConvertFrom-Json | ForEach-Object {
         Write-Host "Adding key '$($_.name)' with label '$($_.label)' to the config store"
         Invoke-CommandLine -Command "az appconfig kv set --name $AppConfigName --key $($_.name) --value $($_.value) --label $($_.label) --yes" -NoOutput
