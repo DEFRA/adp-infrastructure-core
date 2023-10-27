@@ -312,8 +312,8 @@ module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.ex
     }
     fluxConfigurations: [
       {
-        name: 'config-cluster-flux'
-        namespace: 'config-cluster-flux'
+        name: 'flux-config'
+        namespace: 'flux-config'
         scope: 'cluster'
         gitRepository: {
           repositoryRef: {
