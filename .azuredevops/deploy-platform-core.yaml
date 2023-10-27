@@ -209,7 +209,7 @@ extends:
                         -SubscriptionName $(subscriptionName)
                         -TenantId $(tenantId)
               - ${{ if eq(variables.IsManagedClusterCluster, true) }}:      
-                - name: test-template
+                - name: aks-cluster
                   path: infra/core/managed-cluster
                   resourceGroupName: $(aksResourceGroup)
                   postDeployScriptsList:
