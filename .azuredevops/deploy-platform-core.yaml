@@ -208,6 +208,16 @@ extends:
                         -ResourceGroupName $(dnsResourceGroup)
                         -SubscriptionName $(subscriptionName)
                         -TenantId $(tenantId)
+                    - displayName: Add Cluster Details to Config Service
+                      scriptPath: infra/core/scripts/Create-ConfigData.ps1
+                      type: PowerShell
+                      scriptArguments: >
+                        -ServicePrincipalId $(ADO-DefraGovUK-ADP-SND1-Cont-ClientId)
+                        -ServicePrincipalKey $(ADO-DefraGovUK-ADP-SND1-Cont)
+                        -AzureSubscription $(subscriptionName)
+                        -TenantId $(tenantId)
+                        -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                        -ConfigData $(azureDeploymentOutputs)
               - ${{ if eq(variables.IsManagedClusterCluster, true) }}:      
                 - name: aks-cluster
                   path: infra/core/managed-cluster

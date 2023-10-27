@@ -10,7 +10,9 @@ param(
     [string] $TenantId,
     [Parameter(Mandatory)]
     [string] $AppConfigName,
-    [Parameter(Mandatory)]
+    [Parameter()]
+    [string] $ConfigData,
+    [Parameter()]
     [string] $ConfigDataFilePath,
     [Parameter()]
     [string]$WorkingDirectory = $PWD
@@ -38,10 +40,14 @@ Write-Debug "${functionName}:ServicePrincipalId=$ServicePrincipalId"
 Write-Debug "${functionName}:AzureSubscription=$AzureSubscription"
 Write-Debug "${functionName}:TenantId=$TenantId"
 Write-Debug "${functionName}:AppConfigName=$AppConfigName"
+Write-Debug "${functionName}:ConfigData=$ConfigData"
 Write-Debug "${functionName}:ConfigDataFilePath=$ConfigDataFilePath"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
+    if ($null -eq $ConfigData -and $null -eq $ConfigDataFilePath) {
+        throw "One of the parameters 'ConfigData' or 'ConfigDataFilePath' is required."
+    }
 
     [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ps-helpers"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
@@ -54,8 +60,11 @@ try {
     
     Invoke-CommandLine -Command "az appconfig update --name $AppConfigName --disable-local-auth $false" -NoOutput
     
-    $settings = Get-Content -Path $(Join-Path -Path $WorkingDirectory -ChildPath $ConfigDataFilePath)
-
+    $settings = $ConfigData
+    if ($ConfigDataFilePath) {
+        $settings = Get-Content -Path $(Join-Path -Path $WorkingDirectory -ChildPath $ConfigDataFilePath)
+    }
+    
     $settings | ConvertFrom-Json | ForEach-Object {
         Write-Host "Adding key '$($_.name)' with label '$($_.label)' to the config store"
         Invoke-CommandLine -Command "az appconfig kv set --name $AppConfigName --key $($_.name) --value $($_.value) --label $($_.label) --yes" -NoOutput

@@ -27,9 +27,6 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @secure()
 param principalId string
 
-// @description('Optional. Key-Value pair to be added to the Configuration Store')
-// param keyValues array
-
 var roleAssignments = [
   {
     roleDefinitionIdOrName: 'App Configuration Data Owner'
