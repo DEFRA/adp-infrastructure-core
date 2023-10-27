@@ -6,7 +6,7 @@ param cluster object
 param privateDnsZone object
 
 @description('Required. The parameter object for the container registry. The object must contain the name, subscriptionId and resourceGroup values.')
-param containerRegistry object
+param containerRegistries array
 @allowed([
   'UKSouth'
 ])
@@ -78,7 +78,7 @@ var systemNodePool = {
   osSKU: 'Ubuntu'
   minCount: cluster.npSystem.minCount
   maxCount: cluster.npSystem.maxCount
-  vnetSubnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetClusterNodes)
+  vnetSubnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnet02Name)
   enableAutoScaling: true
   enableCustomCATrust: false
   enableFIPS: false
@@ -253,7 +253,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
         osSKU: 'Ubuntu'
         minCount: cluster.npUser.minCount
         maxCount: cluster.npUser.maxCount
-        vnetSubnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetClusterNodes)
+        vnetSubnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnet03Name)
         enableAutoScaling: true
         enableCustomCATrust: false
         enableFIPS: false
@@ -312,8 +312,8 @@ module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.ex
     }
     fluxConfigurations: [
       {
-        name: 'config-cluster-flux'
-        namespace: 'config-cluster-flux'
+        name: 'flux-config'
+        namespace: 'flux-config'
         scope: 'cluster'
         gitRepository: {
           repositoryRef: {
@@ -372,8 +372,8 @@ module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.ex
   }
 }
 
-module acrPullRoleAssignment '.bicep/acr-pull.bicep' = {
-  name: 'aks-acr-pull-role-assignment-${deploymentDate}'
+module sharedAcrPullRoleAssignment '.bicep/acr-pull.bicep' = [for containerRegistry in containerRegistries: {
+  name: '${containerRegistry.name}-acr-pull-role-${deploymentDate}'
   scope: resourceGroup(containerRegistry.subscriptionId, containerRegistry.resourceGroup)
   dependsOn: [
     deployAKS
@@ -382,7 +382,7 @@ module acrPullRoleAssignment '.bicep/acr-pull.bicep' = {
     principalId: deployAKS.outputs.kubeletidentityObjectId
     containerRegistryName: containerRegistry.name
   }
-}
+}]
 
 module appConfigurationDataReaderRoleAssignment '.bicep/app-config-data-reader.bicep' = {
   name: 'app-config-data-reader-role-assignment-${deploymentDate}'

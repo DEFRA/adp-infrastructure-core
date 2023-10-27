@@ -13,7 +13,7 @@
       "value": {
         "name": "#{{ virtualNetworkName }}",
         "resourceGroup": "#{{ virtualNetworkResourceGroup }}",
-        "rediscachesubnet": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}04"
+        "rediscachesubnet": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}97"
       }
     },
     "location": {

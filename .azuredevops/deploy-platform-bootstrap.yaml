@@ -108,7 +108,7 @@ extends:
                 path: infra/common/network
                 serviceConnectionVariableName: "subscriptionName"
                 resourceGroupName: $(virtualNetworkResourceGroup)
-              - name: subnet-nsg
+              - name: network-security-group
                 path: infra/common/network
                 serviceConnectionVariableName: "subscriptionName"
                 resourceGroupName: $(virtualNetworkResourceGroup)
