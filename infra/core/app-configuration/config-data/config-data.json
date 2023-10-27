@@ -68,5 +68,10 @@
       "name": "CLUSTER",
       "value": "0#{{ environmentId }}",
       "label": "Platform"
+    },
+    {
+      "name": "Sentinel",
+      "value": "#{{ Build.BuildId }}",
+      "label": "Platform"
     }
   ]
