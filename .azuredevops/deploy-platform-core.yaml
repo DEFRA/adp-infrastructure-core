@@ -208,6 +208,11 @@ extends:
                         -ResourceGroupName $(dnsResourceGroup)
                         -SubscriptionName $(subscriptionName)
                         -TenantId $(tenantId)
+              - ${{ if eq(variables.IsManagedClusterCluster, true) }}:      
+                - name: test-template
+                  path: infra/core/managed-cluster
+                  resourceGroupName: $(aksResourceGroup)
+                  postDeployScriptsList:
                     - displayName: Add Cluster Details to Config Service
                       scriptPath: infra/core/scripts/Create-ConfigData.ps1
                       type: PowerShell
@@ -218,10 +223,6 @@ extends:
                         -TenantId $(tenantId)
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                         -ConfigData $(azureDeploymentOutputs)
-              - ${{ if eq(variables.IsManagedClusterCluster, true) }}:      
-                - name: aks-cluster
-                  path: infra/core/managed-cluster
-                  resourceGroupName: $(aksResourceGroup)
 
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
