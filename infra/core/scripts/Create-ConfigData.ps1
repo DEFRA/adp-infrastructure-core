@@ -63,6 +63,8 @@ try {
 
     Invoke-CommandLine -Command "az appconfig update --name $AppConfigName --disable-local-auth $true" -NoOutput
 
+    Invoke-CommandLine -Command "az logout" -NoOutput
+
     $exitCode = 0
 }
 catch {
