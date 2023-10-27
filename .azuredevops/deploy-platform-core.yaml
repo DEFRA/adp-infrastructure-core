@@ -222,7 +222,7 @@ extends:
                         -AzureSubscription $(subscriptionName)
                         -TenantId $(tenantId)
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                        -ConfigData $(azureDeploymentOutputs)
+                        -ConfigData "$(azureDeploymentOutputs)"
 
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
