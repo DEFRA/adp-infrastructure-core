@@ -71,7 +71,7 @@ var systemNodePool = {
   name: 'npsystem01'
   mode: 'System'
   count: cluster.npSystem.count
-  vmSize: 'Standard_DS2_v2'
+  vmSize: 'Standard_DS3_v2'
   osDiskSizeGB: cluster.npSystem.osDiskSizeGB
   osDiskType: 'Ephemeral'
   osType: 'Linux'

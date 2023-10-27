@@ -20,10 +20,10 @@ param cluster = {
   dnsServiceIp: '#{{ aksClusterDnsServiceIp }}'
   npSystem: {
     count: 2
-    osDiskSizeGB: 80
+    osDiskSizeGB: 110
     maxCount: 4
     minCount: 1
-    maxPods: 80
+    maxPods: 110
     availabilityZones: [
       '1'
       '2'
@@ -35,7 +35,7 @@ param cluster = {
     osDiskSizeGB: 128
     maxCount: 10
     minCount: 2
-    maxPods: 80
+    maxPods: 110
     minPods: 2
     availabilityZones: [
       '1'
