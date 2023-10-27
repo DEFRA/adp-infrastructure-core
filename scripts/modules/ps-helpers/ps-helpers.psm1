@@ -19,7 +19,8 @@ function Invoke-CommandLine {
         [string]$Command,
         [switch]$IsSensitive,
         [switch]$IgnoreErrorCode,
-        [switch]$ReturnExitCode
+        [switch]$ReturnExitCode,
+        [switch]$NoOutput
     )
   
     [string]$functionName = $MyInvocation.MyCommand
@@ -76,7 +77,7 @@ function Invoke-CommandLine {
     if ($ReturnExitCode) {
         Write-Output $errCode
     }
-    else {
+    elseif (-not $NoOutput) {
         Write-Output $output
     }
     Write-Debug "${functionName}:Exited"

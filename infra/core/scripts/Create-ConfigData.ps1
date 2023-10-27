@@ -43,37 +43,25 @@ Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
 
-    Install-Module -Name "Az.Accounts" -RequiredVersion "2.2.3" -Force -SkipPublisherCheck -AllowClobber
-    # Install-Module -Name "Az.KeyVault" -RequiredVersion "4.10.2" -Force -SkipPublisherCheck -AllowClobber
-
     [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ps-helpers"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
 
     Write-Host "${functionName}:Connecting to Azure..."
-    [SecureString]$SecuredPassword = ConvertTo-SecureString -AsPlainText -String $ServicePrincipalKey
-    [PSCredential]$Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $ServicePrincipalId, $SecuredPassword
-    $null = Connect-AzAccount -ServicePrincipal -TenantId $TenantId -Credential $Credential
-    $null = Set-AzContext -Subscription $AzureSubscription
+    Invoke-CommandLine -Command "az login --service-principal --tenant $TenantId --username $ServicePrincipalId --password $ServicePrincipalKey" -NoOutput
+    Invoke-CommandLine -Command "az account set --name $AzureSubscription" -NoOutput
     Write-Host "${functionName}:Connected to Azure and set context to '$AzureSubscription'"
     
-    # Get-Image -KeyVaultName $KeyVaultName -NGINXCertSecretName $NGINXCertSecretName -NGINXKeySecretName $NGINXKeySecretName -NGINXVersion $NGINXVersion
-
-    # Publish-Image -AcrName $AcrName.ToLower() -NGINXVersion $NGINXVersion
-
+    Invoke-CommandLine -Command "az appconfig update --name $AppConfigName --disable-local-auth $false" -NoOutput
+    
     $settings = Get-Content -Path $(Join-Path -Path $WorkingDirectory -ChildPath $ConfigDataFilePath)
 
     $settings | ConvertFrom-Json | ForEach-Object {
-        az appconfig kv set `
-            --name $AppConfigName `
-            --key $_.name `
-            --value $_.value `
-            --label $_.label
-            # --content-type $_.contentType `
-            # --yes | Out-Null
+        Write-Host "Adding key '$($_.name)' with label '$($_.label)' to the config store"
+        Invoke-CommandLine -Command "az appconfig kv set --name $AppConfigName --key $($_.name) --value $($_.value) --label $($_.label) --yes" -NoOutput
     }
 
-    # az appconfig kv set --name $appConfigName --key $newKey --value "Value 1"
+    Invoke-CommandLine -Command "az appconfig update --name $AppConfigName --disable-local-auth $true" -NoOutput
 
     $exitCode = 0
 }
