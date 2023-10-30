@@ -127,6 +127,10 @@ variables:
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Service Bus')) }}
   - name: IsApplicationKeyVault
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
+  - name: servicePrincipalId
+    value: $(serviceConnectionClientIdSecretName)
+  - name: servicePrincipalKey
+    value: $(serviceConnectionAppRegName)
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -254,8 +258,8 @@ extends:
                       scriptPath: infra/core/scripts/Create-ConfigData.ps1
                       type: PowerShell
                       scriptArguments: >
-                        -ServicePrincipalId $[variables['${{ serviceConnectionClientIdSecretName }}']]
-                        -ServicePrincipalKey $[variables['${{ serviceConnectionAppRegName }}']]
+                        -ServicePrincipalId $(servicePrincipalId)
+                        -ServicePrincipalKey $(servicePrincipalKey)
                         -AzureSubscription $(subscriptionName)
                         -TenantId $(tenantId)
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
