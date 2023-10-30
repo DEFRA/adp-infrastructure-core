@@ -89,7 +89,7 @@ extends:
                     ScriptArguments: >
                       -SubscriptionName $(subscriptionName) 
                       -KeyVaultName $(ssvPlatformKeyVaultName)
-                      -Tier2ApplicationClientIdSecretName $(serviceConnectionClientIdSecretName)
+                      -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)
                   - displayName: Create or Update AzureRm Service Endpoint(Service Connection)
                     Type: AzureCLI
                     useSystemAccessToken: true                      

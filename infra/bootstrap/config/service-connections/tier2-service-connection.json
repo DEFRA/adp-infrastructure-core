@@ -10,11 +10,11 @@
                 "name": "#{{ ssvPlatformKeyVaultName }}",
                 "secrets": [
                     {
-                        "key": "#{{ serviceConnectionAppRegName }}",
+                        "key": "#{{ tier2ServiceConnectionAppRegName }}",
                         "type": "ClientSecret"
                     },
                     {
-                        "key": "#{{ serviceConnectionClientIdSecretName }}",
+                        "key": "#{{ tier2ApplicationClientIdSecretName }}",
                         "type": "ClientId"
                     }
                 ]
