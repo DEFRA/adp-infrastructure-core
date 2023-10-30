@@ -217,8 +217,8 @@ extends:
                       scriptPath: infra/core/scripts/Create-ConfigData.ps1
                       type: PowerShell
                       scriptArguments: >
-                        -ServicePrincipalId "$($(serviceConnectionClientIdSecretName))"
-                        -ServicePrincipalKey "$($(serviceConnectionAppRegName))"
+                        -ServicePrincipalId $[variables[variables.serviceConnectionClientIdSecretName]]
+                        -ServicePrincipalKey $[variables[variables.serviceConnectionAppRegName]]
                         -AzureSubscription $(subscriptionName)
                         -TenantId $(tenantId)
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
