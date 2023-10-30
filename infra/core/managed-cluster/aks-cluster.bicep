@@ -95,6 +95,9 @@ var systemNodePool = {
   nodeTaints: [
     'CriticalAddonsOnly=true:NoSchedule'
   ]
+  nodeLabels: {
+    Ingress:'true'
+  }
 }
 
 module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
