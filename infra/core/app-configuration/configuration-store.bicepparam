@@ -19,4 +19,4 @@ param location = '#{{ location }}'
 
 param environment = '#{{ environment }}'
 
-param principalId = az.getSecret('#{{ ssvSubscriptionId }}', '#{{ ssvSharedResourceGroup }}', '#{{ ssvPlatformKeyVaultName }}', '#{{ tier2ApplicationSPObjectIdSecretName }}')
+param principalId = az.getSecret('#{{ ssvSubscriptionId }}', '#{{ ssvSharedResourceGroup }}', '#{{ ssvPlatformKeyVaultName }}', '#{{ serviceConnectionSPObjectIdSecretName }}')

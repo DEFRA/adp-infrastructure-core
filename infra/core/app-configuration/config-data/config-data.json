@@ -16,11 +16,6 @@
     },
     {
       "name": "SERVICEBUS_RG",
-      "value": "flux-config",
-      "label": "Platform"
-    },
-    {
-      "name": "SERVICEBUS_RG",
       "value": "#{{ servicesResourceGroup }}",
       "label": "Platform"
     },
