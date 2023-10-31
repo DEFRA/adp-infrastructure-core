@@ -18,7 +18,7 @@
     "contentType": "text/plain"
   },
   {
-    "key": "SHARED_SERVICEBUS",
+    "key": "SHARED_SERVICEBUS_NAME",
     "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_servicebus }}#{{ nc_instance_regionid }}01",
     "label": "Platform",
     "contentType": "text/plain"
