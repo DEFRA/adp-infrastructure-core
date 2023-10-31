@@ -24,13 +24,13 @@
     "contentType": "text/plain"
   },
   {
-    "key": "SHRD_POSTGRES_SERVER_RG",
+    "key": "DATABASE_SERVER_RG",
     "value": "#{{ dbsResourceGroup }}",
     "label": "Platform",
     "contentType": "text/plain"
   },
   {
-    "key": "SHRD_POSTGRES_SERVER_#{{ nc_instance_regionid }}01",
+    "key": "SHARED_POSTGRES_SERVER_01",
     "value": "#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}01",
     "label": "Platform",
     "contentType": "text/plain"
