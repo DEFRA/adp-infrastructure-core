@@ -70,10 +70,13 @@ try {
         Write-Host "Adding key '$($_.key)' with label '$($_.label)' to the config store"
 
         [string]$command = "az appconfig kv set --name $AppConfigName --key $($_.key) --value $($_.value)"
-        if ($_.contentType) {
+        if ($_.PSObject.Properties.Name -contains 'contentType') {
             $command += " --content-type $($_.contentType)"
         }
-        $command += " --label $($_.label) --auth-mode login --yes"
+        if ($_.PSObject.Properties.Name -contains 'label') {
+            $command += " --label $($_.label)"
+        }
+        $command += " --auth-mode login --yes"
 
         Invoke-CommandLine -Command $command -NoOutput
         Write-Host "Added key '$($_.key)' with label '$($_.label)' to the config store"
