@@ -6,7 +6,7 @@
     "contentType": "text/plain"
   },
   {
-    "key": "APPLICATIONS_ACR_NAME",
+    "key": "APPLICATION_ACR_NAME",
     "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
     "label": "Platform",
     "contentType": "text/plain"
@@ -18,13 +18,7 @@
     "contentType": "text/plain"
   },
   {
-    "key": "SERVICEBUS_RG",
-    "value": "#{{ servicesResourceGroup }}",
-    "label": "Platform",
-    "contentType": "text/plain"
-  },
-  {
-    "key": "SERVICEBUS_NS",
+    "key": "SERVICEBUS_NAMESPACE",
     "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_servicebus }}#{{ nc_instance_regionid }}01",
     "label": "Platform",
     "contentType": "text/plain"
