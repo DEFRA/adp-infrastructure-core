@@ -10,7 +10,7 @@
     "label": "Platform"
   },
   {
-    "key": "FLUX_NAMESPACE",
+    "key": "FLUX_CONFIG_NAMESPACE",
     "value": "flux-config",
     "label": "Platform"
   },
