@@ -403,7 +403,7 @@ module appConfigurationDataReaderRoleAssignment '.bicep/app-config-data-reader.b
 
 output configuration array = [
   {
-    name: 'CLUSTER_OIDC'
+    key: 'CLUSTER_OIDC'
     value: deployAKS.outputs.oidcIssuerUrl
     label: 'Platform'
   }
