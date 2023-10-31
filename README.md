@@ -1,6 +1,15 @@
-# adp-infrastructure
-Infrastructure Repo for the ADP.
+# ADP Infrastructure - Core
 
+Welcome to the ADP Infrastructure Core repository. This repository contains the 'core' and 'shared' platform infrastructure modules (Azure Bicep), scripts (Powershell, CLI), libraries, and Azure DevOps Pipelines that are used to build, support, and run the Azure Development Platform. All infrastructure modules and scripts in this repo are owned and managed by the ADP Platform Engineering Team. As this contains all the 'shared' infrastructure that all Tenants will use, no 'Tenant/Team' specific logic should reside here. The Infrastructure Services repository for Platform Tenants/Teams can be found here: https://github.com/DEFRA/adp-infrastructure-services that contains the Service logic.
+
+## Repository Structure
+
+The Platform uses infrastructure parameter files (.bicepParams) to instantiate pre-configured (_by ADP Platform Engineering_) and agnostic infrastructure modules (.bicep templates). 
+
+* `azureDevOps` - Platform Generic Azure DevOps Pipeline YAML Files. This instantiates [ado-pipeline-common](https://github.com/DEFRA/ado-pipeline-common)
+* `infra` - Platform Services Infrastructure folder. Contains Shared & Core infrastructure module instantiations.
+* `nginxPlus` - Contains the AKS Cluster NGINX Ingress Controller Scripts.
+* `scripts/modules` - Contains the Powershell scripts, modules and libraries that support the infrastructure deployments and configuration. 
 
 ## Service Connection documentation
 
