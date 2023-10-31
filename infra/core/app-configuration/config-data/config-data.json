@@ -2,71 +2,85 @@
   {
     "key": "ENVIRONMENT",
     "value": "#{{ lower(environment) }}",
-    "label": "Platform"
+    "label": "Platform",
+    "contentType": "text/plain"
   },
   {
-    "key": "ACR_NAME",
+    "key": "APPLICATIONS_ACR_NAME",
     "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
-    "label": "Platform"
+    "label": "Platform",
+    "contentType": "text/plain"
   },
   {
     "key": "FLUX_CONFIG_NAMESPACE",
     "value": "flux-config",
-    "label": "Platform"
+    "label": "Platform",
+    "contentType": "text/plain"
   },
   {
     "key": "SERVICEBUS_RG",
     "value": "#{{ servicesResourceGroup }}",
-    "label": "Platform"
+    "label": "Platform",
+    "contentType": "text/plain"
   },
   {
     "key": "SERVICEBUS_NS",
     "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_servicebus }}#{{ nc_instance_regionid }}01",
-    "label": "Platform"
+    "label": "Platform",
+    "contentType": "text/plain"
   },
   {
-    "key": "POSTGRES_SERVER_RG",
+    "key": "SHRD_POSTGRES_SERVER_RG",
     "value": "#{{ dbsResourceGroup }}",
-    "label": "Platform"
+    "label": "Platform",
+    "contentType": "text/plain"
   },
   {
-    "key": "POSTGRES_SERVER_#{{ nc_instance_regionid }}01",
+    "key": "SHRD_POSTGRES_SERVER_#{{ nc_instance_regionid }}01",
     "value": "#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}01",
-    "label": "Platform"
+    "label": "Platform",
+    "contentType": "text/plain"
   },
   {
-    "key": "INFRA_RG",
+    "key": "SERVICES_INFRA_RG",
     "value": "#{{ servicesResourceGroup }}",
-    "label": "Platform"
+    "label": "Platform",
+    "contentType": "text/plain"
   },
   {
     "key": "TEAM_MI_PREFIX",
     "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01",
-    "label": "Platform"
+    "label": "Platform",
+    "contentType": "text/plain"
   },
   {
     "key": "TENANT_ID",
     "value": "#{{ tenantId }}",
-    "label": "Platform"
+    "label": "Platform",
+    "contentType": "text/plain"
   },
   {
     "key": "SUBSCRIPTION_ID",
     "value": "#{{ subscriptionId }}",
-    "label": "Platform"
+    "label": "Platform",
+    "contentType": "text/plain"
   },
   {
     "key": "SUBSCRIPTION_NAME",
     "value": "#{{ subscriptionName }}",
-    "label": "Platform"
+    "label": "Platform",
+    "contentType": "text/plain"
   },
   {
-    "key": "CLUSTER",
+    "key": "ENVIRONMENT_ID",
     "value": "0#{{ environmentId }}",
-    "label": "Platform"
+    "label": "Platform",
+    "contentType": "text/plain"
   },
   {
     "key": "Sentinel",
     "value": "#{{ Build.BuildId }}",
-    "label": "Platform"
+    "label": "Platform",
+    "contentType": "text/plain"
   }
 ]
