@@ -68,7 +68,14 @@ try {
     
     $settings | ForEach-Object {
         Write-Host "Adding key '$($_.key)' with label '$($_.label)' to the config store"
-        Invoke-CommandLine -Command "az appconfig kv set --name $AppConfigName --key $($_.key) --value $($_.value) --content-type $($_.contentType) --label $($_.label) --auth-mode login --yes" -NoOutput
+
+        [string]$command = "az appconfig kv set --name $AppConfigName --key $($_.key) --value $($_.value)"
+        if ($_.contentType) {
+            $command += " --content-type $($_.contentType)"
+        }
+        $command += " --label $($_.label) --auth-mode login --yes"
+
+        Invoke-CommandLine -Command $command -NoOutput
         Write-Host "Added key '$($_.key)' with label '$($_.label)' to the config store"
     }
 
