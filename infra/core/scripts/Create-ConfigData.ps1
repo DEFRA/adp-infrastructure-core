@@ -53,10 +53,10 @@ try {
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
 
-    Write-Host "${functionName}:Connecting to Azure..."
+    Write-Host "Connecting to Azure..."
     Invoke-CommandLine -Command "az login --service-principal --tenant $TenantId --username $ServicePrincipalId --password $ServicePrincipalKey" -NoOutput
     Invoke-CommandLine -Command "az account set --name $AzureSubscription" -NoOutput
-    Write-Host "${functionName}:Connected to Azure and set context to '$AzureSubscription'"
+    Write-Host "Connected to Azure and set context to '$AzureSubscription'"
     
     if ($ConfigData) {
         $config = $ConfigData | ConvertFrom-Json
@@ -69,9 +69,11 @@ try {
     $settings | ForEach-Object {
         Write-Host "Adding key '$($_.key)' with label '$($_.label)' to the config store"
         Invoke-CommandLine -Command "az appconfig kv set --name $AppConfigName --key $($_.key) --value $($_.value) --label $($_.label) --auth-mode login --yes" -NoOutput
+        Write-Host "Added key '$($_.key)' with label '$($_.label)' to the config store"
     }
 
     Invoke-CommandLine -Command "az logout" -NoOutput
+    Write-Host "Disconnected from Azure"
 
     $exitCode = 0
 }
