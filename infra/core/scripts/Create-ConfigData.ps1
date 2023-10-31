@@ -58,8 +58,6 @@ try {
     Invoke-CommandLine -Command "az account set --name $AzureSubscription" -NoOutput
     Write-Host "${functionName}:Connected to Azure and set context to '$AzureSubscription'"
     
-    Invoke-CommandLine -Command "az appconfig update --name $AppConfigName --disable-local-auth $false" -NoOutput
-    
     if ($ConfigData) {
         $config = $ConfigData | ConvertFrom-Json
         $settings = $config.configuration.value
@@ -69,11 +67,9 @@ try {
     }
     
     $settings | ForEach-Object {
-        Write-Host "Adding key '$($_.name)' with label '$($_.label)' to the config store"
-        Invoke-CommandLine -Command "az appconfig kv set --name $AppConfigName --key $($_.name) --value $($_.value) --label $($_.label) --yes" -NoOutput
+        Write-Host "Adding key '$($_.key)' with label '$($_.label)' to the config store"
+        Invoke-CommandLine -Command "az appconfig kv set --name $AppConfigName --key $($_.key) --value $($_.value) --label $($_.label) --auth-mode login --yes" -NoOutput
     }
-
-    Invoke-CommandLine -Command "az appconfig update --name $AppConfigName --disable-local-auth $true" -NoOutput
 
     Invoke-CommandLine -Command "az logout" -NoOutput
 

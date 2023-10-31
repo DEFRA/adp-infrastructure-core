@@ -1,72 +1,72 @@
 [
-    {
-      "name": "ENVIRONMENT",
-      "value": "#{{ lower(environment) }}",
-      "label": "Platform"
-    },
-    {
-      "name": "ACR_NAME",
-      "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
-      "label": "Platform"
-    },
-    {
-      "name": "NAMESPACE",
-      "value": "flux-config",
-      "label": "Platform"
-    },
-    {
-      "name": "SERVICEBUS_RG",
-      "value": "#{{ servicesResourceGroup }}",
-      "label": "Platform"
-    },
-    {
-      "name": "SERVICEBUS_NS",
-      "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_servicebus }}#{{ nc_instance_regionid }}01",
-      "label": "Platform"
-    },
-    {
-      "name": "POSTGRES_SERVER_RG",
-      "value": "#{{ dbsResourceGroup }}",
-      "label": "Platform"
-    },
-    {
-      "name": "POSTGRES_SERVER",
-      "value": "#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}01",
-      "label": "Platform"
-    },
-    {
-      "name": "INFRA_RG",
-      "value": "#{{ servicesResourceGroup }}",
-      "label": "Platform"
-    },
-    {
-      "name": "TEAM_MI_PREFIX",
-      "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01",
-      "label": "Platform"
-    },
-    {
-      "name": "TENANT_ID",
-      "value": "#{{ tenantId }}",
-      "label": "Platform"
-    },
-    {
-      "name": "SUBSCRIPTION_ID",
-      "value": "#{{ subscriptionId }}",
-      "label": "Platform"
-    },
-    {
-      "name": "SUBSCRIPTION_NAME",
-      "value": "#{{ subscriptionName }}",
-      "label": "Platform"
-    },
-    {
-      "name": "CLUSTER",
-      "value": "0#{{ environmentId }}",
-      "label": "Platform"
-    },
-    {
-      "name": "Sentinel",
-      "value": "#{{ Build.BuildId }}",
-      "label": "Platform"
-    }
-  ]
+  {
+    "key": "ENVIRONMENT",
+    "value": "#{{ lower(environment) }}",
+    "label": "Platform"
+  },
+  {
+    "key": "ACR_NAME",
+    "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
+    "label": "Platform"
+  },
+  {
+    "key": "FLUX_NAMESPACE",
+    "value": "flux-config",
+    "label": "Platform"
+  },
+  {
+    "key": "SERVICEBUS_RG",
+    "value": "#{{ servicesResourceGroup }}",
+    "label": "Platform"
+  },
+  {
+    "key": "SERVICEBUS_NS",
+    "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_servicebus }}#{{ nc_instance_regionid }}01",
+    "label": "Platform"
+  },
+  {
+    "key": "POSTGRES_SERVER_RG",
+    "value": "#{{ dbsResourceGroup }}",
+    "label": "Platform"
+  },
+  {
+    "key": "POSTGRES_SERVER_#{{ nc_instance_regionid }}01",
+    "value": "#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}01",
+    "label": "Platform"
+  },
+  {
+    "key": "INFRA_RG",
+    "value": "#{{ servicesResourceGroup }}",
+    "label": "Platform"
+  },
+  {
+    "key": "TEAM_MI_PREFIX",
+    "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01",
+    "label": "Platform"
+  },
+  {
+    "key": "TENANT_ID",
+    "value": "#{{ tenantId }}",
+    "label": "Platform"
+  },
+  {
+    "key": "SUBSCRIPTION_ID",
+    "value": "#{{ subscriptionId }}",
+    "label": "Platform"
+  },
+  {
+    "key": "SUBSCRIPTION_NAME",
+    "value": "#{{ subscriptionName }}",
+    "label": "Platform"
+  },
+  {
+    "key": "CLUSTER",
+    "value": "0#{{ environmentId }}",
+    "label": "Platform"
+  },
+  {
+    "key": "Sentinel",
+    "value": "#{{ Build.BuildId }}",
+    "label": "Platform"
+  }
+]
