@@ -246,7 +246,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
     agentPools: [
       union(systemNodePool, { orchestratorVersion: cluster.kubernetesVersion })
       {
-        name: 'npuser01cmn'
+        name: 'npuser01shd'
         mode: 'User'
         count: cluster.npUser.count
         vmSize: 'Standard_DS3_v2'
