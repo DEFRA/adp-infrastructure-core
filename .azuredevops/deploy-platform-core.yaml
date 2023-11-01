@@ -133,6 +133,9 @@ extends:
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
+    keyVaultName: $(ssvPlatformKeyVaultName)
+    filePathsForTransform: |
+      **/core/app-configuration/config-data/config-data.json
     groupedDeployments:
         - ${{ if eq(variables.IsNetwork, true) }}:
           - name: network
@@ -209,6 +212,17 @@ extends:
                 - name: aks-cluster
                   path: infra/core/managed-cluster
                   resourceGroupName: $(aksResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: Add Cluster Details to Config Service
+                      scriptPath: infra/core/scripts/Create-ConfigData.ps1
+                      type: PowerShell
+                      scriptArguments: >
+                        -ServicePrincipalId $(serviceConnectionClientIdSecretName)
+                        -ServicePrincipalKey $(serviceConnectionAppRegName)
+                        -AzureSubscription $(subscriptionName)
+                        -TenantId $(tenantId)
+                        -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                        -ConfigData '$(azureDeploymentOutputs)'
 
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
@@ -235,6 +249,17 @@ extends:
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: Create Config Values
+                      scriptPath: infra/core/scripts/Create-ConfigData.ps1
+                      type: PowerShell
+                      scriptArguments: >
+                        -ServicePrincipalId $(serviceConnectionClientIdSecretName)
+                        -ServicePrincipalKey $(serviceConnectionAppRegName)
+                        -AzureSubscription $(subscriptionName)
+                        -TenantId $(tenantId)
+                        -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                        -ConfigDataFilePath "infra/core/app-configuration/config-data/config-data.json"
               - ${{ if eq(variables.IsApplicationContainerRegistry, true) }}:  
                 - name: application-container-registry
                   path: infra/core/container-registry

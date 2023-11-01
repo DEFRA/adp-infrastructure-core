@@ -78,5 +78,3 @@ module appConfigResource 'br/SharedDefraRegistry:app-configuration.configuration
     roleAssignments: roleAssignments
   }
 }
-
-
