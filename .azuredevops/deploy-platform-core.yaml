@@ -213,16 +213,23 @@ extends:
                   path: infra/core/managed-cluster
                   resourceGroupName: $(aksResourceGroup)
                   postDeployScriptsList:
-                    - displayName: Add Cluster Details to Config Service
-                      scriptPath: infra/core/scripts/Create-ConfigData.ps1
+                    - displayName: 'Process Output Variable'
                       type: PowerShell
+                      inlineScript: |
+                        $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
+                        Write-Host "##vso[task.setvariable variable=clusterOidc;]$($output.oidcIssuerUrl.value)"
+                    - displayName: Add Cluster Details to Config Service
+                      scriptPath: scripts/Create-ConfigData.ps1
+                      type: PowerShell
+                      scriptRepo: ADPPipelineCommon
                       scriptArguments: >
                         -ServicePrincipalId $(serviceConnectionClientIdSecretName)
                         -ServicePrincipalKey $(serviceConnectionAppRegName)
                         -AzureSubscription $(subscriptionName)
                         -TenantId $(tenantId)
+                        -Label "Platform"
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                        -ConfigData '$(azureDeploymentOutputs)'
+                        -ConfigData '[{"key": "CLUSTER_OIDC_ISSUER_URL", "value": "$(clusterOidc)", "label": "Platform", "contentType": "text/plain" }]'
 
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
@@ -251,7 +258,8 @@ extends:
                       resourceGroupName: $(servicesResourceGroup)
                   postDeployScriptsList:
                     - displayName: Create Config Values
-                      scriptPath: infra/core/scripts/Create-ConfigData.ps1
+                      scriptPath: scripts/Create-ConfigData.ps1
+                      scriptRepo: ADPPipelineCommon
                       type: PowerShell
                       scriptArguments: >
                         -ServicePrincipalId $(serviceConnectionClientIdSecretName)
@@ -259,7 +267,8 @@ extends:
                         -AzureSubscription $(subscriptionName)
                         -TenantId $(tenantId)
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                        -ConfigDataFilePath "infra/core/app-configuration/config-data/config-data.json"
+                        -Label "Platform"
+                        -ConfigDataFilePath "$(Build.SourcesDirectory)/self/infra/core/app-configuration/config-data/config-data.json"
               - ${{ if eq(variables.IsApplicationContainerRegistry, true) }}:  
                 - name: application-container-registry
                   path: infra/core/container-registry
