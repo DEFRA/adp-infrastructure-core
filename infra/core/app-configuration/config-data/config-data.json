@@ -7,7 +7,7 @@
   },
   {
     "key": "APPLICATION_ACR_NAME",
-    "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
+    "value": "#{{ lower(infraResourceNamePrefix) }}#{{ lower(nc_resource_containerregistry) }}#{{ nc_instance_regionid }}01",
     "label": "Platform",
     "contentType": "text/plain"
   },
@@ -19,31 +19,31 @@
   },
   {
     "key": "SHARED_SERVICEBUS_NAME",
-    "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_servicebus }}#{{ nc_instance_regionid }}01",
+    "value": "#{{ lower(infraResourceNamePrefix) }}#{{ lower(nc_resource_servicebus) }}#{{ nc_instance_regionid }}01",
     "label": "Platform",
     "contentType": "text/plain"
   },
   {
     "key": "DATABASE_SERVER_RG",
-    "value": "#{{ dbsResourceGroup }}",
+    "value": "#{{ lower(dbsResourceGroup) }}",
     "label": "Platform",
     "contentType": "text/plain"
   },
   {
     "key": "SHARED_POSTGRES_SERVER_01",
-    "value": "#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}01",
+    "value": "#{{ lower(dbsResourceNamePrefix) }}#{{ lower(nc_resource_postgresql) }}#{{ nc_instance_regionid }}01",
     "label": "Platform",
     "contentType": "text/plain"
   },
   {
     "key": "SERVICES_INFRA_RG",
-    "value": "#{{ servicesResourceGroup }}",
+    "value": "#{{ lower(servicesResourceGroup) }}",
     "label": "Platform",
     "contentType": "text/plain"
   },
   {
     "key": "TEAM_MI_PREFIX",
-    "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01",
+    "value": "#{{ lower(infraResourceNamePrefix) }}#{{ lower(nc_resource_managedidentity) }}#{{ nc_instance_regionid }}01",
     "label": "Platform",
     "contentType": "text/plain"
   },
