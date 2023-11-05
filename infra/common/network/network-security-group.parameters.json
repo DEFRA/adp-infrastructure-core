@@ -96,9 +96,9 @@
                     "purpose": "ADP AKS System Node Pool NSG",
                     "securityRules": [
                         {
-                            "name": "AllowAnyTcpInboundCidrRange",
+                            "name": "AllowAnyNodePodCidrRange",
                             "properties": {
-                                "protocol": "Tcp",
+                                "protocol": "*",
                                 "sourcePortRange": "*",
                                 "destinationPortRange": "*",
                                 "destinationAddressPrefix": "VirtualNetwork",
@@ -108,31 +108,30 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [
+                                    "#{{ subnet1AddressPrefix }}",
                                     "#{{ subnet3AddressPrefix }}",
                                     "#{{ aksClusterPodCidr }}"
                                 ],
                                 "destinationAddressPrefixes": [],
-                                "description": "Allow Any Tcp Inbound from npUser01cmn and Pod CIDR Ranges to VirtualNetwork"
+                                "description": "Allow Any port Inbound from npUser01cmn and Pod CIDR Ranges to VirtualNetwork"
                             }
                         },
                         {
-                            "name": "AllowAnyUdpInboundCidrRange",
+                            "name": "AllowPodCidrRange",
                             "properties": {
-                                "protocol": "Udp",
+                                "protocol": "*",
                                 "sourcePortRange": "*",
                                 "destinationPortRange": "*",
-                                "destinationAddressPrefix": "VirtualNetwork",
+                                "sourceAddressPrefix": "#{{ aksClusterPodCidr }}",
+                                "destinationAddressPrefix": "#{{ aksClusterPodCidr }}",
                                 "access": "Allow",
                                 "priority": 2010,
                                 "direction": "Inbound",
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
-                                "sourceAddressPrefixes": [
-                                    "#{{ subnet3AddressPrefix }}",
-                                    "#{{ aksClusterPodCidr }}"
-                                ],
+                                "sourceAddressPrefixes": [],
                                 "destinationAddressPrefixes": [],
-                                "description": "Allow Any Udp Inbound from npUser01cmn and Pod CIDR Ranges to VirtualNetwork"
+                                "description": "Allow Any Pod CIDR Ranges to Pod CIDR Ranges"
                             }
                         },
                         {
@@ -172,31 +171,34 @@
                             }
                         },
                         {
-                            "name": "AllowAnyTcpVNetOutbound",
+                            "name": "AllowAnyVNetNodePodCidrOutbound",
                             "properties": {
-                                "protocol": "Tcp",
+                                "protocol": "*",
                                 "sourcePortRange": "*",
                                 "destinationPortRange": "*",
                                 "sourceAddressPrefix": "VirtualNetwork",
-                                "destinationAddressPrefix": "VirtualNetwork",
                                 "access": "Allow",
                                 "priority": 2000,
                                 "direction": "Outbound",
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": [],
-                                "description": "Allow Any Tcp Outbound from VirtualNetwork to VirtualNetwork"
+                                "destinationAddressPrefixes": [
+                                    "#{{ subnet1AddressPrefix }}",
+                                    "#{{ subnet3AddressPrefix }}",
+                                    "#{{ aksClusterPodCidr }}"
+                                ],
+                                "description": "Allow Any Outbound from VirtualNetwork to Node and Pod CIDR Ranges"
                             }
                         },
                         {
-                            "name": "AllowAnyUdpVNetOutbound",
+                            "name": "AllowAnyPodCidrOutbound",
                             "properties": {
-                                "protocol": "Udp",
+                                "protocol": "*",
                                 "sourcePortRange": "*",
                                 "destinationPortRange": "*",
-                                "sourceAddressPrefix": "VirtualNetwork",
-                                "destinationAddressPrefix": "VirtualNetwork",
+                                "sourceAddressPrefix": "#{{ aksClusterPodCidr }}",
+                                "destinationAddressPrefix": "#{{ aksClusterPodCidr }}",
                                 "access": "Allow",
                                 "priority": 2010,
                                 "direction": "Outbound",
@@ -379,9 +381,9 @@
                     "purpose": "AKS User Node Pool NSG",
                     "securityRules": [
                         {
-                            "name": "AllowAnyTcpInboundCidrRange",
+                            "name": "AllowAnyNodePodCidrRange",
                             "properties": {
-                                "protocol": "Tcp",
+                                "protocol": "*",
                                 "sourcePortRange": "*",
                                 "destinationPortRange": "*",
                                 "destinationAddressPrefix": "VirtualNetwork",
@@ -391,33 +393,29 @@
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [
-                                    "#{{ subnet1AddressPrefix }}",
                                     "#{{ subnet2AddressPrefix }}",
                                     "#{{ aksClusterPodCidr }}"
                                 ],
                                 "destinationAddressPrefixes": [],
-                                "description": "Allow Any Tcp Inbound from System, User node pool and Pod CIDR Ranges to VirtualNetwork"
+                                "description": "Allow Any port Inbound from npUser01cmn and Pod CIDR Ranges to VirtualNetwork"
                             }
                         },
                         {
-                            "name": "AllowAnyUdpInboundCidrRange",
+                            "name": "AllowPodCidrRange",
                             "properties": {
-                                "protocol": "Udp",
+                                "protocol": "*",
                                 "sourcePortRange": "*",
                                 "destinationPortRange": "*",
-                                "destinationAddressPrefix": "VirtualNetwork",
+                                "sourceAddressPrefix": "#{{ aksClusterPodCidr }}",
+                                "destinationAddressPrefix": "#{{ aksClusterPodCidr }}",
                                 "access": "Allow",
                                 "priority": 2010,
                                 "direction": "Inbound",
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
-                                "sourceAddressPrefixes": [
-                                    "#{{ subnet1AddressPrefix }}",
-                                    "#{{ subnet2AddressPrefix }}",
-                                    "#{{ aksClusterPodCidr }}"
-                                ],
+                                "sourceAddressPrefixes": [],
                                 "destinationAddressPrefixes": [],
-                                "description": "Allow Any Udp Inbound from System, User node pool and Pod CIDR Ranges to VirtualNetwork"
+                                "description": "Allow Any Pod CIDR Ranges to Pod CIDR Ranges"
                             }
                         },
                         {
@@ -477,31 +475,33 @@
                             }
                         },
                         {
-                            "name": "AllowAnyTcpVNetOutbound",
+                            "name": "AllowAnyVNetNodePodCidrOutbound",
                             "properties": {
-                                "protocol": "Tcp",
+                                "protocol": "*",
                                 "sourcePortRange": "*",
                                 "destinationPortRange": "*",
                                 "sourceAddressPrefix": "VirtualNetwork",
-                                "destinationAddressPrefix": "VirtualNetwork",
                                 "access": "Allow",
                                 "priority": 2000,
                                 "direction": "Outbound",
                                 "sourcePortRanges": [],
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": [],
-                                "description": "Allow Any Tcp Outbound from VirtualNetwork to VirtualNetwork"
+                                "destinationAddressPrefixes": [
+                                    "#{{ subnet2AddressPrefix }}",
+                                    "#{{ aksClusterPodCidr }}"
+                                ],
+                                "description": "Allow Any Outbound from VirtualNetwork to Node and Pod CIDR Ranges"
                             }
                         },
                         {
-                            "name": "AllowAnyUdpVNetOutbound",
+                            "name": "AllowAnyPodCidrOutbound",
                             "properties": {
-                                "protocol": "Udp",
+                                "protocol": "*",
                                 "sourcePortRange": "*",
                                 "destinationPortRange": "*",
-                                "sourceAddressPrefix": "VirtualNetwork",
-                                "destinationAddressPrefix": "VirtualNetwork",
+                                "sourceAddressPrefix": "#{{ aksClusterPodCidr }}",
+                                "destinationAddressPrefix": "#{{ aksClusterPodCidr }}",
                                 "access": "Allow",
                                 "priority": 2010,
                                 "direction": "Outbound",
