@@ -67,19 +67,19 @@ try {
     Invoke-CommandLine -Command "ssh-keygen -t $SSHKeyType -f id_ecdsa -P '' -C ''" -NoOutput
     Write-Host "Generated SSH keys"
 
-    Write-Host "${SSHPrivateKeySecretName}: Uploading SSH Private key to KeyVault."
+    Write-Host "Uploading SSH Private key to KeyVault. SSHPrivateKeySecretName: $SSHPrivateKeySecretName"
     Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $SSHPrivateKeySecretName --file id_ecdsa --encoding utf-8" -NoOutput
     Write-Host "Uploaded SSH Private key to KeyVault"
 
-    Write-Host "${SSHPublicKeySecretName}:Uploading SSH Public key to KeyVault..."
+    Write-Host "Uploading SSH Public key to KeyVault. SSHPublicKeySecretName: $SSHPublicKeySecretName"
     Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $SSHPublicKeySecretName --file id_ecdsa.pub --encoding utf-8" -NoOutput
     Write-Host "Uploaded SSH Public key to KeyVault"
 
     $knownHosts = Invoke-CommandLine -Command "ssh-keyscan -t $SSHKeyType -H github.com"
 
-    Write-Host "${KnownHostsSecretName}:Uploading known_hosts to KeyVault..."
+    Write-Host "Uploading known_hosts to KeyVault. KnownHostsSecretName: $KnownHostsSecretName"
     Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $KnownHostsSecretName --value '$knownHosts' --encoding utf-8" -NoOutput
-    Write-Host "${KnownHostsSecretName}:Uploaded known_hosts to KeyVault"
+    Write-Host "Uploaded known_hosts to KeyVault"
 
     $exitCode = 0
 }
