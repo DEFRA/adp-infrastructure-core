@@ -229,7 +229,8 @@ extends:
               - ${{ if eq(variables.IsManagedClusterFluxServicesSSHKeys, true) }}:
                 - name: flux-services-ssh-keys
                   type: 'script'
-                  scriptType: 'pscore'
+                  scriptType: 'AzurePowerShell'
+                  azurePowershellUseCore: true
                   path: infra/core/scripts/SSH-Generate-Keys.ps1
                   scriptArguments: > 
                     -KeyVaultName $(ssvPlatformKeyVaultName)
