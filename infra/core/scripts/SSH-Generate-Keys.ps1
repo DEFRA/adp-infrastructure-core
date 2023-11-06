@@ -31,6 +31,10 @@ Write-Host "${functionName} started at $($startTime.ToString('u'))"
 
 try {
 
+    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ps-helpers"
+    Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
+    Import-Module $moduleDir.FullName -Force
+
     Invoke-CommandLine -Command "ssh-keygen -t ecdsa-sha2-nistp384 -f id_ecdsa -P '' -C ''" -NoOutput
 
     Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $SSHPrivateKeySecretName --file id_ecdsa --encoding utf-8" -NoOutput
