@@ -24,6 +24,7 @@ parameters:
       - Managed Cluster - All
       - Managed Cluster - Private DNS Zone
       - Managed Cluster - Cluster
+      - Managed Cluster - Flux Services SSH Keys
       - Front Door - All
       - Front Door - Core
       - Front Door - WAF
@@ -99,6 +100,8 @@ variables:
     value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Private DNS Zone')) }}
   - name: IsManagedClusterCluster
     value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Cluster')) }}
+  - name: IsManagedClusterFluxServicesSSHKeys
+    value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Flux Services SSH Keys')) }}
   
   - name: IsFrontDoor
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Front Door')) }}
@@ -223,7 +226,16 @@ extends:
                         -TenantId $(tenantId)
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                         -ConfigData '$(azureDeploymentOutputs)'
-
+              - ${{ if eq(variables.IsManagedClusterFluxServicesSSHKeys, true) }}:
+                - name: flux-services-ssh-keys
+                  type: 'script'
+                  scriptType: 'pscore'
+                  scriptPath: infra/core/scripts/SSH-Generate-Keys.ps1
+                  scriptArguments: > 
+                    -KeyVaultName $(ssvPlatformKeyVaultName)
+                    -SSHPrivateKeySecretName 'SND1401-ADP-Flux-Services-SSH-Identity'
+                    -SSHPublicKeySecretName 'SND1401-ADP-Flux-Services-SSH-PublicKey'
+                    -KnownHostsSecretName 'SND1401-ADP-Flux-Services-SSH-Identity-Known-Hosts'
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
             deployments:
