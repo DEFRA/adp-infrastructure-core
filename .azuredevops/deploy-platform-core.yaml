@@ -219,13 +219,7 @@ extends:
                     - displayName: Add Cluster Details to Config Service
                       scriptPath: infra/core/scripts/Create-ConfigData.ps1
                       type: PowerShell
-                      scriptArguments: >
-                        -ServicePrincipalId $(serviceConnectionClientIdSecretName)
-                        -ServicePrincipalKey $(serviceConnectionAppRegName)
-                        -AzureSubscription $(subscriptionName)
-                        -TenantId $(tenantId)
-                        -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                        -ConfigData '$(azureDeploymentOutputs)'
+                      scriptArguments: -ServicePrincipalId $(serviceConnectionClientIdSecretName) -ServicePrincipalKey $(serviceConnectionAppRegName) -AzureSubscription $(subscriptionName) -TenantId $(tenantId) -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01 -ConfigData '$(azureDeploymentOutputs)'
               - ${{ if eq(variables.IsManagedClusterFluxServicesSSHKeys, true) }}:
                 - name: flux-services-ssh-keys
                   type: 'script'
