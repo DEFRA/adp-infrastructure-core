@@ -71,9 +71,9 @@ try {
     Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $SSHPrivateKeySecretName --file id_ecdsa --encoding utf-8" -NoOutput
     Write-Host "Uploaded SSH Private key to KeyVault"
 
-    Write-Host "${$SSHPublicKeySecretName}:Uploading SSH Public key to KeyVault..."
+    Write-Host "${SSHPublicKeySecretName}:Uploading SSH Public key to KeyVault..."
     Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $SSHPublicKeySecretName --file id_ecdsa.pub --encoding utf-8" -NoOutput
-    Write-Host "${$SSHPublicKeySecretName}:Uploaded SSH Public key to KeyVault"
+    Write-Host "Uploaded SSH Public key to KeyVault"
 
     $knownHosts = Invoke-CommandLine -Command "ssh-keyscan -t $SSHKeyType -H github.com"
 
