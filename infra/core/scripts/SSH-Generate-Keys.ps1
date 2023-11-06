@@ -1,6 +1,8 @@
 [CmdletBinding()]
 param(
 [Parameter(Mandatory)]
+[string] $TenantId,    
+[Parameter(Mandatory)]
 [string] $ServicePrincipalId,
 [Parameter(Mandatory)]
 [string] $ServicePrincipalKey,
