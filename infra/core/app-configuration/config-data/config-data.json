@@ -61,7 +61,7 @@
   },
   {
     "key": "SUBSCRIPTION_NAME",
-    "value": "#{{ subscriptionName }}",
+    "value": "#{{ lower(subscriptionName) }}",
     "label": "Platform",
     "contentType": "text/plain"
   },
