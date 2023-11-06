@@ -60,7 +60,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: features/test
       
 variables:
   - name: IsAll
@@ -219,9 +219,9 @@ extends:
                         $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
                         Write-Host "##vso[task.setvariable variable=clusterOidc;]$($output.oidcIssuerUrl.value)"
                     - displayName: Add Cluster Details to Config Service
-                      scriptPath: scripts/Create-ConfigData.ps1
-                      type: PowerShell
-                      scriptRepo: ADPPipelineCommon
+                      scriptPath: templates/powershell/Create-ConfigData.ps1
+                      type: AzureCLI
+                      scriptRepo: PipelineCommonFiles
                       scriptArguments: >
                         -ServicePrincipalId $(serviceConnectionClientIdSecretName)
                         -ServicePrincipalKey $(serviceConnectionAppRegName)
@@ -258,9 +258,9 @@ extends:
                       resourceGroupName: $(servicesResourceGroup)
                   postDeployScriptsList:
                     - displayName: Create Config Values
-                      scriptPath: scripts/Create-ConfigData.ps1
-                      scriptRepo: ADPPipelineCommon
-                      type: PowerShell
+                      scriptPath: templates/powershell/Create-ConfigData.ps1
+                      scriptRepo: PipelineCommonFiles
+                      type: AzureCLI
                       scriptArguments: >
                         -ServicePrincipalId $(serviceConnectionClientIdSecretName)
                         -ServicePrincipalKey $(serviceConnectionAppRegName)
