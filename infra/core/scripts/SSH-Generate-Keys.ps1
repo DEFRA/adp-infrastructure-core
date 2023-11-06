@@ -1,6 +1,12 @@
 [CmdletBinding()]
 param(
 [Parameter(Mandatory)]
+[string] $ServicePrincipalId,
+[Parameter(Mandatory)]
+[string] $ServicePrincipalKey,
+[Parameter(Mandatory)]
+[string] $AzureSubscription,
+[Parameter(Mandatory)]
 [string] $KeyVaultName,
 [Parameter(Mandatory)]
 [string] $SSHPrivateKeySecretName,

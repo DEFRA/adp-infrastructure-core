@@ -227,11 +227,11 @@ extends:
                   azurePowershellUseCore: true
                   path: infra/core/scripts/SSH-Generate-Keys.ps1
                   scriptArguments: > 
-                    -KeyVaultName $(ssvPlatformKeyVaultName)
                     -ServicePrincipalId $(serviceConnectionClientIdSecretName) 
                     -ServicePrincipalKey $(serviceConnectionAppRegName) 
                     -AzureSubscription $(subscriptionName) 
                     -TenantId $(tenantId)
+                    -KeyVaultName $(ssvPlatformKeyVaultName)
                     -SSHPrivateKeySecretName 'SND1401-ADP-Flux-Services-SSH-Identity'
                     -SSHPublicKeySecretName 'SND1401-ADP-Flux-Services-SSH-PublicKey'
                     -KnownHostsSecretName 'SND1401-ADP-Flux-Services-SSH-Identity-Known-Hosts'
