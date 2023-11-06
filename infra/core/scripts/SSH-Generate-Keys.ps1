@@ -7,7 +7,9 @@ param(
 [Parameter(Mandatory)]
 [string] $SSHPublicKeySecretName,
 [Parameter(Mandatory)]
-[string]$KnownHostsSecretName
+[string]$KnownHostsSecretName,
+[Parameter()]
+[string]$WorkingDirectory = $PWD
 )
 
 Set-StrictMode -Version 3.0
