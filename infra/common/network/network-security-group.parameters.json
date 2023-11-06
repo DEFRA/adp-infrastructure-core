@@ -117,7 +117,7 @@
                         {
                             "name": "AllowILbCidrInbound",
                             "properties": {
-                                "protocol": "*",
+                                "protocol": "Tcp",
                                 "sourcePortRange": "*",
                                 "sourceAddressPrefix": "#{{ subnet1AddressPrefix }}",
                                 "destinationAddressPrefix": "VirtualNetwork",
