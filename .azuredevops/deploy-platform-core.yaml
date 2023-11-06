@@ -230,7 +230,7 @@ extends:
                 - name: flux-services-ssh-keys
                   type: 'script'
                   scriptType: 'pscore'
-                  scriptPath: infra/core/scripts/SSH-Generate-Keys.ps1
+                  path: infra/core/scripts/SSH-Generate-Keys.ps1
                   scriptArguments: > 
                     -KeyVaultName $(ssvPlatformKeyVaultName)
                     -SSHPrivateKeySecretName 'SND1401-ADP-Flux-Services-SSH-Identity'
