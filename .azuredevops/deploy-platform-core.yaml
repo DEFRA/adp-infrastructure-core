@@ -223,11 +223,15 @@ extends:
               - ${{ if eq(variables.IsManagedClusterFluxServicesSSHKeys, true) }}:
                 - name: flux-services-ssh-keys
                   type: 'script'
-                  scriptType: AzureCLI
-                  AzureCLIScriptType: pscore
+                  scriptType: PowerShell
+                  azurePowershellUseCore: true
                   path: infra/core/scripts/SSH-Generate-Keys.ps1
                   scriptArguments: > 
                     -KeyVaultName $(ssvPlatformKeyVaultName)
+                    -ServicePrincipalId $(serviceConnectionClientIdSecretName) 
+                    -ServicePrincipalKey $(serviceConnectionAppRegName) 
+                    -AzureSubscription $(subscriptionName) 
+                    -TenantId $(tenantId)
                     -SSHPrivateKeySecretName 'SND1401-ADP-Flux-Services-SSH-Identity'
                     -SSHPublicKeySecretName 'SND1401-ADP-Flux-Services-SSH-PublicKey'
                     -KnownHostsSecretName 'SND1401-ADP-Flux-Services-SSH-Identity-Known-Hosts'

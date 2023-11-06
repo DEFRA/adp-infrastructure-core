@@ -37,6 +37,11 @@ try {
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
 
+    Write-Host "Connecting to Azure..."
+    Invoke-CommandLine -Command "az login --service-principal --tenant $TenantId --username $ServicePrincipalId --password $ServicePrincipalKey" -NoOutput
+    Invoke-CommandLine -Command "az account set --name $AzureSubscription" -NoOutput
+    Write-Host "Connected to Azure and set context to '$AzureSubscription'"
+
     Invoke-CommandLine -Command "ssh-keygen -t ecdsa-sha2-nistp384 -f id_ecdsa -P '' -C ''" -NoOutput
 
     Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $SSHPrivateKeySecretName --file id_ecdsa --encoding utf-8" -NoOutput
