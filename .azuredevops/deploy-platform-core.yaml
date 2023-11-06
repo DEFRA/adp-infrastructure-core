@@ -221,6 +221,7 @@ extends:
                     - displayName: Add Cluster Details to Config Service
                       scriptPath: templates/powershell/Create-ConfigData.ps1
                       type: AzureCLI
+                      AzureCLIScriptType: pscore
                       scriptRepo: PipelineCommonFiles
                       scriptArguments: >
                         -ServicePrincipalId $(serviceConnectionClientIdSecretName)
@@ -259,8 +260,9 @@ extends:
                   postDeployScriptsList:
                     - displayName: Create Config Values
                       scriptPath: templates/powershell/Create-ConfigData.ps1
-                      scriptRepo: PipelineCommonFiles
                       type: AzureCLI
+                      AzureCLIScriptType: pscore
+                      scriptRepo: PipelineCommonFiles
                       scriptArguments: >
                         -TenantId $(tenantId)
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
