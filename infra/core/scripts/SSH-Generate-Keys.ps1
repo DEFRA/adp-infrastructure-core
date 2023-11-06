@@ -16,6 +16,9 @@ param(
 [string] $SSHPublicKeySecretName,
 [Parameter(Mandatory)]
 [string]$KnownHostsSecretName,
+[Parameter(Mandatory)]
+[ValidateSet("ecdsa-sha2-nistp384")]
+[string]$SSHKeyType="ecdsa-sha2-nistp384",
 [Parameter()]
 [string]$WorkingDirectory = $PWD
 )
@@ -38,6 +41,15 @@ if ($enableDebug) {
 }
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
+Write-Debug "${functionName}:TenantId=$TenantId"
+Write-Debug "${functionName}:ServicePrincipalId=$ServicePrincipalId"
+Write-Debug "${functionName}:AzureSubscription=$AzureSubscription"
+Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
+Write-Debug "${functionName}:SSHPrivateKeySecretName=$SSHPrivateKeySecretName"
+Write-Debug "${functionName}:SSHPublicKeySecretName=$SSHPublicKeySecretName"
+Write-Debug "${functionName}:KnownHostsSecretName=$KnownHostsSecretName"
+Write-Debug "${functionName}:SSHKeyType=$SSHKeyType"
+Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
 
@@ -50,15 +62,24 @@ try {
     Invoke-CommandLine -Command "az account set --name $AzureSubscription" -NoOutput
     Write-Host "Connected to Azure and set context to '$AzureSubscription'"
 
-    Invoke-CommandLine -Command "ssh-keygen -t ecdsa-sha2-nistp384 -f id_ecdsa -P '' -C ''" -NoOutput
 
+    Write-Host "Generating SSH keys for key type: ${SSHKeyType}"
+    Invoke-CommandLine -Command "ssh-keygen -t $SSHKeyType -f id_ecdsa -P '' -C ''" -NoOutput
+    Write-Host "Generated SSH keys"
+
+    Write-Host "${SSHPrivateKeySecretName}: Uploading SSH Private key to KeyVault."
     Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $SSHPrivateKeySecretName --file id_ecdsa --encoding utf-8" -NoOutput
+    Write-Host "Uploaded SSH Private key to KeyVault"
 
+    Write-Host "${$SSHPublicKeySecretName}:Uploading SSH Public key to KeyVault..."
     Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $SSHPublicKeySecretName --file id_ecdsa.pub --encoding utf-8" -NoOutput
+    Write-Host "${$SSHPublicKeySecretName}:Uploaded SSH Public key to KeyVault"
 
-    $knownHosts = Invoke-CommandLine -Command "ssh-keyscan -t ecdsa-sha2-nistp384 -H github.com"
+    $knownHosts = Invoke-CommandLine -Command "ssh-keyscan -t $SSHKeyType -H github.com"
 
-    Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $KnownHostsSecretName --value $knownHosts --encoding utf-8" -NoOutput
+    Write-Host "${KnownHostsSecretName}:Uploading known_hosts to KeyVault..."
+    Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $KnownHostsSecretName --value '$knownHosts' --encoding utf-8" -NoOutput
+    Write-Host "${KnownHostsSecretName}:Uploaded known_hosts to KeyVault"
 
     $exitCode = 0
 }
