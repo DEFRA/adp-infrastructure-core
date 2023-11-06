@@ -111,7 +111,7 @@
                                     "#{{ aksClusterPodCidr }}"
                                 ],
                                 "destinationAddressPrefixes": [],
-                                "description": "Allow Any port and any protocol Inbound from Pod CIDR Ranges to VirtualNetwork"
+                                "description": "Allow Any port and any protocol Inbound from Pod CIDR Ranges to VirtualNetwork. This is required to allow POD to POD communication. https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay"
                             }
                         },
                         {
@@ -135,7 +135,7 @@
                             }
                         },
                         {
-                            "name": "AllowNp01CidrAnyInbound",
+                            "name": "AllowUserNp01CidrAnyInbound",
                             "properties": {
                                 "protocol": "*",
                                 "sourcePortRange": "*",
@@ -149,7 +149,7 @@
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
                                 "destinationAddressPrefixes": [],
-                                "description": "Allow Any Pod CIDR Ranges to Pod CIDR Ranges"
+                                "description": "Allow Any Node CIDR Ranges to Node CIDR Ranges. This is required to allow NODE to NODE communication. https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay"
                             }
                         },
                         {
@@ -203,7 +203,7 @@
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
                                 "destinationAddressPrefixes": [],
-                                "description": "Allow Any Outbound from VirtualNetwork to Node and Pod CIDR Ranges"
+                                "description": "Allow Any Outbound from VirtualNetwork to VirtualNetwork. This is required to allow POD to POD, Node to Node, Node to Pod and To private endpoints. https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay"
                             }
                         },
                         {
@@ -393,7 +393,7 @@
                                     "#{{ aksClusterPodCidr }}"
                                 ],
                                 "destinationAddressPrefixes": [],
-                                "description": "Allow Any port and any protocol Inbound from Pod CIDR Ranges to VirtualNetwork"
+                                "description": "Allow Any port and any protocol Inbound from Pod CIDR Ranges to VirtualNetwork. This is required to allow POD to POD communication. https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay"
                             }
                         },
                         {
@@ -411,7 +411,7 @@
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
                                 "destinationAddressPrefixes": [],
-                                "description": "Allow Any Pod CIDR Ranges to Pod CIDR Ranges"
+                                "description": "Allow Any Node CIDR Ranges to Node CIDR Ranges. This is required to allow NODE to NODE communication. https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay"
                             }
                         },
                         {
@@ -465,7 +465,7 @@
                                 "destinationPortRanges": [],
                                 "sourceAddressPrefixes": [],
                                 "destinationAddressPrefixes": [],
-                                "description": "Allow Any Outbound from VirtualNetwork to Node and Pod CIDR Ranges"
+                                "description": "Allow Any Outbound from VirtualNetwork to VirtualNetwork. This is required to allow POD to POD, Node to Node, Node to Pod and To private endpoints. https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay"
                             }
                         },
                         {
