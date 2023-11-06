@@ -60,7 +60,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: features/test
+      ref: main
       
 variables:
   - name: IsAll
@@ -219,15 +219,11 @@ extends:
                         $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
                         Write-Host "##vso[task.setvariable variable=clusterOidc;]$($output.oidcIssuerUrl.value)"
                     - displayName: Add Cluster Details to Config Service
-                      scriptPath: templates/powershell/Create-ConfigData.ps1
+                      scriptPath: templates/powershell/Import-ConfigData.ps1
                       type: AzureCLI
                       AzureCLIScriptType: pscore
                       scriptRepo: PipelineCommonFiles
                       scriptArguments: >
-                        -ServicePrincipalId $(serviceConnectionClientIdSecretName)
-                        -ServicePrincipalKey $(serviceConnectionAppRegName)
-                        -AzureSubscription $(subscriptionName)
-                        -TenantId $(tenantId)
                         -Label "Platform"
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                         -ConfigData '[{"key": "CLUSTER_OIDC_ISSUER_URL", "value": "$(clusterOidc)", "label": "Platform", "contentType": "text/plain" }]'
@@ -259,12 +255,11 @@ extends:
                       resourceGroupName: $(servicesResourceGroup)
                   postDeployScriptsList:
                     - displayName: Create Config Values
-                      scriptPath: templates/powershell/Create-ConfigData.ps1
+                      scriptPath: templates/powershell/Import-ConfigData.ps1
                       type: AzureCLI
                       AzureCLIScriptType: pscore
                       scriptRepo: PipelineCommonFiles
                       scriptArguments: >
-                        -TenantId $(tenantId)
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                         -Label "Platform"
                         -ConfigDataFilePath "$(Build.SourcesDirectory)/self/infra/core/app-configuration/config-data/config-data.json"
