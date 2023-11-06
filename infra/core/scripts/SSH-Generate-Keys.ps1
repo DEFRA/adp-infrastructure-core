@@ -18,7 +18,7 @@ param(
 [string]$KnownHostsSecretName,
 [Parameter(Mandatory)]
 [ValidateSet("ecdsa-sha2-nistp384")]
-[string]$SSHKeyType="ecdsa-sha2-nistp384",
+[string]$SSHKeyType,
 [Parameter()]
 [string]$WorkingDirectory = $PWD
 )

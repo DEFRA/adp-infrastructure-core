@@ -232,9 +232,10 @@ extends:
                     -AzureSubscription $(subscriptionName) 
                     -TenantId $(tenantId)
                     -KeyVaultName $(ssvPlatformKeyVaultName)
-                    -SSHPrivateKeySecretName 'SND1401-ADP-Flux-Services-SSH-Identity'
-                    -SSHPublicKeySecretName 'SND1401-ADP-Flux-Services-SSH-Identity-Pub'
-                    -KnownHostsSecretName 'SND1401-ADP-Flux-Services-SSH-Identity-Known-Hosts'
+                    -SSHPrivateKeySecretName '$(environment)$(nc_instance_regionid)-$(instanceNumber)-ADP-Flux-Services-SSH-Identity'
+                    -SSHPublicKeySecretName '$(environment)$(nc_instance_regionid)-$(instanceNumber)-ADP-Flux-Services-SSH-Identity-Pub'
+                    -KnownHostsSecretName '$(environment)$(nc_instance_regionid)-$(instanceNumber)-ADP-Flux-Services-SSH-Identity-Known-Hosts'
+                    -SSHKeyType 'ecdsa-sha2-nistp384'
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
             deployments:
