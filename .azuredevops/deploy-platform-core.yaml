@@ -227,15 +227,15 @@ extends:
                   azureCLIScriptType: pscore
                   path: 'infra/core/scripts/SSH-Generate-Keys.ps1'
                   scriptArguments: > 
-                    -ServicePrincipalId $(serviceConnectionClientIdSecretName) 
-                    -ServicePrincipalKey $(serviceConnectionAppRegName) 
-                    -AzureSubscription $(subscriptionName) 
-                    -TenantId $(tenantId)
                     -KeyVaultName $(ssvPlatformKeyVaultName)
+                    -KeyVaultRgName $(ssvSharedResourceGroup)
+                    -KeyVaultSubscriptionId $(ssv3subscriptionId)
                     -SSHPrivateKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity'
                     -SSHPublicKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Pub'
                     -KnownHostsSecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Known-Hosts'
                     -SSHKeyType 'ecdsa-sha2-nistp384'
+                    -AppConfigMIRgName $(aksResourceGroup)
+                    -AppConfigMIName #{{ acManagedIdentityName }}
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
             deployments:

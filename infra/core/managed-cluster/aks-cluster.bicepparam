@@ -95,5 +95,5 @@ param asoPlatformManagedIdentity = '#{{ infraResourceNamePrefix }}#{{ nc_resourc
 param appConfig = {
   name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_appconfiguration }}#{{ nc_instance_regionid }}01'
   resourceGroup: '#{{ servicesResourceGroup }}'
-  managedIdentityName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-adp-ac-platform'
+  managedIdentityName: '#{{ acManagedIdentityName }}'
 }

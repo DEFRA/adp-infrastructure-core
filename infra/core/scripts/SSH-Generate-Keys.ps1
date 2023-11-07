@@ -1,15 +1,11 @@
 [CmdletBinding()]
 param(
 [Parameter(Mandatory)]
-[string] $TenantId,    
-[Parameter(Mandatory)]
-[string] $ServicePrincipalId,
-[Parameter(Mandatory)]
-[string] $ServicePrincipalKey,
-[Parameter(Mandatory)]
-[string] $AzureSubscription,
-[Parameter(Mandatory)]
 [string] $KeyVaultName,
+[Parameter(Mandatory)]
+[string] $KeyVaultRgName,
+[Parameter(Mandatory)]
+[string] $KeyVaultSubscriptionId,
 [Parameter(Mandatory)]
 [string] $SSHPrivateKeySecretName,
 [Parameter(Mandatory)]
@@ -19,6 +15,10 @@ param(
 [Parameter(Mandatory)]
 [ValidateSet("ecdsa-sha2-nistp384")]
 [string]$SSHKeyType,
+[Parameter(Mandatory)]
+[string]$AppConfigMIRgName,
+[Parameter(Mandatory)]
+[string]$AppConfigMIName,
 [Parameter()]
 [string]$WorkingDirectory = $PWD
 )
@@ -41,9 +41,6 @@ if ($enableDebug) {
 }
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
-Write-Debug "${functionName}:TenantId=$TenantId"
-Write-Debug "${functionName}:ServicePrincipalId=$ServicePrincipalId"
-Write-Debug "${functionName}:AzureSubscription=$AzureSubscription"
 Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
 Write-Debug "${functionName}:SSHPrivateKeySecretName=$SSHPrivateKeySecretName"
 Write-Debug "${functionName}:SSHPublicKeySecretName=$SSHPublicKeySecretName"
@@ -57,11 +54,9 @@ try {
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
 
-    Write-Host "Connecting to Azure..."
-    Invoke-CommandLine -Command "az login --service-principal --tenant $TenantId --username $ServicePrincipalId --password $ServicePrincipalKey" -NoOutput
-    Invoke-CommandLine -Command "az account set --name $AzureSubscription" -NoOutput
-    Write-Host "Connected to Azure and set context to '$AzureSubscription'"
+    $keyVaultSecretsUserRole = "Key Vault Secrets User"
 
+    $appConfigMiPrincipalId = (Get-AzUserAssignedIdentity -ResourceGroupName $AppConfigMIRgName -Name $AppConfigMIName).PrincipalId 
 
     Write-Host "Generating SSH keys for key type: ${SSHKeyType}"
     Invoke-CommandLine -Command "ssh-keygen -t $SSHKeyType -f id_ecdsa -N '""""' -C '""""'" -NoOutput
@@ -71,15 +66,32 @@ try {
     Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $SSHPrivateKeySecretName --file id_ecdsa --encoding utf-8" -NoOutput
     Write-Host "Uploaded SSH Private key to KeyVault"
 
+    Write-Host "Assigning $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPrivateKeySecretName"
+    [string]$scopeIdPrivateKeySecret = "/subscriptions/{0}resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $KeyVaultSubecriptionId, $KeyVaultRgName, $KeyVaultName, $SSHPrivateKeySecretName
+    Invoke-CommandLine -Command "az role assignment create --assignee $appConfigMiPrincipalId --role $keyVaultSecretsUserRole --scope $scopeIdPrivateKeySecret" -NoOutput
+    Write-Host "Assigned $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPrivateKeySecretName"
+
     Write-Host "Uploading SSH Public key to KeyVault. SSHPublicKeySecretName: $SSHPublicKeySecretName"
     Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $SSHPublicKeySecretName --file id_ecdsa.pub --encoding utf-8" -NoOutput
     Write-Host "Uploaded SSH Public key to KeyVault"
 
+    Write-Host "Assigning $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPublicKeySecretName"
+    [string]$scopeIdPrivateKeySecret = "/subscriptions/{0}resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $KeyVaultSubecriptionId, $KeyVaultRgName, $KeyVaultName, $SSHPublicKeySecretName
+    Invoke-CommandLine -Command "az role assignment create --assignee $appConfigMiPrincipalId --role $keyVaultSecretsUserRole --scope $scopeIdPrivateKeySecret" -NoOutput
+    Write-Host "Assigned $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPublicKeySecretName"
+
+    Write-Host "Getting known_hosts for github.com"
     $knownHosts = Invoke-CommandLine -Command "ssh-keyscan -t $SSHKeyType github.com"
+    Write-Host "Got known_hosts for github.com"
 
     Write-Host "Uploading known_hosts to KeyVault. KnownHostsSecretName: $KnownHostsSecretName"
     Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $KnownHostsSecretName --value '$knownHosts' --encoding utf-8" -NoOutput
     Write-Host "Uploaded known_hosts to KeyVault"
+
+    Write-Host "Assigning $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $KnownHostsSecretName"
+    [string]$scopeIdPrivateKeySecret = "/subscriptions/{0}resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $KeyVaultSubecriptionId, $KeyVaultRgName, $KeyVaultName, $KnownHostsSecretName
+    Invoke-CommandLine -Command "az role assignment create --assignee $appConfigMiPrincipalId --role $keyVaultSecretsUserRole --scope $scopeIdPrivateKeySecret" -NoOutput
+    Write-Host "Assigned $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $KnownHostsSecretName"
 
     $exitCode = 0
 }
