@@ -64,7 +64,6 @@ try {
 
 
     Write-Host "Generating SSH keys for key type: ${SSHKeyType}"
-    ssh-keygen -t $SSHKeyType -P "" -C "" -f id_ecdsa
     Invoke-CommandLine -Command "ssh-keygen -t $SSHKeyType -P "" "" -C "" "" -f id_ecdsa" -NoOutput
     Write-Host "Generated SSH keys"
 
