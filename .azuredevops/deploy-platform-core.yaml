@@ -224,8 +224,8 @@ extends:
                 - name: Flux Services SSH Keys
                   type: 'script'
                   scriptType: AzureCLI
-                  azureCLIScriptType: 'batch'
-                  path: infra/core/scripts/SSH-Generate-Keys.ps1
+                  azureCLIScriptType: bash
+                  path: 'infra/core/scripts/SSH-Generate-Keys.ps1'
                   scriptArguments: > 
                     -ServicePrincipalId $(serviceConnectionClientIdSecretName) 
                     -ServicePrincipalKey $(serviceConnectionAppRegName) 
