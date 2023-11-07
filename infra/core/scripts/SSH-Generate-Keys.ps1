@@ -1,6 +1,8 @@
 [CmdletBinding()]
 param(
 [Parameter(Mandatory)]
+[string] $AzureSubscription,
+[Parameter(Mandatory)]
 [string] $KeyVaultName,
 [Parameter(Mandatory)]
 [string] $KeyVaultRgName,
@@ -55,6 +57,13 @@ try {
     Import-Module $moduleDir.FullName -Force
 
     Install-Module -Name Az.ManagedServiceIdentity -Force
+
+    Write-Host "Connecting to Azure..."
+    [SecureString]$SecuredPassword = ConvertTo-SecureString -AsPlainText -String $env:servicePrincipalKey
+    [PSCredential]$Credential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $env:servicePrincipalId, $SecuredPassword
+    $null = Connect-AzAccount -ServicePrincipal -TenantId $env:tenantId -Credential $Credential
+    $null = Set-AzContext -Subscription $AzureSubscription
+    Write-Host "Connected to Azure and set context to '$AzureSubscription'"
 
     $keyVaultSecretsUserRole = "Key Vault Secrets User"
 

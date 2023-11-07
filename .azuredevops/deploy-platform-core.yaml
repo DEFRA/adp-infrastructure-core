@@ -227,6 +227,7 @@ extends:
                   azureCLIScriptType: pscore
                   path: 'infra/core/scripts/SSH-Generate-Keys.ps1'
                   scriptArguments: > 
+                    -AzureSubscription $(subscriptionName)
                     -KeyVaultName $(ssvPlatformKeyVaultName)
                     -KeyVaultRgName $(ssvSharedResourceGroup)
                     -KeyVaultSubscriptionId $(ssv3subscriptionId)
