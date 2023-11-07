@@ -64,8 +64,8 @@ try {
 
 
     Write-Host "Generating SSH keys for key type: ${SSHKeyType}"
-    $keyGenCommand = "ssh-keygen -t {0} -P """" -C ""{1}"" -f id_ecdsa" -f $SSHKeyType, "none"       
-    Invoke-CommandLine -Command $keyGenCommand -NoOutput
+    ssh-keygen -t $SSHKeyType -P "" -C "" -f id_ecdsa
+    Invoke-CommandLine -Command "ssh-keygen -t $SSHKeyType -P "" "" -C "" "" -f id_ecdsa" -NoOutput
     Write-Host "Generated SSH keys"
 
     Write-Host "Uploading SSH Private key to KeyVault. SSHPrivateKeySecretName: $SSHPrivateKeySecretName"
