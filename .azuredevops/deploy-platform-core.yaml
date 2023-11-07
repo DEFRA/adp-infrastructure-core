@@ -235,7 +235,7 @@ extends:
                     -KnownHostsSecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Known-Hosts'
                     -SSHKeyType 'ecdsa-sha2-nistp384'
                     -AppConfigMIRgName $(aksResourceGroup)
-                    -AppConfigMIName #{{ acManagedIdentityName }}
+                    -AppConfigMIName $(acManagedIdentityName)
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
             deployments:
