@@ -64,7 +64,7 @@ try {
 
 
     Write-Host "Generating SSH keys for key type: ${SSHKeyType}"
-    ssh-keygen -t $SSHKeyType -P "" -C "" -f 'id_ecdsa'
+    ssh-keygen -t $SSHKeyType -P "" -C "none" -f 'id_ecdsa'
     Write-Host "Generated SSH keys"
 
     Write-Host "Uploading SSH Private key to KeyVault. SSHPrivateKeySecretName: $SSHPrivateKeySecretName"
