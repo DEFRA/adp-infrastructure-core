@@ -223,8 +223,8 @@ extends:
               - ${{ if eq(variables.IsManagedClusterFluxServicesSSHKeys, true) }}:
                 - name: Flux Services SSH Keys
                   type: 'script'
-                  scriptType: PowerShell
-                  azurePowershellUseCore: true
+                  scriptType: AzureCLI
+                  azureCLIScriptType: 'batch'
                   path: infra/core/scripts/SSH-Generate-Keys.ps1
                   scriptArguments: > 
                     -ServicePrincipalId $(serviceConnectionClientIdSecretName) 
