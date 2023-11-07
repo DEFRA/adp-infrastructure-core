@@ -43,11 +43,16 @@ if ($enableDebug) {
 }
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
+Write-Debug "${functionName}:AzureSubscription=$AzureSubscription"
 Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
+Write-Debug "${functionName}:KeyVaultRgName=$KeyVaultRgName"
+Write-Debug "${functionName}:KeyVaultSubscriptionId=$KeyVaultSubscriptionId"
 Write-Debug "${functionName}:SSHPrivateKeySecretName=$SSHPrivateKeySecretName"
 Write-Debug "${functionName}:SSHPublicKeySecretName=$SSHPublicKeySecretName"
 Write-Debug "${functionName}:KnownHostsSecretName=$KnownHostsSecretName"
 Write-Debug "${functionName}:SSHKeyType=$SSHKeyType"
+Write-Debug "${functionName}:AppConfigMIRgName=$AppConfigMIRgName"
+Write-Debug "${functionName}:AppConfigMIName=$AppConfigMIName"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
@@ -67,7 +72,9 @@ try {
 
     $keyVaultSecretsUserRole = "Key Vault Secrets User"
 
+    Write-Host "Getting App Config Managed Identity PrincipalId"
     $appConfigMiPrincipalId = (Get-AzUserAssignedIdentity -ResourceGroupName $AppConfigMIRgName -Name $AppConfigMIName).PrincipalId 
+    Write-Debug "${functionName}:appConfigMiPrincipalId=$appConfigMiPrincipalId"
 
     Write-Host "Generating SSH keys for key type: ${SSHKeyType}"
     Invoke-CommandLine -Command "ssh-keygen -t $SSHKeyType -f id_ecdsa -N '""""' -C '""""'" -NoOutput
@@ -78,7 +85,7 @@ try {
     Write-Host "Uploaded SSH Private key to KeyVault"
 
     Write-Host "Assigning $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPrivateKeySecretName"
-    [string]$scopeIdPrivateKeySecret = "/subscriptions/{0}resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $KeyVaultSubecriptionId, $KeyVaultRgName, $KeyVaultName, $SSHPrivateKeySecretName
+    [string]$scopeIdPrivateKeySecret = "/subscriptions/{0}resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $KeyVaultSubscriptionId, $KeyVaultRgName, $KeyVaultName, $SSHPrivateKeySecretName
     Invoke-CommandLine -Command "az role assignment create --assignee $appConfigMiPrincipalId --role $keyVaultSecretsUserRole --scope $scopeIdPrivateKeySecret" -NoOutput
     Write-Host "Assigned $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPrivateKeySecretName"
 
@@ -87,7 +94,7 @@ try {
     Write-Host "Uploaded SSH Public key to KeyVault"
 
     Write-Host "Assigning $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPublicKeySecretName"
-    [string]$scopeIdPrivateKeySecret = "/subscriptions/{0}resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $KeyVaultSubecriptionId, $KeyVaultRgName, $KeyVaultName, $SSHPublicKeySecretName
+    [string]$scopeIdPrivateKeySecret = "/subscriptions/{0}resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $KeyVaultSubscriptionId, $KeyVaultRgName, $KeyVaultName, $SSHPublicKeySecretName
     Invoke-CommandLine -Command "az role assignment create --assignee $appConfigMiPrincipalId --role $keyVaultSecretsUserRole --scope $scopeIdPrivateKeySecret" -NoOutput
     Write-Host "Assigned $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPublicKeySecretName"
 
@@ -100,7 +107,7 @@ try {
     Write-Host "Uploaded known_hosts to KeyVault"
 
     Write-Host "Assigning $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $KnownHostsSecretName"
-    [string]$scopeIdPrivateKeySecret = "/subscriptions/{0}resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $KeyVaultSubecriptionId, $KeyVaultRgName, $KeyVaultName, $KnownHostsSecretName
+    [string]$scopeIdPrivateKeySecret = "/subscriptions/{0}resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $KeyVaultSubscriptionId, $KeyVaultRgName, $KeyVaultName, $KnownHostsSecretName
     Invoke-CommandLine -Command "az role assignment create --assignee $appConfigMiPrincipalId --role $keyVaultSecretsUserRole --scope $scopeIdPrivateKeySecret" -NoOutput
     Write-Host "Assigned $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $KnownHostsSecretName"
 
