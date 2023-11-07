@@ -86,7 +86,7 @@ try {
 
     Write-Host "Assigning $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPrivateKeySecretName"
     [string]$scopeIdPrivateKeySecret = "/subscriptions/{0}resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $KeyVaultSubscriptionId, $KeyVaultRgName, $KeyVaultName, $SSHPrivateKeySecretName
-    Invoke-CommandLine -Command "az role assignment create --assignee $appConfigMiPrincipalId --role $keyVaultSecretsUserRole --scope $scopeIdPrivateKeySecret" -NoOutput
+    Invoke-CommandLine -Command "az role assignment create --assignee $appConfigMiPrincipalId --role "$keyVaultSecretsUserRole" --scope $scopeIdPrivateKeySecret" -NoOutput
     Write-Host "Assigned $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPrivateKeySecretName"
 
     Write-Host "Uploading SSH Public key to KeyVault. SSHPublicKeySecretName: $SSHPublicKeySecretName"
@@ -95,7 +95,7 @@ try {
 
     Write-Host "Assigning $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPublicKeySecretName"
     [string]$scopeIdPrivateKeySecret = "/subscriptions/{0}resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $KeyVaultSubscriptionId, $KeyVaultRgName, $KeyVaultName, $SSHPublicKeySecretName
-    Invoke-CommandLine -Command "az role assignment create --assignee $appConfigMiPrincipalId --role $keyVaultSecretsUserRole --scope $scopeIdPrivateKeySecret" -NoOutput
+    Invoke-CommandLine -Command "az role assignment create --assignee $appConfigMiPrincipalId --role "$keyVaultSecretsUserRole" --scope $scopeIdPrivateKeySecret" -NoOutput
     Write-Host "Assigned $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPublicKeySecretName"
 
     Write-Host "Getting known_hosts for github.com"
@@ -108,7 +108,7 @@ try {
 
     Write-Host "Assigning $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $KnownHostsSecretName"
     [string]$scopeIdPrivateKeySecret = "/subscriptions/{0}resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $KeyVaultSubscriptionId, $KeyVaultRgName, $KeyVaultName, $KnownHostsSecretName
-    Invoke-CommandLine -Command "az role assignment create --assignee $appConfigMiPrincipalId --role $keyVaultSecretsUserRole --scope $scopeIdPrivateKeySecret" -NoOutput
+    Invoke-CommandLine -Command "az role assignment create --assignee $appConfigMiPrincipalId --role "$keyVaultSecretsUserRole" --scope $scopeIdPrivateKeySecret" -NoOutput
     Write-Host "Assigned $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $KnownHostsSecretName"
 
     $exitCode = 0
