@@ -54,6 +54,8 @@ try {
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
 
+    Install-Module -Name Az.ManagedServiceIdentity -Force
+
     $keyVaultSecretsUserRole = "Key Vault Secrets User"
 
     $appConfigMiPrincipalId = (Get-AzUserAssignedIdentity -ResourceGroupName $AppConfigMIRgName -Name $AppConfigMIName).PrincipalId 
