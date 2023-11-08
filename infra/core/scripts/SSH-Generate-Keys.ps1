@@ -154,8 +154,8 @@ try {
     Invoke-CommandLine -Command "ssh-keygen -t $SSHKeyType -f id_ecdsa -N '""""' -C '""""'" -NoOutput
     Write-Host "Generated SSH keys"
 
-    Set-KeyVaultSecret -KeyVaultName $KeyVaultName -SecretName $SSHPrivateKeySecretName -File id_ecdsa
-    Set-KeyVaultSecret -KeyVaultName $KeyVaultName -SecretName $SSHPublicKeySecretName -File id_ecdsa.pub
+    Set-KeyVaultSecret -KeyVaultName $KeyVaultName -SecretName $SSHPrivateKeySecretName -File "id_ecdsa"
+    Set-KeyVaultSecret -KeyVaultName $KeyVaultName -SecretName $SSHPublicKeySecretName -File "id_ecdsa.pub"
 
     Write-Host "Getting known_hosts for github.com"
     $knownHosts = Invoke-CommandLine -Command "ssh-keyscan -t $SSHKeyType github.com"
