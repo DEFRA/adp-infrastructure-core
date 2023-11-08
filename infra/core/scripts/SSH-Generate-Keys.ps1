@@ -31,9 +31,9 @@ function Set-KeyVaultSecret {
         [string]$KeyVaultName,
         [Parameter(Mandatory)]
         [string]$SecretName,
-        [Parameter(Mandatory)]
+        [Parameter]
         [string]$File,
-        [Parameter(Mandatory)]
+        [Parameter]
         [string]$Value,
         [Parameter()]
         [string]$Encoding = "utf-8"
