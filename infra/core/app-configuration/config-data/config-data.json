@@ -73,7 +73,7 @@
   },
   {
     "key": "identity",
-    "value": "{'uri':'https://ssvadpinfvt3401.vault.azure.net/secrets/SND1401-ADP-Flux-Services-SSH-Identity'}",
+    "value": "{uri:https://ssvadpinfvt3401.vault.azure.net/secrets/SND1401-ADP-Flux-Services-SSH-Identity}",
     "label": "Platform",
     "contentType": "application/vnd.microsoft.appconfig.keyvaultref+json;charset=utf-8"
   },
