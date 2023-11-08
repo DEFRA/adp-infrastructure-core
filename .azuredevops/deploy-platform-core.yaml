@@ -222,6 +222,7 @@ extends:
                       scriptArguments: -ServicePrincipalId $(serviceConnectionClientIdSecretName) -ServicePrincipalKey $(serviceConnectionAppRegName) -AzureSubscription $(subscriptionName) -TenantId $(tenantId) -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01 -ConfigData '$(azureDeploymentOutputs)'
               - ${{ if eq(variables.IsManagedClusterFluxServicesSSHKeys, true) }}:
                 - name: Flux Services SSH Keys
+                  serviceConnectionVariableName: ssvServiceConnection
                   type: 'script'
                   scriptType: AzureCLI
                   azureCLIScriptType: pscore

@@ -25,6 +25,83 @@ param(
 [string]$WorkingDirectory = $PWD
 )
 
+function Set-KeyVaultSecret {
+    param(
+        [Parameter(Mandatory)]
+        [string]$KeyVaultName,
+        [Parameter(Mandatory)]
+        [string]$SecretName,
+        [Parameter(Mandatory)]
+        [string]$File,
+        [Parameter(Mandatory)]
+        [string]$Value,
+        [Parameter()]
+        [string]$Encoding = "utf-8"
+    )
+
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand
+        Write-Debug "${functionName}:Entered"
+        Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
+        Write-Debug "${functionName}:SecretName=$SecretName"
+        Write-Debug "${functionName}:File=$File"
+        Write-Debug "${functionName}:Encoding=$Encoding"
+    }
+
+    process {
+        Write-Host "Uploading Secrect to KeyVault. Secrect name: $SecretName"
+        if ($File) {
+            $command = "az keyvault secret set --vault-name $KeyVaultName --name $SecretName --file $File --encoding $Encoding"
+        } else {
+            $command = "az keyvault secret set --vault-name $KeyVaultName --name $SecretName --value $Value --encoding $Encoding"
+        }
+        Invoke-CommandLine -Command $command -NoOutput
+        Write-Host "Uploaded Secrect to KeyVault"
+    }
+    
+    end {
+        Write-Debug "${functionName}:Exited"
+    }
+}
+
+function Set-SecretsUserRoleAssignment {
+    param(
+        [Parameter(Mandatory)]
+        [string]$SubscriptionId,
+        [Parameter(Mandatory)]
+        [string]$PrincipalId,
+        [Parameter(Mandatory)]
+        [string]$KeyVaultName,
+        [Parameter(Mandatory)]
+        [string]$KeyVaultRgName,
+        [Parameter(Mandatory)]
+        [string]$SecretName
+    )
+
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand
+        Write-Debug "${functionName}:Entered"
+        Write-Debug "${functionName}:SubscriptionId=$SubscriptionId"
+        Write-Debug "${functionName}:PrincipalId=$PrincipalId"
+        Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
+        Write-Debug "${functionName}:KeyVaultRgName=$KeyVaultRgName"
+        Write-Debug "${functionName}:SecretName=$SecretName"
+    }
+    process {
+        
+        $keyVaultSecretsUserRole = "Key Vault Secrets User"
+        Write-Host "Assigning $keyVaultSecretsUserRole role to $PrincipalId on $SecretName"
+        [string]$scopeIdPrivateKeySecret = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $SubscriptionId, $KeyVaultRgName, $KeyVaultName, $SecretName
+        Write-Debug "${functionName}:scopeIdPrivateKeySecret=$scopeIdPrivateKeySecret"
+        Invoke-CommandLine -Command "az role assignment create --assignee $PrincipalId --role '$keyVaultSecretsUserRole' --scope $scopeIdPrivateKeySecret" -NoOutput
+        Write-Host "Assigned $keyVaultSecretsUserRole role to $PrincipalId on $SecretName"
+    }
+
+    end {
+        Write-Debug "${functionName}:Exited"
+    }
+}
+
 Set-StrictMode -Version 3.0
 
 [string]$functionName = $MyInvocation.MyCommand
@@ -60,7 +137,6 @@ try {
     [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ps-helpers"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
-
     Install-Module -Name Az.ManagedServiceIdentity -Force
 
     Write-Host "Connecting to Azure..."
@@ -70,8 +146,6 @@ try {
     $null = Set-AzContext -Subscription $AzureSubscription
     Write-Host "Connected to Azure and set context to '$AzureSubscription'"
 
-    #$keyVaultSecretsUserRole = "Key Vault Secrets User"
-
     Write-Host "Getting App Config Managed Identity PrincipalId"
     $appConfigMiPrincipalId = (Get-AzUserAssignedIdentity -ResourceGroupName $AppConfigMIRgName -Name $AppConfigMIName).PrincipalId 
     Write-Debug "${functionName}:appConfigMiPrincipalId=$appConfigMiPrincipalId"
@@ -80,36 +154,18 @@ try {
     Invoke-CommandLine -Command "ssh-keygen -t $SSHKeyType -f id_ecdsa -N '""""' -C '""""'" -NoOutput
     Write-Host "Generated SSH keys"
 
-    Write-Host "Uploading SSH Private key to KeyVault. SSHPrivateKeySecretName: $SSHPrivateKeySecretName"
-    Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $SSHPrivateKeySecretName --file id_ecdsa --encoding utf-8" -NoOutput
-    Write-Host "Uploaded SSH Private key to KeyVault"
-
-    #Write-Host "Assigning $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPrivateKeySecretName"
-    #[string]$scopeIdPrivateKeySecret = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $KeyVaultSubscriptionId, $KeyVaultRgName, $KeyVaultName, $SSHPrivateKeySecretName
-    #Invoke-CommandLine -Command "az role assignment create --assignee $appConfigMiPrincipalId --role '$keyVaultSecretsUserRole' --scope $scopeIdPrivateKeySecret" -NoOutput
-    #Write-Host "Assigned $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPrivateKeySecretName"
-
-    Write-Host "Uploading SSH Public key to KeyVault. SSHPublicKeySecretName: $SSHPublicKeySecretName"
-    Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $SSHPublicKeySecretName --file id_ecdsa.pub --encoding utf-8" -NoOutput
-    Write-Host "Uploaded SSH Public key to KeyVault"
-
-    #Write-Host "Assigning $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPublicKeySecretName"
-    #[string]$scopeIdPrivateKeySecret = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $KeyVaultSubscriptionId, $KeyVaultRgName, $KeyVaultName, $SSHPublicKeySecretName
-    #Invoke-CommandLine -Command "az role assignment create --assignee $appConfigMiPrincipalId --role '$keyVaultSecretsUserRole' --scope $scopeIdPrivateKeySecret" -NoOutput
-    #Write-Host "Assigned $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $SSHPublicKeySecretName"
+    Set-KeyVaultSecret -KeyVaultName $KeyVaultName -SecretName $SSHPrivateKeySecretName -File id_ecdsa
+    Set-KeyVaultSecret -KeyVaultName $KeyVaultName -SecretName $SSHPublicKeySecretName -File id_ecdsa.pub
 
     Write-Host "Getting known_hosts for github.com"
     $knownHosts = Invoke-CommandLine -Command "ssh-keyscan -t $SSHKeyType github.com"
     Write-Host "Got known_hosts for github.com"
 
-    Write-Host "Uploading known_hosts to KeyVault. KnownHostsSecretName: $KnownHostsSecretName"
-    Invoke-CommandLine -Command "az keyvault secret set --vault-name $KeyVaultName --name $KnownHostsSecretName --value '$knownHosts' --encoding utf-8" -NoOutput
-    Write-Host "Uploaded known_hosts to KeyVault"
+    Set-KeyVaultSecret -KeyVaultName $KeyVaultName -SecretName $KnownHostsSecretName -Value $knownHosts
 
-    #Write-Host "Assigning $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $KnownHostsSecretName"
-    #[string]$scopeIdPrivateKeySecret = "/subscriptions/{0}/resourceGroups/{1}/providers/Microsoft.KeyVault/vaults/{2}/secrets/{3}" -f $KeyVaultSubscriptionId, $KeyVaultRgName, $KeyVaultName, $KnownHostsSecretName
-    #Invoke-CommandLine -Command "az role assignment create --assignee $appConfigMiPrincipalId --role '$keyVaultSecretsUserRole' --scope $scopeIdPrivateKeySecret" -NoOutput
-    #Write-Host "Assigned $keyVaultSecretsUserRole role to $appConfigMiPrincipalId on $KnownHostsSecretName"
+    Set-SecretsUserRoleAssignment -SubscriptionId $KeyVaultSubscriptionId -PrincipalId $appConfigMiPrincipalId -KeyVaultName $KeyVaultName -KeyVaultRgName $KeyVaultRgName -SecretName $SSHPrivateKeySecretName 
+    Set-SecretsUserRoleAssignment -SubscriptionId $KeyVaultSubscriptionId -PrincipalId $appConfigMiPrincipalId -KeyVaultName $KeyVaultName -KeyVaultRgName $KeyVaultRgName -SecretName $SSHPublicKeySecretName
+    Set-SecretsUserRoleAssignment -SubscriptionId $KeyVaultSubscriptionId -PrincipalId $appConfigMiPrincipalId -KeyVaultName $KeyVaultName -KeyVaultRgName $KeyVaultRgName -SecretName $KnownHostsSecretName
 
     $exitCode = 0
 }
