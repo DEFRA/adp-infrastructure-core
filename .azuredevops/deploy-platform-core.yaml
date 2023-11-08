@@ -25,6 +25,7 @@ parameters:
       - Managed Cluster - Private DNS Zone
       - Managed Cluster - Cluster
       - Managed Cluster - Flux Services SSH Keys
+      - Managed Cluster - Platform Variables
       - Front Door - All
       - Front Door - Core
       - Front Door - WAF
@@ -102,7 +103,9 @@ variables:
     value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Cluster')) }}
   - name: IsManagedClusterFluxServicesSSHKeys
     value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Flux Services SSH Keys')) }}
-  
+  - name: IsManagedClusterPlatformVariables
+    value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Platform Variables')) }}
+
   - name: IsFrontDoor
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Front Door')) }}
   - name: IsFrontDoorAll
@@ -238,6 +241,18 @@ extends:
                     -SSHKeyType 'ecdsa-sha2-nistp384'
                     -AppConfigMIRgName $(aksResourceGroup)
                     -AppConfigMIName $(acManagedIdentityName)
+              - £{{ if eq(variables.IsManagedClusterPlatformVariables, true) }}:
+                - name: Create Or Update Config Values
+                  type: 'script'
+                  scriptType: PowerShell
+                  path: infra/core/scripts/Create-ConfigData.ps1
+                  scriptArguments: >
+                    -ServicePrincipalId $(serviceConnectionClientIdSecretName)
+                    -ServicePrincipalKey $(serviceConnectionAppRegName)
+                    -AzureSubscription $(subscriptionName)
+                    -TenantId $(tenantId)
+                    -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                    -ConfigDataFilePath "infra/core/app-configuration/config-data/config-data.json"
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
             deployments:
@@ -263,17 +278,6 @@ extends:
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
-                  postDeployScriptsList:
-                    - displayName: Create Config Values
-                      scriptPath: infra/core/scripts/Create-ConfigData.ps1
-                      type: PowerShell
-                      scriptArguments: >
-                        -ServicePrincipalId $(serviceConnectionClientIdSecretName)
-                        -ServicePrincipalKey $(serviceConnectionAppRegName)
-                        -AzureSubscription $(subscriptionName)
-                        -TenantId $(tenantId)
-                        -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                        -ConfigDataFilePath "infra/core/app-configuration/config-data/config-data.json"
               - ${{ if eq(variables.IsApplicationContainerRegistry, true) }}:  
                 - name: application-container-registry
                   path: infra/core/container-registry
