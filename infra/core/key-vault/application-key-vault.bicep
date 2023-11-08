@@ -58,7 +58,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     tags: union(defaultTags, keyVaultTags)
     vaultSku: keyVault.skuName
     lock: 'CanNotDelete'
-    enableRbacAuthorization: true    
+    enableRbacAuthorization: true
     enableSoftDelete: bool(keyVault.enableSoftDelete)
     enablePurgeProtection: bool(keyVault.enablePurgeProtection)
     softDeleteRetentionInDays: int(keyVault.softDeleteRetentionInDays)
@@ -78,7 +78,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     roleAssignments: roleAssignments
     keys: [
       {
-        name: 'aksKms1'
+        name: 'aksKms2'
       }
     ]
   }
