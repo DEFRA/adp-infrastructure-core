@@ -54,7 +54,7 @@ var keyVaultPrivateEndpointTags = {
 module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
   name: 'app-keyvault-${deploymentDate}'
   params: {
-    name: keyVault.name
+    name: '${keyVault.name}'
     tags: union(defaultTags, keyVaultTags)
     vaultSku: keyVault.skuName
     lock: 'CanNotDelete'
