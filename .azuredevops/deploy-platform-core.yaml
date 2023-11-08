@@ -241,7 +241,7 @@ extends:
                     -SSHKeyType 'ecdsa-sha2-nistp384'
                     -AppConfigMIRgName $(aksResourceGroup)
                     -AppConfigMIName $(acManagedIdentityName)
-              - £{{ if eq(variables.IsManagedClusterPlatformVariables, true) }}:
+              - ${{ if eq(variables.IsManagedClusterPlatformVariables, true) }}:
                 - name: Create Or Update Config Values
                   type: 'script'
                   scriptType: PowerShell
