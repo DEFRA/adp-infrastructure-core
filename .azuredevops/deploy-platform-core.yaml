@@ -24,6 +24,8 @@ parameters:
       - Managed Cluster - All
       - Managed Cluster - Private DNS Zone
       - Managed Cluster - Cluster
+      - Managed Cluster - Flux Services SSH Keys
+      - Managed Cluster - Platform Variables
       - Front Door - All
       - Front Door - Core
       - Front Door - WAF
@@ -99,7 +101,11 @@ variables:
     value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Private DNS Zone')) }}
   - name: IsManagedClusterCluster
     value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Cluster')) }}
-  
+  - name: IsManagedClusterFluxServicesSSHKeys
+    value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Flux Services SSH Keys')) }}
+  - name: IsManagedClusterPlatformVariables
+    value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Platform Variables')) }}
+
   - name: IsFrontDoor
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Front Door')) }}
   - name: IsFrontDoorAll
@@ -226,7 +232,35 @@ extends:
                         -Label "Platform"
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                         -ConfigData '[{"key": "CLUSTER_OIDC_ISSUER_URL", "value": "$(clusterOidc)", "label": "Platform", "contentType": "text/plain" }]'
-
+              - ${{ if eq(variables.IsManagedClusterFluxServicesSSHKeys, true) }}:
+                - name: Flux Services SSH Keys
+                  serviceConnectionVariableName: ssvServiceConnection
+                  type: 'script'
+                  scriptType: AzureCLI
+                  azureCLIScriptType: pscore
+                  path: 'infra/core/scripts/SSH-Generate-Keys.ps1'
+                  scriptArguments: > 
+                    -AzureSubscription $(subscriptionName)
+                    -KeyVaultName $(ssvPlatformKeyVaultName)
+                    -KeyVaultRgName $(ssvSharedResourceGroup)
+                    -KeyVaultSubscriptionId $(ssv3subscriptionId)
+                    -SSHPrivateKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity'
+                    -SSHPublicKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Pub'
+                    -KnownHostsSecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Known-Hosts'
+                    -SSHKeyType 'ecdsa-sha2-nistp384'
+                    -AppConfigMIRgName $(aksResourceGroup)
+                    -AppConfigMIName $(acManagedIdentityName)
+              - ${{ if eq(variables.IsManagedClusterPlatformVariables, true) }}:
+                - name: Import Config Values
+                  type: 'script'
+                  scriptType: AzureCLI
+                  azureCLIScriptType: pscore
+                  scriptRepo: PipelineCommonFiles
+                  path: templates/powershell/Import-ConfigData.ps1
+                  scriptArguments: >
+                    -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                    -ConfigDataFilePath "$(Build.SourcesDirectory)/self/infra/core/app-configuration/config-data/config-data.json"
+                    -Label "Platform"
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
             deployments:
@@ -252,16 +286,6 @@ extends:
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
-                  postDeployScriptsList:
-                    - displayName: Create Config Values
-                      scriptPath: templates/powershell/Import-ConfigData.ps1
-                      type: AzureCLI
-                      AzureCLIScriptType: pscore
-                      scriptRepo: PipelineCommonFiles
-                      scriptArguments: >
-                        -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                        -Label "Platform"
-                        -ConfigDataFilePath "$(Build.SourcesDirectory)/self/infra/core/app-configuration/config-data/config-data.json"
               - ${{ if eq(variables.IsApplicationContainerRegistry, true) }}:  
                 - name: application-container-registry
                   path: infra/core/container-registry
