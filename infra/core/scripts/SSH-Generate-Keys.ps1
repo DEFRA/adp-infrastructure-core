@@ -53,7 +53,7 @@ function Set-KeyVaultSecret {
         if ($File) {
             $command = "az keyvault secret set --vault-name $KeyVaultName --name $SecretName --file $File --encoding $Encoding"
         } else {
-            $command = "az keyvault secret set --vault-name $KeyVaultName --name $SecretName --value $Value --encoding $Encoding"
+            $command = "az keyvault secret set --vault-name $KeyVaultName --name $SecretName --value '$Value' --encoding $Encoding"
         }
         Invoke-CommandLine -Command $command -NoOutput
         Write-Host "Uploaded Secrect to KeyVault"
