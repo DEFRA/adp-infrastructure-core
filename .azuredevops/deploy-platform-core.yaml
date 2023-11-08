@@ -307,5 +307,5 @@ extends:
                   path: infra/core/key-vault
                   resourceGroupName: $(servicesResourceGroup)
                   privateEndpointDnsRecordsForResources:
-                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01AAKMS
                       resourceGroupName: $(servicesResourceGroup)
