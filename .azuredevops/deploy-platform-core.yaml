@@ -255,6 +255,7 @@ extends:
                   type: 'script'
                   scriptType: AzureCLI
                   azureCLIScriptType: pscore
+                  scriptRepo: PipelineCommonFiles
                   path: templates/powershell/Import-ConfigData.ps1
                   scriptArguments: >
                     -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
