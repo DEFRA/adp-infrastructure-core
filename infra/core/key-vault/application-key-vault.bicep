@@ -78,7 +78,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     roleAssignments: roleAssignments
     keys: [
       {
-        name: 'aksKms2'
+        name: 'aksKms3'
       }
     ]
   }
