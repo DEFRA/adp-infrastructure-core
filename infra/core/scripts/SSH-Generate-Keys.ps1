@@ -64,7 +64,7 @@ function Set-KeyVaultSecret {
     }
 }
 
-function Set-SecretsUserRoleAssignment {
+function Set-KeyVaultSecretsUserRole {
     param(
         [Parameter(Mandatory)]
         [string]$SubscriptionId,
@@ -163,9 +163,9 @@ try {
 
     Set-KeyVaultSecret -KeyVaultName $KeyVaultName -SecretName $KnownHostsSecretName -Value $knownHosts
 
-    Set-SecretsUserRoleAssignment -SubscriptionId $KeyVaultSubscriptionId -PrincipalId $appConfigMiPrincipalId -KeyVaultName $KeyVaultName -KeyVaultRgName $KeyVaultRgName -SecretName $SSHPrivateKeySecretName 
-    Set-SecretsUserRoleAssignment -SubscriptionId $KeyVaultSubscriptionId -PrincipalId $appConfigMiPrincipalId -KeyVaultName $KeyVaultName -KeyVaultRgName $KeyVaultRgName -SecretName $SSHPublicKeySecretName
-    Set-SecretsUserRoleAssignment -SubscriptionId $KeyVaultSubscriptionId -PrincipalId $appConfigMiPrincipalId -KeyVaultName $KeyVaultName -KeyVaultRgName $KeyVaultRgName -SecretName $KnownHostsSecretName
+    Set-KeyVaultSecretsUserRole -SubscriptionId $KeyVaultSubscriptionId -PrincipalId $appConfigMiPrincipalId -KeyVaultName $KeyVaultName -KeyVaultRgName $KeyVaultRgName -SecretName $SSHPrivateKeySecretName 
+    Set-KeyVaultSecretsUserRole -SubscriptionId $KeyVaultSubscriptionId -PrincipalId $appConfigMiPrincipalId -KeyVaultName $KeyVaultName -KeyVaultRgName $KeyVaultRgName -SecretName $SSHPublicKeySecretName
+    Set-KeyVaultSecretsUserRole -SubscriptionId $KeyVaultSubscriptionId -PrincipalId $appConfigMiPrincipalId -KeyVaultName $KeyVaultName -KeyVaultRgName $KeyVaultRgName -SecretName $KnownHostsSecretName
 
     $exitCode = 0
 }
