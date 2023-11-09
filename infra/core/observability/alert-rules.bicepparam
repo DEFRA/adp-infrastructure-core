@@ -21,7 +21,7 @@ param alertRules = [
     windowSize : 'PT15M'
     targetResourceType: 'Microsoft.Cache/redis'
     scopes: [
-      '[subscription().id]'
+      '[/subscriptions/subscription().id]'
     ]
     severity: 2
   }

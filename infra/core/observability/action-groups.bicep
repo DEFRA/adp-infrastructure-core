@@ -7,9 +7,6 @@ param environment string
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
-@description('Optional. Date in the format yyyyMMdd-HHmmss.')
-param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
-
 var commonTags = {  
   Location: 'global'
   CreatedDate: createdDate
@@ -20,7 +17,7 @@ var commonTags = {
 var tags = union(loadJsonContent('../../common/default-tags.json'), commonTags)
 
 module mActionGroups 'br/SharedDefraRegistry:insights.action-group:0.4.2' = [for actionGroup in actionGroups: {
-  name: 'actionGroups-${deploymentDate}'
+  name: actionGroup.actionGroupName
   params: {
     name: actionGroup.actionGroupName
     groupShortName: actionGroup.actionGroupShortName
