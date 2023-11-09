@@ -79,19 +79,19 @@
   },
   {
     "key": "identity",
-    "value": "{\"uri\": \"https://#{{ ssvPlatformKeyVaultName }}.vault.azure.net/secrets/${{ environment }}${{ nc_instance_regionid }}0${{ environmentId }}-ADP-Flux-Services-SSH-Identity\" }",
+    "value": "{\"uri\": \"https://#{{ ssvPlatformKeyVaultName }}.vault.azure.net/secrets/#{{ environment }}#{{ nc_instance_regionid }}0#{{ environmentId }}-ADP-Flux-Services-SSH-Identity\" }",
     "label": "Platform",
     "contentType": "text/plain"
   },
   {
     "key": "identity.pub",
-    "value": "{\"uri\": \"https://#{{ ssvPlatformKeyVaultName }}.vault.azure.net/secrets/${{ environment }}${{ nc_instance_regionid }}0${{ environmentId }}-ADP-Flux-Services-SSH-Identity-Pub\" }",
+    "value": "{\"uri\": \"https://#{{ ssvPlatformKeyVaultName }}.vault.azure.net/secrets/#{{ environment }}#{{ nc_instance_regionid }}0#{{ environmentId }}-ADP-Flux-Services-SSH-Identity-Pub\" }",
     "label": "Platform",
     "contentType": "text/plain"
   },
   {
     "key": "known_hosts",
-    "value": "{\"uri\":\"https://#{{ ssvPlatformKeyVaultName }}.vault.azure.net/secrets/${{ environment }}${{ nc_instance_regionid }}0${{ environmentId }}-ADP-Flux-Services-SSH-Identity-Known-Hosts\"}",
+    "value": "{\"uri\":\"https://#{{ ssvPlatformKeyVaultName }}.vault.azure.net/secrets/#{{ environment }}#{{ nc_instance_regionid }}0#{{ environmentId }}-ADP-Flux-Services-SSH-Identity-Known-Hosts\"}",
     "label": "Platform",
     "contentType": "text/plain"
   }
