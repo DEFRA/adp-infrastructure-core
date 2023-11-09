@@ -5,7 +5,7 @@ param vnet = {
   resourceGroup: '#{{ virtualNetworkResourceGroup }}'
   subnet01Name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01'
   subnet02Name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}02'
-  subnet03Name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}02'
+  subnet03Name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}03'
 }
 
 param cluster = {
@@ -78,7 +78,7 @@ param fluxConfig = {
       syncIntervalInSeconds: 300
       timeoutInSeconds: 180
       url: 'https://github.com/DEFRA/adp-flux-core'
-      branch: 'pp/e2e'
+      branch: 'main'
     }
     kustomizations: {
       timeoutInSeconds: 600
