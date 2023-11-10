@@ -97,3 +97,10 @@ param appConfig = {
   resourceGroup: '#{{ servicesResourceGroup }}'
   managedIdentityName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-adp-ac-platform'
 }
+
+param aksKmsKeyName = 'aksKmsKey'
+
+param keyVault = {
+  resourceGroup: 'SNDADPINFRG1401'
+  keyVaultName: 'SNDADPINFVT1401AAKMS'
+}
