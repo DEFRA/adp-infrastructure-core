@@ -1,6 +1,5 @@
-/*
 using './aks-cluster.bicep'
-
+/*
 param vnet = {
   name: '#{{ virtualNetworkName }}'
   resourceGroup: '#{{ virtualNetworkResourceGroup }}'
