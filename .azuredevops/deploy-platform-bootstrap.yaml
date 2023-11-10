@@ -112,6 +112,10 @@ extends:
                 path: infra/common/network
                 serviceConnectionVariableName: "subscriptionName"
                 resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: virtual-network
+                path: infra/common/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(virtualNetworkResourceGroup)
                 postDeployScriptsList:
                   - displayName: Link the VNet to Hub
                     scriptPath: infra/bootstrap/scripts/Trigger-VNetPeering.ps1
@@ -121,7 +125,3 @@ extends:
                       -VirtualNetworkName $(virtualNetworkName)
                       -SubscriptionName $(subscriptionName)
                       -TenantId $(tenantId)
-              - name: virtual-network
-                path: infra/common/network
-                serviceConnectionVariableName: "subscriptionName"
-                resourceGroupName: $(virtualNetworkResourceGroup)
