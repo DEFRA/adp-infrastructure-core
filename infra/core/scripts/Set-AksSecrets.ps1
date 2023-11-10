@@ -62,11 +62,11 @@ try {
         Write-Host "Downloaded Cluster Credentials"
 
         Write-Host "Login using kubelogin plugin for authentication"
-        kubelogin convert-kubeconfig -l azurecli
+        Invoke-CommandLine -Command "kubelogin convert-kubeconfig -l azurecli"
         Write-Host "Logged in using kubelogin plugin for authentication"
 
         Write-Host "Encrypt all secrets with KMS Key by updating all secrets"
-        kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+        Invoke-CommandLine -Command "kubectl get secrets --all-namespaces -o json | kubectl replace -f -"
         Write-Host "Encrypted all secrets with KMS Key by updating all secrets"
     }
     
