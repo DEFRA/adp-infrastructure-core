@@ -78,7 +78,10 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     roleAssignments: roleAssignments
     keys: [
       {
-        name: 'aksKms3'
+        name: 'aksKms5'
+        kty: 'RSA'
+        keySize: 2048
+        keyOps: '[decrypt, encrypt, sign, unwrapKey, verify, wrapKey]'
       }
     ]
   }
