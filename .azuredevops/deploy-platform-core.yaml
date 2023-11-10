@@ -232,7 +232,7 @@ extends:
                         -AzureSubscription $(subscriptionName)
                         -TenantId $(tenantId)
                         -ResourceGroup $(aksResourceGroup)
-                        -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid }}01-Test'
+                        -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01-Test'
                         -RotateKmsKey 'true'
 
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
