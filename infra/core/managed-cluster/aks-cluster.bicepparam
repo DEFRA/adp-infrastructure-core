@@ -1,3 +1,4 @@
+/*
 using './aks-cluster.bicep'
 
 param vnet = {
@@ -104,3 +105,4 @@ param keyVault = {
   resourceGroup: 'SNDADPINFRG1401'
   keyVaultName: 'SNDADPINFVT1401AAKMS'
 }
+*/
