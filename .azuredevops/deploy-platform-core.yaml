@@ -35,6 +35,10 @@ parameters:
       - Application - Storage Account
       - Application - Service Bus
       - Application - Key Vault
+  - name: rotateKmsKey
+    displayName: "Rotate KMS Key"
+    type: boolean
+    default: false
 
 pr:
   branches:
@@ -233,7 +237,7 @@ extends:
                         -TenantId $(tenantId)
                         -ResourceGroup $(aksResourceGroup)
                         -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01-Test'
-                        -RotateKmsKey 'true'
+                        -RotateKmsKey ${{ parameters.deployFromFeature }}
 
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door

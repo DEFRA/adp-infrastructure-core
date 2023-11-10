@@ -13,7 +13,7 @@ param(
     [Parameter(Mandatory)]
     [string] $ClusterName,
     [Parameter(Mandatory)]
-    [string] $RotateKmsKey,
+    [bool] $RotateKmsKey,
     [Parameter()]
     [string]$WorkingDirectory = $PWD
 )
@@ -47,7 +47,7 @@ try {
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
 
-    if ($RotateKmsKey -eq 'true') {
+    if ($RotateKmsKey) {
         Write-Host "Connecting to Azure..."
         Invoke-CommandLine -Command "az login --service-principal --tenant $TenantId --username $ServicePrincipalId --password $ServicePrincipalKey" -NoOutput
         Invoke-CommandLine -Command "az account set --name $AzureSubscription" -NoOutput
