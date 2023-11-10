@@ -13,7 +13,9 @@ param(
     [Parameter(Mandatory)]
     [string] $ClusterName,
     [Parameter(Mandatory)]
-    [string] $RotateKmsKey
+    [string] $RotateKmsKey,
+    [Parameter()]
+    [string]$WorkingDirectory = $PWD
 )
 
 Set-StrictMode -Version 3.0
@@ -38,6 +40,7 @@ Write-Debug "${functionName}:ServicePrincipalId=$ServicePrincipalId"
 Write-Debug "${functionName}:AzureSubscription=$AzureSubscription"
 Write-Debug "${functionName}:TenantId=$TenantId"
 Write-Debug "${functionName}:RotateKmsKey=$rotateKmsKey"
+Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
     [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ps-helpers"
