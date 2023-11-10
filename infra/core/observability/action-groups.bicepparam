@@ -3,10 +3,10 @@ using './action-groups.bicep'
 param actionGroups = [
   {
     actionGroupName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_actiongroups }}#{{ nc_instance_regionid }}01'
-    actionGroupShortName: 'INF-Warning'
+    actionGroupShortName: 'INF-Critical'
     emailReceivers: [
       {
-        name: 'Infrastructure Team'
+        name: 'Platform Team'
         emailAddress: ''
         useCommonAlertSchema: true
       }
@@ -14,10 +14,10 @@ param actionGroups = [
   }
   {
     actionGroupName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_actiongroups }}#{{ nc_instance_regionid }}02'
-    actionGroupShortName: 'INF-Critical'
+    actionGroupShortName: 'INF-Warning'
     emailReceivers: [
       {
-        name: 'Infrastructure Team'
+        name: 'Platform Team'
         emailAddress: ''
         useCommonAlertSchema: true
       }

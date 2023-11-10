@@ -1,3 +1,9 @@
+@description('Required. Alert Name Prefix.')
+param alertNamePrefix string
+
+@description('Required. Action Group Name Prefix.')
+param actionGroupNamePrefix string
+
 @description('Required. The name of the activity Log Alert Rules to create.')
 param activityLogAlertRules array
 
@@ -25,13 +31,13 @@ var commonTags = {
 var tags = union(loadJsonContent('../../common/default-tags.json'), commonTags)
 
 module mActivityLogAlertRules 'br/SharedDefraRegistry:insights.activity-log-alert:0.4.2' = [for activityLogAlertRule in activityLogAlertRules: {
-  name: activityLogAlertRule.name
+  name: '${alertNamePrefix}${activityLogAlertRule.name}'
   params: {
-    name: activityLogAlertRule.name
+    name: '${alertNamePrefix}${activityLogAlertRule.name}'
     alertDescription: activityLogAlertRule.alertDescription
     conditions: activityLogAlertRule.conditions
     actions: [ {
-        actionGroupId: resourceId('Microsoft.Insights/actionGroups', activityLogAlertRule.actionGroupId)
+        actionGroupId: resourceId('Microsoft.Insights/actionGroups', '${actionGroupNamePrefix}${activityLogAlertRule.actionGroupId}')
       } ]
     scopes: [
       subscriptionScope
@@ -41,15 +47,15 @@ module mActivityLogAlertRules 'br/SharedDefraRegistry:insights.activity-log-aler
 }]
 
 module mAlertRules 'br/SharedDefraRegistry:insights.metric-alert:0.4.2' = [for alertRule in alertRules: {
-  name: alertRule.name
+  name: '${alertNamePrefix}${alertRule.name}'
   params: {
-    name: alertRule.name
+    name: '${alertNamePrefix}${alertRule.name}'
     alertDescription: alertRule.alertDescription
     criterias: alertRule.criterias
     actions: [ {
-        actionGroupId: resourceId('Microsoft.Insights/actionGroups', alertRule.actionGroupId)
+        actionGroupId: resourceId('Microsoft.Insights/actionGroups', '${actionGroupNamePrefix}${alertRule.actionGroupId}')
       } ]
-    tags: union(tags, { Name: alertRule.name })
+    tags: union(tags, { Name: '${alertNamePrefix}${alertRule.name}' })
     alertCriteriaType: alertCriteriaType
     autoMitigate:  (contains(alertRule, 'autoMitigate')  ? alertRule.autoMitigate : true)
     evaluationFrequency: alertRule.evaluationFrequency
