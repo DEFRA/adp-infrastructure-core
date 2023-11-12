@@ -1,3 +1,4 @@
+/*
 @description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPrivateEndpoints values.')
 param vnet object
 
@@ -86,3 +87,4 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     ]
   }
 }
+*/
