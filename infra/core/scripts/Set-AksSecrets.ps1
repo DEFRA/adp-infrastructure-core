@@ -74,7 +74,7 @@ try {
         Invoke-CommandLine -Command "kubectl get secrets --all-namespaces -o json | kubectl replace -f -"
         Write-Host "Encrypted all secrets with KMS Key by updating all secrets"
 
-        Invoke-CommandLine -Command "az role assignment delete --assignee $assignee --role $role --scope $scope"
+        Invoke-CommandLine -Command "az role assignment delete --assignee $assignee --role "$role" --scope $scope"
     }
     
     $exitCode = 0
