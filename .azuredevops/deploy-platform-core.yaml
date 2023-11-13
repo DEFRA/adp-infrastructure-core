@@ -35,6 +35,7 @@ parameters:
       - Application - Storage Account
       - Application - Service Bus
       - Application - Key Vault
+      - Platform - Key Vault
   - name: rotateKmsKey
     displayName: "Rotate KMS Key"
     type: boolean
@@ -103,6 +104,9 @@ variables:
     value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Private DNS Zone')) }}
   - name: IsManagedClusterCluster
     value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Cluster')) }}
+
+  - name: IsPlatformKeyVault
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Platform - Key Vault')) }}
   
   - name: IsFrontDoor
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Front Door')) }}
@@ -190,6 +194,16 @@ extends:
                         -ResourceGroupName $(ssvSharedResourceGroup)
                         -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
                         -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(aksResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
+
+        - ${{ if eq(variables.IsPlatformKeyVault, true) }}:
+          - name: platform
+            deployments:                  
+              - name: platform-key-vault
+                path: infra/core/key-vault
+                resourceGroupName: $(servicesResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)02
+                    resourceGroupName: $(servicesResourceGroup)
 
         - ${{ if eq(variables.IsManagedCluster, true) }}:  
           - name: managed_cluster
