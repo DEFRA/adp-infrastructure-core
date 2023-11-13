@@ -1,4 +1,3 @@
-/*
 @description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and subnetClusterNodes values.')
 param vnet object
 @description('Required. The parameter object for the cluster. The object must contain the name,skuTier,nodeResourceGroup,miControlPlane,adminAadGroupObjectId and monitoringWorkspace values.')
@@ -29,6 +28,8 @@ param asoPlatformManagedIdentity string
 param appConfig object
 @description('Required. Key Management Service encryption key name')
 param aksKmsKeyName string
+@description('Optional. set to true if KMS Key rotation is required')
+param rotateKmsKey string = 'false'
 @description('Required. The parameter object for the environment KeyVault. The object must contain name, resourceGroup and keyVaultName.')
 param keyVault object
 
@@ -121,6 +122,7 @@ module aksKmsKey '.bicep/aks-kms-key.bicep' = {
   params: {
     aksKmsKeyName: aksKmsKeyName
     keyVaultName: keyVault.keyVaultName
+    rotateKmsKey: rotateKmsKey
   }
 }
 
@@ -452,4 +454,3 @@ output configuration array = [
     label: 'Platform'
   }
 ]
-*/

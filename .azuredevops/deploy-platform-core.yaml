@@ -136,6 +136,10 @@ variables:
   - name: IsApplicationKeyVault
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
 
+  - name: RotateKmsKey
+    value: ${{ parameters.rotateKmsKey }}
+
+
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
