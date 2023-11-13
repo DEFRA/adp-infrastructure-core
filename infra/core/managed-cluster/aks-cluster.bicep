@@ -29,7 +29,7 @@ param appConfig object
 @description('Required. Key Management Service encryption key name')
 param aksKmsKeyName string
 @description('Optional. set to true if KMS Key rotation is required')
-param rotateKmsKey string = 'false'
+param rotateKmsKey string = 'False'
 @description('Required. The parameter object for the environment KeyVault. The object must contain name, resourceGroup and keyVaultName.')
 param keyVault object
 

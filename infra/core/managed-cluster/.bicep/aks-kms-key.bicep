@@ -12,7 +12,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' existing = {
   name: keyVaultName
 }
 
-resource kvKeyNew 'Microsoft.KeyVault/vaults/keys@2022-07-01' = if (rotateKmsKey == 'true') {
+resource kvKeyNew 'Microsoft.KeyVault/vaults/keys@2022-07-01' = if (rotateKmsKey == 'True') {
   parent: keyVault
   name: aksKmsKeyName
   properties: {
@@ -25,7 +25,7 @@ resource kvKeyNew 'Microsoft.KeyVault/vaults/keys@2022-07-01' = if (rotateKmsKey
   }
 }
 
-resource kvKeyExisting 'Microsoft.KeyVault/vaults/keys@2022-07-01' existing = if (rotateKmsKey == 'false') {
+resource kvKeyExisting 'Microsoft.KeyVault/vaults/keys@2022-07-01' existing = if (rotateKmsKey == 'False') {
   parent: keyVault
   name: aksKmsKeyName
 }
