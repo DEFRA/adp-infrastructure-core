@@ -353,12 +353,12 @@ param tags object = {}
 @description('Optional. The resource ID of the disc encryption set to apply to the cluster. For security reasons, this value should be provided.')
 param diskEncryptionSetID string = ''
 
-@description('Optional. Configuration settings that are sensitive, as name-value pairs for configuring this extension.')
-@secure()
-param fluxConfigurationProtectedSettings object = {}
+// @description('Optional. Configuration settings that are sensitive, as name-value pairs for configuring this extension.')
+// @secure()
+// param fluxConfigurationProtectedSettings object = {}
 
-@description('Optional. Settings and configurations for the flux extension.')
-param fluxExtension object = {}
+// @description('Optional. Settings and configurations for the flux extension.')
+// param fluxExtension object = {}
 
 @description('Optional. Configurations for provisioning the cluster with HTTP proxy servers.')
 param httpProxyConfig object = {}
