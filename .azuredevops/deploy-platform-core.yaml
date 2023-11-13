@@ -247,7 +247,7 @@ extends:
                       scriptArguments: >
                         -ServicePrincipalId $(serviceConnectionClientIdSecretName)
                         -ServicePrincipalKey $(serviceConnectionAppRegName)
-                        -AzureSubscription $(subscriptionName)
+                        -AzureSubscriptionId $(subscriptionId)
                         -TenantId $(tenantId)
                         -ResourceGroup $(aksResourceGroup)
                         -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01-Test'
