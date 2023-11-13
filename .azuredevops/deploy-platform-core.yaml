@@ -234,7 +234,7 @@ extends:
                 - name: aks-cluster
                   path: infra/core/managed-cluster
                   resourceGroupName: $(aksResourceGroup)
-                  postDeployScriptsList:
+                  # postDeployScriptsList:
                     # - displayName: Add Cluster Details to Config Service
                     #   scriptPath: infra/core/scripts/Create-ConfigData.ps1
                     #   type: PowerShell
