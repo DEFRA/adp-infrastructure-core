@@ -18,8 +18,8 @@ param environment string
 param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
-@description('Required. The parameter object for configuring flux with the aks cluster. The object must contain the fluxCore  and fluxServices values.')
-param fluxConfig object
+// @description('Required. The parameter object for configuring flux with the aks cluster. The object must contain the fluxCore  and fluxServices values.')
+// param fluxConfig object
 @description('Optional. The parameter object for the monitoringWorkspace. The object must contain name of the name and resourceGroup.')
 param monitoringWorkspace object
 @description('Required. Azure Service Operator managed identity name')
