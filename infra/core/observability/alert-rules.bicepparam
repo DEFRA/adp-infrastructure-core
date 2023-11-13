@@ -157,6 +157,9 @@ param alertRules = [
     evaluationFrequency: 'PT5M'
     windowSize: 'PT15M'
     targetResourceType: 'Microsoft.AppConfiguration/configurationStores'
+    scopes: [
+      '/subscriptions/#{{ SubscriptionId }}/resourceGroups/#{{ servicesResourceGroup }}/providers/Microsoft.AppConfiguration/configurationStores/#{{ infraResourceNamePrefix }}#{{ nc_resource_appconfiguration }}#{{ nc_instance_regionid }}01'        
+    ]
     severity: 2
   }
   {
@@ -179,6 +182,9 @@ param alertRules = [
     evaluationFrequency: 'PT5M'
     windowSize: 'PT15M'
     targetResourceType: 'Microsoft.AppConfiguration/configurationStores'
+    scopes: [
+      '/subscriptions/#{{ SubscriptionId }}/resourceGroups/#{{ servicesResourceGroup }}/providers/Microsoft.AppConfiguration/configurationStores/#{{ infraResourceNamePrefix }}#{{ nc_resource_appconfiguration }}#{{ nc_instance_regionid }}01'        
+    ]
     severity: 1
   }
 ]
