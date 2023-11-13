@@ -142,6 +142,7 @@ extends:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     keyVaultName: $(ssvPlatformKeyVaultName)
+    keyVaultSecretsFilter: 'ADO-DefraGovUK-ADP-SND1-Cont-SP-ObjectId'
     filePathsForTransform: |
       **/core/app-configuration/config-data/config-data.json
     groupedDeployments:

@@ -48,15 +48,21 @@ try {
     Import-Module $moduleDir.FullName -Force
 
     if ($RotateKmsKey -eq 'true') {
+        Write-Host "ObjectID"
+        Write-Host $(ADO-DefraGovUK-ADP-SND1-Cont-SP-ObjectId)
+        Write-Host "Finish ObjectID"
+
         Write-Host "Connecting to Azure..."
         Invoke-CommandLine -Command "az login --service-principal --tenant $TenantId --username $ServicePrincipalId --password $ServicePrincipalKey" -NoOutput
         Invoke-CommandLine -Command "az account set --name $AzureSubscriptionId" -NoOutput
         Write-Host "Connected to Azure and set context to '$AzureSubscriptionId'"
 
         $scope = "/subscriptions/$AzureSubscriptionId/resourceGroups/$ResourceGroup/providers/Microsoft.ContainerService/managedClusters/$ClusterName"
-        # $role = "Azure Kubernetes Service RBAC Writer"
+        $role = "Azure Kubernetes Service RBAC Writer"
         $assignee = "cbd7efdb-6513-46cc-9324-02ec477fc9da"
-        Invoke-CommandLine -Command "az role assignment create --assignee $assignee --role 'Azure Kubernetes Service RBAC Writer' --scope $scope"
+        Write-Host "Assigning role '$role' to '$assignee' on cluster '$ClusterName'"
+        Invoke-CommandLine -Command "az role assignment create --assignee $assignee --role '$role' --scope $scope"
+        Write-Host "Assigned role '$role' to '$assignee' on cluster '$ClusterName'"
 
         Write-Host "Installing kubelogin"
         Invoke-CommandLine -Command "sudo az aks install-cli"
@@ -74,7 +80,9 @@ try {
         Invoke-CommandLine -Command "kubectl get secrets --all-namespaces -o json | kubectl replace -f -"
         Write-Host "Encrypted all secrets with KMS Key by updating all secrets"
 
-        Invoke-CommandLine -Command "az role assignment delete --assignee $assignee --role 'Azure Kubernetes Service RBAC Writer' --scope $scope"
+        # Write-Host "Deleteing role '$role' from '$assignee' on cluster '$ClusterName'"
+        # Invoke-CommandLine -Command "az role assignment delete --assignee $assignee --role '$role' --scope $scope"
+        # Write-Host "Deleted role '$role' from '$assignee' on cluster '$ClusterName'"
     }
     
     $exitCode = 0
