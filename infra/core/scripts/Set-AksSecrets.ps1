@@ -56,7 +56,7 @@ try {
         $scope = "/subscriptions/$AzureSubscriptionId/resourceGroups/$ResourceGroup/providers/Microsoft.ContainerService/managedClusters/$ClusterName"
         $role = "Azure Kubernetes Service RBAC Writer"
         $assignee = "cbd7efdb-6513-46cc-9324-02ec477fc9da"
-        Invoke-CommandLine -Command "az role assignment create --assignee $assignee --role $role --scope $scope"
+        Invoke-CommandLine -Command "az role assignment create --assignee $assignee --role "$role" --scope $scope"
 
         Write-Host "Installing kubelogin"
         Invoke-CommandLine -Command "sudo az aks install-cli"
