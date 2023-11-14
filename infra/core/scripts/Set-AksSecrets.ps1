@@ -98,19 +98,3 @@ finally {
     }
     exit $exitCode
 }
-
-
-
-if ($rotateKmsKey) {
-
-    # Install kubelogin
-    sudo az aks install-cli
-
-    # az aks get-credentials --resource-group 'SNDADPINFRG1402' --name 'SNDADPINFAK1401'
-    az aks get-credentials --resource-group 'asofluxpoc' --name 'asopocaks2'
-
-    kubelogin convert-kubeconfig -l azurecli
-
-    kubectl get secrets --all-namespaces -o json | kubectl replace -f -
-
-}
