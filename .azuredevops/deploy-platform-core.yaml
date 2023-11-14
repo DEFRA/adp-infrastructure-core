@@ -257,7 +257,6 @@ extends:
                         -TenantId $(tenantId)
                         -ResourceGroup $(aksResourceGroup)
                         -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01-Test'
-                        -RotateKmsKey ${{ parameters.rotateKmsKey }}
 
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
