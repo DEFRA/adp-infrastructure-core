@@ -61,6 +61,7 @@ var tagsAppConfigMi = {
 }
 
 var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io')
+var rotateKmsKeyBool = bool(rotateKmsKey)
 
 var asoPlatformTeamMiRbacs = [
   {
@@ -127,13 +128,13 @@ var systemNodePool = {
 //   name: 'aksKms6'
 // }
 
-module aksKmsKey './.bicep/kms-key.bicep' = {
+module aksKmsKey './.bicep/kms-key.bicep' = if (rotateKmsKeyBool) {
   scope: resourceGroup(keyVault.resourceGroup)
   name: aksKmsKeyName
   params: {
     aksKmsKeyName: aksKmsKeyName
     keyVaultName: keyVault.keyVaultName
-    rotateKmsKey: rotateKmsKey
+    //rotateKmsKey: rotateKmsKey
   }
 }
 
@@ -293,12 +294,12 @@ module deployAKS './resource-modules-managed-cluster/main.bicep' = {
     aadProfileServerAppID: ''
     aadProfileServerAppSecret: ''
     aadProfileTenantId: subscription().tenantId
-    enableAzureKeyVaultKms: true
-    keyVaultKms:{
+    enableAzureKeyVaultKms: rotateKmsKeyBool
+    keyVaultKms: rotateKmsKeyBool ? {
       keyId: aksKmsKey.outputs.keyUriWithVersion
       keyVaultNetworkAccess: 'Private'
       keyVaultResourceId: aksKmsKey.outputs.keyVaultResourceId
-    }
+    } : null
     primaryAgentPoolProfile: [
       systemNodePool
     ]
