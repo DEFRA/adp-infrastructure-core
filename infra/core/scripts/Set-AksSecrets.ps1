@@ -76,9 +76,9 @@ try {
     kubectl get secrets --all-namespaces -o json | kubectl replace -f -
     Write-Host "Encrypted all secrets with KMS Key"
 
-    Write-Host "Deleteing role '$role' from '$assignee' on cluster '$ClusterName'"
-    Invoke-CommandLine -Command "az role assignment delete --assignee $assignee --role '$role' --scope $scope" -NoOutput
-    Write-Host "Deleted role '$role' from '$assignee' on cluster '$ClusterName'"
+    Write-Host "Deleteing role '$role' from '$ServicePrincipalObjectId' on cluster '$ClusterName'"
+    Invoke-CommandLine -Command "az role assignment delete --assignee $ServicePrincipalObjectId --role '$role' --scope $scope" -NoOutput
+    Write-Host "Deleted role '$role' from '$ServicePrincipalObjectId' on cluster '$ClusterName'"
     
     $exitCode = 0
 }
