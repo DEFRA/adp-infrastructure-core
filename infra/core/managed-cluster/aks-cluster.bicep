@@ -230,7 +230,7 @@ module networkContributor '.bicep/network-contributor.bicep' = {
   }
 }
 
-module keyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in kmsKeyVaultRbacs: {
+module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in kmsKeyVaultRbacs: {
   name: 'aks-cluster-${kmsKeyVaultRbac.name}-${deploymentDate}'
   scope: resourceGroup(keyVault.resourceGroup)
   dependsOn: [
@@ -250,7 +250,7 @@ module deployAKS './resource-modules-managed-cluster/main.bicep' = {
   dependsOn: [
     privateDnsZoneContributor
     networkContributor
-    keyVaultRbac
+    kmsKeyVaultRbac
   ]
   params: {
     name: cluster.name
