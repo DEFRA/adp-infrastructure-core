@@ -234,7 +234,7 @@ extends:
                 - name: aks-cluster
                   path: infra/core/managed-cluster
                   resourceGroupName: $(aksResourceGroup)
-                  # postDeployScriptsList:
+                  postDeployScriptsList:
                     # - displayName: Add Cluster Details to Config Service
                     #   scriptPath: infra/core/scripts/Create-ConfigData.ps1
                     #   type: PowerShell
@@ -245,18 +245,18 @@ extends:
                     #     -TenantId $(tenantId)
                     #     -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                     #     -ConfigData '$(azureDeploymentOutputs)'
-                    # - displayName: Update Cluster Secrets to use KMS Key
-                    #   scriptPath: infra/core/scripts/Set-AksSecrets.ps1
-                    #   type: PowerShell
-                    #   scriptArguments: >
-                    #     -ServicePrincipalId $(serviceConnectionClientIdSecretName)
-                    #     -ServicePrincipalKey $(serviceConnectionAppRegName)
-                    #     -ServicePrincipalObjectId $(serviceConnectionSPObjectIdSecretName)
-                    #     -AzureSubscriptionId $(subscriptionId)
-                    #     -TenantId $(tenantId)
-                    #     -ResourceGroup $(aksResourceGroup)
-                    #     -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01-Test'
-                    #     -RotateKmsKey ${{ parameters.rotateKmsKey }}
+                    - displayName: Update Cluster Secrets to use new KMS Key
+                      scriptPath: infra/core/scripts/Set-AksSecrets.ps1
+                      type: PowerShell
+                      scriptArguments: >
+                        -ServicePrincipalId $(serviceConnectionClientIdSecretName)
+                        -ServicePrincipalKey $(serviceConnectionAppRegName)
+                        -ServicePrincipalObjectId $(serviceConnectionSPObjectIdSecretName)
+                        -AzureSubscriptionId $(subscriptionId)
+                        -TenantId $(tenantId)
+                        -ResourceGroup $(aksResourceGroup)
+                        -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01-Test'
+                        -RotateKmsKey ${{ parameters.rotateKmsKey }}
 
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
