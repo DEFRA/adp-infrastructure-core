@@ -246,8 +246,7 @@ extends:
                     #     -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                     #     -ConfigData '$(azureDeploymentOutputs)'
                     - displayName: Update Cluster Secrets to use new KMS Key
-                      # runCondition: ${{ parameters.rotateKmsKey }}
-                      runCondition: false
+                      runCondition: ${{ parameters.rotateKmsKey }}
                       scriptPath: infra/core/scripts/Set-AksSecrets.ps1
                       type: PowerShell
                       scriptArguments: >
