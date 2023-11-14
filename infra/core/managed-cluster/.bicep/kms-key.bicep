@@ -14,7 +14,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' existing = {
 
 resource kvKeyNew 'Microsoft.KeyVault/vaults/keys@2022-07-01' = {
   parent: keyVault
-  name: '${aksKmsKeyName}-${convertToEpoch}'
+  name: '${aksKmsKeyName}-${baseTime}'
   properties: {
     attributes: {
       exp: convertToEpoch
