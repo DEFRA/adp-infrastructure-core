@@ -1,3 +1,4 @@
+/*
 @description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and subnetClusterNodes values.')
 param vnet object
 @description('Required. The parameter object for the cluster. The object must contain the name,skuTier,nodeResourceGroup,miControlPlane,adminAadGroupObjectId and monitoringWorkspace values.')
@@ -468,3 +469,4 @@ output configuration array = [
     label: 'Platform'
   }
 ]
+*/
