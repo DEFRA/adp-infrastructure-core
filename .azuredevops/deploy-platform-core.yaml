@@ -37,7 +37,7 @@ parameters:
       - Application - Key Vault
       - Platform - Key Vault
   - name: rotateKmsKey
-    displayName: "Rotate KMS Key"
+    displayName: "Initialize/Rotate KMS Key"
     type: boolean
     default: false
 

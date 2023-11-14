@@ -73,6 +73,17 @@ var asoPlatformTeamMiRbacs = [
   }
 ]
 
+var kmsKeyVaultRbacs = [
+  {
+    name: 'KeyVaultCryptoUser'
+    roleDefinitionId: '12338af0-0e69-4776-bea7-57ae8d297424'
+  }
+  {
+    name: 'KeyVaultContributor'
+    roleDefinitionId: 'f25e0fa2-a7c8-4377-a976-54943a77a395'
+  }
+]
+
 var systemNodePool = {
   name: 'npsystem01'
   mode: 'System'
@@ -116,7 +127,7 @@ var systemNodePool = {
 //   name: 'aksKms6'
 // }
 
-module aksKmsKey '.bicep/aks-kms-key.bicep' = {
+module aksKmsKey './.bicep/kms-key.bicep' = {
   scope: resourceGroup(keyVault.resourceGroup)
   name: aksKmsKeyName
   params: {
@@ -218,8 +229,8 @@ module networkContributor '.bicep/network-contributor.bicep' = {
   }
 }
 
-module keyVaultRbac '.bicep/keyvault-rbac.bicep' = {
-  name: 'aks-cluster-keyvault-rbac-${deploymentDate}'
+module keyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in kmsKeyVaultRbacs: {
+  name: 'aks-cluster-${kmsKeyVaultRbac.name}-${deploymentDate}'
   scope: resourceGroup(keyVault.resourceGroup)
   dependsOn: [
     managedIdentity
@@ -227,8 +238,10 @@ module keyVaultRbac '.bicep/keyvault-rbac.bicep' = {
   params: {
     principalId: managedIdentity.outputs.principalId
     keyVaultName: keyVault.keyVaultName
+    roleDefinitionId: kmsKeyVaultRbac.roleDefinitionId
   }
 }
+]
 
 //module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3' = {
 module deployAKS './resource-modules-managed-cluster/main.bicep' = {
