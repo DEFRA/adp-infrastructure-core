@@ -1,5 +1,11 @@
 [
   {
+    "key": "CLUSTER_NAME",
+    "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_kubernetesservice }}#{{ nc_instance_regionid }}01",
+    "label": "Platform",
+    "contentType": "text/plain"
+  },
+  {
     "key": "ENVIRONMENT",
     "value": "#{{ lower(environment) }}",
     "label": "Platform",
