@@ -27,7 +27,7 @@ param asoPlatformManagedIdentity string
 @description('Required. The parameter object for the app configuration service. The object must contain name, resourceGroup and managedIdentityName.')
 param appConfig object
 @description('Optional. set to true if KMS Key rotation is required')
-param rotateKmsKey string = 'False'
+param initializeOrRotateKmsKey string = 'False'
 @description('Required. The parameter object for the environment KeyVault. The object must contain name, resourceGroup and keyVaultName.')
 param keyVault object
 
@@ -59,7 +59,7 @@ var tagsAppConfigMi = {
 }
 
 var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.${location}.azmk8s.io')
-var rotateKmsKeyBool = bool(rotateKmsKey)
+var initializeOrRotateKmsKeyBool = bool(initializeOrRotateKmsKey)
 
 var asoPlatformTeamMiRbacs = [
   {
@@ -116,7 +116,7 @@ var systemNodePool = {
   }
 }
 
-module aksKmsKey './.bicep/kms-key.bicep' = if (rotateKmsKeyBool) {
+module aksKmsKey './.bicep/kms-key.bicep' = if (initializeOrRotateKmsKeyBool) {
   scope: resourceGroup(keyVault.resourceGroup)
   name: 'aks-kms-key-${deploymentDate}'
   params: {
@@ -216,7 +216,7 @@ module networkContributor '.bicep/network-contributor.bicep' = {
   }
 }
 
-module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in kmsKeyVaultRbacs: if (rotateKmsKeyBool) {
+module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in kmsKeyVaultRbacs: if (initializeOrRotateKmsKeyBool) {
   name: 'aks-cluster-${kmsKeyVaultRbac.name}-${deploymentDate}'
   scope: resourceGroup(keyVault.resourceGroup)
   dependsOn: [
@@ -281,8 +281,8 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.4
     aadProfileServerAppID: ''
     aadProfileServerAppSecret: ''
     aadProfileTenantId: subscription().tenantId
-    enableAzureKeyVaultKms: rotateKmsKeyBool
-    keyVaultKms: rotateKmsKeyBool ? {
+    enableAzureKeyVaultKms: initializeOrRotateKmsKeyBool
+    keyVaultKms: initializeOrRotateKmsKeyBool ? {
       keyId: aksKmsKey.outputs.keyUriWithVersion
       keyVaultNetworkAccess: 'Private'
       keyVaultResourceId: aksKmsKey.outputs.keyVaultResourceId

@@ -1,6 +1,6 @@
 using './aks-cluster.bicep'
 
-param rotateKmsKey = '#{{ RotateKmsKey }}'
+param initializeOrRotateKmsKey = '#{{ InitializeOrRotateKmsKey }}'
 
 param keyVault = {
   resourceGroup: 'SNDADPINFRG1401'

@@ -36,7 +36,7 @@ parameters:
       - Application - Service Bus
       - Application - Key Vault
       - Platform - Key Vault
-  - name: rotateKmsKey
+  - name: initializeOrRotateKmsKey
     displayName: "Initialize/Rotate KMS Key"
     type: boolean
     default: false
@@ -136,8 +136,8 @@ variables:
   - name: IsApplicationKeyVault
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
 
-  - name: RotateKmsKey
-    value: ${{ parameters.rotateKmsKey }}
+  - name: InitializeOrRotateKmsKey
+    value: ${{ parameters.initializeOrRotateKmsKey }}
 
 
 extends:
@@ -246,7 +246,7 @@ extends:
                     #     -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                     #     -ConfigData '$(azureDeploymentOutputs)'
                     - displayName: Update Cluster Secrets to use new KMS Key
-                      runCondition: ${{ parameters.rotateKmsKey }}
+                      runCondition: ${{ parameters.initializeOrRotateKmsKey }}
                       scriptPath: infra/core/scripts/Set-AksSecrets.ps1
                       type: PowerShell
                       scriptArguments: >
