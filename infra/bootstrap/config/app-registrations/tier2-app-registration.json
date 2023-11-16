@@ -10,7 +10,7 @@
                     {
                         "key": "#{{ tier2ServiceConnectionAppRegName }}-SP-ObjectId",
                         "type": "ServicePrincipalProperty",
-                        "propertyName": "objectId"
+                        "propertyName": "id"
                     }
                 ]
             },
