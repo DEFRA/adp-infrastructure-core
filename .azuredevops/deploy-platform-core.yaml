@@ -229,9 +229,9 @@ extends:
                       AzureCLIScriptType: pscore
                       scriptRepo: PipelineCommonFiles
                       scriptArguments: >
-                        -Label "Platform"
+                        -Label "adp-platform"
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                        -ConfigData '[{"key": "CLUSTER_OIDC_ISSUER_URL", "value": "$(clusterOidc)", "label": "Platform", "contentType": "text/plain" }]'
+                        -ConfigData '[{"key": "CLUSTER_OIDC_ISSUER_URL", "value": "$(clusterOidc)", "label": "adp-platform", "contentType": "text/plain" }]'
               - ${{ if eq(variables.IsManagedClusterFluxServicesSSHKeys, true) }}:
                 - name: Flux Services SSH Keys
                   serviceConnectionVariableName: ssvServiceConnection
@@ -260,7 +260,7 @@ extends:
                   scriptArguments: >
                     -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                     -ConfigDataFilePath "$(Build.SourcesDirectory)/self/infra/core/app-configuration/config-data/config-data.json"
-                    -Label "Platform"
+                    -Label "adp-platform"
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
             deployments:
