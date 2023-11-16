@@ -8,14 +8,6 @@
                 "name": "#{{ ssvPlatformKeyVaultName }}",
                 "secrets": [
                     {
-                        "key": "#{{ tier2ServiceConnectionAppRegName }}",
-                        "type": "ClientSecret"
-                    },
-                    {
-                        "key": "#{{ tier2ServiceConnectionAppRegName }}-ClientId",
-                        "type": "ClientId"
-                    },
-                    {
                         "key": "#{{ tier2ServiceConnectionAppRegName }}-SP-ObjectId",
                         "type": "ServicePrincipalProperty",
                         "propertyName": "objectId"
