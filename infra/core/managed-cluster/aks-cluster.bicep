@@ -1,4 +1,3 @@
-/*
 @description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and subnetClusterNodes values.')
 param vnet object
 @description('Required. The parameter object for the cluster. The object must contain the name,skuTier,nodeResourceGroup,miControlPlane,adminAadGroupObjectId and monitoringWorkspace values.')
@@ -231,7 +230,7 @@ module networkContributor '.bicep/network-contributor.bicep' = {
   }
 }
 
-module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in kmsKeyVaultRbacs: {
+module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in kmsKeyVaultRbacs: if (rotateKmsKeyBool) {
   name: 'aks-cluster-${kmsKeyVaultRbac.name}-${deploymentDate}'
   scope: resourceGroup(keyVault.resourceGroup)
   dependsOn: [
@@ -246,7 +245,8 @@ module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in km
 ]
 
 //module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3' = {
-module deployAKS './resource-modules-managed-cluster/main.bicep' = {
+// module deployAKS './resource-modules-managed-cluster/main.bicep' = {
+module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.4-AA-KMS' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
     privateDnsZoneContributor
@@ -469,4 +469,3 @@ output configuration array = [
     label: 'Platform'
   }
 ]
-*/
