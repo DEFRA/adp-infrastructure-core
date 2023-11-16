@@ -1,5 +1,3 @@
-@description('Required. Key Management Service encryption key name')
-param aksKmsKeyName string
 @description('Required. KeyVault name')
 param keyVaultName string
 @description('Optional. Date to add as a suffix to the Key Name')
@@ -15,7 +13,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' existing = {
 
 resource kvKeyNew 'Microsoft.KeyVault/vaults/keys@2022-07-01' = {
   parent: keyVault
-  name: '${aksKmsKeyName}-${keySuffix}'
+  name: 'aksKmsKey-${keySuffix}'
   properties: {
     attributes: {
       exp: convertToEpoch

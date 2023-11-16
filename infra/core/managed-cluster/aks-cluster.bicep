@@ -26,8 +26,6 @@ param monitoringWorkspace object
 param asoPlatformManagedIdentity string
 @description('Required. The parameter object for the app configuration service. The object must contain name, resourceGroup and managedIdentityName.')
 param appConfig object
-@description('Required. Key Management Service encryption key name')
-param aksKmsKeyName string
 @description('Optional. set to true if KMS Key rotation is required')
 param rotateKmsKey string = 'False'
 @description('Required. The parameter object for the environment KeyVault. The object must contain name, resourceGroup and keyVaultName.')
@@ -120,11 +118,9 @@ var systemNodePool = {
 
 module aksKmsKey './.bicep/kms-key.bicep' = if (rotateKmsKeyBool) {
   scope: resourceGroup(keyVault.resourceGroup)
-  name: aksKmsKeyName
+  name: 'aks-kms-key-${deploymentDate}'
   params: {
-    aksKmsKeyName: aksKmsKeyName
     keyVaultName: keyVault.keyVaultName
-    //rotateKmsKey: rotateKmsKey
   }
 }
 
