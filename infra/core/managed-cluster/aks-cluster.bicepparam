@@ -1,6 +1,5 @@
 using './aks-cluster.bicep'
 
-param aksKmsKeyName = '#{{ aksKmsKeyName }}'
 param rotateKmsKey = '#{{ RotateKmsKey }}'
 
 param keyVault = {
