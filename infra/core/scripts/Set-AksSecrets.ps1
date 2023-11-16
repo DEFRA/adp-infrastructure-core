@@ -72,15 +72,12 @@ try {
     Write-Host "Logged in using kubelogin plugin for authentication"
 
     Write-Host "Encrypt all secrets with KMS Key"
-    Invoke-CommandLine -Command "kubectl get secrets --all-namespaces -o json | kubectl replace -f -"
-    Write-Host "Encrypted all secrets with KMS Key"
-
-    Write-Host "Checking for secret encryption errors"
-    $encryptErrors = kubectl get secrets --all-namespaces | Select-String kube
-    if ($NULL -ne $encryptErrors) {
+    $encryptSecrets = kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+    $encryptSecretErrors = $encryptSecrets | Select-String replaced
+    if ($NULL -ne $encryptSecretErrors) {
         throw "'kubectl get secrets' failed after encryption with new key.  Please investigate ..."
     }
-    Write-Host "Checked for secret encryption errors"
+    Write-Host "Encrypted all secrets with KMS Key"
 
     Write-Host "Deleteing role '$role' from '$ServicePrincipalObjectId' on cluster '$ClusterName'"
     Invoke-CommandLine -Command "az role assignment delete --assignee $ServicePrincipalObjectId --role '$role' --scope $scope" -NoOutput
