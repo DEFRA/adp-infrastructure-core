@@ -73,9 +73,9 @@ try {
 
     Write-Host "Encrypt all secrets with KMS Key"
     $encryptSecrets = kubectl get secrets --all-namespaces -o json | kubectl replace -f -
-    $encryptSecretErrors = $encryptSecrets | Select-String replaced
+    $encryptSecretErrors = $encryptSecrets | Select-String Error
     if ($NULL -ne $encryptSecretErrors) {
-        throw "'kubectl get secrets' failed after encryption with new key.  Please investigate ..."
+        throw "Encrypt all secrets with KMS Key failed.  Please investigate ..."
     }
     Write-Host "Encrypted all secrets with KMS Key"
 
