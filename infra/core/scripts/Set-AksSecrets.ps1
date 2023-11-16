@@ -60,20 +60,19 @@ try {
     Write-Host "Assigned role '$role' to '$ServicePrincipalObjectId' on cluster '$ClusterName'"
 
     Write-Host "Installing kubelogin"
-    Invoke-CommandLine -Command "sudo az aks install-cli" -NoOutput
+    Invoke-CommandLine -Command "sudo az aks install-cli"
     Write-Host "Installed kubelogin"
 
     Write-Host "Download Cluster Credentials"
-    Invoke-CommandLine -Command "az aks get-credentials --resource-group $ResourceGroup --name $ClusterName" -NoOutput
+    Invoke-CommandLine -Command "az aks get-credentials --resource-group $ResourceGroup --name $ClusterName"
     Write-Host "Downloaded Cluster Credentials"
 
     Write-Host "Login using kubelogin plugin for authentication"
-    Invoke-CommandLine -Command "kubelogin convert-kubeconfig -l azurecli" -NoOutput
+    Invoke-CommandLine -Command "kubelogin convert-kubeconfig -l azurecli"
     Write-Host "Logged in using kubelogin plugin for authentication"
 
     Write-Host "Encrypt all secrets with KMS Key"
-    # Invoke-CommandLine -Command "kubectl get secrets --all-namespaces -o json | kubectl replace -f -"
-    kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+    Invoke-CommandLine -Command "kubectl get secrets --all-namespaces -o json | kubectl replace -f -"
     Write-Host "Encrypted all secrets with KMS Key"
 
     Write-Host "Deleteing role '$role' from '$ServicePrincipalObjectId' on cluster '$ClusterName'"
