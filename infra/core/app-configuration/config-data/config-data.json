@@ -2,7 +2,7 @@
   {
     "key": "CLUSTER_NAME",
     "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_kubernetesservice }}#{{ nc_instance_regionid }}01",
-    "label": "Platform",
+    "label": "adp-platform",
     "contentType": "text/plain"
   },
   {
