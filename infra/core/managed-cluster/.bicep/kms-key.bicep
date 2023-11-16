@@ -3,9 +3,9 @@ param aksKmsKeyName string
 @description('Required. KeyVault name')
 param keyVaultName string
 @description('Optional. Date to add as a suffix to the Key Name')
-param keySuffix string = utcNow()
+param keySuffix string = utcNow('yyyyMMdd-HHmmss')
 @description('Optional. Date to be passed into the dateTimeToEpoch function')
-param baseTime string = utcNow('u')
+param baseTime string = utcNow()
 
 var convertToEpoch = dateTimeToEpoch(dateTimeAdd(baseTime, 'P1Y'))
 
