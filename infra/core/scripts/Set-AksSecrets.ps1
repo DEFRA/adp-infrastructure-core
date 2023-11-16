@@ -75,6 +75,13 @@ try {
     Invoke-CommandLine -Command "kubectl get secrets --all-namespaces -o json | kubectl replace -f -"
     Write-Host "Encrypted all secrets with KMS Key"
 
+    Write-Host "Checking for secret encryption errors"
+    $encryptErrors = kubectl get secrets --all-namespaces | Select-String kube
+    if ($NULL -ne $encryptErrors) {
+        throw "'kubectl get secrets' failed after encryption with new key.  Please investigate ..."
+    }
+    Write-Host "Checked for secret encryption errors"
+
     Write-Host "Deleteing role '$role' from '$ServicePrincipalObjectId' on cluster '$ClusterName'"
     Invoke-CommandLine -Command "az role assignment delete --assignee $ServicePrincipalObjectId --role '$role' --scope $scope" -NoOutput
     Write-Host "Deleted role '$role' from '$ServicePrincipalObjectId' on cluster '$ClusterName'"

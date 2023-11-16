@@ -1,5 +1,5 @@
 using './aks-cluster.bicep'
-
+/*
 param initializeOrRotateKmsKey = '#{{ InitializeOrRotateKmsKey }}'
 
 param keyVault = {
@@ -104,3 +104,4 @@ param appConfig = {
   resourceGroup: 'SNDADPINFRG1401'
   managedIdentityName: 'SNDADPINFMI1401-Test-adp-ac-platform'
 }
+*/
