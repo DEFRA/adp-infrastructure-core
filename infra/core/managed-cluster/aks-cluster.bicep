@@ -118,16 +118,6 @@ var systemNodePool = {
   }
 }
 
-// resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' existing = {
-//   name: 'SNDADPINFVT1401AAKMS'
-//   scope: resourceGroup('SNDADPINFRG1401')
-// }
-
-// resource kvKey 'Microsoft.KeyVault/vaults/keys@2021-10-01' existing = {
-//   parent: keyVault
-//   name: 'aksKms6'
-// }
-
 module aksKmsKey './.bicep/kms-key.bicep' = if (rotateKmsKeyBool) {
   scope: resourceGroup(keyVault.resourceGroup)
   name: aksKmsKeyName
