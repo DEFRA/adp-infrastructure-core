@@ -1,5 +1,12 @@
 using './aks-cluster.bicep'
 
+param initializeOrRotateKmsKey = '#{{ InitializeOrRotateKmsKey }}'
+
+param keyVault = {
+  resourceGroup: 'SNDADPINFRG1401'
+  keyVaultName: 'SNDADPINFVT1402'
+}
+
 param vnet = {
   name: 'SNDADPNETVN1401'
   resourceGroup: 'SNDADPNETRG1401'
@@ -72,23 +79,23 @@ param monitoringWorkspace = {
   resourceGroup: 'SNDADPINFRG1401'
 }
 
-// param fluxConfig = {
-//   clusterCore: {
-//     gitRepository: {
-//       syncIntervalInSeconds: 300
-//       timeoutInSeconds: 180
-//       url: 'https://github.com/DEFRA/adp-flux-core'
-//       branch: 'features/platform-config-map'
-//     }
-//     kustomizations: {
-//       timeoutInSeconds: 600
-//       syncIntervalInSeconds: 600
-//       clusterPath: './clusters/snd/01'
-//       infraPath: './infra/snd/01'
-//       servicesPath: './services/snd/01'
-//     }
-//   }
-// }
+param fluxConfig = {
+  clusterCore: {
+    gitRepository: {
+      syncIntervalInSeconds: 300
+      timeoutInSeconds: 180
+      url: 'https://github.com/DEFRA/adp-flux-core'
+      branch: 'features/platform-config-map'
+    }
+    kustomizations: {
+      timeoutInSeconds: 600
+      syncIntervalInSeconds: 600
+      clusterPath: './clusters/snd/01'
+      infraPath: './infra/snd/01'
+      servicesPath: './services/snd/01'
+    }
+  }
+}
 
 param asoPlatformManagedIdentity = 'SNDADPINFMI1401-Test-adp-aso-platform'
 
@@ -96,11 +103,4 @@ param appConfig = {
   name: 'sndadpinfac1401'
   resourceGroup: 'SNDADPINFRG1401'
   managedIdentityName: 'SNDADPINFMI1401-Test-adp-ac-platform'
-}
-
-param initializeOrRotateKmsKey = '#{{ InitializeOrRotateKmsKey }}'
-
-param keyVault = {
-  resourceGroup: 'SNDADPINFRG1401'
-  keyVaultName: 'SNDADPINFVT1402'
 }
