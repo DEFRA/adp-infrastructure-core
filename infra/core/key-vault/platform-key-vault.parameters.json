@@ -24,14 +24,6 @@
         },
         "location": {
             "value": "#{{ location }}"
-        }//,
-        // "principalId": {
-        //     "reference": {
-        //         "keyVault": {
-        //             "id": "/subscriptions/#{{ ssvSubscriptionId }}/resourceGroups/#{{ ssvSharedResourceGroup }}/providers/Microsoft.KeyVault/vaults/#{{ ssvPlatformKeyVaultName }}"
-        //         },
-        //         "secretName": "#{{ tier2ApplicationSPObjectIdSecretName }}"
-        //     }
-        // }
+        }
     }
 }

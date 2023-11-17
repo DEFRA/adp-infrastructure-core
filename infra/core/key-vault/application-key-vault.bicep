@@ -1,4 +1,3 @@
-/*
 @description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPrivateEndpoints values.')
 param vnet object
 
@@ -42,7 +41,7 @@ var defaultTags = union(json(loadTextContent('../../common/default-tags.json')),
 
 var keyVaultTags = {
   Name: keyVault.name
-  Purpose: 'Key Vault'
+  Purpose: 'Application Key Vault'
   Tier: 'Shared'
 }
 
@@ -87,4 +86,3 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     ]
   }
 }
-*/
