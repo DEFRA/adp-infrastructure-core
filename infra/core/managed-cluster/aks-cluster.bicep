@@ -252,9 +252,10 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.5
     enableRBAC: true
     aadProfileManaged: true
     disableLocalAccounts: true
-    systemAssignedIdentity: false
-    userAssignedIdentities: {
-      '${managedIdentity.outputs.resourceId}': {}
+    managedIdentities: {
+      userAssignedResourceIds: [
+        managedIdentity.outputs.resourceId
+      ]
     }
     enableWorkloadIdentity: true
     azurePolicyEnabled: true
