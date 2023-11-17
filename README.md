@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/defragovuk/DEFRA-FFC/_apis/build/status%2FADP%2FCore%2Fplatform-adp-core?repoName=DEFRA%2Fadp-infrastructure-core&branchName=main)](https://dev.azure.com/defragovuk/DEFRA-FFC/_build/latest?definitionId=4407&repoName=DEFRA%2Fadp-infrastructure-core&branchName=main)
+
 # ADP Infrastructure - Core
 
 Welcome to the ADP Infrastructure Core repository. This repository contains the 'core' and 'shared' platform infrastructure modules (Azure Bicep), scripts (Powershell, CLI), libraries, and Azure DevOps Pipelines that are used to build, support, and run the Azure Development Platform. All infrastructure modules and scripts in this repo are owned and managed by the ADP Platform Engineering Team. As this contains all the 'shared' infrastructure that all Tenants will use, no 'Tenant/Team' specific logic should reside here. The Infrastructure Services repository for Platform Tenants/Teams can be found here: https://github.com/DEFRA/adp-infrastructure-services that contains the Service logic.
