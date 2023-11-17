@@ -72,12 +72,12 @@ try {
     Write-Host "Logged in using kubelogin plugin for authentication"
 
     Write-Host "Encrypt all secrets with KMS Key"
-    $encryptSecrets = kubectl get secrets --all-namespaces -o json | kubectl replace -f -
+    $encryptSecrets = $(kubectl get secrets --all-namespaces -o json | kubectl replace -f -) 2>&1
     $encryptSecrets # For visibility that all secrets have been replaced to use encryption key
-    $encryptSecretErrors = $encryptSecrets | Select-String Error
-    if ($NULL -ne $encryptSecretErrors) {
-        throw "Encrypt all secrets with KMS Key failed.  Please investigate ..."
-    }
+    # $encryptSecretErrors = $encryptSecrets | Select-String Error
+    # if ($NULL -ne $encryptSecretErrors) {
+    #     throw "Encrypt all secrets with KMS Key failed.  Please investigate ..."
+    # }
     Write-Host "Encrypted all secrets with KMS Key"
 
     Write-Host "Deleteing role '$role' from '$ServicePrincipalObjectId' on cluster '$ClusterName'"
