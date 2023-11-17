@@ -116,3 +116,12 @@ extends:
                 path: infra/common/network
                 serviceConnectionVariableName: "subscriptionName"
                 resourceGroupName: $(virtualNetworkResourceGroup)
+                postDeployScriptsList:
+                  - displayName: Link the VNet to Hub
+                    scriptPath: infra/bootstrap/scripts/Trigger-VNetPeering.ps1
+                    type: PowerShell
+                    useSystemAccessToken: true
+                    scriptArguments: >
+                      -VirtualNetworkName $(virtualNetworkName)
+                      -SubscriptionName $(subscriptionName)
+                      -TenantId $(tenantId)

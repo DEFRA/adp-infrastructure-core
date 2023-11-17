@@ -54,7 +54,7 @@ var keyVaultPrivateEndpointTags = {
 module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
   name: 'app-keyvault-${deploymentDate}'
   params: {
-    name: '${keyVault.name}'
+    name: keyVault.name
     tags: union(defaultTags, keyVaultTags)
     vaultSku: keyVault.skuName
     lock: 'CanNotDelete'
@@ -76,13 +76,5 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
       }
     ]
     roleAssignments: roleAssignments
-    keys: [
-      {
-        name: 'aksKms6'
-        kty: 'RSA'
-        keySize: 2048
-        keyOps: ['decrypt', 'encrypt', 'sign', 'unwrapKey', 'verify', 'wrapKey']
-      }
-    ]
   }
 }

@@ -1,80 +1,104 @@
 [
   {
+    "key": "CLUSTER_NAME",
+    "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_kubernetesservice }}#{{ nc_instance_regionid }}01",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
     "key": "ENVIRONMENT",
     "value": "#{{ lower(environment) }}",
-    "label": "Platform",
+    "label": "adp-platform",
     "contentType": "text/plain"
   },
   {
     "key": "APPLICATION_ACR_NAME",
-    "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
-    "label": "Platform",
+    "value": "#{{ lower(infraResourceNamePrefix) }}#{{ lower(nc_resource_containerregistry) }}#{{ nc_instance_regionid }}01",
+    "label": "adp-platform",
     "contentType": "text/plain"
   },
   {
     "key": "FLUX_CONFIG_NAMESPACE",
     "value": "flux-config",
-    "label": "Platform",
+    "label": "adp-platform",
     "contentType": "text/plain"
   },
   {
     "key": "SHARED_SERVICEBUS_NAME",
-    "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_servicebus }}#{{ nc_instance_regionid }}01",
-    "label": "Platform",
+    "value": "#{{ lower(infraResourceNamePrefix) }}#{{ lower(nc_resource_servicebus) }}#{{ nc_instance_regionid }}01",
+    "label": "adp-platform",
     "contentType": "text/plain"
   },
   {
     "key": "DATABASE_SERVER_RG",
-    "value": "#{{ dbsResourceGroup }}",
-    "label": "Platform",
+    "value": "#{{ lower(dbsResourceGroup) }}",
+    "label": "adp-platform",
     "contentType": "text/plain"
   },
   {
     "key": "SHARED_POSTGRES_SERVER_01",
-    "value": "#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}01",
-    "label": "Platform",
+    "value": "#{{ lower(dbsResourceNamePrefix) }}#{{ lower(nc_resource_postgresql) }}#{{ nc_instance_regionid }}01",
+    "label": "adp-platform",
     "contentType": "text/plain"
   },
   {
     "key": "SERVICES_INFRA_RG",
-    "value": "#{{ servicesResourceGroup }}",
-    "label": "Platform",
+    "value": "#{{ lower(servicesResourceGroup) }}",
+    "label": "adp-platform",
     "contentType": "text/plain"
   },
   {
     "key": "TEAM_MI_PREFIX",
-    "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01",
-    "label": "Platform",
+    "value": "#{{ lower(infraResourceNamePrefix) }}#{{ lower(nc_resource_managedidentity) }}#{{ nc_instance_regionid }}01",
+    "label": "adp-platform",
     "contentType": "text/plain"
   },
   {
     "key": "TENANT_ID",
     "value": "#{{ tenantId }}",
-    "label": "Platform",
+    "label": "adp-platform",
     "contentType": "text/plain"
   },
   {
     "key": "SUBSCRIPTION_ID",
     "value": "#{{ subscriptionId }}",
-    "label": "Platform",
+    "label": "adp-platform",
     "contentType": "text/plain"
   },
   {
     "key": "SUBSCRIPTION_NAME",
-    "value": "#{{ subscriptionName }}",
-    "label": "Platform",
+    "value": "#{{ lower(subscriptionName) }}",
+    "label": "adp-platform",
     "contentType": "text/plain"
   },
   {
     "key": "ENVIRONMENT_ID",
     "value": "0#{{ environmentId }}",
-    "label": "Platform",
+    "label": "adp-platform",
     "contentType": "text/plain"
   },
   {
     "key": "Sentinel",
     "value": "#{{ Build.BuildId }}",
-    "label": "Platform",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
+    "key": "identity",
+    "value": "{\"uri\": \"https://#{{ ssvPlatformKeyVaultName }}.vault.azure.net/secrets/#{{ environment }}#{{ nc_instance_regionid }}0#{{ environmentId }}-ADP-Flux-Services-SSH-Identity\" }",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
+    "key": "identity.pub",
+    "value": "{\"uri\": \"https://#{{ ssvPlatformKeyVaultName }}.vault.azure.net/secrets/#{{ environment }}#{{ nc_instance_regionid }}0#{{ environmentId }}-ADP-Flux-Services-SSH-Identity-Pub\" }",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
+    "key": "known_hosts",
+    "value": "{\"uri\":\"https://#{{ ssvPlatformKeyVaultName }}.vault.azure.net/secrets/#{{ environment }}#{{ nc_instance_regionid }}0#{{ environmentId }}-ADP-Flux-Services-SSH-Identity-Known-Hosts\"}",
+    "label": "adp-platform",
     "contentType": "text/plain"
   }
 ]

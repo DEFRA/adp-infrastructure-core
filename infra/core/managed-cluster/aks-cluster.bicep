@@ -112,7 +112,7 @@ var systemNodePool = {
     'CriticalAddonsOnly=true:NoSchedule'
   ]
   nodeLabels: {
-    Ingress:'true'
+    Ingress: 'true'
   }
 }
 
@@ -448,10 +448,4 @@ module appConfigurationDataReaderRoleAssignment '.bicep/app-config-data-reader.b
   }
 }
 
-output configuration array = [
-  {
-    key: 'CLUSTER_OIDC'
-    value: deployAKS.outputs.oidcIssuerUrl
-    label: 'Platform'
-  }
-]
+output oidcIssuerUrl string = deployAKS.outputs.oidcIssuerUrl
