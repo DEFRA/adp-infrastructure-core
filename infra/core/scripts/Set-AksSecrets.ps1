@@ -55,9 +55,10 @@ try {
     $scope = "/subscriptions/$AzureSubscriptionId/resourceGroups/$ResourceGroup/providers/Microsoft.ContainerService/managedClusters/$ClusterName"
     $role = "Azure Kubernetes Service RBAC Writer"
 
-    Write-Host "Assigning role '$role' to '$ServicePrincipalObjectId' on cluster '$ClusterName'"
+    Write-Host "Assigning role '$role' to '$ServicePrincipalObjectId' and deleting lock on cluster '$ClusterName'"
+    Invoke-CommandLine -Command "az lock delete --name lock-$ClusterName --resource-group $ResourceGroup --resource $ClusterName --resource-type Microsoft.ContainerService/managedClusters"
     Invoke-CommandLine -Command "az role assignment create --assignee $ServicePrincipalObjectId --role '$role' --scope $scope" -NoOutput
-    Write-Host "Assigned role '$role' to '$ServicePrincipalObjectId' on cluster '$ClusterName'"
+    Write-Host "Assigned role '$role' to '$ServicePrincipalObjectId' deleted lock on cluster '$ClusterName'"
 
     Write-Host "Installing kubelogin"
     Invoke-CommandLine -Command "sudo az aks install-cli"
@@ -80,9 +81,10 @@ try {
     }
     Write-Host "Encrypted all secrets with KMS Key"
 
-    Write-Host "Deleteing role '$role' from '$ServicePrincipalObjectId' on cluster '$ClusterName'"
+    Write-Host "Delete role '$role' from '$ServicePrincipalObjectId' and add lock on cluster '$ClusterName'"
     Invoke-CommandLine -Command "az role assignment delete --assignee $ServicePrincipalObjectId --role '$role' --scope $scope" -NoOutput
-    Write-Host "Deleted role '$role' from '$ServicePrincipalObjectId' on cluster '$ClusterName'"
+    Invoke-CommandLine -Command "az lock create --name lock-$ClusterName --resource-group $ResourceGroup --resource $ClusterName --resource-type Microsoft.ContainerService/managedClusters --lock-type CanNotDelete"
+    Write-Host "Deleted role '$role' from '$ServicePrincipalObjectId' added lock on cluster '$ClusterName'"
     
     $exitCode = 0
 }
