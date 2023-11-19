@@ -25,7 +25,7 @@ resource kvKeyNew 'Microsoft.KeyVault/vaults/keys@2022-07-01' = {
 }
 
 @description('The uri including version of the KMS Key.')
-output keyUriWithVersion string = kvKeyNew.properties.keyUriWithVersion
+output keyName string = kvKeyNew.name
 
 @description('The uri including version of the KMS Key.')
 output keyVaultResourceId string = keyVault.id

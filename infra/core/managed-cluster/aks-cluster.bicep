@@ -242,7 +242,9 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.6
   params: {
     name: cluster.name
     location: location
-    //lock: 'CanNotDelete'
+    lock: {
+      kind: 'CanNotDelete'
+    }
     tags: union(tags, aksTags)
     kubernetesVersion: cluster.kubernetesVersion
     nodeResourceGroup: cluster.nodeResourceGroup
@@ -283,7 +285,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.6
     aadProfileServerAppSecret: ''
     aadProfileTenantId: subscription().tenantId
     customerManagedKey: initializeOrRotateKmsKeyBool ? {
-      keyId: aksKmsKey.outputs.keyUriWithVersion
+      keyName: aksKmsKey.outputs.keyName
       keyVaultNetworkAccess: 'Private'
       keyVaultResourceId: aksKmsKey.outputs.keyVaultResourceId
     } : null
