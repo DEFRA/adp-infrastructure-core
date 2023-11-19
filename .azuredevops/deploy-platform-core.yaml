@@ -252,7 +252,7 @@ extends:
                         -AzureSubscriptionId $(subscriptionId)
                         -TenantId $(tenantId)
                         -ResourceGroup $(aksResourceGroup)
-                        -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01-Test'
+                        -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01'
                     - displayName: 'Process Output Variable'
                       type: PowerShell
                       inlineScript: |
