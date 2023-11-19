@@ -72,23 +72,23 @@ param monitoringWorkspace = {
   resourceGroup: 'SNDADPINFRG1401'
 }
 
-param fluxConfig = {
-  clusterCore: {
-    gitRepository: {
-      syncIntervalInSeconds: 300
-      timeoutInSeconds: 180
-      url: 'https://github.com/DEFRA/adp-flux-core'
-      branch: 'features/platform-config-map'
-    }
-    kustomizations: {
-      timeoutInSeconds: 600
-      syncIntervalInSeconds: 600
-      clusterPath: './clusters/snd/01'
-      infraPath: './infra/snd/01'
-      servicesPath: './services/snd/01'
-    }
-  }
-}
+// param fluxConfig = {
+//   clusterCore: {
+//     gitRepository: {
+//       syncIntervalInSeconds: 300
+//       timeoutInSeconds: 180
+//       url: 'https://github.com/DEFRA/adp-flux-core'
+//       branch: 'features/platform-config-map'
+//     }
+//     kustomizations: {
+//       timeoutInSeconds: 600
+//       syncIntervalInSeconds: 600
+//       clusterPath: './clusters/snd/01'
+//       infraPath: './infra/snd/01'
+//       servicesPath: './services/snd/01'
+//     }
+//   }
+// }
 
 param asoPlatformManagedIdentity = 'SNDADPINFMI1401-Test-adp-aso-platform'
 
