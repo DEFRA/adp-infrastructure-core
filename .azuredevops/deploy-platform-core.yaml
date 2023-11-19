@@ -253,20 +253,20 @@ extends:
                         -TenantId $(tenantId)
                         -ResourceGroup $(aksResourceGroup)
                         -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01-Test'
-                    # - displayName: 'Process Output Variable'
-                    #   type: PowerShell
-                    #   inlineScript: |
-                    #     $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
-                    #     Write-Host "##vso[task.setvariable variable=clusterOidc;]$($output.oidcIssuerUrl.value)"
-                    # - displayName: Add Cluster Details to Config Service
-                    #   scriptPath: templates/powershell/Import-ConfigData.ps1
-                    #   type: AzureCLI
-                    #   AzureCLIScriptType: pscore
-                    #   scriptRepo: PipelineCommonFiles
-                    #   scriptArguments: >
-                    #     -Label "adp-platform"
-                    #     -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                    #     -ConfigData '[{"key": "CLUSTER_OIDC_ISSUER_URL", "value": "$(clusterOidc)", "label": "adp-platform", "contentType": "text/plain" }]'
+                    - displayName: 'Process Output Variable'
+                      type: PowerShell
+                      inlineScript: |
+                        $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
+                        Write-Host "##vso[task.setvariable variable=clusterOidc;]$($output.oidcIssuerUrl.value)"
+                    - displayName: Add Cluster Details to Config Service
+                      scriptPath: templates/powershell/Import-ConfigData.ps1
+                      type: AzureCLI
+                      AzureCLIScriptType: pscore
+                      scriptRepo: PipelineCommonFiles
+                      scriptArguments: >
+                        -Label "adp-platform"
+                        -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                        -ConfigData '[{"key": "CLUSTER_OIDC_ISSUER_URL", "value": "$(clusterOidc)", "label": "adp-platform", "contentType": "text/plain" }]'
               - ${{ if eq(variables.IsManagedClusterFluxServicesSSHKeys, true) }}:
                 - name: Flux Services SSH Keys
                   serviceConnectionVariableName: ssvServiceConnection
