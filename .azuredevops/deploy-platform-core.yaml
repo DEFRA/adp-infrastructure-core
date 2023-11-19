@@ -67,7 +67,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: aa/enableKms
       
 variables:
   - name: IsAll
@@ -252,7 +252,7 @@ extends:
                         -AzureSubscriptionId $(subscriptionId)
                         -TenantId $(tenantId)
                         -ResourceGroup $(aksResourceGroup)
-                        -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01'
+                        -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01-Test'
                     # - displayName: 'Process Output Variable'
                     #   type: PowerShell
                     #   inlineScript: |
