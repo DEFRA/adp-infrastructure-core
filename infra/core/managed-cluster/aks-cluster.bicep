@@ -232,7 +232,7 @@ module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in km
 
 //module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3' = {
 // module deployAKS './resource-modules-managed-cluster/main.bicep' = {
-module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.5-AA-KMS' = {
+module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.6-AA-KMS' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
     privateDnsZoneContributor
@@ -282,8 +282,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.5
     aadProfileServerAppID: ''
     aadProfileServerAppSecret: ''
     aadProfileTenantId: subscription().tenantId
-    enableAzureKeyVaultKms: initializeOrRotateKmsKeyBool
-    keyVaultKms: initializeOrRotateKmsKeyBool ? {
+    customerManagedKey: initializeOrRotateKmsKeyBool ? {
       keyId: aksKmsKey.outputs.keyUriWithVersion
       keyVaultNetworkAccess: 'Private'
       keyVaultResourceId: aksKmsKey.outputs.keyVaultResourceId
