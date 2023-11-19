@@ -1,5 +1,5 @@
 using './aks-cluster.bicep'
-/*
+
 param vnet = {
   name: '#{{ virtualNetworkName }}'
   resourceGroup: '#{{ virtualNetworkResourceGroup }}'
@@ -104,4 +104,3 @@ param keyVault = {
   resourceGroup: '#{{ servicesResourceGroup }}'
   keyVaultName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}02'
 }
-*/
