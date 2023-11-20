@@ -26,7 +26,7 @@ param monitoringWorkspace object
 param asoPlatformManagedIdentity string
 @description('Required. The parameter object for the app configuration service. The object must contain name, resourceGroup and managedIdentityName.')
 param appConfig object
-@description('Optional. set to true if KMS Key rotation is required')
+@description('Optional. set to true if KMS Key initialization or key rotation is required')
 param initializeOrRotateKmsKey string = 'False'
 @description('Required. The parameter object for the environment KeyVault. The object must contain name, resourceGroup and keyVaultName.')
 param keyVault object
@@ -230,8 +230,6 @@ module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in km
 }
 ]
 
-//module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3' = {
-// module deployAKS './resource-modules-managed-cluster/main.bicep' = {
 module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.6-AA-KMS' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
