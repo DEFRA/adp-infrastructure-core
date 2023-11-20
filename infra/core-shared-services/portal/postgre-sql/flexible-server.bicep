@@ -22,6 +22,9 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
+@description('Required. The name of the key vault where the secrets will be stored.')
+param keyvaultName string 
+
 var customTags = {
   Name: server.name
   Location: location
@@ -31,6 +34,12 @@ var customTags = {
 }
 
 var defaultTags = union(json(loadTextContent('../../../common/default-tags.json')), customTags)
+
+@description('Optional. The administrator login name of a server. Can only be specified when the PostgreSQL server is being created.')
+param administratorLogin string = 'solemnapple5'
+
+param guidValue string = guid(deploymentDate)
+var administratorLoginPassword  = substring(replace(replace(guidValue, '.', '-'), '-', ''), 0, 20)
 
 resource virtual_network 'Microsoft.Network/virtualNetworks@2023-05-01' existing = {
   name: vnet.name
@@ -49,6 +58,8 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
     name: toLower(server.name)
+    administratorLogin: administratorLogin
+    administratorLoginPassword : administratorLoginPassword
     storageSizeGB: server.storageSizeGB
     highAvailability: server.highAvailability
     availabilityZone: server.availabilityZone
@@ -58,7 +69,7 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     tier: server.tier
     skuName: server.skuName
     activeDirectoryAuth:'Enabled'
-    passwordAuth: 'Disabled'
+    passwordAuth: 'Enabled'
     enableDefaultTelemetry:false
     lock: 'CanNotDelete'
     backupRetentionDays:14
@@ -71,5 +82,33 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     delegatedSubnetResourceId : virtual_network::subnet.id
     privateDnsZoneArmResourceId: private_dns_zone.id
     diagnosticWorkspaceId: ''
+  }
+}
+
+resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
+  name: keyvaultName
+}
+
+resource secretdbhost 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  name: 'POSTGRES-HOST'
+  parent: keyVault  // Pass key vault symbolic name as parent
+  properties: {
+    value: '${flexibleServerDeployment.outputs.name}.postgres.database.azure.com'
+  }
+}
+
+resource secretdbuser 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  name: 'POSTGRES-USER'
+  parent: keyVault  // Pass key vault symbolic name as parent
+  properties: {
+    value: administratorLogin
+  }
+}
+
+resource secretdbpassword 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  name: 'POSTGRES-PASSWORD'
+  parent: keyVault  // Pass key vault symbolic name as parent
+  properties: {
+    value: administratorLoginPassword
   }
 }

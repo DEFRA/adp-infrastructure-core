@@ -19,6 +19,9 @@
               "subnetPostgreSql": "SSVADPNETSU1402"
             }
         },
+        "keyvaultName": {
+            "value": "SSVADPINFVT3403"
+        },
         "privateDnsZone":{
             "value": { 
                 "name":"ssv3adpdnsdz3401.private.postgres.database.azure.com",
