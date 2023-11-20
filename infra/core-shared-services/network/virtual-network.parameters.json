@@ -1,0 +1,73 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vnet": {
+      "value": {
+        "name": "SSVADPNETVN1401",
+        "addressPrefixes": [
+          "10.178.168.0/24"
+        ],
+        "dnsServers": [
+          "10.176.0.4",
+          "10.176.0.5",
+          "10.184.0.4",
+          "10.184.0.5"
+        ]
+      }
+    },
+    
+    "subnets": {
+      "value": [        
+        {
+          "name": "SSVADPNETSU1401",
+          "addressPrefix": "10.178.168.0/27",
+          "serviceEndpoints": [
+            { "service": "Microsoft.ContainerRegistry" }
+          ],
+          "routeTableId": "/subscriptions/7dc5bbdf-72d7-42ca-ac23-eb5eea3764b4/resourceGroups/SSVADPINFRG3402/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-SNDADPNETVN1401",
+          "networkSecurityGroupId":"/subscriptions/7dc5bbdf-72d7-42ca-ac23-eb5eea3764b4/resourceGroups/SSVADPINFRG3402/providers/Microsoft.Network/networkSecurityGroups/SSV3ADPNETNS3401",
+          "privateEndpointNetworkPolicies": "Disabled",
+          "privateLinkServiceNetworkPolicies": "Disabled"
+        },
+        {
+          "name": "SSVADPNETSU1402",
+          "addressPrefix": "10.178.168.32/27",
+          "serviceEndpoints": [],
+          "delegations": [
+            {
+              "name": "Microsoft.DBforPostgreSQL.flexibleServers",
+              "properties": {
+                "serviceName": "Microsoft.DBforPostgreSQL/flexibleServers"
+              }
+            }
+          ],
+          "routeTableId": "/subscriptions/7dc5bbdf-72d7-42ca-ac23-eb5eea3764b4/resourceGroups/SSVADPINFRG3402/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-SNDADPNETVN1401",
+          "privateEndpointNetworkPolicies": "Disabled",
+          "privateLinkServiceNetworkPolicies": "Enabled"
+        },
+        {
+          "name": "SSVADPNETSU1403",
+          "addressPrefix": "10.178.168.64/27",
+          "serviceEndpoints": [
+            { "service": "Microsoft.ContainerRegistry" },
+            { "service": "Microsoft.Storage" },
+            { "service": "Microsoft.EventHub" },
+            { "service": "Microsoft.ServiceBus" },
+            { "service": "Microsoft.KeyVault" }
+          ],
+          "routeTableId": "/subscriptions/7dc5bbdf-72d7-42ca-ac23-eb5eea3764b4/resourceGroups/SSVADPINFRG3402/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-SNDADPNETVN1401",
+          "networkSecurityGroupId":"/subscriptions/7dc5bbdf-72d7-42ca-ac23-eb5eea3764b4/resourceGroups/SSVADPINFRG3402/providers/Microsoft.Network/networkSecurityGroups/SSV3ADPNETNS3401",
+          "privateEndpointNetworkPolicies": "Disabled",
+          "privateLinkServiceNetworkPolicies": "Disabled"
+        }
+      ]
+    },
+    "location": {
+      "value": "UKSouth"
+    },
+    "environment": {
+      "value": "SSV3"
+    }
+  }
+}
