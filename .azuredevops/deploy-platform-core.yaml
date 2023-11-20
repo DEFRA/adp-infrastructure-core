@@ -67,7 +67,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: aa/enableKms
+      ref: main
       
 variables:
   - name: IsAll
