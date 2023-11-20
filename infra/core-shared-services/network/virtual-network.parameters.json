@@ -22,18 +22,28 @@
         {
           "name": "SSVADPNETSU1401",
           "addressPrefix": "10.178.168.0/27",
-          "serviceEndpoints": [
-            { "service": "Microsoft.ContainerRegistry" }
+          "serviceEndpoints": [],
+          "delegations": [
+            {
+              "name": "Microsoft.App.environments",
+              "properties": {
+                "serviceName": "Microsoft.App/environments"
+              }
+            }
           ],
           "routeTableId": "/subscriptions/7dc5bbdf-72d7-42ca-ac23-eb5eea3764b4/resourceGroups/SSVADPINFRG3402/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-SNDADPNETVN1401",
           "networkSecurityGroupId":"/subscriptions/7dc5bbdf-72d7-42ca-ac23-eb5eea3764b4/resourceGroups/SSVADPINFRG3402/providers/Microsoft.Network/networkSecurityGroups/SSV3ADPNETNS3401",
           "privateEndpointNetworkPolicies": "Disabled",
-          "privateLinkServiceNetworkPolicies": "Disabled"
+          "privateLinkServiceNetworkPolicies": "Enabled"
         },
         {
           "name": "SSVADPNETSU1402",
           "addressPrefix": "10.178.168.32/27",
-          "serviceEndpoints": [],
+          "serviceEndpoints": [
+            {
+              "service": "Microsoft.Storage"
+            }
+          ],
           "delegations": [
             {
               "name": "Microsoft.DBforPostgreSQL.flexibleServers",

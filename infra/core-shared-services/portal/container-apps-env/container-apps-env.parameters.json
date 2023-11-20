@@ -11,8 +11,8 @@
         "workloadProfiles":[
           {
             "workloadProfileType": "D4",
-            "name": "SSVADPINFCAW3401",
-            "minimumCount": 1,
+            "name": "CAW3401",
+            "minimumCount": 0,
             "maximumCount": 3
           }
         ]

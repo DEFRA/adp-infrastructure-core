@@ -28,27 +28,61 @@ var additionalTags = {
   Tier: 'Shared'
 }
 
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = if (!empty(containerApp.logAnalyticsWorkspaceResourceId)) {
+  name: last(split(containerApp.logAnalyticsWorkspaceResourceId, '/'))!
+  scope: resourceGroup(split(containerApp.logAnalyticsWorkspaceResourceId, '/')[2], split(containerApp.logAnalyticsWorkspaceResourceId, '/')[4])
+}
 
-module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.8' = {
-  name: '${containerApp.name}-${deploymentDate}'
-  params: {
-    // Required parameters
-    enableDefaultTelemetry: false
-    logAnalyticsWorkspaceResourceId: containerApp.logAnalyticsWorkspaceResourceId
-    name: '${containerApp.name}'
-    // Non-required parameters
-    dockerBridgeCidr: '172.16.0.1/28'
-    //infrastructureSubnetId: containerApp.SubnetId
-    internal: true
-    location: location
-    lock: {
-      kind: 'CanNotDelete'
-      name: '${containerApp.name}-CanNotDelete'
+var internal= true
+var infrastructureSubnetId = containerApp.SubnetId
+var dockerBridgeCidr = '172.16.0.1/28'
+var workloadProfiles = containerApp.workloadProfiles
+var zoneRedundant = false
+var logsDestination = 'log-analytics'
+var infrastructureResourceGroupName = ''
+resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
+  name: containerApp.name
+  location: location
+  tags: union(defaultTags, additionalTags)
+  properties: {
+    appLogsConfiguration: {
+      destination: logsDestination
+      logAnalyticsConfiguration: {
+        customerId: logAnalyticsWorkspace.properties.customerId
+        sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
+      }
     }
-    platformReservedCidr: '172.17.17.0/24'
-    platformReservedDnsIP: '172.17.17.17'
-    skuName: containerApp.skuName
-    workloadProfiles : containerApp.workloadProfiles
-    tags: union(defaultTags, additionalTags)
+    vnetConfiguration: {
+      internal: internal
+      infrastructureSubnetId: !empty(infrastructureSubnetId) && internal == true ? infrastructureSubnetId : null
+      dockerBridgeCidr: !empty(infrastructureSubnetId) && internal == true ? dockerBridgeCidr : null      
+    }
+    workloadProfiles: !empty(workloadProfiles) ? workloadProfiles : null
+    zoneRedundant: zoneRedundant
+    infrastructureResourceGroup: empty(infrastructureResourceGroupName) ? take('ME_${resourceGroup().name}_${containerApp.name}', 63) : infrastructureResourceGroupName
   }
 }
+
+// module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.8' = {
+//   name: '${containerApp.name}-${deploymentDate}'
+//   params: { 
+//     // Required parameters
+//     enableDefaultTelemetry: false
+//     logAnalyticsWorkspaceResourceId: containerApp.logAnalyticsWorkspaceResourceId
+//     name: '${containerApp.name}'
+//     // Non-required parameters
+//     dockerBridgeCidr: '172.16.0.1/28'
+//     infrastructureSubnetId: containerApp.SubnetId
+//     internal: true
+//     location: location
+//     lock: {
+//       kind: 'CanNotDelete'
+//       name: '${containerApp.name}-CanNotDelete'
+//     }
+//     platformReservedCidr: '172.17.17.0/24'
+//     platformReservedDnsIP: '172.17.17.17'
+//     //skuName: containerApp.skuName
+//     workloadProfiles : containerApp.workloadProfiles
+//     tags: union(defaultTags, additionalTags)
+//   }
+// }
