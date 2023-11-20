@@ -18,8 +18,8 @@ param environment string
 param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
-// @description('Required. The parameter object for configuring flux with the aks cluster. The object must contain the fluxCore  and fluxServices values.')
-// param fluxConfig object
+@description('Required. The parameter object for configuring flux with the aks cluster. The object must contain the fluxCore  and fluxServices values.')
+param fluxConfig object
 @description('Optional. The parameter object for the monitoringWorkspace. The object must contain name of the name and resourceGroup.')
 param monitoringWorkspace object
 @description('Required. Azure Service Operator managed identity name')
@@ -362,67 +362,67 @@ module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.ex
       'helm-controller.detectDrift': 'true'
       'useKubeletIdentity': 'true'
     }
-    // fluxConfigurations: [
-    //   {
-    //     name: 'flux-config'
-    //     namespace: 'flux-config'
-    //     scope: 'cluster'
-    //     gitRepository: {
-    //       repositoryRef: {
-    //         branch: fluxConfig.clusterCore.gitRepository.branch
-    //       }
-    //       syncIntervalInSeconds: fluxConfig.clusterCore.gitRepository.syncIntervalInSeconds
-    //       timeoutInSeconds: fluxConfig.clusterCore.gitRepository.timeoutInSeconds
-    //       url: fluxConfig.clusterCore.gitRepository.url
-    //     }
-    //     kustomizations: {
-    //       cluster: {
-    //         path: fluxConfig.clusterCore.kustomizations.clusterPath
-    //         dependsOn: []
-    //         timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
-    //         syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
-    //         validation: 'none'
-    //         prune: true
-    //       }
-    //       infra: {
-    //         path: fluxConfig.clusterCore.kustomizations.infraPath
-    //         timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
-    //         syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
-    //         dependsOn: [
-    //           'cluster'
-    //         ]
-    //         validation: 'none'
-    //         prune: true
-    //         postBuild: {
-    //           substitute: {
-    //             ASO_MI_CLIENTID: managedIdentityAso.outputs.clientId
-    //             SUBSCRIPTION_ID: subscription().subscriptionId
-    //             TENANT_ID: tenant().tenantId
-    //             LOAD_BALANCER_SUBNET: vnet.subnet01Name
-    //             SHARED_CONTAINER_REGISTRY: containerRegistries[0].name
-    //           }
-    //         }
-    //       }
-    //       services: {
-    //         path: fluxConfig.clusterCore.kustomizations.servicesPath
-    //         timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
-    //         syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
-    //         dependsOn: [
-    //           'cluster'
-    //           'infra'
-    //         ]
-    //         validation: 'none'
-    //         prune: true
-    //         postBuild: {
-    //           substitute: {
-    //             APPCONFIG_NAME: appConfig.name
-    //             APPCONFIG_MI_CLIENTID: managedIdentityAppConfig.outputs.clientId
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // ]
+    fluxConfigurations: [
+      {
+        name: 'flux-config'
+        namespace: 'flux-config'
+        scope: 'cluster'
+        gitRepository: {
+          repositoryRef: {
+            branch: fluxConfig.clusterCore.gitRepository.branch
+          }
+          syncIntervalInSeconds: fluxConfig.clusterCore.gitRepository.syncIntervalInSeconds
+          timeoutInSeconds: fluxConfig.clusterCore.gitRepository.timeoutInSeconds
+          url: fluxConfig.clusterCore.gitRepository.url
+        }
+        kustomizations: {
+          cluster: {
+            path: fluxConfig.clusterCore.kustomizations.clusterPath
+            dependsOn: []
+            timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
+            syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
+            validation: 'none'
+            prune: true
+          }
+          infra: {
+            path: fluxConfig.clusterCore.kustomizations.infraPath
+            timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
+            syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
+            dependsOn: [
+              'cluster'
+            ]
+            validation: 'none'
+            prune: true
+            postBuild: {
+              substitute: {
+                ASO_MI_CLIENTID: managedIdentityAso.outputs.clientId
+                SUBSCRIPTION_ID: subscription().subscriptionId
+                TENANT_ID: tenant().tenantId
+                LOAD_BALANCER_SUBNET: vnet.subnet01Name
+                SHARED_CONTAINER_REGISTRY: containerRegistries[0].name
+              }
+            }
+          }
+          services: {
+            path: fluxConfig.clusterCore.kustomizations.servicesPath
+            timeoutInSeconds: fluxConfig.clusterCore.kustomizations.timeoutInSeconds
+            syncIntervalInSeconds: fluxConfig.clusterCore.kustomizations.syncIntervalInSeconds
+            dependsOn: [
+              'cluster'
+              'infra'
+            ]
+            validation: 'none'
+            prune: true
+            postBuild: {
+              substitute: {
+                APPCONFIG_NAME: appConfig.name
+                APPCONFIG_MI_CLIENTID: managedIdentityAppConfig.outputs.clientId
+              }
+            }
+          }
+        }
+      }
+    ]
   }
 }
 
