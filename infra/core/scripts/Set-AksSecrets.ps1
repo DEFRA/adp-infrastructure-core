@@ -60,8 +60,7 @@ try {
     Write-Host "Logged in using kubelogin plugin for authentication"
 
     Write-Host "Encrypt all secrets with KMS Key"
-    #$encryptSecrets = $(kubectl get secrets --all-namespaces -o json | kubectl replace -f -) 2>&1
-    $encryptSecrets = $(kubectl get secrets --all-namespaces) 2>&1
+    $encryptSecrets = $(kubectl get secrets --all-namespaces -o json | kubectl replace -f -) 2>&1
     $encryptSecrets # For visibility that all secrets have been replaced to use encryption key
     $encryptSecretErrors = $encryptSecrets | Select-String Error
     if ($NULL -ne $encryptSecretErrors) {
