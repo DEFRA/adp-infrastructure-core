@@ -10,11 +10,33 @@ param location string = resourceGroup().location
 @description('Required. Environment name.')
 param environment string
 
+@description('Required. Environment name.')
+@allowed([
+  'Application'
+  'Platform'
+])
+param keyvaultType string
+
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
+
+@description('Required. principalId of service connection')
+@secure()
+param principalId string
+
+var roleAssignments = [
+  {
+    roleDefinitionIdOrName: 'Key Vault Secrets Officer'
+    description: 'Key Vault Secrets Officer Role Assignment'
+    principalIds: [
+      principalId
+    ]
+    principalType: 'ServicePrincipal'
+  }
+]
 
 var customTags = {
   Location: location
@@ -26,20 +48,20 @@ var defaultTags = union(json(loadTextContent('../../common/default-tags.json')),
 
 var keyVaultTags = {
   Name: keyVault.name
-  Purpose: 'Platform Key Vault'
+  Purpose: '${keyvaultType} Key Vault'
   Tier: 'Shared'
 }
 
 var keyVaultPrivateEndpointTags = {
   Name: keyVault.privateEndpointName
-  Purpose: 'Keyvault private endpoint'
+  Purpose: '${keyvaultType} Keyvault private endpoint'
   Tier: 'Shared'
 }
 
 module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
-  name: 'app-keyvault-${deploymentDate}'
+  name: '${keyvaultType}-keyvault-${deploymentDate}'
   params: {
-    name: '${keyVault.name}'
+    name: keyVault.name
     tags: union(defaultTags, keyVaultTags)
     vaultSku: keyVault.skuName
     lock: 'CanNotDelete'
@@ -60,5 +82,6 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
         tags: union(defaultTags, keyVaultPrivateEndpointTags)
       }
     ]
+    roleAssignments: keyvaultType == 'Application' ? roleAssignments : null
   }
 }

@@ -32,6 +32,9 @@
                 },
                 "secretName": "#{{ tier2ApplicationSPObjectIdSecretName }}"
             }
+        },
+        "keyvaultType": {
+            "value": "Application"
         }
     }
 }

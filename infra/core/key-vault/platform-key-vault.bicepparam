@@ -1,4 +1,4 @@
-using './platform-key-vault.bicep'
+using './key-vault.bicep'
 
 param keyVault = {
   name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}02'
@@ -18,3 +18,7 @@ param vnet = {
 param environment = '#{{ environment }}'
 
 param location = '#{{ location }}'
+
+param keyvaultType = 'Platform'
+
+param principalId = ''

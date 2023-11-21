@@ -208,8 +208,9 @@ extends:
         - ${{ if eq(variables.IsPlatformKeyVault, true) }}:
           - name: platform
             deployments:                  
-              - name: platform-key-vault
+              - name: key-vault
                 path: infra/core/key-vault
+                parameterFilePath: infra/core/key-vault/platform-key-vault.bicepparam
                 resourceGroupName: $(servicesResourceGroup)
                 privateEndpointDnsRecordsForResources:
                   - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)02
@@ -364,8 +365,9 @@ extends:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
               - ${{ if eq(variables.IsApplicationKeyVault, true) }}:                    
-                - name: application-key-vault
+                - name: key-vault
                   path: infra/core/key-vault
+                  parameterFilePath: infra/core/key-vault/application-key-vault.parameters.json
                   resourceGroupName: $(servicesResourceGroup)
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
