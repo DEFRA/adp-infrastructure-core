@@ -1,15 +1,9 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)]
-    [string] $ServicePrincipalId,
-    [Parameter(Mandatory)]
-    [string] $ServicePrincipalKey,
-    [Parameter(Mandatory)]
     [string] $ServicePrincipalObjectId,
     [Parameter(Mandatory)]
     [string] $AzureSubscriptionId,
-    [Parameter(Mandatory)]
-    [string] $TenantId,
     [Parameter(Mandatory)]
     [string] $ResourceGroup,
     [Parameter(Mandatory)]
@@ -36,21 +30,14 @@ if ($enableDebug) {
 }
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
-Write-Debug "${functionName}:ServicePrincipalId=$ServicePrincipalId"
 Write-Debug "${functionName}:ServicePrincipalObjectId=$ServicePrincipalObjectId"
 Write-Debug "${functionName}:AzureSubscriptionId=$AzureSubscriptionId"
-Write-Debug "${functionName}:TenantId=$TenantId"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
     [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ps-helpers"
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
-
-    Write-Host "Connecting to Azure..."
-    Invoke-CommandLine -Command "az login --service-principal --tenant $TenantId --username $ServicePrincipalId --password $ServicePrincipalKey" -NoOutput
-    Invoke-CommandLine -Command "az account set --name $AzureSubscriptionId" -NoOutput
-    Write-Host "Connected to Azure and set context to '$AzureSubscriptionId'"
 
     $scope = "/subscriptions/$AzureSubscriptionId/resourceGroups/$ResourceGroup/providers/Microsoft.ContainerService/managedClusters/$ClusterName"
     $role = "Azure Kubernetes Service RBAC Writer"
@@ -73,7 +60,8 @@ try {
     Write-Host "Logged in using kubelogin plugin for authentication"
 
     Write-Host "Encrypt all secrets with KMS Key"
-    $encryptSecrets = $(kubectl get secrets --all-namespaces -o json | kubectl replace -f -) 2>&1
+    #$encryptSecrets = $(kubectl get secrets --all-namespaces -o json | kubectl replace -f -) 2>&1
+    $encryptSecrets = $(kubectl get secrets --all-namespaces) 2>&1
     $encryptSecrets # For visibility that all secrets have been replaced to use encryption key
     $encryptSecretErrors = $encryptSecrets | Select-String Error
     if ($NULL -ne $encryptSecretErrors) {
