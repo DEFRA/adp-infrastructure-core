@@ -49,9 +49,8 @@ extends:
             path: infra/core-shared-services/container-registry
             resourceGroupName: $(ssvSharedResourceGroup)
       - name: network
-        ${{ if eq(parameters.deployResources, 'all') }}:
-          dependsOnGroupedDeployments:
-            - SharedResources
+        dependsOnGroupedDeployments:
+          - SharedResources
         deployments:
           - name: route-table
             path: infra/core-shared-services/network
