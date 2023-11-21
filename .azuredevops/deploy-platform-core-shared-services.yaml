@@ -48,3 +48,29 @@ extends:
           - name: platform-container-registry
             path: infra/core-shared-services/container-registry
             resourceGroupName: $(ssvSharedResourceGroup)
+      - name: network
+        ${{ if eq(parameters.deployResources, 'all') }}:
+          dependsOnGroupedDeployments:
+            - SharedResources
+        deployments:
+          - name: route-table
+            path: infra/core-shared-services/network
+            serviceConnectionVariableName: "subscriptionName"
+            resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+          - name: network-security-group
+            path: infra/core-shared-services/network
+            serviceConnectionVariableName: "subscriptionName"
+            resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+          - name: virtual-network
+            path: infra/core-shared-services/network
+            serviceConnectionVariableName: "subscriptionName"
+            resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+            postDeployScriptsList:
+              - displayName: Link the VNet to Hub
+                scriptPath: infra/bootstrap/scripts/Trigger-VNetPeering.ps1
+                type: PowerShell
+                useSystemAccessToken: true
+                scriptArguments: >
+                  -VirtualNetworkName $(ssvVirtualNetworkName)
+                  -SubscriptionName $(subscriptionName)
+                  -TenantId $(tenantId)

@@ -1,5 +1,5 @@
 @description('Required. The object of the PostgreSQL Flexible Server. The object must contain name,storageSizeGB and highAvailability properties.')
-param containerApp object
+param containerAppEnv object
 
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
@@ -23,25 +23,26 @@ var customTags = {
 var defaultTags = union(json(loadTextContent('../../../common/default-tags.json')), customTags)
 
 var additionalTags = {
-  Name: containerApp.name
+  Name: containerAppEnv.name
   Purpose: 'Container App Env'
   Tier: 'Shared'
 }
 
-resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = if (!empty(containerApp.logAnalyticsWorkspaceResourceId)) {
-  name: last(split(containerApp.logAnalyticsWorkspaceResourceId, '/'))!
-  scope: resourceGroup(split(containerApp.logAnalyticsWorkspaceResourceId, '/')[2], split(containerApp.logAnalyticsWorkspaceResourceId, '/')[4])
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = if (!empty(containerAppEnv.logAnalyticsWorkspaceResourceId)) {
+  name: last(split(containerAppEnv.logAnalyticsWorkspaceResourceId, '/'))!
+  scope: resourceGroup(split(containerAppEnv.logAnalyticsWorkspaceResourceId, '/')[2], split(containerAppEnv.logAnalyticsWorkspaceResourceId, '/')[4])
 }
 
 var internal= true
-var infrastructureSubnetId = containerApp.SubnetId
+var infrastructureSubnetId = containerAppEnv.SubnetId
 var dockerBridgeCidr = '172.16.0.1/28'
-var workloadProfiles = containerApp.workloadProfiles
+var workloadProfiles = containerAppEnv.workloadProfiles
 var zoneRedundant = false
 var logsDestination = 'log-analytics'
 var infrastructureResourceGroupName = ''
+
 resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
-  name: containerApp.name
+  name: containerAppEnv.name
   location: location
   tags: union(defaultTags, additionalTags)
   properties: {
@@ -59,30 +60,30 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
     }
     workloadProfiles: !empty(workloadProfiles) ? workloadProfiles : null
     zoneRedundant: zoneRedundant
-    infrastructureResourceGroup: empty(infrastructureResourceGroupName) ? take('ME_${resourceGroup().name}_${containerApp.name}', 63) : infrastructureResourceGroupName
+    infrastructureResourceGroup: empty(infrastructureResourceGroupName) ? take('ME_${resourceGroup().name}_${containerAppEnv.name}', 63) : infrastructureResourceGroupName
   }
 }
 
 // module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.8' = {
-//   name: '${containerApp.name}-${deploymentDate}'
+//   name: '${containerAppEnv.name}-${deploymentDate}'
 //   params: { 
 //     // Required parameters
 //     enableDefaultTelemetry: false
-//     logAnalyticsWorkspaceResourceId: containerApp.logAnalyticsWorkspaceResourceId
-//     name: '${containerApp.name}'
+//     logAnalyticsWorkspaceResourceId: containerAppEnv.logAnalyticsWorkspaceResourceId
+//     name: '${containerAppEnv.name}'
 //     // Non-required parameters
 //     dockerBridgeCidr: '172.16.0.1/28'
-//     infrastructureSubnetId: containerApp.SubnetId
+//     infrastructureSubnetId: containerAppEnv.SubnetId
 //     internal: true
 //     location: location
 //     lock: {
 //       kind: 'CanNotDelete'
-//       name: '${containerApp.name}-CanNotDelete'
+//       name: '${containerAppEnv.name}-CanNotDelete'
 //     }
 //     platformReservedCidr: '172.17.17.0/24'
 //     platformReservedDnsIP: '172.17.17.17'
-//     //skuName: containerApp.skuName
-//     workloadProfiles : containerApp.workloadProfiles
+//     //skuName: containerAppEnv.skuName
+//     workloadProfiles : containerAppEnv.workloadProfiles
 //     tags: union(defaultTags, additionalTags)
 //   }
 // }
