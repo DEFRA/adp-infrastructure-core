@@ -1,29 +1,29 @@
 using './aks-cluster.bicep'
-/*
+
 param vnet = {
-  name: 'SNDADPNETVN1401'
-  resourceGroup: 'SNDADPNETRG1401'
-  subnet01Name: ''
-  subnet02Name: 'SNDADPNETSU1402-AA-KMS'
-  subnet03Name: 'SNDADPNETSU1403-AA-KMS'
+  name: '#{{ virtualNetworkName }}'
+  resourceGroup: '#{{ virtualNetworkResourceGroup }}'
+  subnet01Name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01'
+  subnet02Name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}02'
+  subnet03Name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}03'
 }
 
 param cluster = {
-  name: 'SNDADPINFAK1401-Test'
-  kubernetesVersion: '1.27.3'
-  skuTier: 'Free'
-  nodeResourceGroup: 'SNDADPINFRG1401-Test-Managed'
-  miControlPlane: 'SNDADPINFMI1401-Test-cluster-control-plane'
-  adminAadGroupObjectId: 'cdf149cd-7dd6-48b0-9d1f-6be074b424cc'
-  podCidr: '172.16.0.0/16'
-  serviceCidr: '172.18.0.0/16'
-  dnsServiceIp: '172.18.255.250'
+  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_kubernetesservice }}#{{ nc_instance_regionid }}01'
+  kubernetesVersion: '#{{ aksVersion }}'
+  skuTier: '#{{ aksClusterSkuTier }}'
+  nodeResourceGroup: '#{{ aksResourceGroup }}-Managed'
+  miControlPlane: '#{{ aksControlPlaneManagedIdentity }}'
+  adminAadGroupObjectId: '#{{ aksAADProfileAdminGroupObjectId }}'
+  podCidr: '#{{ aksClusterPodCidr }}'
+  serviceCidr: '#{{ aksClusterServiceCidr }}'
+  dnsServiceIp: '#{{ aksClusterDnsServiceIp }}'
   npSystem: {
     count: 2
     osDiskSizeGB: 80
     maxCount: 4
     minCount: 1
-    maxPods: 80
+    maxPods: 110
     availabilityZones: [
       '1'
       '2'
@@ -35,7 +35,7 @@ param cluster = {
     osDiskSizeGB: 128
     maxCount: 10
     minCount: 2
-    maxPods: 80
+    maxPods: 110
     minPods: 2
     availabilityZones: [
       '1'
@@ -46,30 +46,30 @@ param cluster = {
 }
 
 param privateDnsZone = {
-  prefix: 'SNDADPDNSDZ1401'
-  resourceGroup: 'SNDADPDNSRG1401'
+  prefix: '#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}01'
+  resourceGroup: '#{{ dnsResourceGroup }}'
 }
 
 param containerRegistries = [
   {
-    name: 'SSVADPINFCR3401'
-    resourceGroup: 'SSVADPINFRG3401'
-    subscriptionId: '7dc5bbdf-72d7-42ca-ac23-eb5eea3764b4'
+    name: '#{{ ssvSharedAcrName }}'
+    resourceGroup: '#{{ ssvSharedResourceGroup }}'
+    subscriptionId: '#{{ ssvSubscriptionId }}'
   }
   {
-    name: 'SNDADPINFCR1401'
-    resourceGroup: 'SNDADPINFRG1401'
-    subscriptionId: '55f3b8c6-6800-41c7-a40d-2adb5e4e1bd1'
+    name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01'
+    resourceGroup: '#{{ servicesResourceGroup }}'
+    subscriptionId: '#{{ subscriptionId }}'
   }
 ]
 
-param location = 'UKSouth'
+param location = '#{{ location }}'
 
-param environment = 'SND'
+param environment = '#{{ environment }}'
 
 param monitoringWorkspace = {
-  name: 'SNDADPINFLW1401'
-  resourceGroup: 'SNDADPINFRG1401'
+  name: '#{{ logAnalyticsWorkspace }}'
+  resourceGroup: '#{{ servicesResourceGroup }}'
 }
 
 param fluxConfig = {
@@ -83,25 +83,24 @@ param fluxConfig = {
     kustomizations: {
       timeoutInSeconds: 600
       syncIntervalInSeconds: 600
-      clusterPath: './clusters/snd/01'
-      infraPath: './infra/snd/01'
-      servicesPath: './services/snd/01'
+      clusterPath: './clusters/#{{ lower(environment) }}/0#{{ environmentId }}'
+      infraPath: './infra/#{{ lower(environment) }}/0#{{ environmentId }}'
+      servicesPath: './services/#{{ lower(environment) }}/0#{{ environmentId }}'
     }
   }
 }
 
-param asoPlatformManagedIdentity = 'SNDADPINFMI1401-Test-adp-aso-platform'
+param asoPlatformManagedIdentity = '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-adp-aso-platform'
 
 param appConfig = {
-  name: 'sndadpinfac1401'
-  resourceGroup: 'SNDADPINFRG1401'
-  managedIdentityName: 'SNDADPINFMI1401-Test-adp-ac-platform'
+  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_appconfiguration }}#{{ nc_instance_regionid }}01'
+  resourceGroup: '#{{ servicesResourceGroup }}'
+  managedIdentityName: '#{{ acManagedIdentityName }}'
 }
 
-param initializeOrRotateKmsKey = 'True'
+param initializeOrRotateKmsKey = '#{{ InitializeOrRotateKmsKey }}'
 
 param keyVault = {
-  resourceGroup: 'SNDADPINFRG1401'
-  keyVaultName: 'SNDADPINFVT1402'
+  resourceGroup: '#{{ servicesResourceGroup }}'
+  keyVaultName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}02'
 }
-*/
