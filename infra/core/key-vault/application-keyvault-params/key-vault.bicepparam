@@ -1,8 +1,8 @@
 using '../key-vault.bicep'
 
 param keyVault = {
-  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}02'
-  privateEndpointName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}06'
+  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}01'
+  privateEndpointName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}03'
   skuName: 'premium'
   enableSoftDelete: '#{{ keyvaultEnableSoftDelete }}'
   enablePurgeProtection: '#{{ keyvaultEnablePurgeProtection }}'
@@ -19,6 +19,6 @@ param environment = '#{{ environment }}'
 
 param location = '#{{ location }}'
 
-param keyvaultType = 'Platform'
+param principalId = az.getSecret('#{{ ssvSubscriptionId }}', '#{{ ssvSharedResourceGroup }}', '#{{ ssvPlatformKeyVaultName }}', '#{{ tier2ApplicationSPObjectIdSecretName }}')
 
-param principalId = ''
+param keyvaultType = 'Application'
