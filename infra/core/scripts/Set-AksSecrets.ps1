@@ -43,7 +43,7 @@ try {
     $role = "Azure Kubernetes Service RBAC Writer"
 
     Write-Host "Assigning role '$role' to '$ServicePrincipalObjectId' and deleting lock on cluster '$ClusterName'"
-    Invoke-CommandLine -Command "az lock delete --name lock-$ClusterName --resource-group $ResourceGroup --resource $ClusterName --resource-type Microsoft.ContainerService/managedClusters"
+    Invoke-CommandLine -Command "az lock delete --name $ClusterName-CanNotDelete-lock --resource-group $ResourceGroup --resource $ClusterName --resource-type Microsoft.ContainerService/managedClusters"
     Invoke-CommandLine -Command "az role assignment create --assignee $ServicePrincipalObjectId --role '$role' --scope $scope" -NoOutput
     Write-Host "Assigned role '$role' to '$ServicePrincipalObjectId' deleted lock on cluster '$ClusterName'"
 
@@ -70,7 +70,7 @@ try {
 
     Write-Host "Delete role '$role' from '$ServicePrincipalObjectId' and add lock on cluster '$ClusterName'"
     Invoke-CommandLine -Command "az role assignment delete --assignee $ServicePrincipalObjectId --role '$role' --scope $scope" -NoOutput
-    Invoke-CommandLine -Command "az lock create --name lock-$ClusterName --resource-group $ResourceGroup --resource $ClusterName --resource-type Microsoft.ContainerService/managedClusters --lock-type CanNotDelete"
+    Invoke-CommandLine -Command "az lock create --name $ClusterName-CanNotDelete-lock --resource-group $ResourceGroup --resource $ClusterName --resource-type Microsoft.ContainerService/managedClusters --lock-type CanNotDelete"
     Write-Host "Deleted role '$role' from '$ServicePrincipalObjectId' added lock on cluster '$ClusterName'"
     
     $exitCode = 0
