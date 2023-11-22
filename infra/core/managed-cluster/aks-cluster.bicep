@@ -242,6 +242,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.1
     location: location
     lock: {
       kind: 'CanNotDelete'
+      name: '${cluster.name}-CanNotDelete-lock'
     }
     tags: union(tags, aksTags)
     kubernetesVersion: cluster.kubernetesVersion
