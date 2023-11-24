@@ -2,8 +2,8 @@ using './virtual-network.bicep'
 
 param vnet = {
   name: '#{{ ssvVirtualNetworkName }}'
-  addressPrefixes: '#{{ noescape(vnet1AddressPrefixes) }}'
-  dnsServers: '#{{ noescape(dnsServers) }}'
+  addressPrefixes: '#{{ vnet1AddressPrefixes }}'
+  dnsServers: '#{{ dnsServers }}'
 }
 
 param subnets = [
