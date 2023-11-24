@@ -1,0 +1,82 @@
+name: 1.0.$(BuildID)-${{ parameters.deployResources }}
+
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+  - name: deployResources
+    displayName: "Resources to Deploy"
+    type: string
+    default: "All"
+    values:
+      - All
+      - Platform - AAD Groups
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra/bootstrap/config/aad-groups/*
+      - infra/scripts/ado/Create-AADGroups.ps1
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+      - infra/bootstrap/config/aad-groups/*
+      - infra/scripts/ado/Create-AADGroups.ps1
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: main
+      
+variables:
+  - name: IsAll
+    value: ${{ eq(parameters.deployResources,'All') }}
+
+  - name: IsPlatfromADGroup
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform - AAD Groups')) }}
+
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.deployFromFeature }}
+    environments:
+      - name: 'defradev'
+        serviceConnection: AZD-ADP-SSV3
+        deploymentBranches:
+          - 'refs/heads/main'
+        developmentEnvironment: true
+        azureRegions:
+          primary: 'UKSouth'
+      # - name: 'defra'
+      #   outputTemplateChange: Skip
+      #   serviceConnection: AZD-ADP-SSV5
+      #   deploymentBranches:
+      #      - 'refs/heads/main'
+      #      - 'refs/pull/*/merge'
+      #   azureRegions:
+      #     primary: 'UKSouth'
+    groupedDeployments:
+        - ${{ if eq(variables.IsPlatfromADGroup, true) }}:  
+          - name: platform_aadgroup
+            deployments:
+              - name: Create or Update Platform AAD groups
+                # serviceConnectionVariableName: ssvServiceConnection
+                type: 'script'
+                scriptType: AzureCLI
+                azureCLIScriptType: pscore
+                path: 'infra/bootstrap/scripts/Create-AADGroups.ps1'
+                scriptArguments: > 
+                  -AADGroupsJsonManifestPath 'infra/bootstrap/config/aad-groups/platformAADGroups.$(environment).json'
