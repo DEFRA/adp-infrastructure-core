@@ -31,11 +31,7 @@
         {
           "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}02",
           "addressPrefix": "#{{ subnet2AddressPrefix }}",
-          "serviceEndpoints": [
-            {
-              "service": "Microsoft.Storage"
-            }
-          ],
+          "serviceEndpoints": [],
           "delegations": [
             {
               "name": "Microsoft.DBforPostgreSQL.flexibleServers",

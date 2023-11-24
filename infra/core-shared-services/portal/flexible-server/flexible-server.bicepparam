@@ -19,7 +19,7 @@ param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{
 
 param privateDnsZone = {
   name: '#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}03.private.postgres.database.azure.com'
-   resourceGroup: '#{{ portalResourceGroup }}'
+  resourceGroup: '#{{ dnsResourceGroup }}'
 }
 
 param diagnostics = {
