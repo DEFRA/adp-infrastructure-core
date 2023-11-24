@@ -1,8 +1,8 @@
 using './flexible-server.bicep'
 
 param server = {
-  name: '#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}01'
-  storageSizeGB: #{{ postgreSqlStorageSizeGB }}
+  name: '#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}03'
+  storageSizeGB: '#{{ postgreSqlStorageSizeGB }}'
   tier: '#{{ postgreSqlTier }}'
   skuName: '#{{ postgreSqlSkuName }}'
   highAvailability: '#{{ postgreSqlHighAvailability }}'
@@ -18,8 +18,8 @@ param vnet = {
 param keyvaultName = '$(ssvResourceNamePrefix)$(nc_resource_keyvault)$(nc_shared_instance_regionid)03'
 
 param privateDnsZone = {
-  name: '#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}01.private.postgres.database.azure.com'
-  resourceGroup: '$(ssvResourceNamePrefix)$(nc_resource_resourcegroup)$(nc_shared_instance_regionid)03'
+  name: '#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}03.private.postgres.database.azure.com'
+   resourceGroup: '#{{ portalResourceGroup }}'
 }
 
 param diagnostics = {

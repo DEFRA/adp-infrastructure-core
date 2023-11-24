@@ -3,6 +3,15 @@ parameters:
     displayName: "Deploy from Feature Branch"
     type: boolean
     default: false
+  - name: deployResources
+    displayName: "Resources to Deploy"
+    type: string
+    default: "all"
+    values:
+      - "all"
+      - "acr"
+      - "network"
+      - "portal"
 
 pr:
   branches:
@@ -43,33 +52,52 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedDeployments:
-      - name: SharedResources 
-        deployments:
-          - name: platform-container-registry
-            path: infra/core-shared-services/container-registry
-            resourceGroupName: $(ssvSharedResourceGroup)
-      - name: network
-        dependsOnGroupedDeployments:
-          - SharedResources
-        deployments:
-          - name: route-table
-            path: infra/core-shared-services/network
-            serviceConnectionVariableName: "subscriptionName"
-            resourceGroupName: $(ssvVirtualNetworkResourceGroup)
-          - name: network-security-group
-            path: infra/core-shared-services/network
-            serviceConnectionVariableName: "subscriptionName"
-            resourceGroupName: $(ssvVirtualNetworkResourceGroup)
-          - name: virtual-network
-            path: infra/core-shared-services/network
-            serviceConnectionVariableName: "subscriptionName"
-            resourceGroupName: $(ssvVirtualNetworkResourceGroup)
-            postDeployScriptsList:
-              - displayName: Link the VNet to Hub
-                scriptPath: infra/bootstrap/scripts/Trigger-VNetPeering.ps1
-                type: PowerShell
-                useSystemAccessToken: true
-                scriptArguments: >
-                  -VirtualNetworkName $(ssvVirtualNetworkName)
-                  -SubscriptionName $(subscriptionName)
-                  -TenantId $(tenantId)
+      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'acr')) }}        
+        : - name: SharedResources 
+            deployments:
+              - name: platform-container-registry
+                path: infra/core-shared-services/container-registry
+                resourceGroupName: $(ssvSharedResourceGroup)
+      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}        
+        : - name: network 
+            deployments:
+              - name: route-table
+                path: infra/core-shared-services/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+              - name: network-security-group
+                path: infra/core-shared-services/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+              - name: virtual-network
+                path: infra/core-shared-services/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+                postDeployScriptsList:
+                  - displayName: Link the VNet to Hub
+                    scriptPath: infra/bootstrap/scripts/Trigger-VNetPeering.ps1
+                    type: PowerShell
+                    useSystemAccessToken: true
+                    scriptArguments: >
+                      -VirtualNetworkName $(ssvVirtualNetworkName)
+                      -SubscriptionName $(subscriptionName)
+                      -TenantId $(tenantId)
+      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal')) }}        
+        : - name: Portal
+            ${{ if eq(parameters.deployResources, 'all') }}:
+              dependsOnGroupedDeployments:
+                - SharedResources        
+            deployments:
+              - name: portal-key-vault
+                path: infra/core-shared-services/portal/key-vault
+                resourceGroupName: $(portalResourceGroup)
+              - name: portal-managed-identity
+                path: infra/core-shared-services/portal/managed-identity
+                resourceGroupName: $(portalResourceGroup)
+              - name: portal-flexible-server-zone
+                path: infra/core-shared-services/portal/flexible-server-zone
+                resourceGroupName: $(portalResourceGroup)
+              - name: portal-flexible-server
+                path: infra/core-shared-services/portal/flexible-server
+                resourceGroupName: $(portalResourceGroup)
+

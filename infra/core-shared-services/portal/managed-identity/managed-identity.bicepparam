@@ -1,7 +1,7 @@
 using './managed-identity.bicep'
 
 param managedIdentity = {
-  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-adp-aso-platform-adp-portal'
+  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}03-adp-portal'
 }
 
 param environment = '#{{ environment }}'
@@ -15,7 +15,7 @@ param containerRegistry = {
 }
 
 param keyVault = {
-  name: '$(ssvResourceNamePrefix)$(nc_resource_keyvault)$(nc_shared_instance_regionid)02'
+  name: '$(ssvResourceNamePrefix)$(nc_resource_keyvault)$(nc_shared_instance_regionid)03'
   subscriptionId: '#{{ subscriptionId }}'
-  resourceGroup: '$(ssvResourceNamePrefix)$(nc_resource_resourcegroup)$(nc_shared_instance_regionid)03'
+  resourceGroup: '#{{ portalResourceGroup }}'
 }
