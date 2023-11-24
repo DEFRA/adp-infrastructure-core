@@ -241,17 +241,17 @@ extends:
                 - name: aks-cluster
                   path: infra/core/managed-cluster
                   resourceGroupName: $(aksResourceGroup)
-                  preDeployScriptsList:
-                    - displayName: Update Cluster Secrets before rotating KMS Key
-                      runCondition: ${{ parameters.initializeOrRotateKmsKey }}
-                      scriptPath: infra/core/scripts/Set-AksSecrets.ps1
-                      type: AzureCLI
-                      AzureCLIScriptType: pscore
-                      scriptArguments: >
-                        -ServicePrincipalObjectId $(serviceConnectionSPObjectIdSecretName)
-                        -AzureSubscriptionId $(subscriptionId)
-                        -ResourceGroup $(aksResourceGroup)
-                        -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01'
+                  # preDeployScriptsList:
+                  #   - displayName: Update Cluster Secrets before rotating KMS Key
+                  #     runCondition: ${{ parameters.initializeOrRotateKmsKey }}
+                  #     scriptPath: infra/core/scripts/Set-AksSecrets.ps1
+                  #     type: AzureCLI
+                  #     AzureCLIScriptType: pscore
+                  #     scriptArguments: >
+                  #       -ServicePrincipalObjectId $(serviceConnectionSPObjectIdSecretName)
+                  #       -AzureSubscriptionId $(subscriptionId)
+                  #       -ResourceGroup $(aksResourceGroup)
+                  #       -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01'
                   postDeployScriptsList:
                     - displayName: Update Cluster Secrets to use new KMS Key
                       runCondition: ${{ parameters.initializeOrRotateKmsKey }}
