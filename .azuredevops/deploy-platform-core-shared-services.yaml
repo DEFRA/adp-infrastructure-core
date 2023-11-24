@@ -103,4 +103,7 @@ extends:
               - name: flexible-server
                 path: infra/core-shared-services/portal/flexible-server
                 resourceGroupName: $(portalResourceGroup)
+              - name: container-apps-env
+                path: infra/core-shared-services/portal/container-apps-env
+                resourceGroupName: $(portalResourceGroup)
 

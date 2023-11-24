@@ -15,7 +15,7 @@ param containerRegistry = {
 }
 
 param keyVault = {
-  name: '$(ssvResourceNamePrefix)$(nc_resource_keyvault)$(nc_shared_instance_regionid)03'
+  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}03'
   subscriptionId: '#{{ subscriptionId }}'
   resourceGroup: '#{{ portalResourceGroup }}'
 }

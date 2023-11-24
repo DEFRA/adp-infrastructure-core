@@ -1,5 +1,12 @@
-@description('Required. The object of the PostgreSQL Flexible Server. The object must contain name,storageSizeGB and highAvailability properties.')
+@description('Required. The object of the Container App Env.')
 param containerAppEnv object
+
+@description('Required. The object of Log Analytics Workspace.')
+param workspace object
+
+@description('Required. The object of Subnet.')
+param subnet object
+
 
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
@@ -28,13 +35,13 @@ var additionalTags = {
   Tier: 'Shared'
 }
 
-resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = if (!empty(containerAppEnv.logAnalyticsWorkspaceResourceId)) {
-  name: last(split(containerAppEnv.logAnalyticsWorkspaceResourceId, '/'))!
-  scope: resourceGroup(split(containerAppEnv.logAnalyticsWorkspaceResourceId, '/')[2], split(containerAppEnv.logAnalyticsWorkspaceResourceId, '/')[4])
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06-01' existing = {
+  name: workspace.name
+  scope: resourceGroup(workspace.subscriptionId,workspace.resourceGroup)
 }
 
 var internal= true
-var infrastructureSubnetId = containerAppEnv.SubnetId
+var infrastructureSubnetId = resourceId(subnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', subnet.vnetName, subnet.Name)
 var dockerBridgeCidr = '172.16.0.1/28'
 var workloadProfiles = containerAppEnv.workloadProfiles
 var zoneRedundant = false
@@ -60,7 +67,7 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
     }
     workloadProfiles: !empty(workloadProfiles) ? workloadProfiles : null
     zoneRedundant: zoneRedundant
-    infrastructureResourceGroup: empty(infrastructureResourceGroupName) ? take('ME_${resourceGroup().name}_${containerAppEnv.name}', 63) : infrastructureResourceGroupName
+    infrastructureResourceGroup: empty(infrastructureResourceGroupName) ? take('${containerAppEnv.name}_ME', 63) : infrastructureResourceGroupName
   }
 }
 
