@@ -58,8 +58,8 @@ extends:
               - name: platform-container-registry
                 path: infra/core-shared-services/container-registry
                 resourceGroupName: $(ssvSharedResourceGroup)
-              - name: operational-insights
-                path: infra/core-shared-services/operational-insights
+              - name: log-analytics-workspace
+                path: infra/core-shared-services/log-analytics-workspace
                 resourceGroupName: $(ssvSharedResourceGroup)
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}        
         : - name: network 
