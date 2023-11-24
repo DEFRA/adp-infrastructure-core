@@ -60,7 +60,7 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     name: toLower(server.name)
     administratorLogin: administratorLogin
     administratorLoginPassword : administratorLoginPassword
-    storageSizeGB: int(server.storageSizeGB)
+    storageSizeGB: server.storageSizeGB
     highAvailability: server.highAvailability
     availabilityZone: server.availabilityZone
     version:'15'

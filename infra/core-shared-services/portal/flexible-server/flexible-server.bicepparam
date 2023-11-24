@@ -2,7 +2,7 @@ using './flexible-server.bicep'
 
 param server = {
   name: '#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}03'
-  storageSizeGB: '#{{ postgreSqlStorageSizeGB }}'
+  storageSizeGB: #{{ postgreSqlStorageSizeGB }}
   tier: '#{{ postgreSqlTier }}'
   skuName: '#{{ postgreSqlSkuName }}'
   highAvailability: '#{{ postgreSqlHighAvailability }}'
