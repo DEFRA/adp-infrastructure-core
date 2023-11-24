@@ -38,7 +38,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: gg/190121-tenant-environment
+      ref: main
       
 variables:
   - name: IsAll
