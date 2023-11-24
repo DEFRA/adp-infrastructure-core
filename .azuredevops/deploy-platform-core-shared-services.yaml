@@ -52,11 +52,14 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedDeployments:
-      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'acr')) }}        
+      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'shared')) }}        
         : - name: SharedResources 
             deployments:
               - name: platform-container-registry
                 path: infra/core-shared-services/container-registry
+                resourceGroupName: $(ssvSharedResourceGroup)
+              - name: operational-insights
+                path: infra/core-shared-services/operational-insights
                 resourceGroupName: $(ssvSharedResourceGroup)
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}        
         : - name: network 
@@ -88,16 +91,16 @@ extends:
               dependsOnGroupedDeployments:
                 - SharedResources        
             deployments:
-              - name: portal-key-vault
+              - name: key-vault
                 path: infra/core-shared-services/portal/key-vault
                 resourceGroupName: $(portalResourceGroup)
-              - name: portal-managed-identity
+              - name: managed-identity
                 path: infra/core-shared-services/portal/managed-identity
                 resourceGroupName: $(portalResourceGroup)
-              - name: portal-flexible-server-zone
+              - name: flexible-server-zone
                 path: infra/core-shared-services/portal/flexible-server-zone
                 resourceGroupName: $(portalResourceGroup)
-              - name: portal-flexible-server
+              - name: flexible-server
                 path: infra/core-shared-services/portal/flexible-server
                 resourceGroupName: $(portalResourceGroup)
 
