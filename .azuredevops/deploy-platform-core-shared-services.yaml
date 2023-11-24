@@ -9,7 +9,7 @@ parameters:
     default: "all"
     values:
       - "all"
-      - "acr"
+      - "shared"
       - "network"
       - "portal"
 
