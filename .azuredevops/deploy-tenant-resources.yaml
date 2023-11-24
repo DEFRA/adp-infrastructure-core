@@ -60,14 +60,14 @@ extends:
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
-      - name: 'defra'
-        outputTemplateChange: Skip
-        serviceConnection: AZD-ADP-SSV5
-        deploymentBranches:
-           - 'refs/heads/main'
-           - 'refs/pull/*/merge'
-        azureRegions:
-          primary: 'UKSouth'
+      # - name: 'defra'
+      #   outputTemplateChange: Skip
+      #   serviceConnection: AZD-ADP-SSV5
+      #   deploymentBranches:
+      #      - 'refs/heads/main'
+      #      - 'refs/pull/*/merge'
+      #   azureRegions:
+      #     primary: 'UKSouth'
     groupedDeployments:
         - ${{ if eq(variables.IsPlatfromADGroup, true) }}:  
           - name: platform_aadgroup
