@@ -19,7 +19,7 @@ pr:
       - main
   paths:
     include:
-      - infra/bootstrap/config/aad-groups/*
+      - infra/bootstrap/tenant/config/aad-groups/*
       - infra/scripts/ado/Create-AADGroups.ps1
 
 trigger:
@@ -29,7 +29,7 @@ trigger:
       - '*'
   paths:
     include:
-      - infra/bootstrap/config/aad-groups/*
+      - infra/bootstrap/tenant/config/aad-groups/*
       - infra/scripts/ado/Create-AADGroups.ps1
 
 resources:
@@ -77,6 +77,6 @@ extends:
                 type: 'script'
                 scriptType: AzureCLI
                 azureCLIScriptType: pscore
-                path: 'infra/bootstrap/scripts/Create-AADGroups.ps1'
+                path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
                 scriptArguments: > 
-                  -AADGroupsJsonManifestPath 'infra/bootstrap/config/aad-groups/platformAADGroups.$(environment).json'
+                  -AADGroupsJsonManifestPath 'infra/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json'

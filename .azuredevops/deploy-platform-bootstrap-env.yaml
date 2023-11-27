@@ -18,7 +18,7 @@ pr:
       - main
   paths:
     include:
-      - infra/bootstrap/*
+      - infra/bootstrap/env/*
       - infra/common/*
 
 trigger:
@@ -28,7 +28,7 @@ trigger:
       - '*'
   paths:
     include:
-      - infra/bootstrap/*
+      - infra/bootstrap/env/*
       - infra/common/*
 
 resources:
@@ -68,24 +68,24 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     filePathsForTransform: |
-      **/bootstrap/config/app-registrations/tier2-app-registration.json
-      **/bootstrap/config/service-connections/tier2-service-connection.json
+      **/bootstrap/env/config/app-registrations/tier2-app-registration.json
+      **/bootstrap/env/config/service-connections/tier2-service-connection.json
     groupedDeployments:
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'service-connections')) }}
         : - name: SharedResources
             deployments:
               - name: platform-key-vault
-                path: infra/bootstrap/key-vault
+                path: infra/bootstrap/env/key-vault
                 resourceGroupName: $(ssvSharedResourceGroup)
                 postDeployScriptsList:
                   - displayName: Create Tier 2 App Registrations
                     scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
                     scriptRepo: PipelineCommonScripts
                     ScriptArguments: >
-                      -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/config/app-registrations/tier2-app-registration.json'
+                      -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
                   - displayName: Setup RBAC on Subscriptions
                     Type: AzurePowerShell
-                    scriptPath: "infra/bootstrap/scripts/Assign-RBAC-Subscription.ps1"
+                    scriptPath: "infra/bootstrap/env/scripts/Assign-RBAC-Subscription.ps1"
                     ScriptArguments: >
                       -SubscriptionName $(subscriptionName) 
                       -KeyVaultName $(ssvPlatformKeyVaultName)
@@ -93,9 +93,9 @@ extends:
                   - displayName: Create or Update AzureRm Service Endpoint(Service Connection)
                     Type: AzureCLI
                     useSystemAccessToken: true                      
-                    scriptPath: "infra/bootstrap/scripts/ado/Initialize-ServiceEndpoint.ps1"
+                    scriptPath: "infra/bootstrap/env/scripts/ado/Initialize-ServiceEndpoint.ps1"
                     ScriptArguments: >
-                      -ServiceEndpointJsonPath 'infra/bootstrap/config/service-connections/tier2-service-connection.json'
+                      -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
                       -WorkingDirectory $(Pipeline.Workspace)\s\self
 
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}
@@ -118,7 +118,7 @@ extends:
                 resourceGroupName: $(virtualNetworkResourceGroup)
                 postDeployScriptsList:
                   - displayName: Link the VNet to Hub
-                    scriptPath: infra/bootstrap/scripts/Trigger-VNetPeering.ps1
+                    scriptPath: infra/bootstrap/env/scripts/Trigger-VNetPeering.ps1
                     type: PowerShell
                     useSystemAccessToken: true
                     scriptArguments: >
