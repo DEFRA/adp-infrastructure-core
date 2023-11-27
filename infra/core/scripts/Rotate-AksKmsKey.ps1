@@ -14,6 +14,61 @@ param(
     [string]$WorkingDirectory = $PWD
 )
 
+function Update-SecretsRetry {
+    param(
+        [Parameter(Mandatory)]
+        [string]$Namespace,
+        [Parameter(Mandatory = $false)]
+        [int]$MaxAttempts = 10
+    )
+    
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand
+        Write-Debug "${functionName}:Entered"
+        Write-Debug "${functionName}:Namespace=$Namespace"
+        Write-Debug "${functionName}:MaxAttempts=$MaxAttempts"
+    }
+
+    process {
+        $attempts = 1    
+        $ErrorActionPreferenceToRestore = $ErrorActionPreference
+        $ErrorActionPreference = "Stop"
+        
+        do {
+            try {
+                $encryptSecrets = $(kubectl get secrets -n $Namespace -o json | kubectl replace -f -) 2>&1
+                $encryptSecrets # For visibility that all secrets have been replaced to use encryption key
+                $encryptSecretErrors = $encryptSecrets | Select-String Error
+                if ($NULL -ne $encryptSecretErrors) {
+                    throw
+                }
+                break;
+            }
+            catch [Exception] {
+                Write-Host $_.Exception.Message
+            }
+           
+            $attempts++
+            if ($attempts -le $MaxAttempts) {
+                $retryDelaySeconds = [math]::Pow(2, $attempts)
+                $retryDelaySeconds = $retryDelaySeconds - 1 
+                Write-Host("Action failed. Waiting " + $retryDelaySeconds + " seconds before attempt " + $attempts + " of " + $MaxAttempts + ".")
+                Start-Sleep -Milliseconds $retryDelaySeconds            
+            }
+            else {
+                $ErrorActionPreference = $ErrorActionPreferenceToRestore
+                Write-Error $_.Exception.Message
+            }
+        } while ($attempts -le $MaxAttempts)
+    
+        $ErrorActionPreference = $ErrorActionPreferenceToRestore
+    }
+    
+    end {
+        Write-Debug "${functionName}:Exited"
+    }
+}
+
 function Update-Secrets {
     
     begin {
@@ -22,25 +77,11 @@ function Update-Secrets {
     }
 
     process {
-        $nameSpaces = kubectl get ns --no-headers -o custom-columns=":metadata.name"
-        foreach ($nameSpace in $nameSpaces) {
-
+        $namespaces = kubectl get ns --no-headers -o custom-columns=":metadata.name"
+        foreach ($namespace in $namespaces) {
             Write-Host "Updating Secrets in namespace: $nameSpace"
-            for ($counter = 1; $counter -le 10; $counter++) {
-                Write-Host "Counter: $counter"
-                if ($counter -ge 10) {
-                    throw "Update secrets failed 10 times.  Please investigate!"
-                }
-
-                $encryptSecrets = $(kubectl get secrets -n $nameSpace -o json | kubectl replace -f -) 2>&1
-                $encryptSecrets # For visibility that all secrets have been replaced to use encryption key
-                $encryptSecretErrors = $encryptSecrets | Select-String Error
-
-                if ($NULL -eq $encryptSecretErrors) {
-                    Write-Host "Successfully updated Secrets in namespace: $nameSpace"
-                    break
-                }
-            }
+            Update-SecretsRetry -Namespace $namespace
+            Write-Host "Successfully updated Secrets in namespace: $nameSpace"
         }
     }
     
