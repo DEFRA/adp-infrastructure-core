@@ -59,14 +59,14 @@ extends:
           primary: 'UKSouth'
       - name: 'defranonprd'
         outputTemplateChange: Skip
-        serviceConnection: AZD-ADP-SSV5
+        serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
            - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'    
       - name: 'defra'
         outputTemplateChange: Skip
-        serviceConnection: AZD-ADP-SSV5
+        serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
            - 'refs/heads/main'
         azureRegions:
