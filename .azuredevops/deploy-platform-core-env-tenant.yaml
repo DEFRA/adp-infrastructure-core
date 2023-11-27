@@ -47,7 +47,7 @@ extends:
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
-    regionalVariableFiles: null
+    regionalVariableFiles: []
     environments:
       - name: 'defradev'
         serviceConnection: AZD-ADP-SSV3
