@@ -30,44 +30,20 @@ resources:
       ref: main
 
 extends:
-  template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
     deployFromFeature: ${{ parameters.deployFromFeature }}
-    environments:
-      - name: snd1
-        serviceConnection: AZD-ADP-SND1
-        deploymentBranches:
-          - 'refs/heads/main'
-        developmentEnvironment: true
-        privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
-        azureRegions:
-          primary: 'UKSouth'
-      - name: snd2
-        serviceConnection: AZD-ADP-SND2
-        deploymentBranches:
-          - 'refs/heads/main'
-          - 'refs/pull/*/merge'
-        privateAgentName: 'DEFRA-ADP-SND2-ubuntu2204'
-        azureRegions:
-          primary: 'UKSouth'
-      - name: snd3
-        serviceConnection: AZD-ADP-SND3
-        deploymentBranches:
-          - 'refs/heads/main'
-          - 'refs/pull/*/merge'
-        privateAgentName: 'DEFRA-ADP-SND3-ubuntu2204'
-        azureRegions:
-          primary: 'UKSouth'
-    # privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
     keyVaultName: $(ssvPlatformKeyVaultName)
-    scriptsList:
-      - displayName: Initialize or Rotate KMS Key
-        scriptPath: infra/core/scripts/Rotate-AksKmsKey.ps1
-        type: AzureCLI
-        AzureCLIScriptType: pscore
-        scriptArguments: >
-          -ServicePrincipalObjectId $(serviceConnectionSPObjectIdSecretName)
-          -AzureSubscriptionId $(subscriptionId)
-          -ResourceGroup $(aksResourceGroup)
-          -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01'
-          -KeyVaultName '$(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)02'
+    groupedDeployments:
+      - name: network
+        deployments: 
+        - name: Initialize or Rotate KMS Key
+          path: infra/core/scripts/Rotate-AksKmsKey.ps1
+          type: 'script'
+          azureCLIScriptType: pscore
+          scriptArguments: >
+            -ServicePrincipalObjectId $(serviceConnectionSPObjectIdSecretName)
+            -AzureSubscriptionId $(subscriptionId)
+            -ResourceGroup $(aksResourceGroup)
+            -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01'
+            -KeyVaultName '$(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)02'
