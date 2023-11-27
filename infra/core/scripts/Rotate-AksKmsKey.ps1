@@ -82,13 +82,7 @@ function Set-NewKmsKey {
         Write-Host "Finished getting keyVault resourceId for KeyVault '$KeyVaultName'"
 
         Write-Host "Rotate Key on cluster '$ClusterName' with new Key '$keyId'"
-        Invoke-CommandLine -Command "az aks update `
-            --name $ClusterName `
-            --resource-group $ResourceGroup `
-            --enable-azure-keyvault-kms `
-            --azure-keyvault-kms-key-id $keyId `
-            --azure-keyvault-kms-key-vault-network-access 'Private' `
-            --azure-keyvault-kms-key-vault-resource-id $keyVaultResourceId"
+        Invoke-CommandLine -Command "az aks update --name $ClusterName --resource-group $ResourceGroup --enable-azure-keyvault-kms --azure-keyvault-kms-key-id $keyId --azure-keyvault-kms-key-vault-network-access 'Private' --azure-keyvault-kms-key-vault-resource-id $keyVaultResourceId"
         Write-Host "Rotated Key on cluster '$ClusterName' with new Key '$keyId'"
     }
     
