@@ -139,7 +139,7 @@ try {
     Write-Host "Assigned role '$role' to '$ServicePrincipalObjectId' deleted lock on cluster '$ClusterName'"
 
     Write-Host "Installing kubelogin"
-    Invoke-CommandLine -Command "sudo az aks install-cli" -NoOutput
+    sudo az aks install-cli
     Write-Host "Installed kubelogin"
 
     Write-Host "Download Cluster Credentials"
