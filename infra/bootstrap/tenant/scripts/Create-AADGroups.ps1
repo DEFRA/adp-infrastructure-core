@@ -33,7 +33,7 @@ Function Get-AccessToken {
     return $token
 }
 
-# Set-StrictMode -Version 3.0
+Set-StrictMode -Version 3.0
 
 [string]$functionName = $MyInvocation.MyCommand
 [datetime]$startTime = [datetime]::UtcNow
@@ -70,8 +70,15 @@ try {
         Install-Module Microsoft.Graph -Force
         Write-Host "Microsoft.Graph Installed Successfully."
     } 
-    $accessToken = Get-AccessToken -AzureTokenDomainName 'graph.microsoft.com'
-    Connect-MgGraph -AccessToken $accessToken
+    $graphApiToken = (Get-AzAccessToken -Resource https://graph.microsoft.com).Token 
+
+    $targetParameter = (Get-Command Connect-MgGraph).Parameters['AccessToken']
+    if ($targetParameter.ParameterType -eq [securestring]){
+    Connect-MgGraph -AccessToken ($graphApiToken | ConvertTo-SecureString -AsPlainText -Force)
+    }
+    else {
+    Connect-MgGraph -AccessToken $graphApiToken
+    }
     Write-Host "======================================================"
 
     [PSCustomObject]$aadGroups = Get-Content -Raw -Path $AADGroupsJsonManifestPath | ConvertFrom-Json
