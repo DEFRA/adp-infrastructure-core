@@ -10,7 +10,7 @@ pr:
     - main
   paths:
     include:
-      - infra/core-shared-services/*
+      - infra/core/env-shared/*
 
 trigger:
   batch: true
@@ -19,7 +19,7 @@ trigger:
       - '*'
   paths:
     include:
-      - infra/core-shared-services/*
+      - infra/core/env-shared/*
 
 resources:
   repositories:
@@ -46,5 +46,5 @@ extends:
       - name: SharedResources 
         deployments:
           - name: platform-container-registry
-            path: infra/core-shared-services/container-registry
+            path: infra/core/env-shared/container-registry
             resourceGroupName: $(ssvSharedResourceGroup)
