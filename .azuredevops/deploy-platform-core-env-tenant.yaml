@@ -1,0 +1,80 @@
+name: 1.0.$(BuildID)-${{ parameters.deployResources }}
+
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+  - name: deployResources
+    displayName: "Resources to Deploy"
+    type: string
+    default: "All"
+    values:
+      - All
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra/core/tenant/*
+      - infra/common/*
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+      - infra/core/tenant/*
+      - infra/common/*
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: main
+      
+variables:
+  - name: IsAll
+    value: ${{ eq(parameters.deployResources,'All') }}
+
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.deployFromFeature }}
+    environments:
+      - name: 'defradev'
+        serviceConnection: AZD-ADP-SSV3
+        deploymentBranches:
+          - 'refs/heads/main'
+          - 'refs/pull/*/merge'
+        developmentEnvironment: true
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'defra.tst'
+        outputTemplateChange: Skip
+        serviceConnection: AZD-ADP-SSV5
+        deploymentBranches:
+           - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'    
+      - name: 'defra.prd'
+        outputTemplateChange: Skip
+        serviceConnection: AZD-ADP-SSV5
+        deploymentBranches:
+           - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'    
+    groupedDeployments:
+        - ${{ if eq(variables.IsNetwork, true) }}:
+          - name: network
+            deployments:
+              - ${{ if eq(variables.IsNetworkRouteTable, true) }}:
+                - name: route-table
+                  path: infra/common/network
+                  resourceGroupName: $(virtualNetworkResourceGroup)
