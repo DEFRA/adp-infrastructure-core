@@ -72,10 +72,8 @@ extends:
         azureRegions:
           primary: 'UKSouth'    
     groupedDeployments:
-        - ${{ if eq(variables.IsNetwork, true) }}:
           - name: network
             deployments:
-              - ${{ if eq(variables.IsNetworkRouteTable, true) }}:
-                - name: route-table
-                  path: infra/common/network
-                  resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: route-table
+                path: infra/common/network
+                resourceGroupName: $(virtualNetworkResourceGroup)
