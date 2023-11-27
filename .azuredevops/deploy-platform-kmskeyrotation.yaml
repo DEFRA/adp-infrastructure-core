@@ -32,6 +32,7 @@ resources:
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
+    projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     keyVaultName: $(ssvPlatformKeyVaultName)
     groupedDeployments:
