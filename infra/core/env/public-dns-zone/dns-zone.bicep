@@ -24,7 +24,7 @@ var commonTags = {
   Environment: environment
   Purpose: 'ADP Public DNS Zone'
 }
-var tags = union(loadJsonContent('../../common/default-tags.json'), commonTags)
+var tags = union(loadJsonContent('../../../common/default-tags.json'), commonTags)
 
 module publicDnsZone 'br/SharedDefraRegistry:network.dns-zone:0.5.2' = {
   name: 'public-dns-zone-${deploymentDate}'

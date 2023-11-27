@@ -17,7 +17,7 @@ var commonTags = {
   Environment: environment
   Purpose: 'Shared Azure Monitor Workspace for Platform'
 }
-var tags = union(loadJsonContent('../../common/default-tags.json'), commonTags)
+var tags = union(loadJsonContent('../../../common/default-tags.json'), commonTags)
 
 resource azureMonitorWorkSpaceResource 'Microsoft.Monitor/accounts@2023-04-03' = {
   location: location

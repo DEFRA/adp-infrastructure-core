@@ -32,7 +32,7 @@ var commonTags = {
   CreatedDate: createdDate
   Environment: environment
 }
-var tags = union(loadJsonContent('../../common/default-tags.json'), commonTags)
+var tags = union(loadJsonContent('../../../common/default-tags.json'), commonTags)
 var tagsMi = {
   Name: cluster.miControlPlane
   Purpose: 'AKS Control Plane Managed Identity'

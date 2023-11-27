@@ -21,7 +21,7 @@ var customTags = {
   Purpose: 'Application Insights'
   Tier: 'Shared'
 }
-var tags = union(loadJsonContent('../../common/default-tags.json'), customTags)
+var tags = union(loadJsonContent('../../../common/default-tags.json'), customTags)
 
 module appInsightsResource 'br/SharedDefraRegistry:insights.component:0.4.2' = {
   name: 'app-insights-${deploymentDate}'

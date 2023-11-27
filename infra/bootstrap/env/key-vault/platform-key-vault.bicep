@@ -41,7 +41,7 @@ var customTags = {
   Purpose: 'ADP Platform KeyVault Store'
   Tier: 'Shared'
 }
-var tags = union(loadJsonContent('../../common/default-tags.json'), customTags)
+var tags = union(loadJsonContent('../../../common/default-tags.json'), customTags)
 
 module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
   name: 'platform-keyvault-${deploymentDate}'

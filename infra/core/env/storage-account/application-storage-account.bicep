@@ -32,7 +32,7 @@ var customTags = {
   Environment: environment
 }
 
-var defaultTags = union(json(loadTextContent('../../common/default-tags.json')), customTags)
+var defaultTags = union(json(loadTextContent('../../../common/default-tags.json')), customTags)
 
 var storageAccountTags = {
   Name: storageAccount.name

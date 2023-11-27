@@ -22,7 +22,7 @@ var commonTags = {
   Environment: environment
   Purpose: 'ADP-GRAFANA-DASHBOARD'
 }
-var tags = union(loadJsonContent('../../common/default-tags.json'), commonTags)
+var tags = union(loadJsonContent('../../../common/default-tags.json'), commonTags)
 
 var azureMonitorWorkspaceResourceIdObject = [for azureMonitorWorkspaceResourceId in split(azureMonitorWorkspaceResourceIds, ' '): {
   azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId

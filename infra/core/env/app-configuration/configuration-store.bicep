@@ -43,7 +43,7 @@ var customTags = {
   CreatedDate: createdDate
   Environment: environment
 }
-var tags = union(loadJsonContent('../../common/default-tags.json'), customTags)
+var tags = union(loadJsonContent('../../../common/default-tags.json'), customTags)
 
 var appConfigTags = {
   Name: appConfig.name

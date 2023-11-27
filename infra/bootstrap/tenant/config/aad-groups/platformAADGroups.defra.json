@@ -1,11 +1,10 @@
 {
     "userADGroups": [
         {
-            "displayName": "AAG-Users-ADP-PlatformEngineers1",
+            "displayName": "AAG-Users-ADP-PlatformEngineers",
             "description": "Azure AD User group for ADP Platform Engineers",
             "Members": {
                 "users" : [
-                    "a-ganesh.ghadge@defra.onmicrosoft.com"
                 ],
                 "groups" : [
 

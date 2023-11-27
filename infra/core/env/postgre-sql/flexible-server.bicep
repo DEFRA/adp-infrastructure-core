@@ -30,7 +30,7 @@ var customTags = {
   Purpose: 'ADP POSTGRESQL FLEXIBLE SERVER'
 }
 
-var defaultTags = union(json(loadTextContent('../../common/default-tags.json')), customTags)
+var defaultTags = union(json(loadTextContent('../../../common/default-tags.json')), customTags)
 
 resource virtual_network 'Microsoft.Network/virtualNetworks@2023-05-01' existing = {
   name: vnet.name
