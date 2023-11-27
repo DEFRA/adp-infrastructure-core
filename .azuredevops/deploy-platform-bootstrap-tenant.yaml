@@ -75,8 +75,8 @@ extends:
               - name: Create or Update Platform AAD groups
                 # serviceConnectionVariableName: ssvServiceConnection
                 type: 'script'
-                scriptType: AzureCLI
-                azureCLIScriptType: pscore
+                scriptType: AzurePowerShell
+                # azureCLIScriptType: pscore
                 path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
                 scriptArguments: > 
                   -AADGroupsJsonManifestPath 'infra/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json'
