@@ -33,7 +33,32 @@ extends:
   template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
   parameters:
     deployFromFeature: ${{ parameters.deployFromFeature }}
-    privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
+    environments:
+      - name: snd1
+        serviceConnection: AZD-ADP-SND1
+        deploymentBranches:
+          - 'refs/heads/main'
+        developmentEnvironment: true
+        privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
+        azureRegions:
+          primary: 'UKSouth'
+      - name: snd2
+        serviceConnection: AZD-ADP-SND2
+        deploymentBranches:
+          - 'refs/heads/main'
+          - 'refs/pull/*/merge'
+        privateAgentName: 'DEFRA-ADP-SND2-ubuntu2204'
+        azureRegions:
+          primary: 'UKSouth'
+      - name: snd3
+        serviceConnection: AZD-ADP-SND3
+        deploymentBranches:
+          - 'refs/heads/main'
+          - 'refs/pull/*/merge'
+        privateAgentName: 'DEFRA-ADP-SND3-ubuntu2204'
+        azureRegions:
+          primary: 'UKSouth'
+    # privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
     keyVaultName: $(ssvPlatformKeyVaultName)
     scriptsList:
       - displayName: Initialize or Rotate KMS Key
