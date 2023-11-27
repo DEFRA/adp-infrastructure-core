@@ -60,8 +60,7 @@ try {
         Install-Module Microsoft.Graph -Force
         Write-Host "Microsoft.Graph Installed Successfully."
     } 
-    $accessToken = (Get-AzAccessToken -Resource https://graph.microsoft.com).Token 
-    Connect-MgGraph -AccessToken $accessToken
+    Connect-MgGraph -AccessToken (Get-AzAccessToken -Resource https://graph.microsoft.com).Token 
     Write-Host "======================================================"
 
     [PSCustomObject]$aadGroups = Get-Content -Raw -Path $AADGroupsJsonManifestPath | ConvertFrom-Json
