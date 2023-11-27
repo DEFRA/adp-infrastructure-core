@@ -33,6 +33,7 @@ extends:
   template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
   parameters:
     deployFromFeature: ${{ parameters.deployFromFeature }}
+    privateAgentName: 'DEFRA-ADP-$(environment)$(environmentId)-ubuntu2204'
     keyVaultName: $(ssvPlatformKeyVaultName)
     scriptsList:
       - displayName: Initialize or Rotate KMS Key
