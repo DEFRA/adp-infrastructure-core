@@ -36,7 +36,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: pp/defra-tst
       
 variables:
   - name: IsAll
@@ -47,6 +47,7 @@ extends:
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
+    regionalVariableFiles: null
     environments:
       - name: 'defradev'
         serviceConnection: AZD-ADP-SSV3
@@ -56,14 +57,14 @@ extends:
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
-      - name: 'defra.tst'
+      - name: 'defranonprd'
         outputTemplateChange: Skip
         serviceConnection: AZD-ADP-SSV5
         deploymentBranches:
            - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'    
-      - name: 'defra.prd'
+      - name: 'defra'
         outputTemplateChange: Skip
         serviceConnection: AZD-ADP-SSV5
         deploymentBranches:
