@@ -36,11 +36,12 @@ extends:
     deployFromFeature: ${{ parameters.deployFromFeature }}
     keyVaultName: $(ssvPlatformKeyVaultName)
     groupedDeployments:
-      - name: network
+      - name: clusterkmskeyrotation
         deployments: 
         - name: Initialize or Rotate KMS Key
           path: infra/core/scripts/Rotate-AksKmsKey.ps1
           type: 'script'
+          scriptType: AzureCLI
           azureCLIScriptType: pscore
           scriptArguments: >
             -ServicePrincipalObjectId $(serviceConnectionSPObjectIdSecretName)
