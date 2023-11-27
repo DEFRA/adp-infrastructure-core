@@ -135,7 +135,7 @@ try {
 
     Write-Host "Assigning role '$role' to '$ServicePrincipalObjectId' and deleting lock on cluster '$ClusterName'"
     Invoke-CommandLine -Command "az lock delete --name $ClusterName-CanNotDelete-lock --resource-group $ResourceGroup --resource $ClusterName --resource-type Microsoft.ContainerService/managedClusters" -NoOutput
-    Invoke-CommandLine -Command "az role assignment create --assignee $ServicePrincipalObjectId --role $role --scope $scope" -NoOutput
+    Invoke-CommandLine -Command "az role assignment create --assignee $ServicePrincipalObjectId --role '$role' --scope $scope" -NoOutput
     Write-Host "Assigned role '$role' to '$ServicePrincipalObjectId' deleted lock on cluster '$ClusterName'"
 
     Write-Host "Installing kubelogin"
