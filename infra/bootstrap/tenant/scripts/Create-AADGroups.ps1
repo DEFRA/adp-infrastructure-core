@@ -33,7 +33,7 @@ Function Get-AccessToken {
     return $token
 }
 
-Set-StrictMode -Version 3.0
+# Set-StrictMode -Version 3.0
 
 [string]$functionName = $MyInvocation.MyCommand
 [datetime]$startTime = [datetime]::UtcNow
