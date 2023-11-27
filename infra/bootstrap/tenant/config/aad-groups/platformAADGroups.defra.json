@@ -1,0 +1,69 @@
+{
+    "userADGroups": [
+        {
+            "displayName": "AAG-Users-ADP-PlatformEngineers",
+            "description": "Azure AD User group for ADP Platform Engineers",
+            "Members": {
+                "users" : [
+                ],
+                "groups" : [
+
+                ],
+                "serviceprincipals" : [
+
+                ]
+            }
+        }
+    ],
+    "accessADGroups": [
+        {
+            "displayName": "AAG-Azure-ADP-GlobalRead",
+            "description": "Azure AD Access group with read permissions to the ADP platform.",
+            "Members": [
+                "AAG-Users-ADP-PlatformEngineers"
+            ]
+        },
+        {
+            "displayName": "AAG-Azure-AZR-ADP-DEV1-Cont",
+            "description": "Azure AD Access group with contributor permissions to the AZR-ADP-DEV1 subscription.",
+            "Members": [
+                "AAG-Users-ADP-PlatformEngineers"
+            ]
+        },
+        {
+            "displayName": "AAG-Azure-AZR-ADP-DEV1-UAA",
+            "description": "Azure AD Access group with User Access administrator permissions to the AZR-ADP-DEV1 subscription.",
+            "Members": [
+                "AAG-Users-ADP-PlatformEngineers"
+            ]
+        },
+        {
+            "displayName": "AAG-Azure-AZR-ADP-TST1-Cont",
+            "description": "Azure AD Access group with contributor permissions to the AZR-ADP-TST1 subscription.",
+            "Members": [
+                "AAG-Users-ADP-PlatformEngineers"
+            ]
+        },
+        {
+            "displayName": "AAG-Azure-AZR-ADP-TST1-UAA",
+            "description": "Azure AD Access group with User Access administrator permissions to the AZR-ADP-TST1 subscription.",
+            "Members": [
+                "AAG-Users-ADP-PlatformEngineers"
+            ]
+        },
+        {
+            "displayName": "AAG-Azure-AZR-ADP-TST2-Cont",
+            "description": "Azure AD Access group with contributor permissions to the AZR-ADP-TST2 subscription.",
+            "Members": [
+                "AAG-Users-ADP-PlatformEngineers"
+            ]
+        },
+        {
+            "displayName": "AAG-Azure-AZR-ADP-TST2-UAA",
+            "description": "Azure AD Access group with User Access administrator permissions to the AZR-ADP-TST2 subscription.",
+            "Members": [
+                "AAG-Users-ADP-PlatformEngineers"
+            ]
+        }
+    ]
+}

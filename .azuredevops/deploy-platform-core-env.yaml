@@ -1,0 +1,337 @@
+name: 1.0.$(BuildID)-${{ parameters.deployResources }}
+
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+  - name: deployResources
+    displayName: "Resources to Deploy"
+    type: string
+    default: "All"
+    values:
+      - All
+      - Network - All
+      - Network - VNET
+      - Network - NSGs
+      - Network - Route Tables
+      - Network - Public DNS Zone
+      - Monitoring - All
+      - Monitoring - Workspace
+      - Monitoring - Insights
+      - Monitoring - Azure Monitor Workspace
+      - Monitoring - Grafana
+      - Managed Cluster - All
+      - Managed Cluster - Private DNS Zone
+      - Managed Cluster - Cluster
+      - Managed Cluster - Flux Services SSH Keys
+      - Managed Cluster - Platform Variables
+      - Front Door - All
+      - Front Door - Core
+      - Front Door - WAF
+      - Application - All
+      - Application - App Configuration
+      - Application - Apps Container Registry
+      - Application - PostgreSql Server
+      - Application - Redis Cache
+      - Application - Storage Account
+      - Application - Service Bus
+      - Application - Key Vault
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra/core/env/*
+      - infra/common/*
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+      - infra/core/env/*
+      - infra/common/*
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: main
+      
+variables:
+  - name: IsAll
+    value: ${{ eq(parameters.deployResources,'All') }}
+  - name: IsNetwork
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Network')) }}
+  - name: IsNetworkAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Network - All')) }}
+  - name: IsNetworkVnet
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - VNET')) }}
+  - name: IsNetworkNsg
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - NSGs')) }}
+  - name: IsNetworkRouteTable
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - Route Tables')) }}
+  - name: IsNetworkPublicDNSZone
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - Public DNS Zone')) }}
+
+  - name: IsMonitoring
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Monitoring')) }}
+  - name: IsMonitoringAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Monitoring - All')) }}
+  - name: IsMonitoringWorkspace
+    value: ${{ or(eq(variables.IsMonitoringAll,true), eq(parameters.deployResources,'Monitoring - Workspace')) }}
+  - name: IsMonitoringInsights
+    value: ${{ or(eq(variables.IsMonitoringAll,true), eq(parameters.deployResources,'Monitoring - Insights')) }}
+  - name: IsMonitoringAzureMonitorWorkspace
+    value: ${{ or(eq(variables.IsMonitoringAll,true), eq(parameters.deployResources,'Monitoring - Azure Monitor Workspace')) }}
+  - name: IsMonitoringGrafana
+    value: ${{ or(eq(variables.IsMonitoringAll,true), eq(parameters.deployResources,'Monitoring - Grafana')) }}
+
+  - name: IsManagedCluster
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Managed Cluster')) }}
+  - name: IsManagedClusterAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Managed Cluster - All')) }}
+  - name: IsManagedClusterPrivateDNSZone
+    value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Private DNS Zone')) }}
+  - name: IsManagedClusterCluster
+    value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Cluster')) }}
+  - name: IsManagedClusterFluxServicesSSHKeys
+    value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Flux Services SSH Keys')) }}
+  - name: IsManagedClusterPlatformVariables
+    value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Platform Variables')) }}
+
+  - name: IsFrontDoor
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Front Door')) }}
+  - name: IsFrontDoorAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Front Door - All')) }}
+  - name: IsFrontDoorCore
+    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - Core')) }}
+  - name: IsFrontDoorWAF
+    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Network - WAF')) }}
+
+  - name: IsApplication
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application')) }}
+  - name: IsApplicationAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Application - All')) }}
+  - name: IsApplicationAppConfig
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - App Configuration')) }}
+  - name: IsApplicationContainerRegistry
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Apps Container Registry')) }}
+  - name: IsApplicationPostgreSqlServer
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - PostgreSql Server')) }}
+  - name: IsApplicationRedisCache
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Redis Cache')) }}
+  - name: IsApplicationStorageAccount
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Storage Account')) }}
+  - name: IsApplicationServiceBus
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Service Bus')) }}
+  - name: IsApplicationKeyVault
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
+
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.deployFromFeature }}
+    filePathsForTransform: |
+      **/core/env/app-configuration/config-data/config-data.json
+    groupedDeployments:
+        - ${{ if eq(variables.IsNetwork, true) }}:
+          - name: network
+            deployments:
+              - ${{ if eq(variables.IsNetworkRouteTable, true) }}:
+                - name: route-table
+                  path: infra/common/network
+                  resourceGroupName: $(virtualNetworkResourceGroup)
+              - ${{ if eq(variables.IsNetworkNsg, true) }}:
+                - name: network-security-group
+                  path: infra/common/network
+                  resourceGroupName: $(virtualNetworkResourceGroup)
+              - ${{ if eq(variables.IsNetworkVnet, true) }}:
+                - name: virtual-network
+                  path: infra/common/network
+                  resourceGroupName: $(virtualNetworkResourceGroup)
+              - ${{ if eq(variables.IsNetworkPublicDNSZone, true) }}:
+                - name: dns-zone
+                  path: infra/core/env/public-dns-zone
+                  resourceGroupName: $(dnsResourceGroup)
+
+        - ${{ if eq(variables.IsMonitoring, true) }}:
+          - name: monitoring
+            deployments:
+              - ${{ if eq(variables.IsMonitoringWorkspace, true) }}:
+                - name: workspace
+                  path: infra/core/env/operational-insights
+                  resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsMonitoringInsights, true) }}:
+                - name: component
+                  path: infra/core/env/insights
+                  resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsMonitoringAzureMonitorWorkspace, true) }}:
+                - name: azure-monitor-workspace
+                  path: infra/core/env/observability
+                  resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsMonitoringGrafana, true) }}:
+                - name: grafana
+                  serviceConnectionVariableName: ssvServiceConnection
+                  path: infra/core/env/observability
+                  resourceGroupName: $(ssvSharedResourceGroup)
+                  preDeployScriptsList:
+                    - displayName: Get Azure Monitor Workspace Resource IDs to link to Grafana Dashboard
+                      scriptPath: infra/core/env/scripts/Get-WorkspaceResourceIds.ps1
+                      serviceConnectionVariableName: ssvServiceConnection
+                      type: AzurePowerShell
+                      scriptArguments: >
+                        -ResourceGroupName $(ssvSharedResourceGroup)
+                        -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
+                        -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(aksResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
+
+        - ${{ if eq(variables.IsManagedCluster, true) }}:  
+          - name: managed_cluster
+            ${{ if eq(variables.IsAll, true) }}:
+              dependsOnGroupedDeployments:
+                - network
+                - application_infra
+            deployments:
+              - ${{ if eq(variables.IsManagedClusterPrivateDNSZone, true) }}:
+                - name: aks-cluster-zone
+                  path: infra/core/env/private-dns-zone
+                  resourceGroupName: $(dnsResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: Link the Private DNS Zone to Central networks
+                      scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
+                      type: PowerShell
+                      useSystemAccessToken: true
+                      scriptArguments: >
+                        -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01.privatelink.$(location).azmk8s.io"
+                        -ResourceGroupName $(dnsResourceGroup)
+                        -SubscriptionName $(subscriptionName)
+                        -TenantId $(tenantId)
+              - ${{ if eq(variables.IsManagedClusterCluster, true) }}:      
+                - name: aks-cluster
+                  path: infra/core/env/managed-cluster
+                  resourceGroupName: $(aksResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: 'Process Output Variable'
+                      type: PowerShell
+                      inlineScript: |
+                        $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
+                        Write-Host "##vso[task.setvariable variable=clusterOidc;]$($output.oidcIssuerUrl.value)"
+                    - displayName: Add Cluster Details to Config Service
+                      scriptPath: templates/powershell/Import-ConfigData.ps1
+                      type: AzureCLI
+                      AzureCLIScriptType: pscore
+                      scriptRepo: PipelineCommonFiles
+                      scriptArguments: >
+                        -Label "adp-platform"
+                        -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                        -ConfigData '[{"key": "CLUSTER_OIDC_ISSUER_URL", "value": "$(clusterOidc)", "label": "adp-platform", "contentType": "text/plain" }]'
+              - ${{ if eq(variables.IsManagedClusterFluxServicesSSHKeys, true) }}:
+                - name: Flux Services SSH Keys
+                  serviceConnectionVariableName: ssvServiceConnection
+                  type: 'script'
+                  scriptType: AzureCLI
+                  azureCLIScriptType: pscore
+                  path: 'infra/core/env/scripts/SSH-Generate-Keys.ps1'
+                  scriptArguments: > 
+                    -AzureSubscription $(subscriptionName)
+                    -KeyVaultName $(ssvPlatformKeyVaultName)
+                    -KeyVaultRgName $(ssvSharedResourceGroup)
+                    -KeyVaultSubscriptionId $(ssv3subscriptionId)
+                    -SSHPrivateKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity'
+                    -SSHPublicKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Pub'
+                    -KnownHostsSecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Known-Hosts'
+                    -SSHKeyType 'ecdsa-sha2-nistp384'
+                    -AppConfigMIRgName $(aksResourceGroup)
+                    -AppConfigMIName $(acManagedIdentityName)
+              - ${{ if eq(variables.IsManagedClusterPlatformVariables, true) }}:
+                - name: Import Config Values
+                  type: 'script'
+                  scriptType: AzureCLI
+                  azureCLIScriptType: pscore
+                  scriptRepo: PipelineCommonFiles
+                  path: templates/powershell/Import-ConfigData.ps1
+                  scriptArguments: >
+                    -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                    -ConfigDataFilePath "$(Build.SourcesDirectory)/self/infra/core/env/app-configuration/config-data/config-data.json"
+                    -Label "adp-platform"
+        - ${{ if eq(variables.IsFrontDoor, true) }}:  
+          - name: front_door
+            deployments:
+              - ${{ if eq(variables.IsFrontDoorCore, true) }}: 
+                - name: front-door
+                  path: infra/core/env/front-door
+                  resourceGroupName: $(cdnResourceGroup)
+              - ${{ if eq(variables.IsFrontDoorWAF, true) }}: 
+                - name: azure-waf
+                  path: infra/core/env/front-door
+                  resourceGroupName: $(cdnResourceGroup)
+                  
+        - ${{ if eq(variables.IsApplication, true) }}:  
+          - name: application_infra
+            ${{ if eq(variables.IsAll, true) }}:
+              dependsOnGroupedDeployments:
+              - network
+            deployments:
+              - ${{ if eq(variables.IsApplicationAppConfig, true) }}:  
+                - name: configuration-store
+                  path: infra/core/env/app-configuration
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsApplicationContainerRegistry, true) }}:  
+                - name: application-container-registry
+                  path: infra/core/env/container-registry
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_containerregistry)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsApplicationPostgreSqlServer, true) }}:
+                - name: flexible-server-zone
+                  path: infra/core/env/private-dns-zone
+                  resourceGroupName: $(dnsResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: Link the Private DNS Zone to Central networks
+                      scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
+                      type: PowerShell
+                      useSystemAccessToken: true
+                      scriptArguments: >
+                        -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)02.private.postgres.database.azure.com"
+                        -ResourceGroupName $(dnsResourceGroup)
+                        -SubscriptionName $(subscriptionName)
+                        -TenantId $(tenantId)
+                - name: flexible-server
+                  path: infra/core/env/postgre-sql
+                  resourceGroupName: $(dbsResourceGroup)
+              - ${{ if eq(variables.IsApplicationRedisCache, true) }}:                    
+                - name: redis-cache
+                  path: infra/core/env/redis-cache
+                  resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsApplicationStorageAccount, true) }}:                    
+                - name: application-storage-account
+                  path: infra/core/env/storage-account
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsApplicationServiceBus, true) }}:                                         
+                - name: namespace
+                  path: infra/core/env/service-bus
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsApplicationKeyVault, true) }}:                    
+                - name: application-key-vault
+                  path: infra/core/env/key-vault
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)
