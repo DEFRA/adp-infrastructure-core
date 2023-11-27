@@ -33,6 +33,7 @@ extends:
   template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
   parameters:
     deployFromFeature: ${{ parameters.deployFromFeature }}
+    keyVaultName: $(ssvPlatformKeyVaultName)
     scriptsList:
       - displayName: Initialize or Rotate KMS Key
         scriptPath: infra/core/scripts/Rotate-AksKmsKey.ps1
