@@ -157,7 +157,7 @@ try {
     Write-Host "Updated all secrets to use new Key after rotation"
 
     Write-Host "Delete role '$role' from '$ServicePrincipalObjectId' and add lock on cluster '$ClusterName'"
-    Invoke-CommandLine -Command "az role assignment delete --assignee $ServicePrincipalObjectId --role $role --scope $scope" -NoOutput
+    Invoke-CommandLine -Command "az role assignment delete --assignee $ServicePrincipalObjectId --role '$role' --scope $scope" -NoOutput
     Invoke-CommandLine -Command "az lock create --name $ClusterName-CanNotDelete-lock --resource-group $ResourceGroup --resource $ClusterName --resource-type Microsoft.ContainerService/managedClusters --lock-type CanNotDelete" -NoOutput
     Write-Host "Deleted role '$role' from '$ServicePrincipalObjectId' added lock on cluster '$ClusterName'"
     
