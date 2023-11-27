@@ -28,7 +28,7 @@ function Update-Secrets {
             Write-Host "Updating Secrets in namespace: $nameSpace"
             for ($counter = 1; $counter -le 10; $counter++) {
                 Write-Host "Counter: $counter"
-                if ($counter -ge 1) {
+                if ($counter -ge 10) {
                     throw "Update secrets failed 10 times.  Please investigate!"
                 }
 

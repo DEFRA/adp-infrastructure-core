@@ -27,14 +27,17 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @secure()
 param principalId string
 
+@description('Required. The parameter object for keyvault roleassignment. The object must contain the roleDefinitionIdOrName, description and principalType.')
+param roleAssignment object
+
 var roleAssignments = [
   {
-    roleDefinitionIdOrName: 'Key Vault Secrets Officer'
-    description: 'Key Vault Secrets Officer Role Assignment'
+    roleDefinitionIdOrName: roleAssignment.roleDefinitionIdOrName
+    description: roleAssignment.description
     principalIds: [
       principalId
     ]
-    principalType: 'ServicePrincipal'
+    principalType: roleAssignment.principalType
   }
 ]
 
@@ -82,6 +85,6 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
         tags: union(defaultTags, keyVaultPrivateEndpointTags)
       }
     ]
-    roleAssignments: keyvaultType == 'Application' ? roleAssignments : null
+    roleAssignments: roleAssignments
   }
 }
