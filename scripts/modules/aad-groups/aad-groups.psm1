@@ -179,7 +179,7 @@ Function Build-Users() {
         $users = [System.Collections.Generic.List[string]]@()
         $AADUsers | ForEach-Object {
             Write-Debug "${functionName}:Getting User ID for user email '$_'"
-            $user = Invoke-CommandLine -Command "Get-MgUser -Filter `"Mail eq '$_'`" -Property `"id,mail`""
+            $user = Get-MgUser -Filter "Mail eq '$_'" -Property "id,mail"
             if ($user) {
                 $users.Add("https://graph.microsoft.com/v1.0/users/$($user.id)")
             }
@@ -213,7 +213,7 @@ Function Build-ServicePrincipals() {
         $servicePrincipalList = [System.Collections.Generic.List[string]]@()
         $Serviceprincipals | ForEach-Object {
             Write-Debug "${functionName}:Getting Serviceprincipal ID for Serviceprincipal name '$_'"
-            $serviceprincipal = Invoke-CommandLine -Command "Get-MgServicePrincipal -Filter `"DisplayName eq '$_'`" -Property `"id`""
+            $serviceprincipal = Get-MgServicePrincipal -Filter "DisplayName eq '$_'" -Property "id"
             if ($serviceprincipal) {
                 $servicePrincipalList.Add("https://graph.microsoft.com/v1.0/servicePrincipals/$($serviceprincipal.id)")
             }
@@ -247,7 +247,7 @@ Function Build-Groups() {
         $groups = [System.Collections.Generic.List[string]]@()
         $AADGroups | ForEach-Object {
             Write-Debug "${functionName}:Getting AD Group ID for group name '$_'"
-            $group = Invoke-CommandLine -Command "Get-MgGroup -Filter `"DisplayName eq '$($_)'`" -Property `"id`""
+            $group = Get-MgGroup -Filter "DisplayName eq '$_'" -Property "id"
             if ($group) {
                 $groups.Add("https://graph.microsoft.com/v1.0/groups/$($group.id)")
             }
