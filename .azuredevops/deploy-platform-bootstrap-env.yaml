@@ -71,7 +71,7 @@ extends:
         outputTemplateChange: Skip
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
-          - 'refs/heads/main'
+          - '*'
         azureRegions:
           primary: 'UKSouth'    
     filePathsForTransform: |
