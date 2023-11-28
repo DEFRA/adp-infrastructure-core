@@ -75,8 +75,7 @@ extends:
         azureRegions:
           primary: 'UKSouth'    
     groupedDeployments:
-          - name: network
+          - name: role-definitions
             deployments:
-              - name: route-table
-                path: infra/common/network
-                resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: servicebus-customrole
+                path: infra/core/tenant/role-definitions
