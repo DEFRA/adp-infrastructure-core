@@ -40,10 +40,7 @@ Function New-ADGroup() {
             Write-Host "No members defined for '$($AADGroupObject.displayName)' group."
         }
 
-        New-MgGroup -BodyParameter $groupParameters
-        if ($LASTEXITCODE -ne 0) {
-            throw "unexpected exit code $LASTEXITCODE"
-        }  
+        New-MgGroup -BodyParameter $groupParameters111
         Write-Host "AD Group '$($AADGroupObject.displayName)' created successfully."      
     }
 
@@ -78,9 +75,6 @@ Function Update-ADGroup() {
         }
 
         Update-MgGroup -GroupId $GroupId -BodyParameter $groupParameters
-        if ($LASTEXITCODE -ne 0) {
-            throw "unexpected exit code $LASTEXITCODE"
-        }   
         Write-Host "AD Group '$($AADGroupObject.displayName)' updated successfully."
     }
 
