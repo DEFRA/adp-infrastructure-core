@@ -36,7 +36,6 @@ function Update-SecretsRetry {
         
         do {
             try {
-                throw
                 $encryptSecrets = $(kubectl get secrets -n $Namespace -o json | kubectl replace -f -) 2>&1
                 $encryptSecrets # For visibility that all secrets have been replaced to use encryption key
                 $encryptSecretErrors = $encryptSecrets | Select-String Error
@@ -81,7 +80,7 @@ function Update-Secrets {
         $namespaces = kubectl get ns --no-headers -o custom-columns=":metadata.name"
         foreach ($namespace in $namespaces) {
             Write-Host "Updating Secrets in namespace: $nameSpace"
-            Update-SecretsRetry -Namespace $namespace -MaxAttempts 0
+            Update-SecretsRetry -Namespace $namespace
             Write-Host "Successfully updated Secrets in namespace: $nameSpace"
         }
     }
