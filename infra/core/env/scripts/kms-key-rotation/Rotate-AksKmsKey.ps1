@@ -113,12 +113,10 @@ function Set-NewKmsKey {
         $keyName = "aksKmsKey-$currentDateTime"
 
         Write-Host "Add new key '$keyName' to KeyVault '$KeyVaultName'"
-        #$keyId = az keyvault key create --name $keyName --vault-name $KeyVaultName --query 'key.kid' -o tsv
         $keyId = Invoke-CommandLine -Command "az keyvault key create --name $keyName --vault-name $KeyVaultName --query 'key.kid' -o tsv"
         Write-Host "Added new key '$keyName' to KeyVault '$KeyVaultName'"
 
         Write-Host "Getting keyVault resourceId for KeyVault '$KeyVaultName'"
-        #$keyVaultResourceId = az keyvault show --name $KeyVaultName --query id -o tsv
         $keyVaultResourceId = Invoke-CommandLine -Command "az keyvault show --name $KeyVaultName --query id -o tsv"
         Write-Host "Finished getting keyVault resourceId for KeyVault '$KeyVaultName'"
 
@@ -131,12 +129,6 @@ function Set-NewKmsKey {
         Write-Debug "${functionName}:Exited"
     }
 }
-
-# $AzureSubscriptionId = '55f3b8c6-6800-41c7-a40d-2adb5e4e1bd1'
-# $ResourceGroup = 'SNDADPINFRG1402'
-# $ClusterName = 'SNDADPINFAK1401-Test'
-# $KeyVaultName = 'SNDADPINFVT1402'
-# $ServicePrincipalObjectId = 'cbd7efdb-6513-46cc-9324-02ec477fc9da'
 
 Set-StrictMode -Version 3.0
 
