@@ -83,3 +83,4 @@ extends:
            - ${{ if eq(variables.IsServiceBusAsoOwnerRole, true) }}:
               - name: servicebus-customrole
                 path: infra/core/tenant/role-definitions
+                scope: "Subscription"
