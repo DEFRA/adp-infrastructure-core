@@ -77,7 +77,7 @@ extends:
                 resourceGroupName: $(ssvVirtualNetworkResourceGroup)
                 postDeployScriptsList:
                   - displayName: Link the VNet to Hub
-                    scriptPath: infra/bootstrap/scripts/Trigger-VNetPeering.ps1
+                    scriptPath: infra/bootstrap/env/scripts/Trigger-VNetPeering.ps1
                     type: PowerShell
                     useSystemAccessToken: true
                     scriptArguments: >
