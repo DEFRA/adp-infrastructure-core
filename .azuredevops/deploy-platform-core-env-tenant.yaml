@@ -75,7 +75,7 @@ extends:
         azureRegions:
           primary: 'UKSouth'    
     groupedDeployments:
-          - name: role-definitions
+          - name: role_definitions
             deployments:
               - name: servicebus-customrole
                 path: infra/core/tenant/role-definitions
