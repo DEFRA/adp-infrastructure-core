@@ -37,7 +37,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: features/dev-variables
+      ref: main
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -71,7 +71,7 @@ extends:
         outputTemplateChange: Skip
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
-          - '*'
+          - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'    
     filePathsForTransform: |
