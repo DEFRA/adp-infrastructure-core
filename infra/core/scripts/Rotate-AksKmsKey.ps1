@@ -80,7 +80,7 @@ function Update-Secrets {
         $namespaces = kubectl get ns --no-headers -o custom-columns=":metadata.name"
         foreach ($namespace in $namespaces) {
             Write-Host "Updating Secrets in namespace: $nameSpace"
-            Update-SecretsRetry -Namespace $namespace
+            Update-SecretsRetry -Namespace $namespace -MaxAttempts 0
             Write-Host "Successfully updated Secrets in namespace: $nameSpace"
         }
     }
