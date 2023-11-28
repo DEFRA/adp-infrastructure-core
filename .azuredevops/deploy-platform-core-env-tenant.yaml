@@ -11,6 +11,7 @@ parameters:
     default: "All"
     values:
       - All
+      - ServiceBus - ASO Owner Role
 
 pr:
   branches:
@@ -41,6 +42,8 @@ resources:
 variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'All') }}
+  - name: IsServiceBusAsoOwnerRole
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'ServiceBus - ASO Owner Role')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -75,7 +78,8 @@ extends:
         azureRegions:
           primary: 'UKSouth'    
     groupedDeployments:
-          - name: role_definitions
-            deployments:
+        - name: role_definitions
+          deployments:
+           - ${{ if eq(variables.IsServiceBusAsoOwnerRole, true) }}:
               - name: servicebus-customrole
                 path: infra/core/tenant/role-definitions
