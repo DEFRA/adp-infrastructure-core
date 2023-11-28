@@ -11,8 +11,9 @@ parameters:
     default: "All"
     values:
       - All
-      - ServiceBus - Writer Role
-      - PostgreSql - Database Writer Role
+      - ServiceBus Writer Role
+      - PostgreSql Database Writer Role
+      - Storage Account Writer Role
 
 pr:
   branches:
@@ -43,10 +44,12 @@ resources:
 variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'All') }}
-  - name: IsServiceBusAsoOwnerRole
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'ServiceBus - Writer Role')) }}
-  - name: IsPostgreSqlAsoDatabaseOwnerRole
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'PostgreSql - Database Writer Role')) }}
+  - name: IsServiceBusWriterRole
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'ServiceBus Writer Role')) }}
+  - name: IsPostgreSqlDatabaseWriterRole
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'PostgreSql Database Writer Role')) }}
+  - name: IsStorageAccountWriterRole
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Storage Account Writer Role')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -83,11 +86,15 @@ extends:
     groupedDeployments:
         - name: role_definitions
           deployments:
-           - ${{ if eq(variables.IsServiceBusAsoOwnerRole, true) }}:
-              - name: servicebus-customrole
+           - ${{ if eq(variables.IsServiceBusWriterRole, true) }}:
+              - name: servicebus
                 path: infra/core/tenant/role-definitions
                 scope: "Subscription"
-           - ${{ if eq(variables.IsPostgreSqlAsoDatabaseOwnerRole, true) }}:
-              - name: flexible-server-customrole
+           - ${{ if eq(variables.IsPostgreSqlDatabaseWriterRole, true) }}:
+              - name: flexible-server
+                path: infra/core/tenant/role-definitions
+                scope: "Subscription"
+           - ${{ if eq(variables.IsStorageAccountWriterRole, true) }}:
+              - name: storageaccount
                 path: infra/core/tenant/role-definitions
                 scope: "Subscription"
