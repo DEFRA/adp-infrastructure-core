@@ -50,31 +50,54 @@ var infrastructureSubnetId = resourceId(subnet.resourceGroup, 'Microsoft.Network
 var dockerBridgeCidr = '172.16.0.1/28'
 var workloadProfiles = containerAppEnv.workloadProfiles
 var zoneRedundant = false
-var logsDestination = 'log-analytics'
-var infrastructureResourceGroupName = take('${containerAppEnv.name}_ME', 63)
+//var logsDestination = 'log-analytics'
+//var infrastructureResourceGroupName = take('${containerAppEnv.name}_ME', 63)
 
 //var privateDnsZoneName = toLower('${privateDnsZonePrefix}.${location}.azurecontainerapps.io')
 
-resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
-  name: containerAppEnv.name
-  location: location
-  tags: union(defaultTags, additionalTags)
-  properties: {
-    appLogsConfiguration: {
-      destination: logsDestination
-      logAnalyticsConfiguration: {
-        customerId: logAnalyticsWorkspace.properties.customerId
-        sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
-      }
+// resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
+//   name: containerAppEnv.name
+//   location: location
+//   tags: union(defaultTags, additionalTags)
+//   properties: {
+//     appLogsConfiguration: {
+//       destination: logsDestination
+//       logAnalyticsConfiguration: {
+//         customerId: logAnalyticsWorkspace.properties.customerId
+//         sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
+//       }
+//     }
+//     vnetConfiguration: {
+//       internal: internal
+//       infrastructureSubnetId: !empty(infrastructureSubnetId) && internal == true ? infrastructureSubnetId : null
+//       dockerBridgeCidr: !empty(infrastructureSubnetId) && internal == true ? dockerBridgeCidr : null      
+//     }
+//     workloadProfiles: !empty(workloadProfiles) ? workloadProfiles : null
+//     zoneRedundant: zoneRedundant
+//     infrastructureResourceGroup: infrastructureResourceGroupName
+//   }
+// }
+
+module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.8' = {
+  name: '${containerAppEnv.name}'
+  params: { 
+    // Required parameters
+    enableDefaultTelemetry: false
+    logAnalyticsWorkspaceResourceId: logAnalyticsWorkspace.id
+    name: '${containerAppEnv.name}'
+    // Non-required parameters
+    dockerBridgeCidr: !empty(infrastructureSubnetId) && internal == true ? dockerBridgeCidr : null  
+    infrastructureSubnetId: !empty(infrastructureSubnetId) && internal == true ? infrastructureSubnetId : null
+    internal: true
+    location: location
+    lock: {
+      kind: 'CanNotDelete'
+      name: '${containerAppEnv.name}-CanNotDelete'
     }
-    vnetConfiguration: {
-      internal: internal
-      infrastructureSubnetId: !empty(infrastructureSubnetId) && internal == true ? infrastructureSubnetId : null
-      dockerBridgeCidr: !empty(infrastructureSubnetId) && internal == true ? dockerBridgeCidr : null      
-    }
-    workloadProfiles: !empty(workloadProfiles) ? workloadProfiles : null
+    skuName: containerAppEnv.skuName
+    workloadProfiles :!empty(workloadProfiles) ? workloadProfiles : null
     zoneRedundant: zoneRedundant
-    infrastructureResourceGroup: infrastructureResourceGroupName
+    tags: union(defaultTags, additionalTags)
   }
 }
 
@@ -149,26 +172,4 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
 //   }
 // }
 
-// module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.8' = {
-//   name: '${containerAppEnv.name}-${deploymentDate}'
-//   params: { 
-//     // Required parameters
-//     enableDefaultTelemetry: false
-//     logAnalyticsWorkspaceResourceId: containerAppEnv.logAnalyticsWorkspaceResourceId
-//     name: '${containerAppEnv.name}'
-//     // Non-required parameters
-//     dockerBridgeCidr: '172.16.0.1/28'
-//     infrastructureSubnetId: containerAppEnv.SubnetId
-//     internal: true
-//     location: location
-//     lock: {
-//       kind: 'CanNotDelete'
-//       name: '${containerAppEnv.name}-CanNotDelete'
-//     }
-//     platformReservedCidr: '172.17.17.0/24'
-//     platformReservedDnsIP: '172.17.17.17'
-//     //skuName: containerAppEnv.skuName
-//     workloadProfiles : containerAppEnv.workloadProfiles
-//     tags: union(defaultTags, additionalTags)
-//   }
-// }
+
