@@ -9,6 +9,84 @@ param nsgList = [
     name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01'
     purpose: 'ADP Container Apps NSG'
     securityRules: [
+      
+      {
+        name: 'Allow_Internal_Traffic'
+        properties: {
+          description: 'Allow vnet traffic'
+          protocol: '*'
+          sourcePortRange: '*'
+          destinationPortRange: '*'
+          sourceAddressPrefix: 'VirtualNetwork'
+          destinationAddressPrefix: 'VirtualNetwork'
+          access: 'Allow'
+          priority: 100
+          direction: 'Inbound'
+        }
+      }
+      {
+        name: 'Allow_OpenVPN'
+        properties: {
+          description: 'Allow inbound from OPS subnet where APS and OPS VPNs live'
+          protocol: '*'
+          sourcePortRange: '*'
+          destinationPortRange: '*'
+          sourceAddressPrefix: '10.204.0.0/26'
+          destinationAddressPrefix: 'VirtualNetwork'
+          access: 'Allow'
+          priority: 110
+          direction: 'Inbound'
+        }
+      }
+      {
+        name: 'Allow_AGW_Subnet_Inbound'
+        properties: {
+          description: 'Allow inbound connectivity from the application gateway via HTTPS'
+          protocol: 'Tcp'
+          sourcePortRange: '*'
+          sourceAddressPrefix: '127.0.0.1/32'
+          destinationAddressPrefix: 'VirtualNetwork'
+          access: 'Allow'
+          priority: 300
+          direction: 'Inbound'
+          destinationPortRanges: [
+            '80'
+            '443'
+          ]
+        }
+      }
+      {
+        name: 'AllowGWM'
+        properties: {
+          description: 'Allow all inbound Gateway Management ports'
+          protocol: '*'
+          sourcePortRange: '*'
+          destinationPortRange: '65200-65535'
+          sourceAddressPrefix: '*'
+          destinationAddressPrefix: '*'
+          access: 'Allow'
+          priority: 400
+          direction: 'Inbound'
+        }
+      }
+      {
+        name: 'AllowAnyInboundFromAzLB'
+        properties: {
+          protocol: '*'
+          sourcePortRange: '*'
+          destinationPortRange: '*'
+          sourceAddressPrefix: 'AzureLoadBalancer'
+          destinationAddressPrefix: 'VirtualNetwork'
+          access: 'Allow'
+          priority: 3600
+          direction: 'Inbound'
+          sourcePortRanges: []
+          destinationPortRanges: []
+          sourceAddressPrefixes: []
+          destinationAddressPrefixes: []
+          description: 'Allow Any Inbound From AzLB'
+        }
+      }
       {
         name: 'CCoE-SOC-Deny-IOC-Inbound'
         properties: {
@@ -18,7 +96,7 @@ param nsgList = [
           destinationPortRange: '*'
           destinationAddressPrefix: '*'
           access: 'Deny'
-          priority: 3308
+          priority: 3990
           direction: 'Inbound'
           sourceAddressPrefixes: [
             '31.220.3.140'
@@ -252,83 +330,6 @@ param nsgList = [
         }
       }
       {
-        name: 'Allow_Internal_Traffic'
-        properties: {
-          description: 'Allow vnet traffic'
-          protocol: '*'
-          sourcePortRange: '*'
-          destinationPortRange: '*'
-          sourceAddressPrefix: 'VirtualNetwork'
-          destinationAddressPrefix: 'VirtualNetwork'
-          access: 'Allow'
-          priority: 100
-          direction: 'Inbound'
-        }
-      }
-      {
-        name: 'Allow_OpenVPN'
-        properties: {
-          description: 'Allow inbound from OPS subnet where APS and OPS VPNs live'
-          protocol: '*'
-          sourcePortRange: '*'
-          destinationPortRange: '*'
-          sourceAddressPrefix: '10.204.0.0/26'
-          destinationAddressPrefix: 'VirtualNetwork'
-          access: 'Allow'
-          priority: 110
-          direction: 'Inbound'
-        }
-      }
-      {
-        name: 'Allow_AGW_Subnet_Inbound'
-        properties: {
-          description: 'Allow inbound connectivity from the application gateway via HTTPS'
-          protocol: 'Tcp'
-          sourcePortRange: '*'
-          sourceAddressPrefix: '127.0.0.1/32'
-          destinationAddressPrefix: 'VirtualNetwork'
-          access: 'Allow'
-          priority: 300
-          direction: 'Inbound'
-          destinationPortRanges: [
-            '80'
-            '443'
-          ]
-        }
-      }
-      {
-        name: 'AllowGWM'
-        properties: {
-          description: 'Allow all inbound Gateway Management ports'
-          protocol: '*'
-          sourcePortRange: '*'
-          destinationPortRange: '65200-65535'
-          sourceAddressPrefix: '*'
-          destinationAddressPrefix: '*'
-          access: 'Allow'
-          priority: 400
-          direction: 'Inbound'
-        }
-      }
-      {
-        name: 'AllowAnyInboundFromAzLB'
-        properties: {
-          protocol: '*'
-          sourcePortRange: '*'
-          destinationPortRange: '*'
-          sourceAddressPrefix: 'AzureLoadBalancer'
-          destinationAddressPrefix: 'VirtualNetwork'
-          access: 'Allow'
-          priority: 3600
-          direction: 'Inbound'
-          sourcePortRanges: []
-          destinationPortRanges: []
-          sourceAddressPrefixes: []
-          destinationAddressPrefixes: []
-          description: 'Allow Any Inbound From AzLB'
-        }
-      }
-      {
         name: 'DenyAnyOtherInbound'
         properties: {
           protocol: '*'
@@ -356,7 +357,7 @@ param nsgList = [
           sourceAddressPrefix: '*'
           destinationAddressPrefix: 'AzureCloud'
           access: 'Allow'
-          priority: 1000
+          priority: 100
           direction: 'Outbound'
         }
       }
@@ -369,7 +370,7 @@ param nsgList = [
           sourceAddressPrefix: 'VirtualNetwork'
           destinationAddressPrefix: 'VirtualNetwork'
           access: 'Allow'
-          priority: 2000
+          priority: 200
           direction: 'Outbound'
           sourcePortRanges: []
           destinationPortRanges: []
@@ -387,13 +388,31 @@ param nsgList = [
           sourceAddressPrefix: 'VirtualNetwork'
           destinationAddressPrefix: 'AzureActiveDirectory'
           access: 'Allow'
-          priority: 2020
+          priority: 220
           direction: 'Outbound'
           sourcePortRanges: []
           destinationPortRanges: []
           sourceAddressPrefixes: []
           destinationAddressPrefixes: []
           description: 'Allow AAD Auth Outbound port(443) from VirtualNetwork to AzureActiveDirectory'
+        }
+      }
+      {
+        name: 'AllowDevOpsSSHOutbound'
+        properties: {
+          protocol: 'Tcp'
+          sourcePortRange: '*'
+          destinationPortRange: '22'
+          sourceAddressPrefix: 'VirtualNetwork'
+          destinationAddressPrefix: 'AzureDevOps'
+          access: 'Allow'
+          priority: 230
+          direction: 'Outbound'
+          sourcePortRanges: []
+          destinationPortRanges: []
+          sourceAddressPrefixes: []
+          destinationAddressPrefixes: []
+          description: 'Allow SSH Outbound port(22) from VirtualNetwork to AzureDevOps'
         }
       }
       {
@@ -404,7 +423,7 @@ param nsgList = [
           sourceAddressPrefix: 'VirtualNetwork'
           destinationAddressPrefix: 'AzureMonitor'
           access: 'Allow'
-          priority: 2040
+          priority: 240
           direction: 'Outbound'
           sourcePortRanges: []
           destinationPortRanges: [
@@ -425,7 +444,7 @@ param nsgList = [
           sourceAddressPrefix: 'VirtualNetwork'
           destinationAddressPrefix: 'AzureContainerRegistry.UKSouth'
           access: 'Allow'
-          priority: 2070
+          priority: 260
           direction: 'Outbound'
           sourcePortRanges: []
           destinationPortRanges: []
@@ -443,7 +462,7 @@ param nsgList = [
           sourceAddressPrefix: 'VirtualNetwork'
           destinationAddressPrefix: 'AzureContainerRegistry.UKWest'
           access: 'Allow'
-          priority: 2075
+          priority: 265
           direction: 'Outbound'
           sourcePortRanges: []
           destinationPortRanges: []
@@ -461,7 +480,7 @@ param nsgList = [
           sourceAddressPrefix: 'VirtualNetwork'
           destinationAddressPrefix: 'AzureKeyVault.UKSouth'
           access: 'Allow'
-          priority: 2090
+          priority: 280
           direction: 'Outbound'
           sourcePortRanges: []
           destinationPortRanges: []
@@ -479,7 +498,7 @@ param nsgList = [
           sourceAddressPrefix: 'VirtualNetwork'
           destinationAddressPrefix: 'AzureKeyVault.UKWest'
           access: 'Allow'
-          priority: 2095
+          priority: 285
           direction: 'Outbound'
           sourcePortRanges: []
           destinationPortRanges: []

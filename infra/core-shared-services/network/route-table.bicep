@@ -1,5 +1,7 @@
 @description('Required. The Route Table object.')
 param routeTable object
+@description('Required. Routes to be deployed.')
+param routes array
 @allowed([
   'UKSouth'
 ])
@@ -28,15 +30,6 @@ module route 'br/SharedDefraRegistry:network.route-table:0.4.2' = {
     location: location
     tags: tags
     disableBgpRoutePropagation: true
-    routes: [
-      {
-        name: 'Default'
-        properties: {
-          addressPrefix: '0.0.0.0/0'
-          nextHopType: 'VirtualAppliance'
-          nextHopIpAddress: routeTable.virtualApplicanceIp
-        }
-      }
-    ]
+    routes: routes
   }
 }

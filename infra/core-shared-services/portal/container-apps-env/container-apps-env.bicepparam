@@ -25,6 +25,11 @@ param subnet = {
   vnetName: '#{{ ssvVirtualNetworkName }}'
 }
 
+param privateLink = {
+  name: 'capp-loadbalancer-pls'
+  visibility: {}
+}
+
 param environment = '#{{ environment }}'
 
 param location = '#{{ location }}'

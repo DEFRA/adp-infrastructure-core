@@ -7,6 +7,8 @@ param workspace object
 @description('Required. The object of Subnet.')
 param subnet object
 
+@description('Required. The object of privateLink.')
+param privateLink object
 
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
@@ -16,7 +18,8 @@ param environment string
 
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
-
+@description('Optional. Date in the format yyyyMMdd-HHmmss.')
+param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 var customTags = {
   Location: location
@@ -43,7 +46,7 @@ var dockerBridgeCidr = '172.16.0.1/28'
 var workloadProfiles = containerAppEnv.workloadProfiles
 var zoneRedundant = false
 var logsDestination = 'log-analytics'
-var infrastructureResourceGroupName = ''
+var infrastructureResourceGroupName = take('${containerAppEnv.name}_ME', 63)
 
 resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
   name: containerAppEnv.name
@@ -64,8 +67,52 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
     }
     workloadProfiles: !empty(workloadProfiles) ? workloadProfiles : null
     zoneRedundant: zoneRedundant
-    infrastructureResourceGroup: empty(infrastructureResourceGroupName) ? take('${containerAppEnv.name}_ME', 63) : infrastructureResourceGroupName
+    infrastructureResourceGroup: infrastructureResourceGroupName
   }
+}
+
+resource loadBalancer 'Microsoft.Network/loadBalancers@2021-05-01' existing = {
+  name: 'capp-svc-lb'
+  scope: resourceGroup(infrastructureResourceGroupName)  
+}
+
+module flexibleServerDeployment 'br/SharedDefraRegistry:network.private-link-service:0.4.8' = {
+  name: 'private-link-service-${deploymentDate}'
+  params: {
+    // Required parameters
+    name: containerAppEnv.name
+    // Non-required parameters    
+    fqdns: [
+      '${containerAppEnv.name}.uksouth.azure.privatelinkservice'
+    ]
+    ipConfigurations: [
+      {
+        name: 'snet-provider-default-1'
+        properties: {
+          privateIPAllocationMethod: 'Dynamic'
+          subnet: {
+            id: infrastructureSubnetId
+          }
+          primary: true
+          privateIPAddressVersion: 'IPv4'
+        }
+      }
+    ]
+    loadBalancerFrontendIpConfigurations: [
+      {
+        id: loadBalancer.properties.frontendIPConfigurations[0].id
+      }
+    ]
+    lock: {
+      kind: 'CanNotDelete'
+      name: '${privateLink.name}-CanNotDelete'
+    }
+    tags: union(defaultTags, customTags)
+    visibility: privateLink.visibility
+  }
+  dependsOn: [
+    managedEnvironment
+  ]
 }
 
 // module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.8' = {
