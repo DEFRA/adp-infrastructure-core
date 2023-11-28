@@ -7,7 +7,7 @@ param roleName string
 param roleScopes array
 
 @description('Detailed description of the role definition')
-param roleDescription string = 'Custom Role to provide RBAC on Azure Service Bus Queues, Topics and Subscriptions. Also provides Authorization/write on ASB to allow for MIs to be given RBAC access for a service.'
+param roleDescription string = 'Custom Role to provide RBAC on Azure Service Bus Queues and Topics. Also provides Authorization/write on ASB to allow for MIs to be given RBAC access for a service.'
 
 resource asbCustomRoleResource 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
   name: guid(subscription().id, roleName)
