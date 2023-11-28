@@ -5,7 +5,7 @@
             "description": "Azure AD User group for ADP Platform Engineers",
             "Owners": {
                 "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV5"
+                    "ADO-DefraGovUK-AAD-CDO-SSV5"
                 ]
             }
         }
@@ -16,7 +16,7 @@
             "description": "Azure AD Access group with read permissions to the ADP platform.",
             "Owners": {
                 "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV5"
+                    "ADO-DefraGovUK-AAD-CDO-SSV5"
                 ]
             },
             "Members": {
@@ -30,7 +30,7 @@
             "description": "Azure AD Access group with contributor permissions to the AZR-ADP-DEV1 subscription.",
             "Owners": {
                 "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV5"
+                    "ADO-DefraGovUK-AAD-CDO-SSV5"
                 ]
             },
             "Members": {
@@ -44,7 +44,7 @@
             "description": "Azure AD Access group with User Access administrator permissions to the AZR-ADP-DEV1 subscription.",
             "Owners": {
                 "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV5"
+                    "ADO-DefraGovUK-AAD-CDO-SSV5"
                 ]
             },
             "Members": {
@@ -58,7 +58,7 @@
             "description": "Azure AD Access group with contributor permissions to the AZR-ADP-TST1 subscription.",
             "Owners": {
                 "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV5"
+                    "ADO-DefraGovUK-AAD-CDO-SSV5"
                 ]
             },
             "Members": {
@@ -72,7 +72,7 @@
             "description": "Azure AD Access group with User Access administrator permissions to the AZR-ADP-TST1 subscription.",
             "Owners": {
                 "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV5"
+                    "ADO-DefraGovUK-AAD-CDO-SSV5"
                 ]
             },
             "Members": {
@@ -86,7 +86,7 @@
             "description": "Azure AD Access group with contributor permissions to the AZR-ADP-TST2 subscription.",
             "Owners": {
                 "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV5"
+                    "ADO-DefraGovUK-AAD-CDO-SSV5"
                 ]
             },
             "Members": {
@@ -100,7 +100,7 @@
             "description": "Azure AD Access group with User Access administrator permissions to the AZR-ADP-TST2 subscription.",
             "Owners": {
                 "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV5"
+                    "ADO-DefraGovUK-AAD-CDO-SSV5"
                 ]
             },
             "Members": {
