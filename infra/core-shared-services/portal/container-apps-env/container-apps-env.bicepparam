@@ -25,10 +25,12 @@ param subnet = {
   vnetName: '#{{ ssvVirtualNetworkName }}'
 }
 
-param privateLink = {
-  name: 'capp-loadbalancer-pls'
-  visibility: {}
-}
+// param privateLink = {
+//   name: 'capp-loadbalancer-pls'
+//   visibility: {}
+// }
+
+// param privateDnsZonePrefix = '#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}01'
 
 param environment = '#{{ environment }}'
 
