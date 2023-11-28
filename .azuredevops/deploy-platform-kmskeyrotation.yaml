@@ -10,7 +10,7 @@ pr:
     - main
   paths:
     include:
-    - infra/core/env/scripts/kms-key-rotation/*
+    - infra/core/env/kms-key-rotation/*
 
 trigger:
   batch: true
@@ -19,7 +19,7 @@ trigger:
       - '*'
   paths:
     include:
-    - infra/core/env/scripts/kms-key-rotation/*
+    - infra/core/env/kms-key-rotation/*
 
 resources:
   repositories:
@@ -39,7 +39,7 @@ extends:
       - name: clusterkmskeyrotation
         deployments: 
         - name: Initialize or Rotate KMS Key
-          path: infra/core/env/scripts/kms-key-rotation/Rotate-AksKmsKey.ps1
+          path: infra/core/env/kms-key-rotation/Rotate-AksKmsKey.ps1
           type: 'script'
           scriptType: AzureCLI
           azureCLIScriptType: pscore
