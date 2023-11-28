@@ -36,6 +36,7 @@ function Update-SecretsRetry {
         
         do {
             try {
+                throw
                 $encryptSecrets = $(kubectl get secrets -n $Namespace -o json | kubectl replace -f -) 2>&1
                 $encryptSecrets # For visibility that all secrets have been replaced to use encryption key
                 $encryptSecretErrors = $encryptSecrets | Select-String Error
