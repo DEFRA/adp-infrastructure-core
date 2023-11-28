@@ -34,7 +34,8 @@ resources:
 variables:
   - name: ssv3Subscription
     value: AZD-ADP-SSV3
-
+  - name: ssv5Subscription
+    value: AZR-ADP-SSV5
 extends:
   template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
   parameters:
@@ -48,6 +49,13 @@ extends:
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
+      # - name: 'ssv5'
+      #   serviceConnection: $(ssv5Subscription)
+      #   deploymentBranches:
+      #     - 'refs/heads/main'
+      #   developmentEnvironment: true
+      #   azureRegions:
+      #     primary: 'UKSouth'    
     scriptsList:
       - displayName: Publish Nginx Image to ACR
         scriptPath: 'nginxplus/Publish-NginxPlus-Acr.ps1'
