@@ -47,6 +47,9 @@ extends:
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
+    variableFiles: 
+      - /pipelines/vars/common.yaml@_self
+      - /pipelines/vars/tenant/{environment}.yaml@_self
     regionalVariableFiles: []
     environments:
       - name: 'defradev'
