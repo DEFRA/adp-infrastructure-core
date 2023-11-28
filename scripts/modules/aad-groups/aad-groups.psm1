@@ -1,3 +1,16 @@
+<#
+.SYNOPSIS
+Create a new Azure AD Security Group.
+
+.DESCRIPTION
+Create a new Azure AD Security Group. Owners and members can be added optionally. 
+
+.PARAMETER AADGroupObject
+Mandatory. AAD Group Object (description, displayName, Owners, Members)
+
+.EXAMPLE
+New-ADGroup -AADGroupObject <AADGroupObject>
+#> 
 Function New-ADGroup() {
     [CmdletBinding()]
     Param(
@@ -49,6 +62,19 @@ Function New-ADGroup() {
     }    
 }
 
+<#
+.SYNOPSIS
+Update a Azure AD Security Group.
+
+.DESCRIPTION
+Update a Azure AD Security Group. This function currently supports to update only 'description' property.
+
+.PARAMETER AADGroupObject
+Mandatory. AAD Group Object (description, displayName, Owners, Members)
+
+.EXAMPLE
+Update-ADGroup -AADGroupObject <AADGroupObject>
+#> 
 Function Update-ADGroup() {
     [CmdletBinding()]
     Param(
@@ -83,7 +109,19 @@ Function Update-ADGroup() {
     }    
 }
 
+<#
+.SYNOPSIS
+Builds Array of Members.
 
+.DESCRIPTION
+Builds Array of Members which is used while creating new group. Members can be type of 'User', 'ServicePrincipal' or 'Group'.
+
+.PARAMETER AADGroupMembers
+Mandatory. AAD Group Members Object (users, serviceprincipals, groups)
+
+.EXAMPLE
+Build-GroupMembers -AADGroupMembers <AADGroupMembers>
+#> 
 Function Build-GroupMembers() {
     [CmdletBinding()]
     Param(
@@ -125,6 +163,19 @@ Function Build-GroupMembers() {
     }    
 }
 
+<#
+.SYNOPSIS
+Builds Array of Owners.
+
+.DESCRIPTION
+Builds Array of Owners which is used while creating new group. Owners can be type of 'User', 'ServicePrincipal'.
+
+.PARAMETER AADGroupOwners
+Mandatory. AAD Group Owners Object (users, serviceprincipals)
+
+.EXAMPLE
+Build-GroupOwners -AADGroupOwners <AADGroupOwners>
+#> 
 Function Build-GroupOwners() {
     [CmdletBinding()]
     Param(
@@ -161,6 +212,20 @@ Function Build-GroupOwners() {
     }    
 }
 
+<#
+.SYNOPSIS
+Builds Array of Users.
+
+.DESCRIPTION
+Builds Array of Users. It uses 'User Emails' to find user object ID and build "https://graph.microsoft.com/v1.0/users/{userID}" strings.
+It is internal function used by 'Build-GroupOwners' and 'Build-GroupMembers'.
+
+.PARAMETER AADUsers
+Mandatory. AAD Users Object
+
+.EXAMPLE
+Build-Users -AADUsers <AADUsers>
+#> 
 Function Build-Users() {
     [CmdletBinding()]
     Param(
@@ -195,6 +260,20 @@ Function Build-Users() {
     }
 }
 
+<#
+.SYNOPSIS
+Builds Array of Serviceprincipals.
+
+.DESCRIPTION
+Builds Array of Users. It uses 'Serviceprincipals Name' to find Serviceprincipal object ID and build "https://graph.microsoft.com/v1.0/servicePrincipals/{servicePrincipalObjectID}" strings.
+It is internal function used by 'Build-GroupOwners' and 'Build-GroupMembers'.
+
+.PARAMETER AADUsers
+Mandatory. Serviceprincipals Object
+
+.EXAMPLE
+Build-ServicePrincipals -Serviceprincipals <Serviceprincipals>
+#> 
 Function Build-ServicePrincipals() {
     [CmdletBinding()]
     Param(
@@ -229,6 +308,20 @@ Function Build-ServicePrincipals() {
     }
 }
 
+<#
+.SYNOPSIS
+Builds Array of AADGroups.
+
+.DESCRIPTION
+Builds Array of Users. It uses 'AADGroups Name' to find Group object ID and build "https://graph.microsoft.com/v1.0/groups/{groupId}" strings.
+It is internal function used by 'Build-GroupMembers'.
+
+.PARAMETER AADUsers
+Mandatory. AADGroups Object
+
+.EXAMPLE
+Build-Groups -AADGroups <AADGroups>
+#> 
 Function Build-Groups() {
     [CmdletBinding()]
     Param(
