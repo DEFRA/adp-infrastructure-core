@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "roleName": {
-      "value": "#{{ serviceBusAsoOwnerCustomRole }}"
+      "value": "#{{ postgreSqlDatabaseAsoOwnerCustomRole }}"
     },
     "roleScopes": {
       "value": #{{ noescape(customRoleScopes) }}
