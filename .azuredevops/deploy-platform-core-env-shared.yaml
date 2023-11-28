@@ -3,7 +3,15 @@ parameters:
     displayName: "Deploy from Feature Branch"
     type: boolean
     default: false
-
+  - name: deployResources
+    displayName: "Resources to Deploy"
+    type: string
+    default: "all"
+    values:
+      - "all"
+      - "shared"
+      - "network"
+      - "portal"
 pr:
   branches:
     include:
@@ -16,7 +24,7 @@ trigger:
   batch: true
   branches:
     include:
-      - '*'
+      - 'none'
   paths:
     include:
       - infra/core/env-shared/*
@@ -27,7 +35,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref:  main
+      ref:  refs/heads/rv/263292-backstageportal
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -43,8 +51,67 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedDeployments:
-      - name: SharedResources 
-        deployments:
-          - name: platform-container-registry
-            path: infra/core/env-shared/container-registry
-            resourceGroupName: $(ssvSharedResourceGroup)
+      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'shared')) }}        
+        : - name: SharedResources 
+            deployments:
+              - name: platform-container-registry
+                path: infra/core/env-shared/container-registry
+                resourceGroupName: $(ssvSharedResourceGroup)
+              - name: log-analytics-workspace
+                path: infra/core/env-shared/log-analytics-workspace
+                resourceGroupName: $(ssvSharedResourceGroup)
+      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}        
+        : - name: network 
+            deployments:
+              - name: route-table
+                path: infra/core/env-shared/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+              - name: network-security-group
+                path: infra/core/env-shared/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+              - name: virtual-network
+                path: infra/core/env-shared/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+                postDeployScriptsList:
+                  - displayName: Link the VNet to Hub
+                    scriptPath: infra/bootstrap/scripts/Trigger-VNetPeering.ps1
+                    type: PowerShell
+                    useSystemAccessToken: true
+                    scriptArguments: >
+                      -VirtualNetworkName $(ssvVirtualNetworkName)
+                      -SubscriptionName $(subscriptionName)
+                      -TenantId $(tenantId)
+      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal')) }}        
+        : - name: Portal
+            ${{ if eq(parameters.deployResources, 'all') }}:
+              dependsOnGroupedDeployments:
+                - SharedResources        
+            deployments:
+              - name: key-vault
+                path: infra/core/env-shared/portal/key-vault
+                resourceGroupName: $(portalResourceGroup)
+              - name: managed-identity
+                path: infra/core/env-shared/portal/managed-identity
+                resourceGroupName: $(portalResourceGroup)
+              - name: flexible-server-zone
+                path: infra/core/env-shared/portal/flexible-server-zone
+                resourceGroupName: $(dnsResourceGroup)
+                postDeployScriptsList:
+                  - displayName: Link the Private DNS Zone to Central networks
+                    scriptPath: infra/core/scripts/Trigger-LinkPrivateDNSZones.ps1
+                    type: PowerShell
+                    useSystemAccessToken: true
+                    scriptArguments: >
+                      -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)03.private.postgres.database.azure.com"
+                      -ResourceGroupName $(dnsResourceGroup)
+                      -SubscriptionName $(subscriptionName)
+                      -TenantId $(tenantId)
+              - name: flexible-server
+                path: infra/core/env-shared/portal/flexible-server
+                resourceGroupName: $(portalResourceGroup)
+              - name: container-apps-env
+                path: infra/core/env-shared/portal/container-apps-env
+                resourceGroupName: $(portalResourceGroup)
