@@ -40,7 +40,7 @@ Function New-ADGroup() {
             Write-Host "No members defined for '$($AADGroupObject.displayName)' group."
         }
 
-        New-MgGroup -BodyParameter $groupParameters111
+        New-MgGroup -BodyParameter $groupParameters
         Write-Host "AD Group '$($AADGroupObject.displayName)' created successfully."      
     }
 
