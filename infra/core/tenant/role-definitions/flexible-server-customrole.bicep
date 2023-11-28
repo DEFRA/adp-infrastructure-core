@@ -7,7 +7,7 @@ param roleName string
 param roleScopes array
 
 @description('Detailed description of the role definition')
-param roleDescription string = 'Custom Role for ASO to manage PostgreSql Flexible Server databases.'
+param roleDescription string = 'Custom Role to create/update PostgreSql Flexible Server databases.'
 
 resource asbCustomRoleResource 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
   name: guid(subscription().id, roleName)
@@ -20,7 +20,6 @@ resource asbCustomRoleResource 'Microsoft.Authorization/roleDefinitions@2022-04-
         actions: [
           'Microsoft.DBforPostgreSQL/flexibleServers/databases/read'
           'Microsoft.DBforPostgreSQL/flexibleServers/databases/write'
-          'Microsoft.DBforPostgreSQL/flexibleServers/databases/delete'
         ]
         dataActions: []
         notActions: []

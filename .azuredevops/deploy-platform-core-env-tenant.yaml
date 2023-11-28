@@ -88,6 +88,6 @@ extends:
                 path: infra/core/tenant/role-definitions
                 scope: "Subscription"
            - ${{ if eq(variables.IsPostgreSqlAsoDatabaseOwnerRole, true) }}:
-              - name: flexible-server-database-cutomrole
+              - name: flexible-server-customrole
                 path: infra/core/tenant/role-definitions
                 scope: "Subscription"
