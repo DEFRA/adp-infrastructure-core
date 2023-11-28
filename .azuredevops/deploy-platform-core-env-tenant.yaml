@@ -60,7 +60,7 @@ extends:
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
-      - name: 'defranonprd'
+      - name: 'defra-non-prd'
         outputTemplateChange: Skip
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
