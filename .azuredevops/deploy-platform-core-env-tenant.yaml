@@ -11,8 +11,8 @@ parameters:
     default: "All"
     values:
       - All
-      - ServiceBus - ASO Owner Role
-      - PostgreSql - ASO Database Owner Role
+      - ServiceBus - Writer Role
+      - PostgreSql - Database Writer Role
 
 pr:
   branches:
@@ -44,9 +44,9 @@ variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'All') }}
   - name: IsServiceBusAsoOwnerRole
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'ServiceBus - ASO Owner Role')) }}
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'ServiceBus - Writer Role')) }}
   - name: IsPostgreSqlAsoDatabaseOwnerRole
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'PostgreSql - ASO Database Owner Role')) }}
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'PostgreSql - Database Writer Role')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
