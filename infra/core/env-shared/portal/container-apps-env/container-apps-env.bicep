@@ -1,8 +1,8 @@
 @description('Required. The object of the Container App Env.')
 param containerAppEnv object
 
-// @description('Required. The object of the Container App.')
-// param containerApp object
+@description('Required. The object of the Container App.')
+param containerApp object
 
 @description('Required. The object of Log Analytics Workspace.')
 param workspace object
@@ -27,6 +27,9 @@ param createdDate string = utcNow('yyyy-MM-dd')
 
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
+
+@description('Required. The name of the key vault where the secrets will be stored.')
+param keyvaultName string 
 
 var customTags = {
   Location: location
@@ -189,7 +192,19 @@ module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5
     a: [
       {
         name: '*.${toLower(split(managedEnvironment.properties.defaultDomain, '.')[0])}'
-        ipv4Address: loadBalancer.properties.frontendIPConfigurations[0].properties.privateIPAddress
+        ipv4Address: loadBalancer.properties.frontendIPConfigurations[0].properties.publicIPAddress
       } ]
+  }
+}
+
+resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
+  name: keyvaultName
+}
+
+resource secretdbhost 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  name: 'APP-BASE-URL'
+  parent: keyVault  // Pass key vault symbolic name as parent
+  properties: {
+    value: 'https://${containerApp.name}.${toLower(managedEnvironment.properties.defaultDomain)}'
   }
 }

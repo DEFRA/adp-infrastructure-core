@@ -9,9 +9,9 @@ param containerAppEnv = {
     }
   ]
 }
-// param containerApp = {
-//   name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerapps }}#{{ nc_shared_instance_regionid }}03' 
-// }
+param containerApp = {
+  name: 'portaL' 
+}
 param workspace = {
   name: '#{{ logAnalyticsWorkspace }}'
   resourceGroup: '#{{ ssvSharedResourceGroup }}'
@@ -34,6 +34,8 @@ param privateDNSZone = {
   resourceGroup: '#{{ dnsResourceGroup }}'
   subscriptionId: '#{{ SubscriptionId }}'
 }
+
+param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}03'
 
 param environment = '#{{ environment }}'
 
