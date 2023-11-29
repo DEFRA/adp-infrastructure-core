@@ -1,6 +1,9 @@
 @description('Required. The object of the Container App Env.')
 param containerAppEnv object
 
+@description('Required. The object of the Container App.')
+param containerApp object
+
 @description('Required. The object of Log Analytics Workspace.')
 param workspace object
 
@@ -45,13 +48,13 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
   scope: resourceGroup(workspace.subscriptionId,workspace.resourceGroup)
 }
 
-var internal= true
+var internal= false
 var infrastructureSubnetId = resourceId(subnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', subnet.vnetName, subnet.Name)
 var dockerBridgeCidr = '172.16.0.1/28'
-var workloadProfiles = containerAppEnv.workloadProfiles
+// var workloadProfiles = containerAppEnv.workloadProfiles
 var zoneRedundant = false
-//var logsDestination = 'log-analytics'
-//var infrastructureResourceGroupName = take('${containerAppEnv.name}_ME', 63)
+// var logsDestination = 'log-analytics'
+// var infrastructureResourceGroupName = take('${containerAppEnv.name}_ME', 63)
 
 //var privateDnsZoneName = toLower('${privateDnsZonePrefix}.${location}.azurecontainerapps.io')
 
@@ -72,7 +75,7 @@ var zoneRedundant = false
 //       infrastructureSubnetId: !empty(infrastructureSubnetId) && internal == true ? infrastructureSubnetId : null
 //       dockerBridgeCidr: !empty(infrastructureSubnetId) && internal == true ? dockerBridgeCidr : null      
 //     }
-//     workloadProfiles: !empty(workloadProfiles) ? workloadProfiles : null
+//     workloadProfiles: !empty(workloadProfiles) ? null : workloadProfiles
 //     zoneRedundant: zoneRedundant
 //     infrastructureResourceGroup: infrastructureResourceGroupName
 //   }
@@ -88,15 +91,38 @@ module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.8'
     // Non-required parameters
     dockerBridgeCidr: !empty(infrastructureSubnetId) && internal == true ? dockerBridgeCidr : null  
     infrastructureSubnetId: !empty(infrastructureSubnetId) && internal == true ? infrastructureSubnetId : null
-    internal: true
+    internal: false
     location: location
     lock: {
       kind: 'CanNotDelete'
       name: '${containerAppEnv.name}-CanNotDelete'
     }
     skuName: containerAppEnv.skuName
-    workloadProfiles :!empty(workloadProfiles) ? workloadProfiles : null
+    //workloadProfiles :!empty(workloadProfiles) ? workloadProfiles : null
     zoneRedundant: zoneRedundant
+    tags: union(defaultTags, additionalTags)
+  }
+}
+
+module initContainerApp 'br/SharedDefraRegistry:app.container-app:0.4.9' = {
+  name: '${containerApp.name}'
+  params: {
+    // Required parameters
+    containers: [
+      {
+        image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
+        name: 'simple-hello-world-container'
+        resources: {
+          cpu: '0.5'
+          memory: '1Gi'
+        }
+      }
+    ]
+    environmentId: managedEnvironment.outputs.resourceId
+    name: containerApp.name
+    // Non-required parameters
+    enableDefaultTelemetry: false
+    location: location
     tags: union(defaultTags, additionalTags)
   }
 }
