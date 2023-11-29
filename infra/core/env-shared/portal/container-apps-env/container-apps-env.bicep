@@ -72,7 +72,7 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
       infrastructureSubnetId: !empty(infrastructureSubnetId) && internal == true ? infrastructureSubnetId : null
       dockerBridgeCidr: !empty(infrastructureSubnetId) && internal == true ? dockerBridgeCidr : null
     }
-    workloadProfiles: !empty(workloadProfiles) ? null : workloadProfiles
+    workloadProfiles: !empty(workloadProfiles) ? workloadProfiles : null
     zoneRedundant: zoneRedundant
     infrastructureResourceGroup: infrastructureResourceGroupName
   }
@@ -189,7 +189,7 @@ module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5
     a: [
       {
         name: '*'
-        ipv4Address: '${loadBalancer.properties.frontendIPConfigurations[0].id}'
+        ipv4Address: loadBalancer.properties.frontendIPConfigurations[0].id
       } ]
   }
 }
