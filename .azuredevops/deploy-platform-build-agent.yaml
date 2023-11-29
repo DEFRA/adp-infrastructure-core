@@ -81,7 +81,7 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedDeployments:
-      - name: Deploy Build Agent - ${{ parameters.imageType }}
+      - name: Deploy Build Agent_${{ parameters.imageType }}
         type: 'script'
         scriptType: AzureCLI
         azureCLIScriptType: pscore
