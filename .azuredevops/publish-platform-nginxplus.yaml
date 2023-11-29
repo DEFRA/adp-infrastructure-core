@@ -31,11 +31,7 @@ resources:
       endpoint: DEFRA
       type: github
       ref: main
-variables:
-  - name: ssv3Subscription
-    value: AZD-ADP-SSV3
-  - name: ssv5Subscription
-    value: AZR-ADP-SSV5
+
 extends:
   template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
   parameters:
@@ -43,17 +39,16 @@ extends:
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
       - name: 'ssv3'
-        serviceConnection: $(ssv3Subscription)
+        serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - 'refs/heads/main'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
       - name: 'ssv5'
-        serviceConnection: $(ssv5Subscription)
+        serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
           - 'refs/heads/main'
-        developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
     scriptsList:
@@ -61,7 +56,7 @@ extends:
         scriptPath: 'nginxplus/Publish-NginxPlus-Acr.ps1'
         scriptArguments: >
           -AcrName $(ssvSharedAcrName)
-          -AzureSubscription $(ssv3Subscription)
+          -AzureSubscription $(subscriptionName)
           -KeyVaultName $(ssvPlatformKeyVaultName)
           -NGINXCertSecretName $(nginxCertSecretName)
           -NGINXKeySecretName $(nginxKeySecretName)
