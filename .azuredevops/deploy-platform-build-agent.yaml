@@ -48,11 +48,11 @@ variables:
     instanceNumber: 03
   ${{ if eq(parameters.imageType, 'ubuntu2004') }}:
     instanceNumber: 04
-  
 
 extends:
   template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
   parameters:
+    projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
       - name: 'snd1'
@@ -80,10 +80,13 @@ extends:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
-    scriptsList:
-      - displayName: Deploy Build Agent - ${{ parameters.imageType }}
-        scriptPath: infra/build-agent/Create-AdoBuildAgent.ps1
-        scriptArguments: >
+    groupedDeployments:
+      - name: Deploy Build Agent - ${{ parameters.imageType }}
+        type: 'script'
+        scriptType: AzureCLI
+        azureCLIScriptType: pscore
+        path: infra/build-agent/Create-AdoBuildAgent.ps1
+        scriptArguments: > 
           -ImageGalleryTenantId $(imageGalleryTenant)
           -TenantId $(tenantId)
           -SubscriptionName $(subscriptionName)
@@ -94,4 +97,3 @@ extends:
           -KeyVaultName $(ssvPlatformKeyVaultName)
           -Location $(location)
           -SecretsPrefix $(environment)$(nc_instance_regionid)-$(instanceNumber)
-        type: AzureCLI
