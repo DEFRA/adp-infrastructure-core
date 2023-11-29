@@ -26,6 +26,8 @@ param monitoringWorkspace object
 param asoPlatformManagedIdentity string
 @description('Required. The parameter object for the app configuration service. The object must contain name, resourceGroup and managedIdentityName.')
 param appConfig object
+@description('Required. The parameter object for the azure monitor workspace service. The object must contain name, resourceGroup and subscriptionId.')
+param azureMonitorWorkspace object
 
 var commonTags = {
   Location: location
@@ -192,7 +194,18 @@ module networkContributor '.bicep/network-contributor.bicep' = {
   }
 }
 
-module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3' = {
+module aksDataCollectionRuleAssociation '.bicep/data-collection-rule-association.bicep' = {
+  name: 'aks-data-collection-rule-association-${deploymentDate}'
+  params: {
+    azureMonitorWorkspace: {
+      name: azureMonitorWorkspace.name
+      resourceGroup: azureMonitorWorkspace.resourceGroup
+    }
+    clusterName: deployAKS.name
+  }
+}
+
+module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.15-AA' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
     privateDnsZoneContributor
@@ -201,7 +214,10 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
   params: {
     name: cluster.name
     location: location
-    lock: 'CanNotDelete'
+    lock: {
+      kind: 'CanNotDelete'
+      name: '${cluster.name}-CanNotDelete-lock'
+    }
     tags: union(tags, aksTags)
     kubernetesVersion: cluster.kubernetesVersion
     nodeResourceGroup: cluster.nodeResourceGroup
@@ -211,9 +227,10 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
     enableRBAC: true
     aadProfileManaged: true
     disableLocalAccounts: true
-    systemAssignedIdentity: false
-    userAssignedIdentities: {
-      '${managedIdentity.outputs.resourceId}': {}
+    managedIdentities: {
+      userAssignedResourceIds: [
+        managedIdentity.outputs.resourceId
+      ]
     }
     enableWorkloadIdentity: true
     azurePolicyEnabled: true

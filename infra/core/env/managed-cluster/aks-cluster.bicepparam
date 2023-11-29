@@ -63,6 +63,11 @@ param containerRegistries = [
   }
 ]
 
+param azureMonitorWorkspace = {
+  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_azuremonitorworkspace }}#{{ nc_instance_regionid }}01'
+  resourceGroup: '#{{ servicesResourceGroup }}'
+}
+
 param location = '#{{ location }}'
 
 param environment = '#{{ environment }}'
