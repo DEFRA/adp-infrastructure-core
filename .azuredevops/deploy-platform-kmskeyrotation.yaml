@@ -1,0 +1,51 @@
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+
+pr:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - infra/core/env/kms-key-rotation/*
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+    - infra/core/env/kms-key-rotation/*
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: main
+
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.deployFromFeature }}
+    keyVaultName: $(ssvPlatformKeyVaultName)
+    groupedDeployments:
+      - name: clusterkmskeyrotation
+        deployments: 
+        - name: Initialize or Rotate KMS Key
+          path: infra/core/env/kms-key-rotation/Rotate-AksKmsKey.ps1
+          type: 'script'
+          scriptType: AzureCLI
+          azureCLIScriptType: pscore
+          scriptArguments: >
+            -ServicePrincipalObjectId $(serviceConnectionSPObjectIdSecretName)
+            -AzureSubscriptionId $(subscriptionId)
+            -ResourceGroup $(aksResourceGroup)
+            -ClusterName '$(infraResourceNamePrefix)$(nc_resource_kubernetesservice)$(nc_instance_regionid)01'
+            -KeyVaultName '$(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)02'

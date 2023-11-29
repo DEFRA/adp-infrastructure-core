@@ -26,6 +26,8 @@ param monitoringWorkspace object
 param asoPlatformManagedIdentity string
 @description('Required. The parameter object for the app configuration service. The object must contain name, resourceGroup and managedIdentityName.')
 param appConfig object
+@description('Required. The parameter object for the environment KeyVault. The object must contain name, resourceGroup and keyVaultName.')
+param keyVault object
 
 var commonTags = {
   Location: location
@@ -64,6 +66,17 @@ var asoPlatformTeamMiRbacs = [
   {
     name: 'UserAccessAdministrator'
     roleDefinitionId: '18d7d88d-d35e-4fb5-a5c3-7773c20a72d9'
+  }
+]
+
+var kmsKeyVaultRbacs = [
+  {
+    name: 'KeyVaultCryptoUser'
+    roleDefinitionId: '12338af0-0e69-4776-bea7-57ae8d297424'
+  }
+  {
+    name: 'KeyVaultContributor'
+    roleDefinitionId: 'f25e0fa2-a7c8-4377-a976-54943a77a395'
   }
 ]
 
@@ -192,16 +205,34 @@ module networkContributor '.bicep/network-contributor.bicep' = {
   }
 }
 
-module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3' = {
+module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in kmsKeyVaultRbacs: {
+  name: 'aks-cluster-${kmsKeyVaultRbac.name}-${deploymentDate}'
+  scope: resourceGroup(keyVault.resourceGroup)
+  dependsOn: [
+    managedIdentity
+  ]
+  params: {
+    principalId: managedIdentity.outputs.principalId
+    keyVaultName: keyVault.keyVaultName
+    roleDefinitionId: kmsKeyVaultRbac.roleDefinitionId
+  }
+}
+]
+
+module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.14' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
     privateDnsZoneContributor
     networkContributor
+    kmsKeyVaultRbac
   ]
   params: {
     name: cluster.name
     location: location
-    lock: 'CanNotDelete'
+    lock: {
+      kind: 'CanNotDelete'
+      name: '${cluster.name}-CanNotDelete-lock'
+    }
     tags: union(tags, aksTags)
     kubernetesVersion: cluster.kubernetesVersion
     nodeResourceGroup: cluster.nodeResourceGroup
@@ -211,9 +242,10 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.3
     enableRBAC: true
     aadProfileManaged: true
     disableLocalAccounts: true
-    systemAssignedIdentity: false
-    userAssignedIdentities: {
-      '${managedIdentity.outputs.resourceId}': {}
+    managedIdentities: {
+      userAssignedResourceIds: [
+        managedIdentity.outputs.resourceId
+      ]
     }
     enableWorkloadIdentity: true
     azurePolicyEnabled: true
