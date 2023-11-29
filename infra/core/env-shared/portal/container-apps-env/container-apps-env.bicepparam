@@ -24,10 +24,10 @@ param subnet = {
   vnetName: '#{{ ssvVirtualNetworkName }}'
 }
 
-// param privateLink = {
-//   name: 'capp-loadbalancer-pls'
-//   visibility: {}
-// }
+param privateLink = {
+  name: 'capp-loadbalancer-pls'
+  visibility: {}
+}
 
 param privateDNSZone = {  
   name: '#{{ location }}.azurecontainerapps.io'

@@ -10,8 +10,8 @@ param workspace object
 @description('Required. The object of Subnet.')
 param subnet object
 
-// @description('Required. The object of privateLink.')
-// param privateLink object
+@description('Required. The object of privateLink.')
+param privateLink object
 
 @description('Required. The object for the private DNS zone.')
 param privateDNSZone object
@@ -104,68 +104,68 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
 //   }
 // }
 
-// module initContainerApp 'br/SharedDefraRegistry:app.container-app:0.4.9' = {
-//   name: '${containerApp.name}'
-//   params: {
-//     // Required parameters
-//     containers: [
-//       {
-//         image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
-//         name: containerApp.name        
-//       }
-//     ]
-//     environmentId: managedEnvironment.id
-//     name: containerApp.name
-//     // Non-required parameters
-//     enableDefaultTelemetry: false
-//     location: location
-//     tags: union(defaultTags, additionalTags)
-//   }
-// }
+module initContainerApp 'br/SharedDefraRegistry:app.container-app:0.4.9' = {
+  name: '${containerApp.name}'
+  params: {
+    // Required parameters
+    containers: [
+      {
+        image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
+        name: containerApp.name        
+      }
+    ]
+    environmentId: managedEnvironment.id
+    name: containerApp.name
+    // Non-required parameters
+    enableDefaultTelemetry: false
+    location: location
+    tags: union(defaultTags, additionalTags)
+  }
+}
 
 resource loadBalancer 'Microsoft.Network/loadBalancers@2021-05-01' existing = {
   name: 'capp-svc-lb'
   scope: resourceGroup(infrastructureResourceGroupName)
 }
 
-// module flexibleServerDeployment 'br/SharedDefraRegistry:network.private-link-service:0.4.8' = {
-//   name: 'private-link-service-${deploymentDate}'
-//   params: {
-//     // Required parameters
-//     name: containerAppEnv.name
-//     // Non-required parameters    
-//     fqdns: [
-//       '${containerAppEnv.name}.uksouth.azure.privatelinkservice'
-//     ]
-//     ipConfigurations: [
-//       {
-//         name: 'snet-provider-default-1'
-//         properties: {
-//           privateIPAllocationMethod: 'Dynamic'
-//           subnet: {
-//             id: infrastructureSubnetId
-//           }
-//           primary: true
-//           privateIPAddressVersion: 'IPv4'
-//         }
-//       }
-//     ]
-//     loadBalancerFrontendIpConfigurations: [
-//       {
-//         id: loadBalancer.properties.frontendIPConfigurations[0].id
-//       }
-//     ]
-//     lock: {
-//       kind: 'CanNotDelete'
-//       name: '${privateLink.name}-CanNotDelete'
-//     }
-//     tags: union(defaultTags, customTags)
-//     visibility: privateLink.visibility
-//   }
-//   dependsOn: [
-//     managedEnvironment
-//   ]
-// }
+module flexibleServerDeployment 'br/SharedDefraRegistry:network.private-link-service:0.4.8' = {
+  name: 'private-link-service-${deploymentDate}'
+  params: {
+    // Required parameters
+    name: containerAppEnv.name
+    // Non-required parameters    
+    fqdns: [
+      '${containerAppEnv.name}.uksouth.azure.privatelinkservice'
+    ]
+    ipConfigurations: [
+      {
+        name: 'snet-provider-default-1'
+        properties: {
+          privateIPAllocationMethod: 'Dynamic'
+          subnet: {
+            id: infrastructureSubnetId
+          }
+          primary: true
+          privateIPAddressVersion: 'IPv4'
+        }
+      }
+    ]
+    loadBalancerFrontendIpConfigurations: [
+      {
+        id: loadBalancer.properties.frontendIPConfigurations[0].id
+      }
+    ]
+    lock: {
+      kind: 'CanNotDelete'
+      name: '${privateLink.name}-CanNotDelete'
+    }
+    tags: union(defaultTags, customTags)
+    visibility: privateLink.visibility
+  }
+  dependsOn: [
+    managedEnvironment
+  ]
+}
 
 var dnsTags = {
   Purpose: 'Private DNS Zone'
