@@ -189,7 +189,7 @@ module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5
     a: [
       {
         name: '*'
-        ipv4Address: loadBalancer.properties.frontendIPConfigurations[0].id
+        ipv4Address: loadBalancer.properties.frontendIPConfigurations[0].properties.privateIPAddress
       } ]
   }
 }
