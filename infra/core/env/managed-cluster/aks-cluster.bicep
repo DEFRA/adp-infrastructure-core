@@ -201,7 +201,7 @@ module aksDataCollectionRuleAssociation '.bicep/data-collection-rule-association
       name: azureMonitorWorkspace.name
       resourceGroup: azureMonitorWorkspace.resourceGroup
     }
-    clusterName: deployAKS.name
+    clusterName: deployAKS.outputs.name
   }
 }
 
