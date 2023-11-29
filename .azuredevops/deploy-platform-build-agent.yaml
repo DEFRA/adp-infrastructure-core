@@ -64,12 +64,15 @@ extends:
           primary: 'UKSouth'
       - name: 'snd2'
         serviceConnection: AZD-ADP-SND2-VMSS
+        dependsOn: Validate
         deploymentBranches:
           - 'refs/heads/main'
+          - 'refs/pull/*/merge'
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd3'
         serviceConnection: AZD-ADP-SND3-VMSS
+        dependsOn: 'snd1'
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
