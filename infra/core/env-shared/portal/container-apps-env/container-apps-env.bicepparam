@@ -9,9 +9,9 @@ param containerAppEnv = {
     }
   ]
 }
-param containerApp = {
-  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerapps }}#{{ nc_shared_instance_regionid }}03' 
-}
+// param containerApp = {
+//   name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerapps }}#{{ nc_shared_instance_regionid }}03' 
+// }
 param workspace = {
   name: '#{{ logAnalyticsWorkspace }}'
   resourceGroup: '#{{ ssvSharedResourceGroup }}'

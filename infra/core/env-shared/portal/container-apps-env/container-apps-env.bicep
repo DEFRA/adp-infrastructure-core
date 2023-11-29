@@ -1,8 +1,8 @@
 @description('Required. The object of the Container App Env.')
 param containerAppEnv object
 
-@description('Required. The object of the Container App.')
-param containerApp object
+// @description('Required. The object of the Container App.')
+// param containerApp object
 
 @description('Required. The object of Log Analytics Workspace.')
 param workspace object
@@ -104,28 +104,24 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
 //   }
 // }
 
-module initContainerApp 'br/SharedDefraRegistry:app.container-app:0.4.9' = {
-  name: '${containerApp.name}'
-  params: {
-    // Required parameters
-    containers: [
-      {
-        image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
-        name: 'simple-hello-world-container'
-        resources: {
-          cpu: '0.5'
-          memory: '1Gi'
-        }
-      }
-    ]
-    environmentId: managedEnvironment.id
-    name: containerApp.name
-    // Non-required parameters
-    enableDefaultTelemetry: false
-    location: location
-    tags: union(defaultTags, additionalTags)
-  }
-}
+// module initContainerApp 'br/SharedDefraRegistry:app.container-app:0.4.9' = {
+//   name: '${containerApp.name}'
+//   params: {
+//     // Required parameters
+//     containers: [
+//       {
+//         image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
+//         name: containerApp.name        
+//       }
+//     ]
+//     environmentId: managedEnvironment.id
+//     name: containerApp.name
+//     // Non-required parameters
+//     enableDefaultTelemetry: false
+//     location: location
+//     tags: union(defaultTags, additionalTags)
+//   }
+// }
 
 // resource loadBalancer 'Microsoft.Network/loadBalancers@2021-05-01' existing = {
 //   name: 'capp-svc-lb'
@@ -173,11 +169,9 @@ module initContainerApp 'br/SharedDefraRegistry:app.container-app:0.4.9' = {
 
 
 var dnsTags = {
-  Name: toLower('${managedEnvironment.properties.defaultDomain}.${location}.azurecontainerapps.io')
   Purpose: 'Private DNS Zone'
 }
 var dnsVnetLinksTags = {
-  Name: subnet.vnetName 
   Purpose: 'Private DNS Zone VNet Link'
 }
 
