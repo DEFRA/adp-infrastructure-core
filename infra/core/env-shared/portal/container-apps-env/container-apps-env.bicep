@@ -112,6 +112,10 @@ module initContainerApp 'br/SharedDefraRegistry:app.container-app:0.4.9' = {
       {
         image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
         name: containerApp.name        
+        resources: {
+          cpu: '0.5'
+          memory: '1Gi'
+        }
       }
     ]
     environmentId: managedEnvironment.id
