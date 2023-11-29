@@ -1,56 +1,113 @@
 {
     "userADGroups": [
         {
-            "global": [
-                {
-                    "displayName": "AAG-Users-ADP-PlatformEngineers",
-                    "description": "Azure AD User group for ADP Platform Engineers",
-                    "Owners": "#{{ TenantId }}"
-                }
-            ]
+            "displayName": "AAG-Users-ADP-PlatformEngineers",
+            "description": "Azure AD User group for ADP Platform Engineers",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ]
+            }
         }
     ],
     "accessADGroups": [
         {
-            "global": [
-                {
-                    "displayName": "AAG-Azure-ADP-GlobalRead",
-                    "description": "Azure AD Access group with read permissions to the ADP platform.",
-                    "Owners": "#{{ TenantId }}"
-                }
-            ],
-            "env": [
-                {
-                    "displayName": "AAG-Azure-AZD-ADP-SND1-Cont",
-                    "description": "Azure AD Access group with contributor permissions to the AZD-ADP-SND1 subscription.",
-                    "Owners": "#{{ TenantId }}"
-                },
-                {
-                    "displayName": "AAG-Azure-AZD-ADP-SND1-UAA",
-                    "description": "Azure AD Access group with User Access administrator permissions to the AZD-ADP-SND1 subscription.",
-                    "Owners": "#{{ TenantId }}"
-                },
-                {
-                    "displayName": "AAG-Azure-AZD-ADP-SND2-Cont",
-                    "description": "Azure AD Access group with contributor permissions to the AZD-ADP-SND2 subscription.",
-                    "Owners": "#{{ TenantId }}"
-                },
-                {
-                    "displayName": "AAG-Azure-AZD-ADP-SND2-UAA",
-                    "description": "Azure AD Access group with User Access administrator permissions to the AZD-ADP-SND2 subscription.",
-                    "Owners": "#{{ TenantId }}"
-                },
-                {
-                    "displayName": "AAG-Azure-AZD-ADP-SND3-Cont",
-                    "description": "Azure AD Access group with contributor permissions to the AZD-ADP-SND3 subscription.",
-                    "Owners": "#{{ TenantId }}"
-                },
-                {
-                    "displayName": "AAG-Azure-AZD-ADP-SND3-UAA",
-                    "description": "Azure AD Access group with User Access administrator permissions to the AZD-ADP-SND3 subscription.",
-                    "Owners": "#{{ TenantId }}"
-                }
-            ]
+            "displayName": "AAG-Azure-ADP-GlobalRead",
+            "description": "Azure AD Access group with read permissions to the ADP platform.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ]
+            },
+            "Members": {
+                "groups" : [
+                    "AAG-Users-ADP-PlatformEngineers"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Azure-AZD-ADP-SND1-Cont",
+            "description": "Azure AD Access group with contributor permissions to the AZD-ADP-SND1 subscription.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ]
+            },
+            "Members": {
+                "groups" : [
+                    "AAG-Users-ADP-PlatformEngineers"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Azure-AZD-ADP-SND1-UAA",
+            "description": "Azure AD Access group with User Access administrator permissions to the AZD-ADP-SND1 subscription.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ]
+            },
+            "Members": {
+                "groups" : [
+                    "AAG-Users-ADP-PlatformEngineers"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Azure-AZD-ADP-SND2-Cont",
+            "description": "Azure AD Access group with contributor permissions to the AZD-ADP-SND2 subscription.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ]
+            },
+            "Members": {
+                "groups" : [
+                    "AAG-Users-ADP-PlatformEngineers"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Azure-AZD-ADP-SND2-UAA",
+            "description": "Azure AD Access group with User Access administrator permissions to the AZD-ADP-SND2 subscription.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ]
+            },
+            "Members": {
+                "groups" : [
+                    "AAG-Users-ADP-PlatformEngineers"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Azure-AZD-ADP-SND3-Cont",
+            "description": "Azure AD Access group with contributor permissions to the AZD-ADP-SND3 subscription.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ]
+            },
+            "Members": {
+                "groups" : [
+                    "AAG-Users-ADP-PlatformEngineers"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Azure-AZD-ADP-SND3-UAA",
+            "description": "Azure AD Access group with User Access administrator permissions to the AZD-ADP-SND3 subscription.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ]
+            },
+            "Members": {
+                "groups" : [
+                    "AAG-Users-ADP-PlatformEngineers"
+                ]
+            }
         }
     ]
 }
