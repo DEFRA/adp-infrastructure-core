@@ -6,9 +6,6 @@ param containerAppEnv = {
   workloadProfiles: [
     {
       workloadProfileType: 'Consumption'
-      name: 'CAW3401'
-      minimumCount: 0
-      maximumCount: 3
     }
   ]
 }
