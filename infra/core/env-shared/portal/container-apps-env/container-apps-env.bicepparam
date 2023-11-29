@@ -1,7 +1,7 @@
 using './container-apps-env.bicep'
 
 param containerAppEnv = {
-  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerappsenv }}#{{ nc_shared_instance_regionid }}03'    
+  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerappsenv }}#{{ nc_shared_instance_regionid }}04'    
   skuName: 'Consumption'
   workloadProfiles: [
     {
