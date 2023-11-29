@@ -50,7 +50,7 @@ variables:
     instanceNumber: 04
 
 extends:
-  template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
