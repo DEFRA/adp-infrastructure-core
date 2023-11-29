@@ -128,7 +128,7 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
 // }
 
 resource loadBalancer 'Microsoft.Network/loadBalancers@2021-05-01' existing = {
-  name: 'kubernetes-internal'
+  name: 'capp-svc-lb'
   scope: resourceGroup(infrastructureResourceGroupName)
 }
 
@@ -138,9 +138,9 @@ module privateLinkDeployment 'br/SharedDefraRegistry:network.private-link-servic
     // Required parameters
     name: containerAppEnv.name
     // Non-required parameters    
-    fqdns: [
-      '${containerAppEnv.name}.uksouth.azure.privatelinkservice'
-    ]
+    // fqdns: [
+    //   '${containerAppEnv.name}.uksouth.azure.privatelinkservice'
+    // ]
     ipConfigurations: [
       {
         name: 'snet-provider-default-1'
