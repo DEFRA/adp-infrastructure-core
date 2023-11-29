@@ -10,7 +10,7 @@ param containerAppEnv = {
   ]
 }
 param containerApp = {
-  name: 'portaL' 
+  name: 'portal' 
 }
 param workspace = {
   name: '#{{ logAnalyticsWorkspace }}'

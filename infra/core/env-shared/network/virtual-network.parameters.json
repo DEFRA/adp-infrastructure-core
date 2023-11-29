@@ -47,27 +47,10 @@
         {
           "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}03",
           "addressPrefix": "#{{ subnet3AddressPrefix }}",
-          "serviceEndpoints": [
-            {
-              "service": "Microsoft.ContainerRegistry"
-            },
-            {
-              "service": "Microsoft.Storage"
-            },
-            {
-              "service": "Microsoft.EventHub"
-            },
-            {
-              "service": "Microsoft.ServiceBus"
-            },
-            {
-              "service": "Microsoft.KeyVault"
-            }
-          ],
+          "serviceEndpoints": [],
           "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ ssvVirtualNetworkName }}",
-          "networkSecurityGroupId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
-          "privateEndpointNetworkPolicies": "Disabled",
-          "privateLinkServiceNetworkPolicies": "Disabled"
+          "privateEndpointNetworkPolicies": "Enabled",
+          "privateLinkServiceNetworkPolicies": "Enabled"
         }
       ]
     },

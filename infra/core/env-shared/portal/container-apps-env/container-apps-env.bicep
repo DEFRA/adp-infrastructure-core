@@ -128,7 +128,7 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
 // }
 
 resource loadBalancer 'Microsoft.Network/loadBalancers@2021-05-01' existing = {
-  name: 'capp-svc-lb'
+  name: 'kubernetes-internal'
   scope: resourceGroup(infrastructureResourceGroupName)
 }
 
