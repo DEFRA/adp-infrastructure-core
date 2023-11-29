@@ -86,7 +86,7 @@ extends:
                       -VirtualNetworkName $(ssvVirtualNetworkName)
                       -SubscriptionName $(subscriptionName)
                       -TenantId $(tenantId)
-      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal')) }}        
+      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal'), eq(parameters.deployResources, 'portal-container-apps-env')) }}        
         : - name: Portal
             ${{ if eq(parameters.deployResources, 'all') }}:
               dependsOnGroupedDeployments:
