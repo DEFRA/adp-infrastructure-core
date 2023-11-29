@@ -36,6 +36,7 @@ extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
     privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
+    projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
       - name: 'ssv3'
