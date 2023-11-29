@@ -192,7 +192,7 @@ module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5
     a: [
       {
         name: '*.${toLower(split(managedEnvironment.properties.defaultDomain, '.')[0])}'
-        ipv4Address: loadBalancer.properties.frontendIPConfigurations[0].properties.publicIPAddress
+        ipv4Address: loadBalancer.properties.frontendIPConfigurations[0].properties.privateIPAddress
       } ]
   }
 }
@@ -201,9 +201,9 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
   name: keyvaultName
 }
 
-resource secretdbhost 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+resource secretbaseurl 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'APP-BASE-URL'
-  parent: keyVault  // Pass key vault symbolic name as parent
+  parent: keyVault 
   properties: {
     value: 'https://${containerApp.name}.${toLower(managedEnvironment.properties.defaultDomain)}'
   }
