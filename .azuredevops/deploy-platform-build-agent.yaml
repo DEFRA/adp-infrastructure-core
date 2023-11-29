@@ -77,13 +77,13 @@ extends:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
-      - name: 'tst1'
-        serviceConnection: AZR-ADP-TST1
-        dependsOn: 'dev1'
-        deploymentBranches:
-          - 'refs/heads/main'
-        azureRegions:
-          primary: 'UKSouth'
+      # - name: 'tst1'
+      #   serviceConnection: AZR-ADP-TST1
+      #   dependsOn: 'dev1'
+      #   deploymentBranches:
+      #     - 'refs/heads/main'
+      #   azureRegions:
+      #     primary: 'UKSouth'
       - name: 'snd3'
         serviceConnection: AZD-ADP-SND3-VMSS
         dependsOn: 'snd1'
