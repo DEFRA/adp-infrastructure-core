@@ -13,8 +13,8 @@ param subnet object
 // @description('Required. The object of privateLink.')
 // param privateLink object
 
-// @description('Required. The prefix for the private DNS zone.')
-// param privateDnsZonePrefix string
+ @description('Required. The object for the private DNS zone.')
+ param privateDNSZone object
 
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
@@ -55,8 +55,6 @@ var workloadProfiles = containerAppEnv.workloadProfiles
 var zoneRedundant = false
 var logsDestination = 'log-analytics'
 var infrastructureResourceGroupName = take('${containerAppEnv.name}_ME', 63)
-
-//var privateDnsZoneName = toLower('${privateDnsZonePrefix}.${location}.azurecontainerapps.io')
 
 resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
   name: containerAppEnv.name
@@ -177,8 +175,9 @@ var dnsVnetLinksTags = {
 
 module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5.2' = {
   name: 'private-dns-zone-${deploymentDate}'
+  scope: privateDNSZone.resourceGroup
   params: {
-   name:  toLower('${managedEnvironment.properties.defaultDomain}.${location}.azurecontainerapps.io')  
+   name:  toLower('${managedEnvironment.properties.defaultDomain}.${location}${privateDNSZone.suffix}}')  
    lock: 'CanNotDelete'
    tags:union(defaultTags, additionalTags,dnsTags)
    virtualNetworkLinks: [

@@ -5,7 +5,10 @@ param containerAppEnv = {
   skuName: 'Consumption'
   workloadProfiles: [
     {
-      workloadProfileType: 'Consumption'
+      workloadProfileType: 'D4'
+      name: 'CAW3401'
+      minimumCount: 0
+      maximumCount: 3
     }
   ]
 }
@@ -30,6 +33,12 @@ param subnet = {
 // }
 
 // param privateDnsZonePrefix = '#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}01'
+
+param privateDNSZone = {
+  suffix: '.azurecontainerapps.io'
+  resourceGroup: '#{{ dnsResourceGroup }}'
+  subscriptionId: '#{{ SubscriptionId }}'
+}
 
 param environment = '#{{ environment }}'
 
