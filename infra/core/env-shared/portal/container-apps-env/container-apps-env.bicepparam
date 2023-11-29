@@ -5,10 +5,7 @@ param containerAppEnv = {
   skuName: 'Consumption'
   workloadProfiles: [
     {
-      workloadProfileType: 'D4'
-      name: 'CAW3401'
-      minimumCount: 0
-      maximumCount: 3
+      workloadProfileType: 'Consumption'
     }
   ]
 }

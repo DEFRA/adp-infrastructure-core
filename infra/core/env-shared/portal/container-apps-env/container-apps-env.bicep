@@ -51,7 +51,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
 var internal= false
 var infrastructureSubnetId = resourceId(subnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', subnet.vnetName, subnet.Name)
 var dockerBridgeCidr = '172.16.0.1/28'
-// var workloadProfiles = containerAppEnv.workloadProfiles
+ var workloadProfiles = containerAppEnv.workloadProfiles
 var zoneRedundant = false
 // var logsDestination = 'log-analytics'
 // var infrastructureResourceGroupName = take('${containerAppEnv.name}_ME', 63)
@@ -98,7 +98,7 @@ module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.8'
       name: '${containerAppEnv.name}-CanNotDelete'
     }
     skuName: containerAppEnv.skuName
-    //workloadProfiles :!empty(workloadProfiles) ? workloadProfiles : null
+    workloadProfiles :!empty(workloadProfiles) ? workloadProfiles : null
     zoneRedundant: zoneRedundant
     tags: union(defaultTags, additionalTags)
   }
