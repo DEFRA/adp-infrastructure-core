@@ -1,0 +1,100 @@
+name: 1.0.$(BuildID)-${{ parameters.deployResources }}
+
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+  - name: deployResources
+    displayName: "Resources to Deploy"
+    type: string
+    default: "All"
+    values:
+      - All
+      - ServiceBus Writer Role
+      - PostgreSql Database Writer Role
+      - Storage Account Writer Role
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra/core/tenant/*
+      - infra/common/*
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+      - infra/core/tenant/*
+      - infra/common/*
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: pp/defra-test
+      
+variables:
+  - name: IsAll
+    value: ${{ eq(parameters.deployResources,'All') }}
+  - name: IsServiceBusWriterRole
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'ServiceBus Writer Role')) }}
+  - name: IsPostgreSqlDatabaseWriterRole
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'PostgreSql Database Writer Role')) }}
+  - name: IsStorageAccountWriterRole
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Storage Account Writer Role')) }}
+
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.deployFromFeature }}
+    variableFiles: 
+      - /pipelines/vars/common.yaml@_self
+      - /pipelines/vars/tenant/{environment}.yaml@_self
+    regionalVariableFiles: []
+    environments:
+      - name: 'defradev'
+        serviceConnection: AZD-ADP-SSV3
+        deploymentBranches:
+          - 'refs/heads/main'
+          - 'refs/pull/*/merge'
+        developmentEnvironment: true
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'defra_non_prd'
+        outputTemplateChange: Skip
+        serviceConnection: AZD-ADP-SSV3
+        deploymentBranches:
+           - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'    
+      - name: 'defra'
+        outputTemplateChange: Skip
+        serviceConnection: AZD-ADP-SSV3
+        deploymentBranches:
+           - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'    
+    groupedDeployments:
+        - name: role_definitions
+          deployments:
+           - ${{ if eq(variables.IsServiceBusWriterRole, true) }}:
+              - name: servicebus
+                path: infra/core/tenant/role-definitions
+                scope: "Subscription"
+           - ${{ if eq(variables.IsPostgreSqlDatabaseWriterRole, true) }}:
+              - name: flexible-server
+                path: infra/core/tenant/role-definitions
+                scope: "Subscription"
+           - ${{ if eq(variables.IsStorageAccountWriterRole, true) }}:
+              - name: storageaccount
+                path: infra/core/tenant/role-definitions
+                scope: "Subscription"
