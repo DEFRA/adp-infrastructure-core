@@ -178,6 +178,8 @@ var dnsVnetLinksTags = {
   Purpose: 'Private DNS Zone VNet Link'
 }
 
+var lbip = loadBalancer.properties.frontendIPConfigurations[0].properties.privateIPAddress
+
 module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5.2' = {
   name: 'private-dns-zone-${deploymentDate}'
   scope: resourceGroup(privateDNSZone.resourceGroup)
@@ -196,7 +198,7 @@ module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5
     a: [
       {
         name: '*.${toLower(split(managedEnvironment.properties.defaultDomain, '.')[0])}'
-        ipv4Address: loadBalancer.properties.frontendIPConfigurations[0].properties.privateIPAddress
+        ipv4Address: lbip
       } ]
   }
 }
