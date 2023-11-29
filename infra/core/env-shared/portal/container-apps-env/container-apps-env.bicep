@@ -29,7 +29,7 @@ param createdDate string = utcNow('yyyy-MM-dd')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 @description('Required. The name of the key vault where the secrets will be stored.')
-param keyvaultName string 
+param keyvaultName string
 
 var customTags = {
   Location: location
@@ -104,35 +104,35 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
 //   }
 // }
 
-module initContainerApp 'br/SharedDefraRegistry:app.container-app:0.4.9' = {
-  name: '${containerApp.name}'
-  params: {
-    // Required parameters
-    containers: [
-      {
-        image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
-        name: containerApp.name        
-        resources: {
-          cpu: '0.5'
-          memory: '1Gi'
-        }
-      }
-    ]
-    environmentId: managedEnvironment.id
-    name: containerApp.name
-    // Non-required parameters
-    enableDefaultTelemetry: false
-    location: location
-    tags: union(defaultTags, additionalTags)
-  }
-}
+// module initContainerApp 'br/SharedDefraRegistry:app.container-app:0.4.9' = {
+//   name: '${containerApp.name}'
+//   params: {
+//     // Required parameters
+//     containers: [
+//       {
+//         image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
+//         name: containerApp.name        
+//         resources: {
+//           cpu: '0.5'
+//           memory: '1Gi'
+//         }
+//       }
+//     ]
+//     environmentId: managedEnvironment.id
+//     name: containerApp.name
+//     // Non-required parameters
+//     enableDefaultTelemetry: false
+//     location: location
+//     tags: union(defaultTags, additionalTags)
+//   }
+// }
 
 resource loadBalancer 'Microsoft.Network/loadBalancers@2021-05-01' existing = {
   name: 'capp-svc-lb'
   scope: resourceGroup(infrastructureResourceGroupName)
 }
 
-module flexibleServerDeployment 'br/SharedDefraRegistry:network.private-link-service:0.4.8' = {
+module privateLinkDeployment 'br/SharedDefraRegistry:network.private-link-service:0.4.8' = {
   name: 'private-link-service-${deploymentDate}'
   params: {
     // Required parameters
@@ -207,7 +207,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
 
 resource secretbaseurl 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'APP-BASE-URL'
-  parent: keyVault 
+  parent: keyVault
   properties: {
     value: 'https://${containerApp.name}.${toLower(managedEnvironment.properties.defaultDomain)}'
   }
