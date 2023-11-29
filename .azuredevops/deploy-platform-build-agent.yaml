@@ -82,7 +82,7 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     groupedDeployments:
-      - name: managed_cluster
+      - name: build_agent
         deployments:
         - name: Deploy Build Agent - ${{ parameters.imageType }}
           type: 'script'

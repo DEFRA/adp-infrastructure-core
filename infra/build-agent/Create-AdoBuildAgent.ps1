@@ -210,7 +210,6 @@ try {
             --authentication-type password ``
             --admin-username $adminUsername ``
             --admin-password '$adminPassword' ``
-            --disable-overprovision ``
             --upgrade-policy-mode Manual ``
             --public-ip-address '""' ``
             --load-balancer '""' ``
