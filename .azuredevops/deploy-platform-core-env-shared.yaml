@@ -12,6 +12,8 @@ parameters:
       - "shared"
       - "network"
       - "portal"
+      - "portal-container-apps-env"
+
 pr:
   branches:
     include:
@@ -90,28 +92,30 @@ extends:
               dependsOnGroupedDeployments:
                 - SharedResources        
             deployments:
-              - name: key-vault
-                path: infra/core/env-shared/portal/key-vault
-                resourceGroupName: $(portalResourceGroup)
-              - name: managed-identity
-                path: infra/core/env-shared/portal/managed-identity
-                resourceGroupName: $(portalResourceGroup)
-              - name: flexible-server-zone
-                path: infra/core/env-shared/portal/flexible-server-zone
-                resourceGroupName: $(dnsResourceGroup)
-                postDeployScriptsList:
-                  - displayName: Link the Private DNS Zone to Central networks
-                    scriptPath: infra/core/scripts/Trigger-LinkPrivateDNSZones.ps1
-                    type: PowerShell
-                    useSystemAccessToken: true
-                    scriptArguments: >
-                      -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)03.private.postgres.database.azure.com"
-                      -ResourceGroupName $(dnsResourceGroup)
-                      -SubscriptionName $(subscriptionName)
-                      -TenantId $(tenantId)
-              - name: flexible-server
-                path: infra/core/env-shared/portal/flexible-server
-                resourceGroupName: $(portalResourceGroup)
-              - name: container-apps-env
-                path: infra/core/env-shared/portal/container-apps-env
-                resourceGroupName: $(portalResourceGroup)
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal')) }}:
+                - name: key-vault
+                  path: infra/core/env-shared/portal/key-vault
+                  resourceGroupName: $(portalResourceGroup)
+                - name: managed-identity
+                  path: infra/core/env-shared/portal/managed-identity
+                  resourceGroupName: $(portalResourceGroup)
+                - name: flexible-server-zone
+                  path: infra/core/env-shared/portal/flexible-server-zone
+                  resourceGroupName: $(dnsResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: Link the Private DNS Zone to Central networks
+                      scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
+                      type: PowerShell
+                      useSystemAccessToken: true
+                      scriptArguments: >
+                        -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)03.private.postgres.database.azure.com"
+                        -ResourceGroupName $(dnsResourceGroup)
+                        -SubscriptionName $(subscriptionName)
+                        -TenantId $(tenantId)
+                - name: flexible-server
+                  path: infra/core/env-shared/portal/flexible-server
+                  resourceGroupName: $(portalResourceGroup)
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal'), eq(parameters.deployResources, 'portal-container-apps-env')) }}:
+                - name: container-apps-env
+                  path: infra/core/env-shared/portal/container-apps-env
+                  resourceGroupName: $(portalResourceGroup)
