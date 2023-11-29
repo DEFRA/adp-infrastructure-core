@@ -45,9 +45,71 @@ Write-Debug "${functionName}:AADGroupsJsonManifestPath=$AADGroupsJsonManifestPat
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
-    Write-Host "Script is in progress......"
+    
+    [System.IO.DirectoryInfo]$adGroupsModuleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/aad-groups"
+    Write-Debug "${functionName}:moduleDir.FullName=$($adGroupsModuleDir.FullName)"
+    Import-Module $adGroupsModuleDir.FullName -Force
+
+    ## Authenticate using Graph Powershell
+    if (-not (Get-Module -ListAvailable -Name 'Microsoft.Graph')) {
+        Write-Host "Microsoft.Graph Module does not exists. Installing now.."
+        Install-Module Microsoft.Graph -Force
+        Write-Host "Microsoft.Graph Installed Successfully."
+    } 
+    $graphApiToken = (Get-AzAccessToken -Resource https://graph.microsoft.com).Token 
+
+    $targetParameter = (Get-Command Connect-MgGraph).Parameters['AccessToken']
+    if ($targetParameter.ParameterType -eq [securestring]){
+    Connect-MgGraph -AccessToken ($graphApiToken | ConvertTo-SecureString -AsPlainText -Force)
+    }
+    else {
+    Connect-MgGraph -AccessToken $graphApiToken
+    }
+    Write-Host "======================================================"
+
+
     [PSCustomObject]$aadGroups = Get-Content -Raw -Path $AADGroupsJsonManifestPath | ConvertFrom-Json
+
     Write-Debug "${functionName}:aadGroups=$($aadGroups | ConvertTo-Json -Depth 10)"
+
+    #Setup User AD groups
+    if (($aadGroups.psobject.properties.match('userADGroups').Count -gt 0) -and $aadGroups.userADGroups) {
+        foreach ($userAADGroup in $aadGroups.userADGroups) {
+            $result = Get-MgGroup -Filter "DisplayName eq '$($userAADGroup.displayName)'"
+        
+            if ($result) {
+                Write-Host "User AD Group '$($userAADGroup.displayName)' already exist. Group Id: $($result.Id)"
+                Update-ADGroup -AADGroupObject $userAADGroup -GroupId $result.Id
+            }
+            else {
+                Write-Host "User AD Group '$($userAADGroup.displayName)' does not exist."
+                New-ADGroup -AADGroupObject $userAADGroup
+            }
+        }
+    }
+    else {
+        Write-Host "No 'userADGroups' defined in group manifest file. Skipped"
+    }
+
+    #Setup Access AD groups
+    if (($aadGroups.psobject.properties.match('accessADGroups').Count -gt 0) -and $aadGroups.accessADGroups) {
+        foreach ($accessAADGroup in $aadGroups.accessADGroups) {
+            $result = Get-MgGroup -Filter "DisplayName eq '$($accessAADGroup.displayName)'"
+        
+            if ($result) {
+                Write-Host "Access AD Group '$($accessAADGroup.displayName)' already exist. Group Id: $result.Id"
+                Update-ADGroup -AADGroupObject $accessAADGroup -GroupId $result.Id
+            }
+            else {
+                Write-Host "Access AD Group '$($accessAADGroup.displayName)' does not exist."
+                New-ADGroup -AADGroupObject $accessAADGroup
+            }
+        }
+    }
+    else {
+        Write-Host "No 'accessADGroups' defined in group manifest file. Skipped"
+    }
+
     $exitCode = 0    
 }
 catch {
