@@ -10,8 +10,8 @@ param workspace object
 @description('Required. The object of Subnet.')
 param subnet object
 
-@description('Required. The object of privateLink.')
-param privateLink object
+// @description('Required. The object of privateLink.')
+// param privateLink object
 
 @description('Required. The object for the private DNS zone.')
 param privateDNSZone object
@@ -50,7 +50,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
   scope: resourceGroup(workspace.subscriptionId, workspace.resourceGroup)
 }
 
-var internal = false
+var internal = true
 var infrastructureSubnetId = resourceId(subnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', subnet.vnetName, subnet.Name)
 var dockerBridgeCidr = '172.16.0.1/28'
 var workloadProfiles = containerAppEnv.workloadProfiles
@@ -132,44 +132,44 @@ resource loadBalancer 'Microsoft.Network/loadBalancers@2021-05-01' existing = {
   scope: resourceGroup(infrastructureResourceGroupName)
 }
 
-module privateLinkDeployment 'br/SharedDefraRegistry:network.private-link-service:0.4.8' = {
-  name: 'private-link-service-${deploymentDate}'
-  params: {
-    // Required parameters
-    name: containerAppEnv.name
-    // Non-required parameters    
-    // fqdns: [
-    //   '${containerAppEnv.name}.uksouth.azure.privatelinkservice'
-    // ]
-    ipConfigurations: [
-      {
-        name: 'snet-provider-default-1'
-        properties: {
-          privateIPAllocationMethod: 'Dynamic'
-          subnet: {
-            id: infrastructureSubnetId
-          }
-          primary: true
-          privateIPAddressVersion: 'IPv4'
-        }
-      }
-    ]
-    loadBalancerFrontendIpConfigurations: [
-      {
-        id: loadBalancer.properties.frontendIPConfigurations[0].id
-      }
-    ]
-    lock: {
-      kind: 'CanNotDelete'
-      name: '${privateLink.name}-CanNotDelete'
-    }
-    tags: union(defaultTags, customTags)
-    visibility: privateLink.visibility
-  }
-  dependsOn: [
-    managedEnvironment
-  ]
-}
+// module privateLinkDeployment 'br/SharedDefraRegistry:network.private-link-service:0.4.8' = {
+//   name: 'private-link-service-${deploymentDate}'
+//   params: {
+//     // Required parameters
+//     name: containerAppEnv.name
+//     // Non-required parameters    
+//     // fqdns: [
+//     //   '${containerAppEnv.name}.uksouth.azure.privatelinkservice'
+//     // ]
+//     ipConfigurations: [
+//       {
+//         name: 'snet-provider-default-1'
+//         properties: {
+//           privateIPAllocationMethod: 'Dynamic'
+//           subnet: {
+//             id: infrastructureSubnetId
+//           }
+//           primary: true
+//           privateIPAddressVersion: 'IPv4'
+//         }
+//       }
+//     ]
+//     loadBalancerFrontendIpConfigurations: [
+//       {
+//         id: loadBalancer.properties.frontendIPConfigurations[0].id
+//       }
+//     ]
+//     lock: {
+//       kind: 'CanNotDelete'
+//       name: '${privateLink.name}-CanNotDelete'
+//     }
+//     tags: union(defaultTags, customTags)
+//     visibility: privateLink.visibility
+//   }
+//   dependsOn: [
+//     managedEnvironment
+//   ]
+// }
 
 var dnsTags = {
   Purpose: 'Private DNS Zone'
