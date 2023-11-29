@@ -212,6 +212,9 @@ try {
             --admin-username $adminUsername ``
             --admin-password '$adminPassword' ``
             --upgrade-policy-mode Manual ``
+            --single-placement-group false ``
+            --platform-fault-domain-count 1 ``
+            --disable-overprovision ``
             --public-ip-address '""' ``
             --load-balancer '""' ``
             --tags ServiceName='ADP' ServiceCode='ADP' Name=$VMSSName Purpose='ADO Build Agent'
