@@ -208,6 +208,7 @@ try {
             --subnet '$SubnetId' ``
             --image '$ImageId' ``
             --authentication-type password ``
+            --orchestration-mode Uniform ``
             --admin-username $adminUsername ``
             --admin-password '$adminPassword' ``
             --upgrade-policy-mode Manual ``
