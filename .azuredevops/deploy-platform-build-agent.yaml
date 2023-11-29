@@ -76,8 +76,9 @@ extends:
           primary: 'UKSouth'
       - name: 'dev1'
         serviceConnection: AZR-ADP-DEV1
+        dependsOn: 'snd1'
         deploymentBranches:
-          - 'refs/heads/main'
+          - '*'
         azureRegions:
           primary: 'UKSouth'
     groupedDeployments:
