@@ -33,9 +33,10 @@ resources:
       ref: main
 
 extends:
-  template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
     privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
+    projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
       - name: 'ssv3'
@@ -51,16 +52,19 @@ extends:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
-    scriptsList:
-      - displayName: Publish Nginx Image to ACR
-        scriptPath: 'nginxplus/Publish-NginxPlus-Acr.ps1'
-        scriptArguments: >
-          -AcrName $(ssvSharedAcrName)
-          -AzureSubscription $(subscriptionName)
-          -KeyVaultName $(ssvPlatformKeyVaultName)
-          -NGINXCertSecretName $(nginxCertSecretName)
-          -NGINXKeySecretName $(nginxKeySecretName)
-          -NGINXVersion: ${{ parameters.nginxVersion }}
-          -CertFilesPath $(Build.ArtifactStagingDirectory)
-        type: AzureCLI
-        azureCLIScriptType: 'pscore'
+    groupedDeployments:
+      - name: build_agent
+        deployments:
+        - name:  Publish Nginx Image to ACR
+          type: 'script'
+          scriptType: AzureCLI
+          azureCLIScriptType: pscore
+          path: nginxplus/Publish-NginxPlus-Acr.ps1
+          scriptArguments: > 
+            -AcrName $(ssvSharedAcrName)
+            -AzureSubscription $(subscriptionName)
+            -KeyVaultName $(ssvPlatformKeyVaultName)
+            -NGINXCertSecretName $(nginxCertSecretName)
+            -NGINXKeySecretName $(nginxKeySecretName)
+            -NGINXVersion: ${{ parameters.nginxVersion }}
+            -CertFilesPath $(Build.ArtifactStagingDirectory)
