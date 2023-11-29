@@ -46,7 +46,6 @@ extends:
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
           - 'refs/heads/main'
-        developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'    
     groupedDeployments:
