@@ -31,8 +31,7 @@ param subnet = {
 
 // param privateDnsZonePrefix = '#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}01'
 
-param privateDNSZone = {
-  suffix: '.azurecontainerapps.io'
+param privateDNSZone = {  
   resourceGroup: '#{{ dnsResourceGroup }}'
   subscriptionId: '#{{ SubscriptionId }}'
 }

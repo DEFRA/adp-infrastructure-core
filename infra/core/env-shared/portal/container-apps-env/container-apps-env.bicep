@@ -175,7 +175,7 @@ module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5
   name: 'private-dns-zone-${deploymentDate}'
   scope: resourceGroup(privateDNSZone.resourceGroup)
   params: {
-    name: toLower('${managedEnvironment.properties.defaultDomain}.${location}${privateDNSZone.suffix}}')
+    name: toLower('${managedEnvironment.properties.defaultDomain}')
     lock: 'CanNotDelete'
     tags: union(defaultTags, additionalTags, dnsTags)
     virtualNetworkLinks: [
