@@ -25,8 +25,8 @@ param environment string
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
-// @description('Optional. Date in the format yyyyMMdd-HHmmss.')
-// param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
+@description('Optional. Date in the format yyyyMMdd-HHmmss.')
+param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 
 var customTags = {
@@ -51,58 +51,58 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
 var internal= false
 var infrastructureSubnetId = resourceId(subnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', subnet.vnetName, subnet.Name)
 var dockerBridgeCidr = '172.16.0.1/28'
- var workloadProfiles = containerAppEnv.workloadProfiles
+var workloadProfiles = containerAppEnv.workloadProfiles
 var zoneRedundant = false
-// var logsDestination = 'log-analytics'
-// var infrastructureResourceGroupName = take('${containerAppEnv.name}_ME', 63)
+var logsDestination = 'log-analytics'
+var infrastructureResourceGroupName = take('${containerAppEnv.name}_ME', 63)
 
 //var privateDnsZoneName = toLower('${privateDnsZonePrefix}.${location}.azurecontainerapps.io')
 
-// resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
-//   name: containerAppEnv.name
-//   location: location
-//   tags: union(defaultTags, additionalTags)
-//   properties: {
-//     appLogsConfiguration: {
-//       destination: logsDestination
-//       logAnalyticsConfiguration: {
-//         customerId: logAnalyticsWorkspace.properties.customerId
-//         sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
-//       }
-//     }
-//     vnetConfiguration: {
-//       internal: internal
-//       infrastructureSubnetId: !empty(infrastructureSubnetId) && internal == true ? infrastructureSubnetId : null
-//       dockerBridgeCidr: !empty(infrastructureSubnetId) && internal == true ? dockerBridgeCidr : null      
-//     }
-//     workloadProfiles: !empty(workloadProfiles) ? null : workloadProfiles
-//     zoneRedundant: zoneRedundant
-//     infrastructureResourceGroup: infrastructureResourceGroupName
-//   }
-// }
-
-module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.8' = {
-  name: '${containerAppEnv.name}'
-  params: { 
-    // Required parameters
-    enableDefaultTelemetry: false
-    logAnalyticsWorkspaceResourceId: logAnalyticsWorkspace.id
-    name: '${containerAppEnv.name}'
-    // Non-required parameters
-    dockerBridgeCidr: !empty(infrastructureSubnetId) && internal == true ? dockerBridgeCidr : null  
-    infrastructureSubnetId: !empty(infrastructureSubnetId) && internal == true ? infrastructureSubnetId : null
-    internal: false
-    location: location
-    lock: {
-      kind: 'CanNotDelete'
-      name: '${containerAppEnv.name}-CanNotDelete'
+resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
+  name: containerAppEnv.name
+  location: location
+  tags: union(defaultTags, additionalTags)
+  properties: {
+    appLogsConfiguration: {
+      destination: logsDestination
+      logAnalyticsConfiguration: {
+        customerId: logAnalyticsWorkspace.properties.customerId
+        sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
+      }
     }
-    skuName: containerAppEnv.skuName
-    workloadProfiles :!empty(workloadProfiles) ? workloadProfiles : null
+    vnetConfiguration: {
+      internal: internal
+      infrastructureSubnetId: !empty(infrastructureSubnetId) && internal == true ? infrastructureSubnetId : null
+      dockerBridgeCidr: !empty(infrastructureSubnetId) && internal == true ? dockerBridgeCidr : null      
+    }
+    workloadProfiles: !empty(workloadProfiles) ? null : workloadProfiles
     zoneRedundant: zoneRedundant
-    tags: union(defaultTags, additionalTags)
+    infrastructureResourceGroup: infrastructureResourceGroupName
   }
 }
+
+// module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.8' = {
+//   name: '${containerAppEnv.name}'
+//   params: { 
+//     // Required parameters
+//     enableDefaultTelemetry: false
+//     logAnalyticsWorkspaceResourceId: logAnalyticsWorkspace.id
+//     name: '${containerAppEnv.name}'
+//     // Non-required parameters
+//     dockerBridgeCidr: !empty(infrastructureSubnetId) && internal == true ? dockerBridgeCidr : null  
+//     infrastructureSubnetId: !empty(infrastructureSubnetId) && internal == true ? infrastructureSubnetId : null
+//     internal: false
+//     location: location
+//     lock: {
+//       kind: 'CanNotDelete'
+//       name: '${containerAppEnv.name}-CanNotDelete'
+//     }
+//     skuName: containerAppEnv.skuName
+//     workloadProfiles :!empty(workloadProfiles) ? workloadProfiles : null
+//     zoneRedundant: zoneRedundant
+//     tags: union(defaultTags, additionalTags)
+//   }
+// }
 
 module initContainerApp 'br/SharedDefraRegistry:app.container-app:0.4.9' = {
   name: '${containerApp.name}'
@@ -118,7 +118,7 @@ module initContainerApp 'br/SharedDefraRegistry:app.container-app:0.4.9' = {
         }
       }
     ]
-    environmentId: managedEnvironment.outputs.resourceId
+    environmentId: managedEnvironment.id
     name: containerApp.name
     // Non-required parameters
     enableDefaultTelemetry: false
@@ -172,30 +172,30 @@ module initContainerApp 'br/SharedDefraRegistry:app.container-app:0.4.9' = {
 // }
 
 
-// var dnsTags = {
-//   Name: privateDnsZoneName
-//   Purpose: 'Private DNS Zone'
-// }
-// var dnsVnetLinksTags = {
-//   Name: subnet.vnetName 
-//   Purpose: 'Private DNS Zone VNet Link'
-// }
+var dnsTags = {
+  Name: toLower('${managedEnvironment.properties.defaultDomain}.${location}.azurecontainerapps.io')
+  Purpose: 'Private DNS Zone'
+}
+var dnsVnetLinksTags = {
+  Name: subnet.vnetName 
+  Purpose: 'Private DNS Zone VNet Link'
+}
 
-// module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5.2' = {
-//   name: 'private-dns-zone-${deploymentDate}'
-//   params: {
-//    name: privateDnsZoneName  
-//    lock: 'CanNotDelete'
-//    tags:union(defaultTags, additionalTags,dnsTags)
-//    virtualNetworkLinks: [
-//     {
-//       name: subnet.vnetName 
-//       virtualNetworkResourceId: resourceId(subnet.resourceGroup , 'Microsoft.Network/virtualNetworks', subnet.vnetName )
-//       registrationEnabled: false
-//       tags: union(defaultTags, additionalTags,dnsVnetLinksTags)
-//     }
-//    ]
-//   }
-// }
+module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5.2' = {
+  name: 'private-dns-zone-${deploymentDate}'
+  params: {
+   name:  toLower('${managedEnvironment.properties.defaultDomain}.${location}.azurecontainerapps.io')  
+   lock: 'CanNotDelete'
+   tags:union(defaultTags, additionalTags,dnsTags)
+   virtualNetworkLinks: [
+    {
+      name: subnet.vnetName 
+      virtualNetworkResourceId: resourceId(subnet.resourceGroup , 'Microsoft.Network/virtualNetworks', subnet.vnetName )
+      registrationEnabled: false
+      tags: union(defaultTags, additionalTags,dnsVnetLinksTags)
+    }
+   ]
+  }    
+}
 
 
