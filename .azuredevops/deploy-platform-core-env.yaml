@@ -258,7 +258,7 @@ extends:
                     -AzureSubscription $(subscriptionName)
                     -KeyVaultName $(ssvPlatformKeyVaultName)
                     -KeyVaultRgName $(ssvSharedResourceGroup)
-                    -KeyVaultSubscriptionId $(ssv3subscriptionId)
+                    -KeyVaultSubscriptionId $(ssvSubscriptionId)
                     -SSHPrivateKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity'
                     -SSHPublicKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Pub'
                     -KnownHostsSecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Known-Hosts'
