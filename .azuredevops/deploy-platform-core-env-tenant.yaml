@@ -71,14 +71,14 @@ extends:
           primary: 'UKSouth'
       - name: 'defra_non_prd'
         outputTemplateChange: Skip
-        serviceConnection: AZD-ADP-SSV3
+        serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
            - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'    
       - name: 'defra'
         outputTemplateChange: Skip
-        serviceConnection: AZD-ADP-SSV3
+        serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
            - 'refs/heads/main'
         azureRegions:
