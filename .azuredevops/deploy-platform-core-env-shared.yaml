@@ -119,13 +119,3 @@ extends:
                 - name: container-apps-env
                   path: infra/core/env-shared/portal/container-apps-env
                   resourceGroupName: $(portalResourceGroup)
-                  postDeployScriptsList:
-                    - displayName: Link the Private DNS Zone to Central networks
-                      scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
-                      type: PowerShell
-                      useSystemAccessToken: true
-                      scriptArguments: >
-                        -PrivateDnsZoneName "$(location).azurecontainerapps.io"
-                        -ResourceGroupName $(dnsResourceGroup)
-                        -SubscriptionName $(subscriptionName)
-                        -TenantId $(tenantId)
