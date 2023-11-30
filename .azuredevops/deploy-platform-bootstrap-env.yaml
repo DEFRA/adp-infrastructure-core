@@ -37,7 +37,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: gg/261316-UpdateAppregNames
+      ref: main
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -57,9 +57,8 @@ extends:
         serviceConnection: AZD-ADP-SSV3
         dependsOn: Validate
         deploymentBranches:
-          - '*'
-          # - 'refs/heads/main'
-          # - 'refs/pull/*/merge'
+          - 'refs/heads/main'
+          - 'refs/pull/*/merge'
         azureRegions:
           primary: 'UKSouth'
       - name: 'dev1'
@@ -67,8 +66,7 @@ extends:
         outputTemplateChange: Skip
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
-          - '*'
-          # - 'refs/heads/main'
+          - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
       - name: 'tst1'
@@ -84,10 +82,17 @@ extends:
         serviceConnection: AZD-ADP-SSV3
         dependsOn: 'snd1'
         deploymentBranches:
-          - '*'
-          # - 'refs/heads/main'
+          - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
+      - name: 'pre1'
+        dependsOn: 'tst1'
+        outputTemplateChange: Skip
+        serviceConnection: AZR-ADP-SSV5
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'    
     filePathsForTransform: |
       **/bootstrap/env/config/app-registrations/tier2-app-registration.json
       **/bootstrap/env/config/service-connections/tier2-service-connection.json
