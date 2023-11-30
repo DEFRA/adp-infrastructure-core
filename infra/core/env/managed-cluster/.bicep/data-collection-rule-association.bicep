@@ -7,16 +7,16 @@ param azureMonitorWorkspace object = {
 param clusterName string = 'SNDADPINFAK1401-Test'
 @description('Required. The Azure region where the resources will be deployed.')
 param location string = 'UKSouth'
-@description('Optional. Date in the format yyyyMMdd-HHmmss.')
-param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
+// @description('Optional. Date in the format yyyyMMdd-HHmmss.')
+// param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-var dataCollectionEndpointName = 'MSProm-${location}-${clusterName}'
-var dataCollectionRuleName = 'MSProm-${location}-${clusterName}'
+// var dataCollectionEndpointName = 'MSProm-${location}-${clusterName}'
+// var dataCollectionRuleName = 'MSProm-${location}-${clusterName}'
 var dataCollectionRuleAssociationName = 'MSProm-${location}-${clusterName}'
 var nodeRecordingRuleGroup = 'NodeRecordingRulesRuleGroup-'
-var nodeRecordingRuleGroupName = '${nodeRecordingRuleGroup}${clusterName}'
-var nodeRecordingRuleGroupDescription = 'Node Recording Rules RuleGroup'
-var version = ' - 0.1'
+// var nodeRecordingRuleGroupName = '${nodeRecordingRuleGroup}${clusterName}'
+// var nodeRecordingRuleGroupDescription = 'Node Recording Rules RuleGroup'
+// var version = ' - 0.1'
 
 resource managedCluster 'Microsoft.ContainerService/managedClusters@2023-07-02-preview' existing = {
   name: clusterName
