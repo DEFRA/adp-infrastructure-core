@@ -78,6 +78,18 @@
     "contentType": "text/plain"
   },
   {
+    "key": "SERVICEBUS_WRITER_ROLE_DEFINITION_ID",
+    "value": "#{{ serviceBusWriterRoleDefinitionId }}",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
+    "key": "POSTGRESQL_DATABASE_WRITER_ROLE_DEFINITION_ID",
+    "value": "#{{ postgreSqlDatabaseWriterRoleDefinitionId }}",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
     "key": "Sentinel",
     "value": "#{{ Build.BuildId }}",
     "label": "adp-platform",

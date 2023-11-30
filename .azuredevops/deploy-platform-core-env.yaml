@@ -37,6 +37,7 @@ parameters:
       - Application - Storage Account
       - Application - Service Bus
       - Application - Key Vault
+      - Platform - Key Vault
 
 pr:
   branches:
@@ -105,6 +106,9 @@ variables:
     value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Flux Services SSH Keys')) }}
   - name: IsManagedClusterPlatformVariables
     value: ${{ or(eq(variables.IsManagedClusterAll,true), eq(parameters.deployResources, 'Managed Cluster - Platform Variables')) }}
+
+  - name: IsPlatformKeyVault
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Platform - Key Vault')) }}
 
   - name: IsFrontDoor
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Front Door')) }}
@@ -191,6 +195,17 @@ extends:
                         -ResourceGroupName $(ssvSharedResourceGroup)
                         -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
                         -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(aksResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
+
+        - ${{ if eq(variables.IsPlatformKeyVault, true) }}:
+          - name: platform
+            deployments:                  
+              - name: key-vault
+                path: infra/core/env/key-vault
+                parameterFilePath: infra/core/env/key-vault/platform-keyvault-params
+                resourceGroupName: $(servicesResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)02
+                    resourceGroupName: $(servicesResourceGroup)
 
         - ${{ if eq(variables.IsManagedCluster, true) }}:  
           - name: managed_cluster
@@ -329,8 +344,9 @@ extends:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_servicebus)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
               - ${{ if eq(variables.IsApplicationKeyVault, true) }}:                    
-                - name: application-key-vault
+                - name: key-vault
                   path: infra/core/env/key-vault
+                  parameterFilePath: infra/core/env/key-vault/application-keyvault-params
                   resourceGroupName: $(servicesResourceGroup)
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01

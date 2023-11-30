@@ -31,33 +31,40 @@ resources:
       endpoint: DEFRA
       type: github
       ref: main
-variables:
-  - name: ssv3Subscription
-    value: AZD-ADP-SSV3
 
 extends:
-  template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
     privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
+    projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
       - name: 'ssv3'
-        serviceConnection: $(ssv3Subscription)
+        serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - 'refs/heads/main'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
-    scriptsList:
-      - displayName: Publish Nginx Image to ACR
-        scriptPath: 'nginxplus/Publish-NginxPlus-Acr.ps1'
-        scriptArguments: >
-          -AcrName $(ssvSharedAcrName)
-          -AzureSubscription $(ssv3Subscription)
-          -KeyVaultName $(ssvPlatformKeyVaultName)
-          -NGINXCertSecretName $(nginxCertSecretName)
-          -NGINXKeySecretName $(nginxKeySecretName)
-          -NGINXVersion: ${{ parameters.nginxVersion }}
-          -CertFilesPath $(Build.ArtifactStagingDirectory)
-        type: AzureCLI
-        azureCLIScriptType: 'pscore'
+      - name: 'ssv5'
+        serviceConnection: AZR-ADP-SSV5
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'
+    groupedDeployments:
+      - name: build_agent
+        deployments:
+        - name:  Publish Nginx Image to ACR
+          type: 'script'
+          scriptType: AzureCLI
+          azureCLIScriptType: pscore
+          path: nginxplus/Publish-NginxPlus-Acr.ps1
+          scriptArguments: > 
+            -AcrName $(ssvSharedAcrName)
+            -AzureSubscription $(subscriptionName)
+            -KeyVaultName $(ssvPlatformKeyVaultName)
+            -NGINXCertSecretName $(nginxCertSecretName)
+            -NGINXKeySecretName $(nginxKeySecretName)
+            -NGINXVersion: ${{ parameters.nginxVersion }}
+            -CertFilesPath $(Build.ArtifactStagingDirectory)

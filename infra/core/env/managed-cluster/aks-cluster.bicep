@@ -28,6 +28,8 @@ param asoPlatformManagedIdentity string
 param appConfig object
 @description('Required. The parameter object for the azure monitor workspace service. The object must contain name, resourceGroup and subscriptionId.')
 param azureMonitorWorkspace object
+@description('Required. The parameter object for the environment KeyVault. The object must contain name, resourceGroup and keyVaultName.')
+param keyVault object
 
 var commonTags = {
   Location: location
@@ -66,6 +68,17 @@ var asoPlatformTeamMiRbacs = [
   {
     name: 'UserAccessAdministrator'
     roleDefinitionId: '18d7d88d-d35e-4fb5-a5c3-7773c20a72d9'
+  }
+]
+
+var kmsKeyVaultRbacs = [
+  {
+    name: 'KeyVaultCryptoUser'
+    roleDefinitionId: '12338af0-0e69-4776-bea7-57ae8d297424'
+  }
+  {
+    name: 'KeyVaultContributor'
+    roleDefinitionId: 'f25e0fa2-a7c8-4377-a976-54943a77a395'
   }
 ]
 
@@ -206,11 +219,26 @@ module aksDataCollectionRuleAssociation '.bicep/data-collection-rule-association
   }
 }
 
+module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in kmsKeyVaultRbacs: {
+  name: 'aks-cluster-${kmsKeyVaultRbac.name}-${deploymentDate}'
+  scope: resourceGroup(keyVault.resourceGroup)
+  dependsOn: [
+    managedIdentity
+  ]
+  params: {
+    principalId: managedIdentity.outputs.principalId
+    keyVaultName: keyVault.keyVaultName
+    roleDefinitionId: kmsKeyVaultRbac.roleDefinitionId
+  }
+}
+]
+
 module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.15-AA' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
     privateDnsZoneContributor
     networkContributor
+    kmsKeyVaultRbac
   ]
   params: {
     name: cluster.name

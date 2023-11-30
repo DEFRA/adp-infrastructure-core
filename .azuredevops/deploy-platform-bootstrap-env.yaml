@@ -55,14 +55,32 @@ extends:
       - name: 'snd2'
         outputTemplateChange: Skip
         serviceConnection: AZD-ADP-SSV3
+        dependsOn: Validate
         deploymentBranches:
-           - 'refs/heads/main'
-           - 'refs/pull/*/merge'
+          - 'refs/heads/main'
+          - 'refs/pull/*/merge'
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'dev1'
+        dependsOn: 'snd1'
+        outputTemplateChange: Skip
+        serviceConnection: AZR-ADP-SSV5
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'tst1'
+        dependsOn: 'dev1'
+        outputTemplateChange: Skip
+        serviceConnection: AZR-ADP-SSV5
+        deploymentBranches:
+          - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd3'
         outputTemplateChange: Skip
         serviceConnection: AZD-ADP-SSV3
+        dependsOn: 'snd1'
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
@@ -92,7 +110,7 @@ extends:
                       -Tier2ApplicationClientIdSecretName $(tier2ApplicationClientIdSecretName)
                   - displayName: Create or Update AzureRm Service Endpoint(Service Connection)
                     Type: AzureCLI
-                    useSystemAccessToken: true                      
+                    useSystemAccessToken: true
                     scriptPath: "infra/bootstrap/env/scripts/ado/Initialize-ServiceEndpoint.ps1"
                     ScriptArguments: >
                       -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
