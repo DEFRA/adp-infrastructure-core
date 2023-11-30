@@ -37,7 +37,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref:  refs/heads/rv/263292-backstageportal
+      ref:  refs/heads/rv/testenv03
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon

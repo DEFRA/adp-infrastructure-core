@@ -10,11 +10,9 @@ param workspace object
 @description('Required. The object of Subnet.')
 param subnet object
 
-// @description('Required. The object of privateLink.')
-// param privateLink object
 
-@description('Required. The object for the private DNS zone.')
-param privateDNSZone object
+// @description('Required. The object for the private DNS zone.')
+// param privateDNSZone object
 
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
@@ -25,8 +23,8 @@ param environment string
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
-@description('Optional. Date in the format yyyyMMdd-HHmmss.')
-param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
+// @description('Optional. Date in the format yyyyMMdd-HHmmss.')
+// param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 @description('Required. The name of the key vault where the secrets will be stored.')
 param keyvaultName string
@@ -50,7 +48,7 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
   scope: resourceGroup(workspace.subscriptionId, workspace.resourceGroup)
 }
 
-var internal = true
+var internal = false
 var infrastructureSubnetId = resourceId(subnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', subnet.vnetName, subnet.Name)
 var dockerBridgeCidr = '172.16.0.1/28'
 var workloadProfiles = containerAppEnv.workloadProfiles
@@ -72,8 +70,8 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
     }
     vnetConfiguration: {
       internal: internal
-      infrastructureSubnetId: !empty(infrastructureSubnetId) && internal == true ? infrastructureSubnetId : null
-      dockerBridgeCidr: !empty(infrastructureSubnetId) && internal == true ? dockerBridgeCidr : null
+      infrastructureSubnetId: !empty(infrastructureSubnetId) ? infrastructureSubnetId : null
+      dockerBridgeCidr: !empty(infrastructureSubnetId) ? dockerBridgeCidr : null
     }
     workloadProfiles: !empty(workloadProfiles) ? workloadProfiles : null
     zoneRedundant: zoneRedundant
@@ -127,80 +125,41 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
 //   }
 // }
 
-resource loadBalancer 'Microsoft.Network/loadBalancers@2021-05-01' existing = {
-  name: 'capp-svc-lb'
-  scope: resourceGroup(infrastructureResourceGroupName)
-}
-
-// module privateLinkDeployment 'br/SharedDefraRegistry:network.private-link-service:0.4.8' = {
-//   name: 'private-link-service-${deploymentDate}'
-//   params: {
-//     // Required parameters
-//     name: containerAppEnv.name
-//     // Non-required parameters    
-//     // fqdns: [
-//     //   '${containerAppEnv.name}.uksouth.azure.privatelinkservice'
-//     // ]
-//     ipConfigurations: [
-//       {
-//         name: 'snet-provider-default-1'
-//         properties: {
-//           privateIPAllocationMethod: 'Dynamic'
-//           subnet: {
-//             id: infrastructureSubnetId
-//           }
-//           primary: true
-//           privateIPAddressVersion: 'IPv4'
-//         }
-//       }
-//     ]
-//     loadBalancerFrontendIpConfigurations: [
-//       {
-//         id: loadBalancer.properties.frontendIPConfigurations[0].id
-//       }
-//     ]
-//     lock: {
-//       kind: 'CanNotDelete'
-//       name: '${privateLink.name}-CanNotDelete'
-//     }
-//     tags: union(defaultTags, customTags)
-//     visibility: privateLink.visibility
-//   }
-//   dependsOn: [
-//     managedEnvironment
-//   ]
+// resource loadBalancer 'Microsoft.Network/loadBalancers@2021-05-01' existing = {
+//   name: 'capp-svc-lb'
+//   scope: resourceGroup(infrastructureResourceGroupName)
 // }
 
-var dnsTags = {
-  Purpose: 'Private DNS Zone'
-}
-var dnsVnetLinksTags = {
-  Purpose: 'Private DNS Zone VNet Link'
-}
+// var dnsTags = {
+//   Purpose: 'Private DNS Zone'
+// }
+// var dnsVnetLinksTags = {
+//   Purpose: 'Private DNS Zone VNet Link'
+// }
 
 
-module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5.2' = {
-  name: 'private-dns-zone-${deploymentDate}'
-  scope: resourceGroup(privateDNSZone.resourceGroup)
-  params: {
-    name: toLower('${privateDNSZone.name}')
-    lock: 'CanNotDelete'
-    tags: union(defaultTags, additionalTags, dnsTags)
-    virtualNetworkLinks: [
-      {
-        name: subnet.vnetName
-        virtualNetworkResourceId: resourceId(subnet.resourceGroup, 'Microsoft.Network/virtualNetworks', subnet.vnetName)
-        registrationEnabled: false
-        tags: union(defaultTags, additionalTags, dnsVnetLinksTags)
-      }
-    ]
-    a: [
-      {
-        name: '*.${toLower(split(managedEnvironment.properties.defaultDomain, '.')[0])}'
-        ipv4Address: loadBalancer.properties.frontendIPConfigurations[0].properties.privateIPAddress
-      } ]
-  }
-}
+// module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5.2' = {
+//   name: 'private-dns-zone-${deploymentDate}'
+//   scope: resourceGroup(privateDNSZone.resourceGroup)
+//   params: {
+//     name: toLower('${privateDNSZone.name}')
+//     lock: 'CanNotDelete'
+//     tags: union(defaultTags, additionalTags, dnsTags)
+//     virtualNetworkLinks: [
+//       {
+//         name: subnet.vnetName
+//         virtualNetworkResourceId: resourceId(subnet.resourceGroup, 'Microsoft.Network/virtualNetworks', subnet.vnetName)
+//         registrationEnabled: false
+//         tags: union(defaultTags, additionalTags, dnsVnetLinksTags)
+//       }
+//     ]
+//     a: [
+//       {
+//         name: '*.${toLower(split(managedEnvironment.properties.defaultDomain, '.')[0])}'
+//         ipv4Address: loadBalancer.properties.frontendIPConfigurations[0].properties.privateIPAddress
+//       } ]
+//   }
+// }
 
 resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
   name: keyvaultName

@@ -1,7 +1,7 @@
 using './container-apps-env.bicep'
 
 param containerAppEnv = {
-  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerappsenv }}#{{ nc_shared_instance_regionid }}04'    
+  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerappsenv }}#{{ nc_shared_instance_regionid }}03'    
   skuName: 'Consumption'
   workloadProfiles: [
     {
@@ -24,16 +24,12 @@ param subnet = {
   vnetName: '#{{ ssvVirtualNetworkName }}'
 }
 
-// param privateLink = {
-//   name: 'capp-loadbalancer-pls'
-//   visibility: {}
-// }
 
-param privateDNSZone = {  
-  name: '#{{ location }}.azurecontainerapps.io'
-  resourceGroup: '#{{ dnsResourceGroup }}'
-  subscriptionId: '#{{ SubscriptionId }}'
-}
+// param privateDNSZone = {  
+//   name: '#{{ location }}.azurecontainerapps.io'
+//   resourceGroup: '#{{ dnsResourceGroup }}'
+//   subscriptionId: '#{{ SubscriptionId }}'
+// }
 
 param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}03'
 
