@@ -18,25 +18,7 @@
       "value": "#{{ environment }}"
     },
     "customRules": {
-      "value": [
-        {
-          "name": "ApplyGeoFilter",
-          "priority": 100,
-          "enabledState": "Enabled",
-          "ruleType": "MatchRule",
-          "action": "Block",
-          "matchConditions": [
-            {
-              "matchVariable": "RemoteAddr",
-              "operator": "GeoMatch",
-              "negateCondition": true,
-              "matchValue": [
-                "ZZ"
-              ]
-            }
-          ]
-        }
-      ]
+      "value": []
     },
     "microsoftDefaultRuleSetRuleGroupOverrides":{
       "value": []
