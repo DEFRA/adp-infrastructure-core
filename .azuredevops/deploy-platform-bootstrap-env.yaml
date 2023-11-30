@@ -37,7 +37,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: gg/261316-UpdateAppregNames
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
