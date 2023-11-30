@@ -52,6 +52,12 @@ extends:
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
+      - name: 'ssv5'
+        serviceConnection: AZR-ADP-SSV5
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'    
     groupedDeployments:
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'shared')) }}        
         : - name: SharedResources 
