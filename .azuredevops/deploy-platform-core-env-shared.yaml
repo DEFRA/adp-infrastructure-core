@@ -114,7 +114,7 @@ extends:
                       type: PowerShell
                       useSystemAccessToken: true
                       scriptArguments: >
-                        -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)03.private.postgres.database.azure.com"
+                        -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01.private.postgres.database.azure.com"
                         -ResourceGroupName $(dnsResourceGroup)
                         -SubscriptionName $(subscriptionName)
                         -TenantId $(tenantId)
