@@ -13,10 +13,11 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 var dataCollectionEndpointName = 'MSProm-${location}-${clusterName}'
 var dataCollectionRuleName = 'MSProm-${location}-${clusterName}'
 var dataCollectionRuleAssociationName = 'MSProm-${location}-${clusterName}'
-// var nodeRecordingRuleGroup = 'NodeRecordingRulesRuleGroup-'
-// var nodeRecordingRuleGroupName = '${nodeRecordingRuleGroup}${clusterName}'
-// var nodeRecordingRuleGroupDescription = 'Node Recording Rules RuleGroup'
-// var version = ' - 0.1'
+
+resource managedGrafana 'Microsoft.Dashboard/grafana@2022-08-01' existing = {
+  scope: resourceGroup('7dc5bbdf-72d7-42ca-ac23-eb5eea3764b4','SSVADPINFRG3401')
+  name: 'SSVADPINFMG3401'
+}
 
 resource managedCluster 'Microsoft.ContainerService/managedClusters@2023-07-02-preview' existing = {
   name: clusterName
@@ -84,6 +85,19 @@ resource dataCollectionRuleAssociation 'Microsoft.Insights/dataCollectionRuleAss
   properties: {
     description: 'Association of data collection rule. Deleting this association will break the data collection for this AKS Cluster.'
     dataCollectionRuleId: dataCollectionRule.outputs.resourceId
+  }
+}
+
+module prometheusRuleGroup './prometheus-rule-groups.bicep' = {
+  scope: resourceGroup(azureMonitorWorkspace.resourceGroup)
+  name: 'prometheus-rul-group-${deploymentDate}'
+  params: {
+    azureMonitorWorkspace: {
+      name: azureMonitorWorkspace.name
+      resourceGroup: azureMonitorWorkspace.resourceGroup
+    }
+    clusterName: clusterName
+    location: location
   }
 }
 
@@ -179,3 +193,12 @@ resource dataCollectionRuleAssociation 'Microsoft.Insights/dataCollectionRuleAss
 //     }
 //   }
 // }
+
+module monitorWorkspaceRoleAssignment 'monitoring-reader.bicep' = {
+  name: 'monitor-workspace-monitoring-reader-role-${deploymentDate}'
+  scope: resourceGroup(azureMonitorWorkspace.resourceGroup)
+  params: {
+    azureMonitorWorkspaceName: azureMonitorWorkspace.name
+    principalId: managedGrafana.identity.principalId
+  }
+}
