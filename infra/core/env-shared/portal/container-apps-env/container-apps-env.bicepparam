@@ -1,7 +1,7 @@
 using './container-apps-env.bicep'
 
 param containerAppEnv = {
-  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerappsenv }}#{{ nc_shared_instance_regionid }}01'    
+  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerappsenv }}#{{ nc_shared_instance_regionid }}02'    
   workloadProfiles: [
     {
       workloadProfileType: 'Consumption'
@@ -24,7 +24,7 @@ param subnet = {
   vnetName: '#{{ ssvVirtualNetworkName }}'
 }
 
-param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}03'
+param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}02'
 
 param environment = '#{{ environment }}'
 
