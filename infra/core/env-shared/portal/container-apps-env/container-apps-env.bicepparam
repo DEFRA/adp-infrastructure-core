@@ -10,6 +10,7 @@ param containerAppEnv = {
 }
 param containerApp = {
   name: 'portal' 
+  managedIdentityName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}03-adp-portal'
 }
 param workspace = {
   name: '#{{ logAnalyticsWorkspace }}'
