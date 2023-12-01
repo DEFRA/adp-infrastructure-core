@@ -4,7 +4,7 @@ param azureMonitorWorkspace object = {
   resourceGroup: 'sndadpinfrg1401'
 }
 @description('Required. The clustername to scope the data collection rule association.')
-param clusterName string = 'SNDADPINFAK1401-Test'
+param clusterName string = 'SNDADPINFAK1401'
 @description('Required. The Azure region where the resources will be deployed.')
 param location string = 'UKSouth'
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
@@ -28,7 +28,7 @@ resource monitorWorkspace 'Microsoft.Monitor/accounts@2021-06-03-preview' existi
 }
 
 module dataCollectionEndpoint 'br/SharedDefraRegistry:insights.data-collection-endpoint:0.4.8' = {
-  scope: resourceGroup(azureMonitorWorkspace.resourceGroup)
+  // scope: resourceGroup(azureMonitorWorkspace.resourceGroup)
   name: 'prometheus-data-collection-endpoint-${deploymentDate}'
   params: {
     name: dataCollectionEndpointName
@@ -38,7 +38,7 @@ module dataCollectionEndpoint 'br/SharedDefraRegistry:insights.data-collection-e
 }
 
 module dataCollectionRule 'br/SharedDefraRegistry:insights.data-collection-rule:0.4.8' = {
-  scope: resourceGroup(azureMonitorWorkspace.resourceGroup)
+  // scope: resourceGroup(azureMonitorWorkspace.resourceGroup)
   name: 'prometheus-data-collection-rule-${deploymentDate}'
   params: {
     name: dataCollectionRuleName
@@ -78,8 +78,8 @@ module dataCollectionRule 'br/SharedDefraRegistry:insights.data-collection-rule:
   }
 }
 
-resource dataCollectionRuleAssociation2 'Microsoft.Insights/dataCollectionRuleAssociations@2021-09-01-preview' = {
-  name: '${dataCollectionRuleAssociationName}-2'
+resource dataCollectionRuleAssociation 'Microsoft.Insights/dataCollectionRuleAssociations@2021-09-01-preview' = {
+  name: dataCollectionRuleAssociationName
   scope: managedCluster
   properties: {
     description: 'Association of data collection rule. Deleting this association will break the data collection for this AKS Cluster.'
@@ -87,14 +87,14 @@ resource dataCollectionRuleAssociation2 'Microsoft.Insights/dataCollectionRuleAs
   }
 }
 
-resource dataCollectionRuleAssociation 'Microsoft.Insights/dataCollectionRuleAssociations@2021-09-01-preview' = {
-  name: dataCollectionRuleAssociationName
-  scope: managedCluster
-  properties: {
-    description: 'Association of data collection rule. Deleting this association will break the data collection for this AKS Cluster.'
-    dataCollectionRuleId: monitorWorkspace.properties.defaultIngestionSettings.dataCollectionRuleResourceId
-  }
-}
+// resource dataCollectionRuleAssociation2 'Microsoft.Insights/dataCollectionRuleAssociations@2021-09-01-preview' = {
+//   name: '${dataCollectionRuleAssociationName}-2'
+//   scope: managedCluster
+//   properties: {
+//     description: 'Association of data collection rule. Deleting this association will break the data collection for this AKS Cluster.'
+//     dataCollectionRuleId: monitorWorkspace.properties.defaultIngestionSettings.dataCollectionRuleResourceId
+//   }
+// }
 
 // resource nodeRecordingRuleGroupResource 'Microsoft.AlertsManagement/prometheusRuleGroups@2023-03-01' = {
 //   name: nodeRecordingRuleGroupName
