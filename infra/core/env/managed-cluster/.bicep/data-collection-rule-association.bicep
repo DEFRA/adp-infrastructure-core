@@ -92,12 +92,10 @@ module prometheusRuleGroup './prometheus-rule-groups.bicep' = {
   scope: resourceGroup(azureMonitorWorkspace.resourceGroup)
   name: 'prometheus-rul-group-${deploymentDate}'
   params: {
-    azureMonitorWorkspace: {
-      name: azureMonitorWorkspace.name
-      resourceGroup: azureMonitorWorkspace.resourceGroup
-    }
     clusterName: clusterName
-    location: location
+    location: location 
+    clusterResourceId: managedCluster.id
+    monitorWorkspaceResourceId: monitorWorkspace.id
   }
 }
 

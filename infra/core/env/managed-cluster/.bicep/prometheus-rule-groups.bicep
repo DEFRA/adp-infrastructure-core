@@ -1,10 +1,9 @@
-@description('Required. The parameter object for the azure monitor workspace service. The object must contain name, resourceGroup and subscriptionId.')
-param azureMonitorWorkspace object //= {
-//   name: 'SNDADPINFMW1401'
-//   resourceGroup: 'sndadpinfrg1401'
-// }
+@description('Required. Azure Monitor Workspace resource id.')
+param monitorWorkspaceResourceId string 
 @description('Required. The clustername to scope the data collection rule association.')
 param clusterName string //= 'SNDADPINFAK1401'
+@description('Required. The AKS Cluster resource is.')
+param clusterResourceId string
 @description('Required. The Azure region where the resources will be deployed.')
 param location string //= 'UKSouth'
 
@@ -13,14 +12,14 @@ var nodeRecordingRuleGroupName = '${nodeRecordingRuleGroup}${clusterName}'
 var nodeRecordingRuleGroupDescription = 'Node Recording Rules RuleGroup'
 var version = ' - 0.1'
 
-resource managedCluster 'Microsoft.ContainerService/managedClusters@2023-07-02-preview' existing = {
-  name: clusterName
-}
+// resource managedCluster 'Microsoft.ContainerService/managedClusters@2023-07-02-preview' existing = {
+//   name: clusterName
+// }
 
-resource monitorWorkspace 'Microsoft.Monitor/accounts@2021-06-03-preview' existing = {
-  scope: resourceGroup(azureMonitorWorkspace.resourceGroup)
-  name: azureMonitorWorkspace.name
-}
+// resource monitorWorkspace 'Microsoft.Monitor/accounts@2021-06-03-preview' existing = {
+//   scope: resourceGroup(azureMonitorWorkspace.resourceGroup)
+//   name: azureMonitorWorkspace.name
+// }
 
 resource nodeRecordingRuleGroupResource 'Microsoft.AlertsManagement/prometheusRuleGroups@2023-03-01' = {
   name: nodeRecordingRuleGroupName
@@ -28,8 +27,8 @@ resource nodeRecordingRuleGroupResource 'Microsoft.AlertsManagement/prometheusRu
   properties: {
     description: '${nodeRecordingRuleGroupDescription}-${version}'
     scopes: [
-      monitorWorkspace.id
-      managedCluster.id
+      monitorWorkspaceResourceId
+      clusterResourceId
     ]
     clusterName: clusterName
     interval: 'PT1M'
