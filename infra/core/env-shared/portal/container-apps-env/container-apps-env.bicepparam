@@ -2,7 +2,6 @@ using './container-apps-env.bicep'
 
 param containerAppEnv = {
   name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerappsenv }}#{{ nc_shared_instance_regionid }}03'    
-  skuName: 'Consumption'
   workloadProfiles: [
     {
       workloadProfileType: 'Consumption'
@@ -23,13 +22,6 @@ param subnet = {
   resourceGroup: '#{{ ssvVirtualNetworkResourceGroup }}'
   vnetName: '#{{ ssvVirtualNetworkName }}'
 }
-
-
-// param privateDNSZone = {  
-//   name: '#{{ location }}.azurecontainerapps.io'
-//   resourceGroup: '#{{ dnsResourceGroup }}'
-//   subscriptionId: '#{{ SubscriptionId }}'
-// }
 
 param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}03'
 

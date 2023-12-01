@@ -362,6 +362,20 @@ param nsgList = [
         }
       }
       {
+        name: 'Allow_HTTPs_Outbound_To_Any'
+        properties: {
+          description: 'Allow outbound HTTPS to Any'
+          protocol: 'Tcp'
+          sourcePortRange: '*'
+          destinationPortRange: '443'
+          sourceAddressPrefix: '*'
+          destinationAddressPrefix: '*'
+          access: 'Allow'
+          priority: 110
+          direction: 'Outbound'
+        }
+      }
+      {
         name: 'AllowVNetAnyOutbound'
         properties: {
           protocol: '*'
