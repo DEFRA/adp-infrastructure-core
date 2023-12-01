@@ -24,7 +24,7 @@ param subnet = {
   vnetName: '#{{ ssvVirtualNetworkName }}'
 }
 
-param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}03'
+param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}02'
 
 param environment = '#{{ environment }}'
 
