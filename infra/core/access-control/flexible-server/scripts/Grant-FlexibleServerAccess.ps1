@@ -11,13 +11,13 @@ Grant access to postgres flexible server for service (tier-3) managed identity.
 
 Set-StrictMode -Version 3.0
 
-$PostgresHost = $env:PostgresHost # "sndadpdbsps1401.postgres.database.azure.com"
-$PostgresDatabase = $env:PostgresDatabase # "ffc-demo-payment"
-$ServiceMIName = $env:ServiceMIName # "sndadpinfmi1401-ffc-demo-payment-service"
-$PlatformMIName = $env:PlatformMIName # "ADP-Plarform-Test-App"
-$PlatformMIClientId = $env:PlatformMIClientId # "6b57e845-f3a8-4c0f-821b-8d4e99414f87"
-$PlatformMITenantId = $env:PlatformMITenantId # "6f504113-6b64-43f2-ade9-242e05780007"
-$PlatformMISubscriptionId = $env:PlatformMISubscriptionId # "55f3b8c6-6800-41c7-a40d-2adb5e4e1bd1"
+$PostgresHost = $env:PostgresHost 
+$PostgresDatabase = $env:PostgresDatabase 
+$ServiceMIName = $env:ServiceMIName 
+$PlatformMIName = $env:PlatformMIName 
+$PlatformMIClientId = $env:PlatformMIClientId
+$PlatformMITenantId = $env:PlatformMITenantId 
+$PlatformMISubscriptionId = $env:PlatformMISubscriptionId 
 $PlatformMIFederatedTokenFile = $env:PlatformMIFederatedTokenFile
 $WorkingDirectory = $PWD
 
