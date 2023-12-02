@@ -48,7 +48,7 @@ resource dataCollectionRuleAssociation 'Microsoft.Insights/dataCollectionRuleAss
   }
 }
 
-module monitorWorkspaceRoleAssignment 'monitoring-reader.bicep' = {
+module monitorWorkspaceRoleAssignment 'monitoring-data-reader.bicep' = {
   name: 'monitor-workspace-monitoring-reader-role-${deploymentDate}'
   scope: resourceGroup(azureMonitorWorkspace.resourceGroup)
   params: {
