@@ -16,12 +16,6 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('The resourceIds of Azure Monitor Workspaces which will be linked to Grafana')
 param azureMonitorWorkspaceResourceIds string
 
-// @description('Required. The parameter object for the monitor workspace. The object must contain the name, subscriptionId and resourceGroup values.')
-// param azureMonitorWorkspace object
-
-// @description('Optional. Date in the format yyyyMMdd-HHmmss.')
-// param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
-
 var commonTags = {
   Location: location
   CreatedDate: createdDate
@@ -61,12 +55,3 @@ resource grafanaRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-
     principalType: 'Group'
   }
 }
-
-// module monitorWorkspaceRoleAssignment '.bicep/monitoring-reader.bicep' = {
-//   name: 'monitor-workspace-monitoring-reader-role-${deploymentDate}'
-//   scope: resourceGroup(azureMonitorWorkspace.subscriptionId, azureMonitorWorkspace.resourceGroup)
-//   params: {
-//     azureMonitorWorkspaceName: azureMonitorWorkspace.name
-//     principalId: grafanaDashboardResource.identity.principalId
-//   }
-// }

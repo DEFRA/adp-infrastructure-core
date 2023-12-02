@@ -20,8 +20,10 @@ param createdDate string = utcNow('yyyy-MM-dd')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 // @description('Required. The parameter object for configuring flux with the aks cluster. The object must contain the fluxCore  and fluxServices values.')
 // param fluxConfig object
-@description('Optional. The parameter object for the monitoringWorkspace. The object must contain name of the name and resourceGroup.')
+@description('Required. The parameter object for the monitoringWorkspace. The object must contain name of the name and resourceGroup.')
 param monitoringWorkspace object
+@description('Required. The parameter object for the managed grafana instance. The object must contain name of the name, resourceGroup and subscriptionId.')
+param grafana object
 @description('Required. Azure Service Operator managed identity name')
 param asoPlatformManagedIdentity string
 @description('Required. The parameter object for the app configuration service. The object must contain name, resourceGroup and managedIdentityName.')
@@ -207,12 +209,17 @@ module networkContributor '.bicep/network-contributor.bicep' = {
   }
 }
 
-module aksDataCollectionRuleAssociation '.bicep/data-collection-rule-association.bicep' = {
+module prometheusLogsRequisites '.bicep/prometheus-logs-requisites.bicep' = {
   name: 'aks-data-collection-rule-association-${deploymentDate}'
   params: {
     azureMonitorWorkspace: {
       name: azureMonitorWorkspace.name
       resourceGroup: azureMonitorWorkspace.resourceGroup
+    }
+    grafana: {
+      name: grafana.name
+      resourceGroup: grafana.resourceGroup
+      subscriptionId: grafana.subscriptionId
     }
     clusterName: deployAKS.outputs.name
     location: location

@@ -17,12 +17,12 @@ resource monitorWorkspaceRoleAssignment 'Microsoft.Authorization/roleAssignments
   }
 }
 
-resource monitorWorkspaceMDRRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(resourceGroup().id, 'MonitoringDataReader', azureMonitorWorkSpaceResource.name)
-  scope: azureMonitorWorkSpaceResource
-  properties: {
-    principalId: principalId
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b0d8363b-8ddd-447d-831f-62ca05bff136') // Monitoring Data Reader
-    principalType: 'ServicePrincipal'
-  }
-}
+// resource monitorWorkspaceMDRRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+//   name: guid(resourceGroup().id, 'MonitoringDataReader', azureMonitorWorkSpaceResource.name)
+//   scope: azureMonitorWorkSpaceResource
+//   properties: {
+//     principalId: principalId
+//     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b0d8363b-8ddd-447d-831f-62ca05bff136') // Monitoring Data Reader
+//     principalType: 'ServicePrincipal'
+//   }
+// }
