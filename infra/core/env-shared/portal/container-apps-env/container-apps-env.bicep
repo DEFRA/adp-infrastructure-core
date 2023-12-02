@@ -41,9 +41,9 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
   scope: resourceGroup(workspace.subscriptionId, workspace.resourceGroup)
 }
 
-resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
-  name: containerApp.managedIdentityName
-}
+// resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
+//   name: containerApp.managedIdentityName
+// }
 
 var internal = false
 var infrastructureSubnetId = resourceId(subnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', subnet.vnetName, subnet.Name)
@@ -99,33 +99,33 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
 //   }
 // }
 
-resource initContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
-  name: '${containerApp.name}'
-  location: location
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${managedIdentity.id}': {}
-    }
-  }
-  properties: {
-    environmentId: managedEnvironment.id
-    configuration: {
-      ingress: {
-        external: true
-        targetPort: 80
-      }
-    }
-    template: {
-      containers: [
-        {
-          name: '${containerApp.name}'
-          image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
-        }
-      ]
-    }
-  }
-}
+// resource initContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
+//   name: '${containerApp.name}'
+//   location: location
+//   identity: {
+//     type: 'UserAssigned'
+//     userAssignedIdentities: {
+//       '${managedIdentity.id}': {}
+//     }
+//   }
+//   properties: {
+//     environmentId: managedEnvironment.id
+//     configuration: {
+//       ingress: {
+//         external: true
+//         targetPort: 80
+//       }
+//     }
+//     template: {
+//       containers: [
+//         {
+//           name: '${containerApp.name}'
+//           image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
+//         }
+//       ]
+//     }
+//   }
+// }
 
 resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
   name: keyvaultName

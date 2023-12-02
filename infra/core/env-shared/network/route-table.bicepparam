@@ -17,7 +17,7 @@ param routes = [
   {
     name: 'acainternal'
     properties: {
-      addressPrefix: '#{{ subnet1AddressPrefix }}'
+      addressPrefix: '#{{ vnet1AddressPrefixes }}'
       nextHopType: 'VnetLocal'
     }
   }
