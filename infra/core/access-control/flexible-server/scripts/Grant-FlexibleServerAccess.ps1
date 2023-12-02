@@ -1,0 +1,121 @@
+<#
+.SYNOPSIS
+Grant access to postgres flexible server for service (tier-3) managed identity.
+
+.DESCRIPTION
+Grant access to postgres flexible server for service (tier-3) managed identity.
+
+.EXAMPLE
+.\Grant-FlexibleServerAccess.ps1 
+#>
+
+Set-StrictMode -Version 3.0
+
+$PostgresHost = $env:PostgresHost # "sndadpdbsps1401.postgres.database.azure.com"
+$PostgresDatabase = $env:PostgresDatabase # "ffc-demo-payment"
+$ServiceMIName = $env:ServiceMIName # "sndadpinfmi1401-ffc-demo-payment-service"
+$PlatformMIName = $env:PlatformMIName # "ADP-Plarform-Test-App"
+$PlatformMIClientId = $env:PlatformMIClientId # "6b57e845-f3a8-4c0f-821b-8d4e99414f87"
+$PlatformMITenantId = $env:PlatformMITenantId # "6f504113-6b64-43f2-ade9-242e05780007"
+$PlatformMISubscriptionId = $env:PlatformMISubscriptionId # "55f3b8c6-6800-41c7-a40d-2adb5e4e1bd1"
+$PlatformMIFederatedTokenFile = $env:PlatformMIFederatedTokenFile
+$WorkingDirectory = $PWD
+
+[string]$functionName = $MyInvocation.MyCommand
+[DateTime]$startTime = [DateTime]::UtcNow
+[int]$exitCode = -1
+[bool]$setHostExitCode = (Test-Path -Path ENV:TF_BUILD) -and ($ENV:TF_BUILD -eq "true")
+[bool]$enableDebug = (Test-Path -Path ENV:SYSTEM_DEBUG) -and ($ENV:SYSTEM_DEBUG -eq "true")
+
+Set-Variable -Name ErrorActionPreference -Value Continue -scope global
+Set-Variable -Name VerbosePreference -Value Continue -Scope global
+
+if ($enableDebug) {
+    Set-Variable -Name DebugPreference -Value Continue -Scope global
+    Set-Variable -Name InformationPreference -Value Continue -Scope global
+}
+
+Write-Host "${functionName} started at $($startTime.ToString('u'))"
+Write-Debug "${functionName}:PostgresHost:$PostgresHost"
+Write-Debug "${functionName}:PostgresDatabase:$PostgresDatabase"
+Write-Debug "${functionName}:ServiceMIName:$ServiceMIName"
+Write-Debug "${functionName}:PlatformMIName:$PlatformMIName"
+Write-Debug "${functionName}:PlatformMIClientId=$PlatformMIClientId"
+Write-Debug "${functionName}:PlatformMIFederatedTokenFile=$PlatformMIFederatedTokenFile"
+Write-Debug "${functionName}:PlatformMITenantId=$PlatformMITenantId"
+Write-Debug "${functionName}:PlatformMISubscriptionId=$PlatformMISubscriptionId"
+Write-Debug "${functionName}:AzureSubscription=$AzureSubscription"
+
+[System.IO.DirectoryInfo]$scriptDir = $PSCommandPath | Split-Path -Parent
+Write-Debug "${functionName}:scriptDir.FullName:$($scriptDir.FullName)"
+
+try {
+    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ps-helpers"
+    Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
+    Import-Module $moduleDir.FullName -Force
+
+    Write-Host "Connecting to Azure..."
+    $null = Connect-AzAccountForPSQL -PlatformMIClientId $PlatformMIClientId -PlatformMIFederatedTokenFile $PlatformMIFederatedTokenFile -PlatformMITenantId $PlatformMITenantId -PlatformMISubscriptionId $PlatformMISubscriptionId
+    $null = Set-AzContext -Subscription $AzureSubscription
+    Write-Host "Connected to Azure and set context to '$AzureSubscription'"
+
+    [string]$getAccessTokenOutput = Get-AccessTokenForPSQL
+    Write-Debug "${functionName}:getAccessTokenOutput:$getAccessTokenOutput"
+
+    [System.Text.StringBuilder]$builder = [System.Text.StringBuilder]::new()
+    [void]$builder.Append(' DO $$ ')
+    [void]$builder.Append(' BEGIN ')
+    [void]$builder.Append("     IF NOT EXISTS (SELECT 1 FROM pgaadauth_list_principals(false) WHERE rolname='$ServiceMIName') THEN ")
+    [void]$builder.Append("         PERFORM pgaadauth_create_principal('$ServiceMIName', false, false); ");
+    [void]$builder.Append("         RAISE NOTICE 'MANAGED IDENTITY CREATED';")
+    [void]$builder.Append('     ELSE ')
+    [void]$builder.Append("         RAISE NOTICE 'MANAGED IDENTITY ALREADY EXISTS';")
+    [void]$builder.Append('     END IF; ')
+    [void]$builder.Append("     EXECUTE ( 'GRANT CONNECT ON DATABASE `"$PostgresDatabase`" TO `"$ServiceMIName`"' );")
+    [void]$builder.Append("     RAISE NOTICE 'GRANTED CONNECT TO DATABASE';")
+    [void]$builder.Append(" EXCEPTION ")
+    [void]$builder.Append("     WHEN OTHERS THEN  ")
+    [void]$builder.Append("         RAISE EXCEPTION 'ERROR DURING PRINCIPAL CREATION/GRANT CONNECT: %', SQLERRM; ")
+    [void]$builder.Append(' END $$' )
+    [string]$command = $builder.ToString()
+    Write-Debug "${functionName}:command=$command"
+    
+    [System.IO.FileInfo]$tempFile = [System.IO.Path]::GetTempFileName()
+    [string]$content = Set-Content -Path $tempFile.FullName -Value $command -PassThru -Force
+    Write-Debug "${functionName}:$($tempFile.FullName)=$content"
+
+    [System.Text.StringBuilder]$expressionBuilder = [System.Text.StringBuilder]::new('psql -A -q ')
+    [void]$expressionBuilder.Append(" -h " + $PostgresHost)
+    [void]$expressionBuilder.Append(" -U " + $PlatformMIName)
+    [void]$expressionBuilder.Append(" " + $PostgresDatabase)
+    [void]$expressionBuilder.Append(" -f '")
+    [void]$expressionBuilder.Append($Path)
+    [void]$expressionBuilder.Append("'")
+
+    $expression = $expressionBuilder.ToString()
+    Write-Host "Creating Principal in ${PostgresHost} and Granting permissions to ${ServiceMIName}"
+    Invoke-CommandLine -Command $expression -NoOutput
+    Write-Host "Granted Access to ${PostgresHost}"
+
+    # Successful exit
+    $exitCode = 0
+} 
+catch {
+    $exitCode = -2
+    Write-Error $_.Exception.ToString()
+    throw $_.Exception
+}
+finally {
+    Remove-Item -Path $tempFile.FullName -Force -ErrorAction SilentlyContinue
+
+    [DateTime]$endTime = [DateTime]::UtcNow
+    [Timespan]$duration = $endTime.Subtract($startTime)
+
+    Write-Host "${functionName} finished at $($endTime.ToString('u')) (duration $($duration -f 'g')) with exit code $exitCode"
+
+    if ($setHostExitCode) {
+        Write-Debug "${functionName}:Setting host exit code"
+        $host.SetShouldExit($exitCode)
+    }
+    exit $exitCode
+}
