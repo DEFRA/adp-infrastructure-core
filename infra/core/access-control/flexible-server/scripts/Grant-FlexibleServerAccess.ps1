@@ -92,7 +92,7 @@ try {
     [System.Text.StringBuilder]$expressionBuilder = [System.Text.StringBuilder]::new('psql -A -q ')
     [void]$expressionBuilder.Append(" -h " + $PostgresHost)
     [void]$expressionBuilder.Append(" -U " + $PlatformMIName)
-    [void]$expressionBuilder.Append(" " + $PostgresDatabase)
+    [void]$expressionBuilder.Append(" " + "postgres")
     [void]$expressionBuilder.Append(" -f '")
     [void]$expressionBuilder.Append($tempFile.FullName)
     [void]$expressionBuilder.Append("'")
