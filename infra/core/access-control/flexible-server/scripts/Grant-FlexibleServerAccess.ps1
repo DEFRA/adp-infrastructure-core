@@ -57,12 +57,14 @@ try {
     Import-Module $moduleDir.FullName -Force
 
     Write-Host "Connecting to Azure..."
-    $null = Connect-AzAccountForPSQL -PlatformMIClientId $PlatformMIClientId -PlatformMIFederatedTokenFile $PlatformMIFederatedTokenFile -PlatformMITenantId $PlatformMITenantId -PlatformMISubscriptionId $PlatformMISubscriptionId
+    $null = Connect-AzAccount -ServicePrincipal -ApplicationId $PlatformMIClientId -FederatedToken $(Get-Content $PlatformMIFederatedTokenFile -raw) -Tenant $PlatformMITenantId -Subscription $PlatformMISubscriptionId
     $null = Set-AzContext -Subscription $SubscriptionName
     Write-Host "Connected to Azure and set context to '$SubscriptionName'"
 
-    [string]$getAccessTokenOutput = Get-AccessTokenForPSQL
-    Write-Debug "${functionName}:getAccessTokenOutput:$getAccessTokenOutput"
+    Write-Host "Acquiring Access Token..."
+    $accessToken = Get-AzAccessToken -ResourceUrl "https://ossrdbms-aad.database.windows.net"
+    $ENV:PGPASSWORD = $accessToken.Token
+    Write-Host "Access Token Acquired"
 
     [System.Text.StringBuilder]$builder = [System.Text.StringBuilder]::new()
     [void]$builder.Append(' DO $$ ')
