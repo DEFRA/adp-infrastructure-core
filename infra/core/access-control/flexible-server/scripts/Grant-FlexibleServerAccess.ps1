@@ -11,14 +11,14 @@ Grant access to postgres flexible server for service (tier-3) managed identity.
 
 Set-StrictMode -Version 3.0
 
-$PostgresHost = $env:PostgresHost 
-$PostgresDatabase = $env:PostgresDatabase 
-$ServiceMIName = $env:ServiceMIName 
-$PlatformMIName = $env:PlatformMIName 
-$PlatformMIClientId = $env:PlatformMIClientId
-$PlatformMITenantId = $env:PlatformMITenantId 
-$PlatformMISubscriptionId = $env:PlatformMISubscriptionId 
-$PlatformMIFederatedTokenFile = $env:PlatformMIFederatedTokenFile
+$PostgresHost = $env:POSTGRES_HOST 
+$PostgresDatabase = $env:POSTGRES_DATABASE
+$ServiceMIName = $env:SERVICE_MI_NAME 
+$PlatformMIName = $env:PLATFORM_MI_NAME 
+$PlatformMIClientId = $env:AZURE_CLIENT_ID
+$PlatformMITenantId = $env:AZURE_TENANT_ID
+$PlatformMISubscriptionId = $env:PLATFORM_MI_SUBSCRIPTION_ID 
+$PlatformMIFederatedTokenFile = $env:AZURE_FEDERATED_TOKEN_FILE
 $WorkingDirectory = $PWD
 
 [string]$functionName = $MyInvocation.MyCommand
