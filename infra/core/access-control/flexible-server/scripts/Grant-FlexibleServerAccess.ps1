@@ -19,7 +19,7 @@ $PlatformMIClientId = $env:AZURE_CLIENT_ID
 $PlatformMITenantId = $env:AZURE_TENANT_ID
 $PlatformMISubscriptionId = $env:PLATFORM_MI_SUBSCRIPTION_ID 
 $PlatformMIFederatedTokenFile = $env:AZURE_FEDERATED_TOKEN_FILE
-$SUBSCRIPTION_NAME = $env:SUBSCRIPTION_NAME
+$SubscriptionName = $env:SUBSCRIPTION_NAME
 $WorkingDirectory = $PWD
 
 [string]$functionName = $MyInvocation.MyCommand
@@ -45,7 +45,8 @@ Write-Debug "${functionName}:PlatformMIClientId=$PlatformMIClientId"
 Write-Debug "${functionName}:PlatformMIFederatedTokenFile=$PlatformMIFederatedTokenFile"
 Write-Debug "${functionName}:PlatformMITenantId=$PlatformMITenantId"
 Write-Debug "${functionName}:PlatformMISubscriptionId=$PlatformMISubscriptionId"
-Write-Debug "${functionName}:SUBSCRIPTION_NAME=$SUBSCRIPTION_NAME"
+Write-Debug "${functionName}:SubscriptionName=$SubscriptionName"
+Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 [System.IO.DirectoryInfo]$scriptDir = $PSCommandPath | Split-Path -Parent
 Write-Debug "${functionName}:scriptDir.FullName:$($scriptDir.FullName)"
@@ -57,8 +58,8 @@ try {
 
     Write-Host "Connecting to Azure..."
     $null = Connect-AzAccountForPSQL -PlatformMIClientId $PlatformMIClientId -PlatformMIFederatedTokenFile $PlatformMIFederatedTokenFile -PlatformMITenantId $PlatformMITenantId -PlatformMISubscriptionId $PlatformMISubscriptionId
-    $null = Set-AzContext -Subscription $SUBSCRIPTION_NAME
-    Write-Host "Connected to Azure and set context to '$SUBSCRIPTION_NAME'"
+    $null = Set-AzContext -Subscription $SubscriptionName
+    Write-Host "Connected to Azure and set context to '$SubscriptionName'"
 
     [string]$getAccessTokenOutput = Get-AccessTokenForPSQL
     Write-Debug "${functionName}:getAccessTokenOutput:$getAccessTokenOutput"
