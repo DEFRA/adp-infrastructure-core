@@ -70,10 +70,11 @@ try {
     [void]$builder.Append(' DO $$ ')
     [void]$builder.Append(' BEGIN ')
     [void]$builder.Append("     IF NOT EXISTS (SELECT 1 FROM pgaadauth_list_principals(false) WHERE rolname='$ServiceMIName') THEN ")
+    [void]$builder.Append("         RAISE NOTICE 'CREATING PRINCIPAL FOR MANAGED IDENTITY';")
     [void]$builder.Append("         PERFORM pgaadauth_create_principal('$ServiceMIName', false, false); ");
-    [void]$builder.Append("         RAISE NOTICE 'MANAGED IDENTITY CREATED';")
+    [void]$builder.Append("         RAISE NOTICE 'PRINCIPAL FOR MANAGED IDENTITY CREATED';")
     [void]$builder.Append('     ELSE ')
-    [void]$builder.Append("         RAISE NOTICE 'MANAGED IDENTITY ALREADY EXISTS';")
+    [void]$builder.Append("         RAISE NOTICE 'PRINCIPAL FOR MANAGED IDENTITY ALREADY EXISTS';")
     [void]$builder.Append('     END IF; ')
     [void]$builder.Append("     EXECUTE ( 'GRANT CONNECT ON DATABASE `"$PostgresDatabase`" TO `"$ServiceMIName`"' );")
     [void]$builder.Append("     RAISE NOTICE 'GRANTED CONNECT TO DATABASE';")
