@@ -1,25 +1,26 @@
 <#
 .SYNOPSIS
-Grant access to postgres flexible server for service (tier-3) managed identity.
+Grant access to postgres flexible server database for service (tier-3) managed identity.
 
 .DESCRIPTION
-Grant access to postgres flexible server for service (tier-3) managed identity.
+Grant access to postgres flexible server database for service (tier-3) managed identity.
 
 .EXAMPLE
-.\Grant-FlexibleServerAccess.ps1 
+.\Grant-FlexibleServerDBAccess.ps1 
 #>
 
 Set-StrictMode -Version 3.0
 
-[string]$PostgresHost = $env:POSTGRES_HOST 
+[string]$PostgresHost = $env:POSTGRES_HOST
 [string]$PostgresDatabase = $env:POSTGRES_DATABASE
-[string]$ServiceMIName = $env:SERVICE_MI_NAME 
-[string]$PlatformMIName = $env:PLATFORM_MI_NAME 
+[string]$ServiceMIName = $env:SERVICE_MI_NAME
+[string]$PlatformMIName = $env:PLATFORM_MI_NAME
 [string]$PlatformMIClientId = $env:AZURE_CLIENT_ID
 [string]$PlatformMITenantId = $env:AZURE_TENANT_ID
-[string]$PlatformMISubscriptionId = $env:PLATFORM_MI_SUBSCRIPTION_ID 
+[string]$PlatformMISubscriptionId = $env:PLATFORM_MI_SUBSCRIPTION_ID
 [string]$PlatformMIFederatedTokenFile = $env:AZURE_FEDERATED_TOKEN_FILE
 [string]$SubscriptionName = $env:SUBSCRIPTION_NAME
+[bool]$IsMigrationAccount = $env:IS_MIGRATION_ACCOUNT
 [string]$WorkingDirectory = $PWD
 
 [string]$functionName = $MyInvocation.MyCommand
@@ -47,6 +48,7 @@ Write-Debug "${functionName}:PlatformMITenantId=$PlatformMITenantId"
 Write-Debug "${functionName}:PlatformMISubscriptionId=$PlatformMISubscriptionId"
 Write-Debug "${functionName}:SubscriptionName=$SubscriptionName"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
+Write-Debug "${functionName}:IsMigrationAccount=$IsMigrationAccount"
 
 [System.IO.DirectoryInfo]$scriptDir = $PSCommandPath | Split-Path -Parent
 Write-Debug "${functionName}:scriptDir.FullName:$($scriptDir.FullName)"
@@ -67,21 +69,14 @@ try {
     Write-Host "Access Token Acquired"
 
     [System.Text.StringBuilder]$builder = [System.Text.StringBuilder]::new()
-    [void]$builder.Append(' DO $$ ')
-    [void]$builder.Append(' BEGIN ')
-    [void]$builder.Append("     IF NOT EXISTS (SELECT 1 FROM pgaadauth_list_principals(false) WHERE rolname='$ServiceMIName') THEN ")
-    [void]$builder.Append("         RAISE NOTICE 'CREATING PRINCIPAL FOR MANAGED IDENTITY';")
-    [void]$builder.Append("         PERFORM pgaadauth_create_principal('$ServiceMIName', false, false); ");
-    [void]$builder.Append("         RAISE NOTICE 'PRINCIPAL FOR MANAGED IDENTITY CREATED';")
-    [void]$builder.Append('     ELSE ')
-    [void]$builder.Append("         RAISE NOTICE 'PRINCIPAL FOR MANAGED IDENTITY ALREADY EXISTS';")
-    [void]$builder.Append('     END IF; ')
-    [void]$builder.Append("     EXECUTE ( 'GRANT CONNECT ON DATABASE `"$PostgresDatabase`" TO `"$ServiceMIName`"' );")
-    [void]$builder.Append("     RAISE NOTICE 'GRANTED CONNECT TO DATABASE';")
-    [void]$builder.Append(" EXCEPTION ")
-    [void]$builder.Append("     WHEN OTHERS THEN  ")
-    [void]$builder.Append("         RAISE EXCEPTION 'ERROR DURING PRINCIPAL CREATION/GRANT CONNECT: %', SQLERRM; ")
-    [void]$builder.Append(' END $$' )
+    [void]$builder.Append("GRANT CREATE, USAGE ON SCHEMA public TO `"$ServiceMIName`";")
+    [void]$builder.Append("GRANT CREATE, SELECT, UPDATE, INSERT, REFERENCES, TRIGGER ON ALL TABLES IN SCHEMA public TO`"$ServiceMIName`";")
+    if ($IsMigrationAccount -eq $true) {
+        [void]$builder.Append("GRANT DELETE ON ALL TABLES IN SCHEMA public TO`"$ServiceMIName`";")
+    }
+    [void]$builder.Append("GRANT SELECT, UPDATE, USAGE ON ALL SEQUENCES IN SCHEMA public TO `"$ServiceMIName`";")
+    [void]$builder.Append("GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO `"$ServiceMIName`";")
+    [void]$builder.Append("GRANT EXECUTE ON ALL PROCEDURES IN SCHEMA public TO `"$ServiceMIName`";")
     [string]$command = $builder.ToString()
     Write-Debug "${functionName}:command=$command"
     
@@ -92,13 +87,13 @@ try {
     [System.Text.StringBuilder]$expressionBuilder = [System.Text.StringBuilder]::new('psql -A -q ')
     [void]$expressionBuilder.Append(" -h " + $PostgresHost)
     [void]$expressionBuilder.Append(" -U " + $PlatformMIName)
-    [void]$expressionBuilder.Append(" " + "postgres")
+    [void]$expressionBuilder.Append(" " + $PostgresDatabase)
     [void]$expressionBuilder.Append(" -f '")
     [void]$expressionBuilder.Append($tempFile.FullName)
     [void]$expressionBuilder.Append("'")
 
     $expression = $expressionBuilder.ToString()
-    Write-Host "Creating Principal in ${PostgresHost} and Granting permissions to ${ServiceMIName}"
+    Write-Host "Granting permissions to ${ServiceMIName}"
     Invoke-CommandLine -Command $expression -NoOutput
     Write-Host "Granted Access to ${PostgresHost}"
 
