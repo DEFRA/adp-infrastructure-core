@@ -70,7 +70,7 @@ try {
 
     [System.Text.StringBuilder]$builder = [System.Text.StringBuilder]::new()
     [void]$builder.Append("GRANT CREATE, USAGE ON SCHEMA public TO `"$ServiceMIName`";")
-    [void]$builder.Append("GRANT CREATE, SELECT, UPDATE, INSERT, REFERENCES, TRIGGER ON ALL TABLES IN SCHEMA public TO `"$ServiceMIName`";")
+    [void]$builder.Append("GRANT SELECT, UPDATE, INSERT, REFERENCES, TRIGGER ON ALL TABLES IN SCHEMA public TO `"$ServiceMIName`";")
     if ($IsMigrationAccount -eq "true") {
         [void]$builder.Append("GRANT DELETE ON ALL TABLES IN SCHEMA public TO `"$ServiceMIName`";")
     }
