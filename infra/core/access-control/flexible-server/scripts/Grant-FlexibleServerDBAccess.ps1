@@ -20,7 +20,6 @@ Set-StrictMode -Version 3.0
 [string]$TeamMISubscriptionId = $env:TEAM_MI_SUBSCRIPTION_ID
 [string]$TeamMIFederatedTokenFile = $env:AZURE_FEDERATED_TOKEN_FILE
 [string]$SubscriptionName = $env:SUBSCRIPTION_NAME
-[string]$IsMigrationAccount = $env:IS_MIGRATION_ACCOUNT
 [string]$WorkingDirectory = $PWD
 
 [string]$functionName = $MyInvocation.MyCommand
@@ -48,7 +47,6 @@ Write-Debug "${functionName}:TeamMITenantId=$TeamMITenantId"
 Write-Debug "${functionName}:TeamMISubscriptionId=$TeamMISubscriptionId"
 Write-Debug "${functionName}:SubscriptionName=$SubscriptionName"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
-Write-Debug "${functionName}:IsMigrationAccount=$IsMigrationAccount"
 
 [System.IO.DirectoryInfo]$scriptDir = $PSCommandPath | Split-Path -Parent
 Write-Debug "${functionName}:scriptDir.FullName:$($scriptDir.FullName)"
@@ -66,17 +64,16 @@ try {
     Write-Host "Acquiring Access Token..."
     $accessToken = Get-AzAccessToken -ResourceUrl "https://ossrdbms-aad.database.windows.net"
     $ENV:PGPASSWORD = $accessToken.Token
+    Write-Debug "${functionName}:accessToken:$ENV:PGPASSWORD"
     Write-Host "Access Token Acquired"
 
     [System.Text.StringBuilder]$builder = [System.Text.StringBuilder]::new()
     [void]$builder.Append("GRANT CREATE, USAGE ON SCHEMA public TO `"$ServiceMIName`";")
     [void]$builder.Append("GRANT SELECT, UPDATE, INSERT, REFERENCES, TRIGGER ON ALL TABLES IN SCHEMA public TO `"$ServiceMIName`";")
-    if ($IsMigrationAccount -eq "true") {
-        [void]$builder.Append("GRANT DELETE ON ALL TABLES IN SCHEMA public TO `"$ServiceMIName`";")
-    }
     [void]$builder.Append("GRANT SELECT, UPDATE, USAGE ON ALL SEQUENCES IN SCHEMA public TO `"$ServiceMIName`";")
     [void]$builder.Append("GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO `"$ServiceMIName`";")
     [void]$builder.Append("GRANT EXECUTE ON ALL PROCEDURES IN SCHEMA public TO `"$ServiceMIName`";")
+    
     [string]$command = $builder.ToString()
     Write-Debug "${functionName}:command=$command"
     
