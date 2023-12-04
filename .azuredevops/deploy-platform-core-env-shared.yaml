@@ -133,7 +133,7 @@ extends:
                     type: PowerShell
                     inlineScript: |
                       $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
-                      Write-Host "##vso[task.setvariable variable=appUrl;]$($output.appUrl.value)"
+                      Write-Host "##vso[task.setvariable variable=portalAppUrl;]$($output.appUrl.value)"
                   - displayName: Create Tier 2 App Registrations
                     scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
                     scriptRepo: PipelineCommonScripts

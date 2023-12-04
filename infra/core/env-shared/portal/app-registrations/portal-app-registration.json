@@ -14,18 +14,14 @@
                     {
                         "key": "#{{ portalApplicationClientIdName }}",
                         "type": "ClientId"
-                    },
-                    {
-                        "key": "#{{ portalApplicationClientTenantName }}",
-                        "type": "ClientProperty",
-                        "propertyName": "TenantId"
-                    }
+                    }                    
                 ]
             },
             "publicClient": {
                 "redirectUris": [
                     "http://localhost:7007/api/auth/microsoft/handler/frame",
-                    "https://dev-portal.snd1.adp.defra.gov.uk/api/auth/microsoft/handler/frame"
+                    "https://dev-portal.snd1.adp.defra.gov.uk/api/auth/microsoft/handler/frame",
+                    "https://portal.snd1.adp.defra.gov.uk/api/auth/microsoft/handler/frame"
                 ],
                 "implicitGrantSettings": {
                     "enableAccessTokenIssuance": true,
