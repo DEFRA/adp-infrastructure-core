@@ -14,11 +14,11 @@ Set-StrictMode -Version 3.0
 [string]$PostgresHost = $env:POSTGRES_HOST
 [string]$PostgresDatabase = $env:POSTGRES_DATABASE
 [string]$ServiceMIName = $env:SERVICE_MI_NAME
-[string]$PlatformMIName = $env:PLATFORM_MI_NAME
-[string]$PlatformMIClientId = $env:AZURE_CLIENT_ID
-[string]$PlatformMITenantId = $env:AZURE_TENANT_ID
-[string]$PlatformMISubscriptionId = $env:PLATFORM_MI_SUBSCRIPTION_ID
-[string]$PlatformMIFederatedTokenFile = $env:AZURE_FEDERATED_TOKEN_FILE
+[string]$TeamMIName = $env:TEAM_MI_NAME
+[string]$TeamMIClientId = $env:AZURE_CLIENT_ID
+[string]$TeamMITenantId = $env:AZURE_TENANT_ID
+[string]$TeamMISubscriptionId = $env:TEAM_MI_SUBSCRIPTION_ID
+[string]$TeamMIFederatedTokenFile = $env:AZURE_FEDERATED_TOKEN_FILE
 [string]$SubscriptionName = $env:SUBSCRIPTION_NAME
 [string]$IsMigrationAccount = $env:IS_MIGRATION_ACCOUNT
 [string]$WorkingDirectory = $PWD
@@ -41,11 +41,11 @@ Write-Host "${functionName} started at $($startTime.ToString('u'))"
 Write-Debug "${functionName}:PostgresHost:$PostgresHost"
 Write-Debug "${functionName}:PostgresDatabase:$PostgresDatabase"
 Write-Debug "${functionName}:ServiceMIName:$ServiceMIName"
-Write-Debug "${functionName}:PlatformMIName:$PlatformMIName"
-Write-Debug "${functionName}:PlatformMIClientId=$PlatformMIClientId"
-Write-Debug "${functionName}:PlatformMIFederatedTokenFile=$PlatformMIFederatedTokenFile"
-Write-Debug "${functionName}:PlatformMITenantId=$PlatformMITenantId"
-Write-Debug "${functionName}:PlatformMISubscriptionId=$PlatformMISubscriptionId"
+Write-Debug "${functionName}:TeamMIName:$TeamMIName"
+Write-Debug "${functionName}:TeamMIClientId=$TeamMIClientId"
+Write-Debug "${functionName}:TeamMIFederatedTokenFile=$TeamMIFederatedTokenFile"
+Write-Debug "${functionName}:TeamMITenantId=$TeamMITenantId"
+Write-Debug "${functionName}:TeamMISubscriptionId=$TeamMISubscriptionId"
 Write-Debug "${functionName}:SubscriptionName=$SubscriptionName"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 Write-Debug "${functionName}:IsMigrationAccount=$IsMigrationAccount"
@@ -59,7 +59,7 @@ try {
     Import-Module $moduleDir.FullName -Force
 
     Write-Host "Connecting to Azure..."
-    $null = Connect-AzAccount -ServicePrincipal -ApplicationId $PlatformMIClientId -FederatedToken $(Get-Content $PlatformMIFederatedTokenFile -raw) -Tenant $PlatformMITenantId -Subscription $PlatformMISubscriptionId
+    $null = Connect-AzAccount -ServicePrincipal -ApplicationId $TeamMIClientId -FederatedToken $(Get-Content $TeamMIFederatedTokenFile -raw) -Tenant $TeamMITenantId -Subscription $TeamMISubscriptionId
     $null = Set-AzContext -Subscription $SubscriptionName
     Write-Host "Connected to Azure and set context to '$SubscriptionName'"
 
@@ -86,7 +86,7 @@ try {
 
     [System.Text.StringBuilder]$expressionBuilder = [System.Text.StringBuilder]::new('psql -A -q ')
     [void]$expressionBuilder.Append(" -h " + $PostgresHost)
-    [void]$expressionBuilder.Append(" -U " + $PlatformMIName)
+    [void]$expressionBuilder.Append(" -U " + $TeamMIName)
     [void]$expressionBuilder.Append(" " + $PostgresDatabase)
     [void]$expressionBuilder.Append(" -f '")
     [void]$expressionBuilder.Append($tempFile.FullName)
