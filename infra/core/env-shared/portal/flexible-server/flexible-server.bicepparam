@@ -1,7 +1,7 @@
 using './flexible-server.bicep'
 
 param server = {
-  name: '#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}01'
+  name: '#{{ dbsResourceNamePrefix }}#{{ nc_resource_postgresql }}#{{ nc_instance_regionid }}03'
   storageSizeGB: #{{ postgreSqlStorageSizeGB }}
   tier: '#{{ postgreSqlTier }}'
   skuName: '#{{ postgreSqlSkuName }}'
@@ -15,10 +15,10 @@ param vnet = {
   subnetPostgreSql: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}02'
 }
 
-param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}02'
+param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}03'
 
 param privateDnsZone = {
-  name: '#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}01.private.postgres.database.azure.com'
+  name: '#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}03.private.postgres.database.azure.com'
   resourceGroup: '#{{ dnsResourceGroup }}'
 }
 
