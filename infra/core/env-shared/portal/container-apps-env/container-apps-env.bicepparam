@@ -19,7 +19,7 @@ param workspace = {
 }
 
 param subnet = {
-  name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01'
+  name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}05'
   resourceGroup: '#{{ ssvVirtualNetworkResourceGroup }}'
   vnetName: '#{{ ssvVirtualNetworkName }}'
 }

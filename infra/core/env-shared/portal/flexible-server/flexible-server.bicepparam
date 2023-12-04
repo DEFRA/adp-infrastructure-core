@@ -12,7 +12,7 @@ param server = {
 param vnet = {
   name: '#{{ ssvVirtualNetworkName }}'
   resourceGroup: '#{{ ssvVirtualNetworkResourceGroup }}'
-  subnetPostgreSql: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}02'
+  subnetPostgreSql: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}04'
 }
 
 param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}03'
