@@ -1,11 +1,11 @@
 @description('Required. Azure Monitor Workspace resource id.')
 param monitorWorkspaceResourceId string 
 @description('Required. The clustername to scope the data collection rule association.')
-param clusterName string //= 'SNDADPINFAK1401'
+param clusterName string
 @description('Required. The AKS Cluster resource is.')
 param clusterResourceId string
 @description('Required. The Azure region where the resources will be deployed.')
-param location string //= 'UKSouth'
+param location string
 
 var nodeRecordingRuleGroup = 'NodeRecordingRulesRuleGroup-'
 var nodeRecordingRuleGroupName = '${nodeRecordingRuleGroup}${clusterName}'
@@ -14,15 +14,6 @@ var kubernetesRecordingRuleGrouPrefix = 'KubernetesReccordingRulesRuleGroup-'
 var kubernetesRecordingRuleGroupName = '${kubernetesRecordingRuleGrouPrefix}${clusterName}'
 var kubernetesRecordingRuleGroupDescription = 'Kubernetes Recording Rules RuleGroup'
 var version = ' - 0.1'
-
-// resource managedCluster 'Microsoft.ContainerService/managedClusters@2023-07-02-preview' existing = {
-//   name: clusterName
-// }
-
-// resource monitorWorkspace 'Microsoft.Monitor/accounts@2021-06-03-preview' existing = {
-//   scope: resourceGroup(azureMonitorWorkspace.resourceGroup)
-//   name: azureMonitorWorkspace.name
-// }
 
 resource nodeRecordingRuleGroupResource 'Microsoft.AlertsManagement/prometheusRuleGroups@2023-03-01' = {
   name: nodeRecordingRuleGroupName
