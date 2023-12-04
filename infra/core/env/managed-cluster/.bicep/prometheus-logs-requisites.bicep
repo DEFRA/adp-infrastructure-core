@@ -4,7 +4,11 @@ param azureMonitorWorkspace object = {
   resourceGroup: 'sndadpinfrg1401'
 }
 @description('Required. The parameter object for the managed grafana instance. The object must contain name of the name, resourceGroup and subscriptionId.')
-param grafana object
+param grafana object = {
+  name: 'SSVADPINFMG3401'
+  subscriptionId: '7dc5bbdf-72d7-42ca-ac23-eb5eea3764b4'
+  resourceGroup: 'SSVADPINFRG3401'
+}
 @description('Required. The clustername to scope the data collection rule association.')
 param clusterName string = 'SNDADPINFAK1401'
 @description('Required. The Azure region where the resources will be deployed.')
@@ -115,5 +119,22 @@ module monitorWorkspaceRoleAssignment 'monitoring-data-reader.bicep' = {
   params: {
     azureMonitorWorkspaceName: azureMonitorWorkspace.name
     principalId: managedGrafana.identity.principalId
+  }
+}
+
+resource aksClusterUpdate 'Microsoft.ContainerService/managedClusters@2023-07-02-preview' = {
+  dependsOn: [dataCollectionRuleAssociation]
+  name: clusterName
+  location: location
+  properties: {
+    azureMonitorProfile: {
+      metrics: {
+        enabled: true
+        kubeStateMetrics: {
+          metricLabelsAllowlist: ''
+          metricAnnotationsAllowList: ''
+        }
+      }
+    }
   }
 }

@@ -83,23 +83,23 @@ param monitoringWorkspace = {
   resourceGroup: '#{{ servicesResourceGroup }}'
 }
 
-// param fluxConfig = {
-//   clusterCore: {
-//     gitRepository: {
-//       syncIntervalInSeconds: 300
-//       timeoutInSeconds: 180
-//       url: 'https://github.com/DEFRA/adp-flux-core'
-//       branch: 'main'
-//     }
-//     kustomizations: {
-//       timeoutInSeconds: 600
-//       syncIntervalInSeconds: 600
-//       clusterPath: './clusters/#{{ lower(environment) }}/0#{{ environmentId }}'
-//       infraPath: './infra/#{{ lower(environment) }}/0#{{ environmentId }}'
-//       servicesPath: './services/#{{ lower(environment) }}/0#{{ environmentId }}'
-//     }
-//   }
-// }
+param fluxConfig = {
+  clusterCore: {
+    gitRepository: {
+      syncIntervalInSeconds: 300
+      timeoutInSeconds: 180
+      url: 'https://github.com/DEFRA/adp-flux-core'
+      branch: 'main'
+    }
+    kustomizations: {
+      timeoutInSeconds: 600
+      syncIntervalInSeconds: 600
+      clusterPath: './clusters/#{{ lower(environment) }}/0#{{ environmentId }}'
+      infraPath: './infra/#{{ lower(environment) }}/0#{{ environmentId }}'
+      servicesPath: './services/#{{ lower(environment) }}/0#{{ environmentId }}'
+    }
+  }
+}
 
 param asoPlatformManagedIdentity = '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-adp-aso-platform'
 

@@ -7,15 +7,15 @@ resource azureMonitorWorkSpaceResource 'Microsoft.Monitor/accounts@2023-04-03' e
   name: azureMonitorWorkspaceName
 }
 
-// resource monitorWorkspaceRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-//   name: guid(resourceGroup().id, 'MonitoringReader', azureMonitorWorkSpaceResource.name)
-//   scope: azureMonitorWorkSpaceResource
-//   properties: {
-//     principalId: principalId
-//     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '43d0d8ad-25c7-4714-9337-8ba259a9fe05') // Monitoring Reader
-//     principalType: 'ServicePrincipal'
-//   }
-// }
+resource monitorWorkspaceRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(resourceGroup().id, 'MonitoringReader', azureMonitorWorkSpaceResource.name)
+  scope: azureMonitorWorkSpaceResource
+  properties: {
+    principalId: principalId
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '43d0d8ad-25c7-4714-9337-8ba259a9fe05') // Monitoring Reader
+    principalType: 'ServicePrincipal'
+  }
+}
 
 resource monitorWorkspaceMDRRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(resourceGroup().id, 'MonitoringDataReader', azureMonitorWorkSpaceResource.name)
