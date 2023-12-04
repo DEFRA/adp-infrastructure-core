@@ -43,6 +43,7 @@ resource grafanaDashboardResource 'Microsoft.Dashboard/grafana@2022-08-01' = {
       azureMonitorWorkspaceIntegrations: !empty(azureMonitorWorkspaceResourceIds) ? azureMonitorWorkspaceResourceIdObject : null
     }
     publicNetworkAccess: grafana.publicNetworkAccess
+    apiKey: 'Enabled'
   }
 }
 
