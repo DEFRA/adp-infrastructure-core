@@ -50,6 +50,42 @@ Write-Debug "${functionName}:PlatformMISubscriptionId=$PlatformMISubscriptionId"
 Write-Debug "${functionName}:SubscriptionName=$SubscriptionName"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
+function Invoke-PSQLCommand {
+    param(
+        [string]$PostgresHost,
+        [string]$PostgresDatabase,
+        [string]$PlatformMIName,
+        [string]$Path
+    )
+
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand
+        Write-Debug "${functionName}:Entered"
+        Write-Debug "${functionName}:begin:PostgresHost=$PostgresHost"
+        Write-Debug "${functionName}:begin:PostgresDatabase=$PostgresDatabase"
+        Write-Debug "${functionName}:begin:PlatformMIName=$PlatformMIName"
+        Write-Debug "${functionName}:begin:Path=$Path"
+    }
+
+    process {
+        [System.Text.StringBuilder]$expressionBuilder = [System.Text.StringBuilder]::new('psql -A -q ')
+        [void]$expressionBuilder.Append(" -h " + $PostgresHost)
+        [void]$expressionBuilder.Append(" -U " + $PlatformMIName)
+        [void]$expressionBuilder.Append(" " + $PostgresDatabase)
+        [void]$expressionBuilder.Append(" -f '")
+        [void]$expressionBuilder.Append($tempFile.FullName)
+        [void]$expressionBuilder.Append("'")
+        $expression = $expressionBuilder.ToString()
+
+        Write-Debug "${functionName}:process:expression:$expression"
+        Invoke-CommandLine -Command $expression -NoOutput
+    }
+
+    end {
+        Write-Debug "${functionName}:end:Exited"
+    }
+}
+
 [System.IO.DirectoryInfo]$scriptDir = $PSCommandPath | Split-Path -Parent
 Write-Debug "${functionName}:scriptDir.FullName:$($scriptDir.FullName)"
 
@@ -142,40 +178,4 @@ finally {
         $host.SetShouldExit($exitCode)
     }
     exit $exitCode
-}
-
-function Invoke-PSQLCommand {
-    param(
-        [string]$PostgresHost,
-        [string]$PostgresDatabase,
-        [string]$PlatformMIName,
-        [string]$Path
-    )
-
-    begin {
-        [string]$functionName = $MyInvocation.MyCommand
-        Write-Debug "${functionName}:Entered"
-        Write-Debug "${functionName}:begin:PostgresHost=$PostgresHost"
-        Write-Debug "${functionName}:begin:PostgresDatabase=$PostgresDatabase"
-        Write-Debug "${functionName}:begin:PlatformMIName=$PlatformMIName"
-        Write-Debug "${functionName}:begin:Path=$Path"
-    }
-
-    process {
-        [System.Text.StringBuilder]$expressionBuilder = [System.Text.StringBuilder]::new('psql -A -q ')
-        [void]$expressionBuilder.Append(" -h " + $PostgresHost)
-        [void]$expressionBuilder.Append(" -U " + $PlatformMIName)
-        [void]$expressionBuilder.Append(" " + $PostgresDatabase)
-        [void]$expressionBuilder.Append(" -f '")
-        [void]$expressionBuilder.Append($tempFile.FullName)
-        [void]$expressionBuilder.Append("'")
-        $expression = $expressionBuilder.ToString()
-
-        Write-Debug "${functionName}:process:expression:$expression"
-        Invoke-CommandLine -Command $expression -NoOutput
-    }
-
-    end {
-        Write-Debug "${functionName}:end:Exited"
-    }
 }
