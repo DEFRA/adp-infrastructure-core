@@ -96,6 +96,7 @@ extends:
     filePathsForTransform: |
       **/bootstrap/env/config/app-registrations/tier2-app-registration.json
       **/bootstrap/env/config/service-connections/tier2-service-connection.json
+      **/bootstrap/env/config/role-assignments/tier2-role-assignments.json
     groupedDeployments:
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'service-connections')) }}
         : - name: SharedResources
@@ -104,23 +105,23 @@ extends:
                 path: infra/bootstrap/env/key-vault
                 resourceGroupName: $(ssvSharedResourceGroup)
                 postDeployScriptsList:
-                  - displayName: Create Tier 2 App Registrations
-                    scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
-                    scriptRepo: PipelineCommonScripts
-                    ScriptArguments: >
-                      -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
+                  # - displayName: Create Tier 2 App Registrations
+                  #   scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+                  #   scriptRepo: PipelineCommonScripts
+                  #   ScriptArguments: >
+                  #     -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
                   - displayName: Setup Tier 2 Service Principal Role Assignments
                     Type: AzurePowerShell
                     scriptPath: "infra/bootstrap/env/scripts/Set-RoleAssignments.ps1"
                     ScriptArguments: >
                       -RoleAssignmentsJsonPath 'infra/bootstrap/env/config/role-assignments/tier2-role-assignments.json'
-                  - displayName: Create or Update AzureRm Service Endpoint(Service Connection)
-                    Type: AzureCLI
-                    useSystemAccessToken: true
-                    scriptPath: "infra/bootstrap/env/scripts/ado/Initialize-ServiceEndpoint.ps1"
-                    ScriptArguments: >
-                      -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
-                      -WorkingDirectory $(Pipeline.Workspace)\s\self
+                  # - displayName: Create or Update AzureRm Service Endpoint(Service Connection)
+                  #   Type: AzureCLI
+                  #   useSystemAccessToken: true
+                  #   scriptPath: "infra/bootstrap/env/scripts/ado/Initialize-ServiceEndpoint.ps1"
+                  #   ScriptArguments: >
+                  #     -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
+                  #     -WorkingDirectory $(Pipeline.Workspace)\s\self
 
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}
         : - name: network
