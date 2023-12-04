@@ -293,7 +293,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.1
     aadProfileServerAppID: ''
     aadProfileServerAppSecret: ''
     aadProfileTenantId: subscription().tenantId
-    // enableAzureMonitorProfileMetrics: true
+    enableAzureMonitorProfileMetrics: true
     primaryAgentPoolProfile: [
       systemNodePool
     ]
