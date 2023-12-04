@@ -73,7 +73,7 @@ function Invoke-PSQLCommand {
         [void]$expressionBuilder.Append(" -U " + $PlatformMIName)
         [void]$expressionBuilder.Append(" " + $PostgresDatabase)
         [void]$expressionBuilder.Append(" -f '")
-        [void]$expressionBuilder.Append($tempFile.FullName)
+        [void]$expressionBuilder.Append($Path)
         [void]$expressionBuilder.Append("'")
         $expression = $expressionBuilder.ToString()
 
