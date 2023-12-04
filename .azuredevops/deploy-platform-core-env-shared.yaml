@@ -17,10 +17,11 @@ parameters:
 pr:
   branches:
     include:
-    - main
+      - main
   paths:
     include:
       - infra/core/env-shared/*
+  drafts: false
 
 trigger:
   batch: true
