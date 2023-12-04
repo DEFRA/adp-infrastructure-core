@@ -75,7 +75,7 @@ Function New-RoleAssignment {
     
         if (-not $isRoleAssignmentExist) {
             Write-Host "Creating new Role Assignment : RoleDefinitionName = $RoleDefinitionName, Scope = $Scope, ObjectId = $ObjectId"
-            New-AzRoleAssignment -Scope $subscriptionScope -RoleDefinitionName $RoleDefinitionName -ObjectId $ObjectId | Out-Null
+            # New-AzRoleAssignment -Scope $subscriptionScope -RoleDefinitionName $RoleDefinitionName -ObjectId $ObjectId | Out-Null
         }
         else {
             Write-Host "Role Assignment already exist for : RoleDefinitionName = $RoleDefinitionName, Scope = $Scope, ObjectId = $ObjectId"
