@@ -9,8 +9,6 @@ param location string
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-var dataCollectionRuleAssociationName = 'MSProm-${location}-${clusterName}'
-
 resource managedGrafana 'Microsoft.Dashboard/grafana@2022-08-01' existing = {
   scope: resourceGroup(grafana.subscriptionId,grafana.resourceGroup)
   name: grafana.name
@@ -26,7 +24,7 @@ resource monitorWorkspace 'Microsoft.Monitor/accounts@2021-06-03-preview' existi
 }
 
 resource dataCollectionRuleAssociation 'Microsoft.Insights/dataCollectionRuleAssociations@2021-09-01-preview' = {
-  name: dataCollectionRuleAssociationName
+  name: 'MSProm-${location}-${clusterName}'
   scope: managedCluster
   properties: {
     description: 'Association of data collection rule. Deleting this association will break the data collection for this AKS Cluster.'

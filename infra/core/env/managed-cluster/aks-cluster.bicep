@@ -209,8 +209,8 @@ module networkContributor '.bicep/network-contributor.bicep' = {
   }
 }
 
-module prometheusLogsRequisites '.bicep/prometheus-logs-requisites.bicep' = {
-  name: 'aks-data-collection-rule-association-${deploymentDate}'
+module prometheusLogsRequisiteResources '.bicep/prometheus-logs-requisite-resources.bicep' = {
+  name: 'aks-prometheus-logs-requisite-resources-${deploymentDate}'
   params: {
     azureMonitorWorkspace: {
       name: azureMonitorWorkspace.name

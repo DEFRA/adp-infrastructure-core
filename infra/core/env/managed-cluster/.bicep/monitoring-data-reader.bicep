@@ -7,7 +7,7 @@ resource azureMonitorWorkSpaceResource 'Microsoft.Monitor/accounts@2023-04-03' e
   name: azureMonitorWorkspaceName
 }
 
-resource monitorWorkspaceMDRRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource monitorWorkspaceRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(resourceGroup().id, 'MonitoringDataReader', azureMonitorWorkSpaceResource.name)
   scope: azureMonitorWorkSpaceResource
   properties: {
