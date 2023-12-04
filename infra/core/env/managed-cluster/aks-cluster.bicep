@@ -240,7 +240,7 @@ module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in km
 }
 ]
 
-module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.15-AA' = {
+module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.15-prerelease' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
     privateDnsZoneContributor
