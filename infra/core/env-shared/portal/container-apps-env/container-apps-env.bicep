@@ -138,3 +138,5 @@ resource secretbaseurl 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
     value: 'https://${containerApp.name}.${toLower(managedEnvironment.properties.defaultDomain)}'
   }
 }
+
+output appUrl string = 'https://${containerApp.name}.${toLower(managedEnvironment.properties.defaultDomain)}'
