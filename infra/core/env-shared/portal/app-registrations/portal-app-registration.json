@@ -14,16 +14,23 @@
                     {
                         "key": "#{{ portalApplicationClientIdName }}",
                         "type": "ClientId"
+                    },
+                    {
+                        "key": "#{{ portalApplicationClientTenantName }}",
+                        "type": "ClientProperty",
+                        "propertyName": "TenantId"
                     }
                 ]
             },
-            "oauth2AllowIdTokenImplicitFlow": true,
-            "replyUrlsWithType": [
-                {
-                    "url": "http://localhost:7007/api/auth/microsoft/handler/frame",
-                    "type": "Web"
+            "publicClient": {
+                "redirectUris": [
+                    "http://localhost:7007/api/auth/microsoft/handler/frame"
+                ],
+                "implicitGrantSettings": {
+                    "enableAccessTokenIssuance": true,
+                    "enableIdTokenIssuance": false
                 }
-            ],
+            },
             "requiredResourceAccess": [
                 {
                     "resourceAppId": "499b84ac-1321-427f-aa17-267ca6975798",
