@@ -57,6 +57,10 @@ try {
     [string]$fluxClusterStatsJson = Join-Path -Path $DashboardsPath -ChildPath "flux-cluster-stats.json"
     [string]$fluxControlPlaneJson = Join-Path -Path $DashboardsPath -ChildPath "flux-control-plane.json"
 
+    Write-Host "Add azure managed grafana extension"
+    Invoke-CommandLine -Command "az extension add --upgrade -n amg"
+    Write-Host "Added extension"
+
     Write-Host "Creating new folder $fluxFolderName in Grafana"
     Invoke-CommandLine -Command "az grafana folder create --name $GrafanaName --title $fluxFolderName"
     Write-Host "Created new folder"
