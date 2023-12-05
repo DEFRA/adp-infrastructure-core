@@ -25,10 +25,6 @@ param(
 [string]$WorkingDirectory = $PWD
 )
 
-$GrafanaName = 'SSVADPINFMG3401'
-$ResourceGroupName = 'SSVADPINFRG3401'
-$DashboardsPath = 'C:\Users\asaarif\GitRepos\adp-infrastructure-core\infra\core\env\observability\dashboards'
-
 Set-StrictMode -Version 3.0
 
 [string]$functionName = $MyInvocation.MyCommand
