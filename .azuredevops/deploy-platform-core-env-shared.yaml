@@ -138,8 +138,7 @@ extends:
                       Write-Host "##vso[task.setvariable variable=portalAppUrl;]$($output.appUrl.value)"
                       $filePath = "$(Pipeline.Workspace)/s/self/infra/core/env-shared/portal/app-registrations/portal-app-registration.json"                      
                       $fileContent = Get-Content $filePath                      
-                      (Get-Content $filePath) -replace "#{{ portalAppUrl }}", "$($output.appUrl.value)" | Set-Content $filePath  
-                      Get-Content $filePath   
+                      (Get-Content $filePath) -replace "{{portalAppUrl}}", "$($output.appUrl.value)" | Set-Content $filePath     
                   - displayName: Register App
                     scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
                     scriptRepo: PipelineCommonScripts
