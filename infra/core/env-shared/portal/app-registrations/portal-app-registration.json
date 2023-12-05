@@ -6,16 +6,14 @@
             "keyVault": {
                 "name": "#{{ ssvPortalKeyVaultName }}",
                 "secrets": [
-                    
+                    {
+                        "key": "#{{ portalApplicationClientSecretName }}",
+                        "type": "ClientSecret"
+                    },
                     {
                         "key": "#{{ portalApplicationClientIdName }}",
                         "type": "ClientId"
-                    },
-                    {
-                        "key": "#{{ portalApplicationClientTenantName }}",
-                        "type": "ClientProperty",
-                        "propertyName": "TenantId"
-                    }                    
+                    }                   
                 ]
             },
             "web": {
