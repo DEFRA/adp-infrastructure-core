@@ -136,8 +136,10 @@ extends:
                     inlineScript: |
                       $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
                       Write-Host "##vso[task.setvariable variable=portalAppUrl;]$($output.appUrl.value)"
+                      Write-Host "$($output.appUrl.value)"
+                      Write-Host "$output.appUrl.value"
                       $oldStr = "#{{ portalAppUrl }}"
-                      $newStr = "$($output.appUrl.value)"
+                      $newStr = "$output.appUrl.value"
                       $filePath = "$(Pipeline.Workspace)/s/self/infra/core/env-shared/portal/app-registrations/portal-app-registration.json"                      
                       $fileContent = Get-Content $filePath                      
                       $newFileContent = $fileContent -replace $oldStr, $newStr
