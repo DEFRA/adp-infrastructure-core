@@ -51,6 +51,7 @@ extends:
         deploymentBranches:
           - 'refs/heads/main'
         developmentEnvironment: true
+        privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
         azureRegions:
           primary: 'UKSouth'
       - name: 'ssv5'

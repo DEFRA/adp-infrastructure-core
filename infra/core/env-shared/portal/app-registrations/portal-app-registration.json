@@ -19,7 +19,6 @@
             "web": {
                 "redirectUris": [
                     "http://localhost:7007/api/auth/microsoft/handler/frame",
-                    "https://dev-portal.snd1.adp.defra.gov.uk/api/auth/microsoft/handler/frame",
                     "https://portal.snd1.adp.defra.gov.uk/api/auth/microsoft/handler/frame"
                 ],
                 "implicitGrantSettings": {
