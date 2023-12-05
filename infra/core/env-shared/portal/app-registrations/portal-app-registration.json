@@ -24,7 +24,7 @@
             "web": {
                 "redirectUris": [
                     "http://localhost:7007/api/auth/microsoft/handler/frame",
-                    "https://#{{ portalAppUrl }}/api/auth/microsoft/handler/frame"
+                    "#{{ portalAppUrl }}/api/auth/microsoft/handler/frame"
                 ],
                 "implicitGrantSettings": {
                     "enableAccessTokenIssuance": false,
