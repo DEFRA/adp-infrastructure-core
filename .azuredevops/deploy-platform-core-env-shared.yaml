@@ -139,7 +139,7 @@ extends:
                   - displayName: 'Replace Variables'
                     task: qetza.replacetokens.replacetokens-task.replacetokens@5
                     inputs:
-                      targetFiles: '$(Pipeline.Workspace)/s/self/infra/core/env-shared/portal/app-registrations/portal-app-registration.json'                      
+                      targetFiles: '**/infra/core/env-shared/portal/app-registrations/portal-app-registration.json'                      
                       writeBOM: false
                       tokenPattern: custom
                       tokenPrefix: '#{{'
