@@ -25,6 +25,10 @@ param(
 [string]$WorkingDirectory = $PWD
 )
 
+$GrafanaName = 'SSVADPINFMG3401'
+$ResourceGroupName = 'SSVADPINFRG3401'
+$DashboardsPath = 'C:\Users\asaarif\GitRepos\adp-infrastructure-core\infra\core\env\observability\dashboards'
+
 Set-StrictMode -Version 3.0
 
 [string]$functionName = $MyInvocation.MyCommand
@@ -58,25 +62,28 @@ try {
     Write-Host "Added extension"
 
     [string]$fluxFolderName = 'Flux'
-    [array]$fluxDashboardFileNames = @(
-        "flux-cluster-stats"
-        "flux-control-plane"
-        "flux-application-deployments"
+    [string]$folderExistsJson = Invoke-CommandLine -Command "az grafana folder list --name $GrafanaName --query ""[?@.title == '$fluxFolderName']"""
+    [object]$folderExists = $folderExistsJson | ConvertFrom-Json
+    if ($NULL -eq $folderExists) {
+        Write-Host "Creating new folder $fluxFolderName in Grafana"
+        Invoke-CommandLine -Command "az grafana folder create --name $GrafanaName --title $fluxFolderName"
+        Write-Host "Created new folder"
+    }
+
+    [array]$fluxDashboards = @(
+        @{fileName="flux-cluster-stats.json";dashBoardTitle="Flux Cluster Stats"}
+        @{fileName="flux-control-plane.json";dashBoardTitle="Flux Control Plane"}
+        @{fileName="flux-application-deployments.json";dashBoardTitle="GitOps Flux - Application Deployments Dashboard"}
     )
-
-    Write-Host "Creating new folder $fluxFolderName in Grafana"
-    Invoke-CommandLine -Command "az grafana folder create --name $GrafanaName --title $fluxFolderName"
-    Write-Host "Created new folder"
-
-    foreach ($fluxDashboardFileName in $fluxDashboardFileNames) {
-
-        [string]$fluxDashboardPath = Join-Path -Path $DashboardsPath -ChildPath $fluxDashboardFileName
-        [string]$fluxDashboardJsonPath = Join-Path -Path $fluxDashboardPath -ChildPath '.json'
-
-        Write-Host "Creating $fluxDashboardFileName dashboard in Grafana"
-        Invoke-CommandLine -Command "az grafana dashboard import --name $GrafanaName --resource-group $ResourceGroupName --definition @$fluxDashboardJsonPath --folder $fluxFolderName"
-        Write-Host "Created dashboard in Grafana"
-        
+    foreach ($fluxDashboard in $fluxDashboards) {
+        [string]$dashBoardExistsJson = Invoke-CommandLine -Command "az grafana dashboard list --name $GrafanaName --resource-group $ResourceGroupName --query ""[?@.title == '$($fluxDashboard.dashBoardTitle)']"""
+        [object]$dashBoardExists = $dashBoardExistsJson | ConvertFrom-Json
+        if ($NULL -eq $dashBoardExists) {
+            [string]$fluxDashboardPath = Join-Path -Path $DashboardsPath -ChildPath $fluxDashboard.fileName
+            Write-Host "Creating $($fluxDashboard.fileName) dashboard in Grafana"
+            Invoke-CommandLine -Command "az grafana dashboard import --name $GrafanaName --resource-group $ResourceGroupName --definition @$fluxDashboardPath --folder $fluxFolderName"
+            Write-Host "Created dashboard in Grafana"
+        }
     }
 
     $exitCode = 0
