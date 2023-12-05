@@ -58,6 +58,7 @@ extends:
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
           - 'refs/heads/main'
+        privateAgentName: 'DEFRA-COMMON-ubuntu2004-SSV5'
         azureRegions:
           primary: 'UKSouth'  
     filePathsForTransform: |
@@ -135,7 +136,17 @@ extends:
                     inlineScript: |
                       $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
                       Write-Host "##vso[task.setvariable variable=portalAppUrl;]$($output.appUrl.value)"
-                  - displayName: Create Tier 2 App Registrations
+                  - displayName: 'Replace Variables'
+                    task: qetza.replacetokens.replacetokens-task.replacetokens@5
+                    inputs:
+                      targetFiles: '$(Pipeline.Workspace)/s/self/infra/core/env-shared/portal/app-registrations/portal-app-registration.json'                      
+                      writeBOM: false
+                      tokenPattern: custom
+                      tokenPrefix: '#{{'
+                      tokenSuffix: '}}'
+                      inlineVariables: |
+                        portalAppUrl: $(portalAppUrl)
+                  - displayName: Register App
                     scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
                     scriptRepo: PipelineCommonScripts
                     ScriptArguments: >
