@@ -198,7 +198,7 @@ extends:
                   postDeployScriptsList:
                     - displayName: Create Flux Dashboards in Grafana
                       scriptPath: infra/core/env/scripts/New-FluxDashboards.ps1
-                      scriptType: AzureCLI
+                      type: AzureCLI
                       azureCLIScriptType: pscore
                       serviceConnectionVariableName: ssvServiceConnection
                       scriptArguments: >
