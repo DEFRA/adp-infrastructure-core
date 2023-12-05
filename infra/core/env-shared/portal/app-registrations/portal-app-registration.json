@@ -2,6 +2,7 @@
     "applications": [
         {
             "displayName": "#{{ portalAppRegName }}",
+            "IdentifierUris": "",
             "keyVault": {
                 "name": "#{{ ssvPortalKeyVaultName }}",
                 "secrets": [
@@ -22,11 +23,33 @@
                     "https://portal.snd1.adp.defra.gov.uk/api/auth/microsoft/handler/frame"
                 ],
                 "implicitGrantSettings": {
-                    "enableAccessTokenIssuance": true,
-                    "enableIdTokenIssuance": false
+                    "enableAccessTokenIssuance": false,
+                    "enableIdTokenIssuance": true
                 }
-            }
-            
+            },
+            "requiredResourceAccess": [
+                {
+                    "resourceAppId": "499b84ac-1321-427f-aa17-267ca6975798",
+                    "resourceAccess": [
+                        {
+                            "id": "8deb8858-ff9b-4c4e-b702-5a6abbb28db0",
+                            "type": "Scope"
+                        },
+                        {
+                            "id": "0d85fdcb-8267-4af0-857e-7f76b110fbdc",
+                            "type": "Scope"
+                        },
+                        {
+                            "id": "b64406bf-2a08-4182-b51e-f51dd0f6d5a3",
+                            "type": "Scope"
+                        },
+                        {
+                            "id": "6f9f984c-a956-40b7-a6ac-4f7e3f091f96",
+                            "type": "Scope"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
