@@ -53,25 +53,31 @@ try {
     Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
     Import-Module $moduleDir.FullName -Force
     
-    [string]$fluxFolderName = 'Flux'
-    [string]$fluxClusterStatsJson = Join-Path -Path $DashboardsPath -ChildPath "flux-cluster-stats.json"
-    [string]$fluxControlPlaneJson = Join-Path -Path $DashboardsPath -ChildPath "flux-control-plane.json"
-
     Write-Host "Add azure managed grafana extension"
     Invoke-CommandLine -Command "az extension add --upgrade -n amg"
     Write-Host "Added extension"
+
+    [string]$fluxFolderName = 'Flux'
+    [array]$fluxDashboardFileNames = @(
+        "flux-cluster-stats"
+        "flux-control-plane"
+        "flux-application-deployments"
+    )
 
     Write-Host "Creating new folder $fluxFolderName in Grafana"
     Invoke-CommandLine -Command "az grafana folder create --name $GrafanaName --title $fluxFolderName"
     Write-Host "Created new folder"
 
-    Write-Host "Creating flux-cluster-stats dashboard in Grafana"
-    Invoke-CommandLine -Command "az grafana dashboard import --name $GrafanaName --resource-group $ResourceGroupName --definition @$fluxClusterStatsJson --folder $fluxFolderName"
-    Write-Host "Creating dashboard in Grafana"
+    foreach ($fluxDashboardFileName in $fluxDashboardFileNames) {
 
-    Write-Host "Creating flux-control-plane dashboard in Grafana"
-    Invoke-CommandLine -Command "az grafana dashboard import --name $GrafanaName --resource-group $ResourceGroupName --definition @$fluxControlPlaneJson --folder $fluxFolderName"
-    Write-Host "Creating dashboard in Grafana"
+        [string]$fluxDashboardPath = Join-Path -Path $DashboardsPath -ChildPath $fluxDashboardFileName
+        [string]$fluxDashboardJsonPath = Join-Path -Path $fluxDashboardPath -ChildPath '.json'
+
+        Write-Host "Creating $fluxDashboardFileName dashboard in Grafana"
+        Invoke-CommandLine -Command "az grafana dashboard import --name $GrafanaName --resource-group $ResourceGroupName --definition @$fluxDashboardJsonPath --folder $fluxFolderName"
+        Write-Host "Created dashboard in Grafana"
+        
+    }
 
     $exitCode = 0
 }
