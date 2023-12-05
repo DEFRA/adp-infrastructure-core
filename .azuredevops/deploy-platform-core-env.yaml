@@ -197,8 +197,7 @@ extends:
                   #       -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(servicesResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
                   postDeployScriptsList:
                     - displayName: Create Flux Dashboards in Grafana
-                      path: infra/core/env/kms-key-rotation/New-FluxDashboards.ps1
-                      type: 'script'
+                      scriptPath: infra/core/env/kms-key-rotation/New-FluxDashboards.ps1
                       scriptType: AzureCLI
                       azureCLIScriptType: pscore
                       serviceConnectionVariableName: ssvServiceConnection
