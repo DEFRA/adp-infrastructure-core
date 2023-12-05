@@ -1,3 +1,4 @@
+/*
 @description('Required. The object of the Grafana Dashboard. The object must contain name,publicNetworkAccess and grafanaResourceSku.')
 param grafana object
 
@@ -56,3 +57,4 @@ resource grafanaRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-
     principalType: 'Group'
   }
 }
+*/
