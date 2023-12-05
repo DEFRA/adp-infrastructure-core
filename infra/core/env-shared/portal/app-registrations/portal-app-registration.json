@@ -6,10 +6,7 @@
             "keyVault": {
                 "name": "#{{ ssvPortalKeyVaultName }}",
                 "secrets": [
-                    {
-                        "key": "#{{ portalApplicationClientSecretName }}",
-                        "type": "ClientSecret"
-                    },
+                    
                     {
                         "key": "#{{ portalApplicationClientIdName }}",
                         "type": "ClientId"
