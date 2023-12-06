@@ -6,9 +6,9 @@ parameters:
   - name: deployResources
     displayName: "Resources to Deploy"
     type: string
-    default: "all"
+    default: "All"
     values:
-      - "all"
+      - "All"
       - "Policy Assignments"
       - "Platform Key Vault"
       - "Platform Container Registry"
