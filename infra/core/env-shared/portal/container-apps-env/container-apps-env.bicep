@@ -44,10 +44,6 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
   scope: resourceGroup(workspace.subscriptionId, workspace.resourceGroup)
 }
 
-// resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' existing = {
-//   name: containerApp.managedIdentityName
-// }
-
 var internal = false
 var infrastructureSubnetId = resourceId(subnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', subnet.vnetName, subnet.Name)
 var dockerBridgeCidr = '172.16.0.1/28'
@@ -99,34 +95,6 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
 //     workloadProfiles :!empty(workloadProfiles) ? workloadProfiles : null
 //     zoneRedundant: zoneRedundant
 //     tags: union(defaultTags, additionalTags)
-//   }
-// }
-
-// resource initContainerApp 'Microsoft.App/containerApps@2023-05-01' = {
-//   name: '${containerApp.name}'
-//   location: location
-//   identity: {
-//     type: 'UserAssigned'
-//     userAssignedIdentities: {
-//       '${managedIdentity.id}': {}
-//     }
-//   }
-//   properties: {
-//     environmentId: managedEnvironment.id
-//     configuration: {
-//       ingress: {
-//         external: true
-//         targetPort: 80
-//       }
-//     }
-//     template: {
-//       containers: [
-//         {
-//           name: '${containerApp.name}'
-//           image: 'mcr.microsoft.com/azuredocs/containerapps-helloworld:latest'
-//         }
-//       ]
-//     }
 //   }
 // }
 

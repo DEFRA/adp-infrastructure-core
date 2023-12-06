@@ -104,17 +104,17 @@ extends:
                 - SharedResources        
             deployments:
               - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal')) }}:
-                - name: key-vault
-                  path: infra/core/env-shared/portal/key-vault
-                  resourceGroupName: $(portalResourceGroup)
-                  privateEndpointDnsRecordsForResources:
-                    - resourceName: $(ssvResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)03
-                      resourceGroupName: $(portalResourceGroup)
                 - name: storage-account
                   path: infra/core/env-shared/portal/storage-account
                   resourceGroupName: $(portalResourceGroup)
                   privateEndpointDnsRecordsForResources:
-                    - resourceName: $(ssvResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)03
+                    - resourceName: $(ssvResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
+                      resourceGroupName: $(portalResourceGroup)
+                - name: key-vault
+                  path: infra/core/env-shared/portal/key-vault
+                  resourceGroupName: $(portalResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(ssvResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)02
                       resourceGroupName: $(portalResourceGroup)
                 - name: managed-identity
                   path: infra/core/env-shared/portal/managed-identity
@@ -128,7 +128,7 @@ extends:
                       type: PowerShell
                       useSystemAccessToken: true
                       scriptArguments: >
-                        -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)03.private.postgres.database.azure.com"
+                        -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01.private.postgres.database.azure.com"
                         -ResourceGroupName $(dnsResourceGroup)
                         -SubscriptionName $(subscriptionName)
                         -TenantId $(tenantId)

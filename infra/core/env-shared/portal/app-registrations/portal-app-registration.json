@@ -29,6 +29,15 @@
             },
             "requiredResourceAccess": [
                 {
+                    "resourceAppId": "00000003-0000-0000-c000-000000000000",
+                    "resourceAccess": [
+                        {
+                            "id": "bc024368-1153-4739-b217-4326f2e966d0",
+                            "type": "Scope"
+                        }
+                    ]
+                },
+                {
                     "resourceAppId": "499b84ac-1321-427f-aa17-267ca6975798",
                     "resourceAccess": [
                         {
