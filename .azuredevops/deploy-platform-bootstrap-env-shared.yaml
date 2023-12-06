@@ -8,10 +8,10 @@ parameters:
     type: string
     default: "All"
     values:
-      - "All"
-      - "Policy Assignments"
-      - "Platform Key Vault"
-      - "Platform Container Registry"
+      - All
+      - Policy Assignments
+      - Platform Key Vault
+      - Platform Container Registry
 
 pr:
   branches:
