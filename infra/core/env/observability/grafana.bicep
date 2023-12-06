@@ -17,7 +17,7 @@ param createdDate string = utcNow('yyyy-MM-dd')
 param azureMonitorWorkspaceResourceIds string
 
 @description('The object ID of the SSV ADO App Registration')
-param ssvAppRegServicePrincipalId string
+param ssvAppRegServicePrincipalObjectId string
 
 var commonTags = {
   Location: location
@@ -37,7 +37,7 @@ var grafanaAdminRoleAssignments = [
     principalType: 'Group'
   }
   {
-    principalId: ssvAppRegServicePrincipalId
+    principalId: ssvAppRegServicePrincipalObjectId
     principalType: 'ServicePrincipal'
   }
 ]
