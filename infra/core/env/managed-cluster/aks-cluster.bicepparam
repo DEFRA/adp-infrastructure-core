@@ -89,7 +89,7 @@ param fluxConfig = {
       syncIntervalInSeconds: 300
       timeoutInSeconds: 180
       url: 'https://github.com/DEFRA/adp-flux-core'
-      branch: 'aa/fluxGrafanaDashBoard'
+      branch: 'main'
     }
     kustomizations: {
       timeoutInSeconds: 600
