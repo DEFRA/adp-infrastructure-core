@@ -2,7 +2,7 @@ using './storage-account.bicep'
 
 param storageAccount = {
   name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_storageaccount }}#{{ nc_instance_regionid }}03'
-  privateEndpointName: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}03'
+  privateEndpointName: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}04'
   skuName: 'Standard_ZRS'
   containerName: 'adp-wiki-techdocs'
 }
