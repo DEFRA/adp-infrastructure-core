@@ -74,7 +74,7 @@ try {
     [string]$dashBoardExistsJson = Invoke-CommandLine -Command "az grafana dashboard list --name $GrafanaName --resource-group $ResourceGroupName --query ""[?@.folderTitle == '$fluxFolderName']"""
     [object]$dashBoardExists = $dashBoardExistsJson | ConvertFrom-Json
     foreach ($fluxDashboard in $fluxDashboards) {
-        if ($dashBoardExists.title -contains $fluxDashboard.dashBoardTitle) {
+        if ($dashBoardExists.title -notcontains $fluxDashboard.dashBoardTitle) {
             [string]$fluxDashboardPath = Join-Path -Path $DashboardsPath -ChildPath $fluxDashboard.fileName
             Write-Host "Creating $($fluxDashboard.fileName) dashboard in Grafana"
             Invoke-CommandLine -Command "az grafana dashboard import --name $GrafanaName --resource-group $ResourceGroupName --definition @$fluxDashboardPath --folder $fluxFolderName"
