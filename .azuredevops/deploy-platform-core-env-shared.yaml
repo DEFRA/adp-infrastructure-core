@@ -107,6 +107,9 @@ extends:
                 - name: key-vault
                   path: infra/core/env-shared/portal/key-vault
                   resourceGroupName: $(portalResourceGroup)
+                - name: storage-account
+                  path: infra/core/env-shared/portal/storage-account
+                  resourceGroupName: $(portalResourceGroup)
                 - name: managed-identity
                   path: infra/core/env-shared/portal/managed-identity
                   resourceGroupName: $(portalResourceGroup)
