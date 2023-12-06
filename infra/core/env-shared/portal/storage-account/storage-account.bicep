@@ -27,7 +27,7 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 param createdDate string = utcNow('yyyy-MM-dd')
 
 @description('Required. The name of the key vault where the secrets will be stored.')
-param keyvaultName string 
+param keyvaultName string
 
 var customTags = {
   Location: location
@@ -62,6 +62,13 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-account:0.5.3' = 
       defaultAction: 'Deny'
     }
     publicNetworkAccess: 'Disabled'
+    blobServices: {
+      containers: [
+        {
+          name: '${storageAccount.containerName}'
+        }
+      ]
+    }
     privateEndpoints: [
       {
         name: storageAccount.privateEndpointName
@@ -73,15 +80,8 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-account:0.5.3' = 
   }
 }
 
-resource container 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-05-01' = {
-  name: '${toLower(storageAccount.name)}/default/${storageAccount.containerName}'
-  dependsOn: [
-    storageAccounts
-  ]
-}
-
 resource storageAccountResource 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
-  name: toLower(storageAccount.name) 
+  name: toLower(storageAccount.name)
 }
 
 resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
@@ -90,7 +90,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
 
 resource accountKey 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'TECHDOCS-AZURE-BLOB-STORAGE-ACCOUNT-KEY'
-  parent: keyVault 
+  parent: keyVault
   properties: {
     value: storageAccountResource.listKeys().keys[0].value
   }
@@ -101,7 +101,7 @@ resource accountKey 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
 
 resource accountName 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'TECHDOCS-AZURE-BLOB-STORAGE-ACCOUNT-NAME'
-  parent: keyVault  
+  parent: keyVault
   properties: {
     value: toLower(storageAccount.name)
   }
