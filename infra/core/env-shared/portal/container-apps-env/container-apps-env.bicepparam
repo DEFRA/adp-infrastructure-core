@@ -9,7 +9,7 @@ param containerAppEnv = {
   ]
 }
 param containerApp = {
-  name: 'portal'
+  name: 'test'
   hostName: '#{{ ssvPortalHostName }}'
   managedIdentityName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}03-adp-portal'
 }

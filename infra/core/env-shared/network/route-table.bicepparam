@@ -13,28 +13,7 @@ param routes = [
       nextHopType: 'VirtualAppliance'
       nextHopIpAddress: '#{{ virtualApplianceIp }}'
     }
-  }
-  {
-    name: 'subnet1'
-    properties: {
-      addressPrefix: '#{{ subnet1AddressPrefix }}'
-      nextHopType: 'VnetLocal'
-    }
-  }
-  {
-    name: 'subnet2'
-    properties: {
-      addressPrefix: '#{{ subnet2AddressPrefix }}'
-      nextHopType: 'VnetLocal'
-    }
-  }
-  {
-    name: 'subnet3'
-    properties: {
-      addressPrefix: '#{{ subnet3AddressPrefix }}'
-      nextHopType: 'VnetLocal'
-    }
-  }
+  }  
 ]
 
 param location = '#{{ location }}'
