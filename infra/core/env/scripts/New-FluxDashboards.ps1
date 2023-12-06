@@ -71,10 +71,10 @@ try {
         @{fileName="flux-control-plane.json";dashBoardTitle="Flux Control Plane"}
         @{fileName="flux-application-deployments.json";dashBoardTitle="GitOps Flux - Application Deployments Dashboard"}
     )
+    [string]$dashBoardExistsJson = Invoke-CommandLine -Command "az grafana dashboard list --name $GrafanaName --resource-group $ResourceGroupName --query ""[?@.folderTitle == '$fluxFolderName']"""
+    [object]$dashBoardExists = $dashBoardExistsJson | ConvertFrom-Json
     foreach ($fluxDashboard in $fluxDashboards) {
-        [string]$dashBoardExistsJson = Invoke-CommandLine -Command "az grafana dashboard list --name $GrafanaName --resource-group $ResourceGroupName --query ""[?@.title == '$($fluxDashboard.dashBoardTitle)']"""
-        [object]$dashBoardExists = $dashBoardExistsJson | ConvertFrom-Json
-        if ($NULL -eq $dashBoardExists) {
+        if ($dashBoardExists.title -contains $fluxDashboard.dashBoardTitle) {
             [string]$fluxDashboardPath = Join-Path -Path $DashboardsPath -ChildPath $fluxDashboard.fileName
             Write-Host "Creating $($fluxDashboard.fileName) dashboard in Grafana"
             Invoke-CommandLine -Command "az grafana dashboard import --name $GrafanaName --resource-group $ResourceGroupName --definition @$fluxDashboardPath --folder $fluxFolderName"
