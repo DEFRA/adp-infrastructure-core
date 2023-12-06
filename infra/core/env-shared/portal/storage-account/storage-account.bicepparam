@@ -8,7 +8,7 @@ param storageAccount = {
 }
 
 param vnet = {
-  name: '#{{ virtualNetworkName }}'
+  name: '#{{ ssvVirtualNetworkName }}'
   resourceGroup: '#{{ ssvVirtualNetworkResourceGroup }}'
   subnetPrivateEndpoints: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}06'
 }
