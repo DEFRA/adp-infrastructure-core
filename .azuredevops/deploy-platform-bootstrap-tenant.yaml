@@ -21,16 +21,18 @@ pr:
     include:
       - infra/bootstrap/tenant/config/aad-groups/*
       - infra/scripts/ado/Create-AADGroups.ps1
+      - scripts/modules/aad-groups/*
 
 trigger:
   batch: true
   branches:
     include:
-      - '*'
+      - main
   paths:
     include:
       - infra/bootstrap/tenant/config/aad-groups/*
       - infra/scripts/ado/Create-AADGroups.ps1
+      - scripts/modules/aad-groups/*
 
 resources:
   repositories:
@@ -52,6 +54,10 @@ extends:
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
+    variableFiles: 
+      - /pipelines/vars/common.yaml@_self
+      - /pipelines/vars/tenant/{environment}.yaml@_self
+    regionalVariableFiles: []
     environments:
       - name: 'defradev'
         serviceConnection: AZD-ADP-SSV3

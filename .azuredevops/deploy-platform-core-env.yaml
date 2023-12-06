@@ -194,7 +194,7 @@ extends:
                       scriptArguments: >
                         -ResourceGroupName $(ssvSharedResourceGroup)
                         -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
-                        -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(aksResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
+                        -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(servicesResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
 
         - ${{ if eq(variables.IsPlatformKeyVault, true) }}:
           - name: platform
@@ -258,7 +258,7 @@ extends:
                     -AzureSubscription $(subscriptionName)
                     -KeyVaultName $(ssvPlatformKeyVaultName)
                     -KeyVaultRgName $(ssvSharedResourceGroup)
-                    -KeyVaultSubscriptionId $(ssv3subscriptionId)
+                    -KeyVaultSubscriptionId $(ssvSubscriptionId)
                     -SSHPrivateKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity'
                     -SSHPublicKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Pub'
                     -KnownHostsSecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Known-Hosts'
