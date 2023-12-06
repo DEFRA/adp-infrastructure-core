@@ -20,6 +20,9 @@
         },
         "grafanaAdminsGroupObjectId": {
             "value": "#{{ grafanaAdminGroupObjectId }}"
+        },
+        "ssvAppRegServicePrincipalObjectId": {
+            "value": "#{{ ssvAppRegServicePrincipalId }}"
         }
     }
 }
