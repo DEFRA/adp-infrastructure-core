@@ -63,6 +63,17 @@ param containerRegistries = [
   }
 ]
 
+param azureMonitorWorkspace = {
+  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_azuremonitorworkspace }}#{{ nc_instance_regionid }}01'
+  resourceGroup: '#{{ servicesResourceGroup }}'
+}
+
+param grafana = {
+  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_grafana }}#{{ nc_shared_instance_regionid }}01'
+  resourceGroup: '#{{ ssvSharedResourceGroup }}'
+  subscriptionId: '#{{ ssvSubscriptionId }}'
+}
+
 param location = '#{{ location }}'
 
 param environment = '#{{ environment }}'
