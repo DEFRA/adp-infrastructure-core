@@ -60,7 +60,7 @@ try {
     [string]$fluxFolderName = 'Flux'
     [string]$folderExistsJson = Invoke-CommandLine -Command "az grafana folder list --name $GrafanaName --query ""[?@.title == '$fluxFolderName']"""
     [object]$folderExists = $folderExistsJson | ConvertFrom-Json
-    if ($NULL -eq $folderExists) {
+    if ([string]::IsNullOrEmpty($folderExists)) {
         Write-Host "Creating new folder $fluxFolderName in Grafana"
         Invoke-CommandLine -Command "az grafana folder create --name $GrafanaName --title $fluxFolderName"
         Write-Host "Created new folder"
@@ -73,8 +73,9 @@ try {
     )
     [string]$dashBoardExistsJson = Invoke-CommandLine -Command "az grafana dashboard list --name $GrafanaName --resource-group $ResourceGroupName --query ""[?@.folderTitle == '$fluxFolderName']"""
     [object]$dashBoardExists = $dashBoardExistsJson | ConvertFrom-Json
+
     foreach ($fluxDashboard in $fluxDashboards) {
-        if ($dashBoardExists.title -notcontains $fluxDashboard.dashBoardTitle) {
+        if ([string]::IsNullOrEmpty($dashBoardExists) -or $dashBoardExists.title -notcontains $fluxDashboard.dashBoardTitle) {
             [string]$fluxDashboardPath = Join-Path -Path $DashboardsPath -ChildPath $fluxDashboard.fileName
             Write-Host "Creating $($fluxDashboard.fileName) dashboard in Grafana"
             Invoke-CommandLine -Command "az grafana dashboard import --name $GrafanaName --resource-group $ResourceGroupName --definition @$fluxDashboardPath --folder $fluxFolderName"
