@@ -22,6 +22,9 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Required. The name of the key vault where the secrets will be stored.')
 param keyvaultName string
 
+@description('Required. Object contains the Entra app details')
+param portalEntraApp object
+
 var customTags = {
   Location: location
   CreatedDate: createdDate
@@ -131,11 +134,27 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
   name: keyvaultName
 }
 
-resource secretbaseurl 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+resource secretdefaulturl 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'APP-DEFAULT-URL'
   parent: keyVault
   properties: {
     value: 'https://${containerApp.name}.${toLower(managedEnvironment.properties.defaultDomain)}'
+  }
+}
+
+resource secretbaseurl 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  name: 'APP-BASE-URL'
+  parent: keyVault
+  properties: {
+    value: 'https://${containerApp.hostName}'
+  }
+}
+
+resource tenantId 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  name: portalEntraApp.tenantIdSecretName
+  parent: keyVault
+  properties: {
+    value: '${portalEntraApp.tenantIdSecretValue}'
   }
 }
 

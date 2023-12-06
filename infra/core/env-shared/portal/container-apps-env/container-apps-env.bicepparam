@@ -1,7 +1,7 @@
 using './container-apps-env.bicep'
 
 param containerAppEnv = {
-  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerappsenv }}#{{ nc_shared_instance_regionid }}03'    
+  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerappsenv }}#{{ nc_shared_instance_regionid }}03'
   workloadProfiles: [
     {
       workloadProfileType: 'Consumption'
@@ -9,7 +9,8 @@ param containerAppEnv = {
   ]
 }
 param containerApp = {
-  name: 'portal' 
+  name: 'portal'
+  hostName: '#{{ ssvPortalHostName }}'
   managedIdentityName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}03-adp-portal'
 }
 param workspace = {
@@ -29,3 +30,8 @@ param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{
 param environment = '#{{ environment }}'
 
 param location = '#{{ location }}'
+
+param portalEntraApp = {
+  tenantIdSecretName: '#{{ portalApplicationClientTenantName }}' 
+  tenantIdSecretValue: '#{{ tenantId }}'
+}

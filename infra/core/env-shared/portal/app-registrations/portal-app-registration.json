@@ -13,14 +13,14 @@
                     {
                         "key": "#{{ portalApplicationClientIdName }}",
                         "type": "ClientId"
-                    }                   
+                    }
                 ]
             },
             "web": {
                 "redirectUris": [
                     "http://localhost:7007/api/auth/microsoft/handler/frame",
                     "{{portalAppUrl}}/api/auth/microsoft/handler/frame",
-                    "https://#{{ ssvPortalDnsName }}/api/auth/microsoft/handler/frame"
+                    "https://#{{ ssvPortalHostName }}/api/auth/microsoft/handler/frame"
                 ],
                 "implicitGrantSettings": {
                     "enableAccessTokenIssuance": false,
