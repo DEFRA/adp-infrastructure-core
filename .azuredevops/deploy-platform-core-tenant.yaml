@@ -14,7 +14,6 @@ parameters:
       - ServiceBus Writer Role
       - PostgreSql Database Writer Role
       - Storage Account Writer Role
-
 pr:
   branches:
     include:
@@ -87,14 +86,14 @@ extends:
         - name: role_definitions
           deployments:
            - ${{ if eq(variables.IsServiceBusWriterRole, true) }}:
-              - name: servicebus
-                path: infra/core/tenant/role-definitions
+              - name: servicebus-writer-role
+                path: infra/core/tenant/role-definition
                 scope: "Subscription"
            - ${{ if eq(variables.IsPostgreSqlDatabaseWriterRole, true) }}:
-              - name: flexible-server
-                path: infra/core/tenant/role-definitions
+              - name: flexible-server-writer-role
+                path: infra/core/tenant/role-definition
                 scope: "Subscription"
            - ${{ if eq(variables.IsStorageAccountWriterRole, true) }}:
-              - name: storageaccount
-                path: infra/core/tenant/role-definitions
+              - name: storageaccount-writer-role
+                path: infra/core/tenant/role-definition
                 scope: "Subscription"
