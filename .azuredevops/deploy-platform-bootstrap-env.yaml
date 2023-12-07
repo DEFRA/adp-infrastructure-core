@@ -105,6 +105,7 @@ extends:
                 path: infra/bootstrap/env/role-assignment
                 parameterFilePath: infra/bootstrap/env/role-assignment
                 scope: "Subscription"
+                serviceConnectionVariableName: "subscriptionName"
                 # preDeployScriptsList:
                 #   - displayName: Create Tier 2 App Registrations
                 #     scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
@@ -120,30 +121,30 @@ extends:
                 #       -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
                 #       -WorkingDirectory $(Pipeline.Workspace)\s\self      
 
-      # - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}
-      #   : - name: network
-      #       ${{ if eq(parameters.deployResources, 'all') }}:
-      #         dependsOnGroupedDeployments:
-      #           - SharedResources
-      #       deployments:
-      #         - name: route-table
-      #           path: infra/common/network
-      #           serviceConnectionVariableName: "subscriptionName"
-      #           resourceGroupName: $(virtualNetworkResourceGroup)
-      #         - name: network-security-group
-      #           path: infra/common/network
-      #           serviceConnectionVariableName: "subscriptionName"
-      #           resourceGroupName: $(virtualNetworkResourceGroup)
-      #         - name: virtual-network
-      #           path: infra/common/network
-      #           serviceConnectionVariableName: "subscriptionName"
-      #           resourceGroupName: $(virtualNetworkResourceGroup)
-      #           postDeployScriptsList:
-      #             - displayName: Link the VNet to Hub
-      #               scriptPath: infra/bootstrap/env/scripts/Trigger-VNetPeering.ps1
-      #               type: PowerShell
-      #               useSystemAccessToken: true
-      #               scriptArguments: >
-      #                 -VirtualNetworkName $(virtualNetworkName)
-      #                 -SubscriptionName $(subscriptionName)
-      #                 -TenantId $(tenantId)
+      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}
+        : - name: network
+            ${{ if eq(parameters.deployResources, 'all') }}:
+              dependsOnGroupedDeployments:
+                - SharedResources
+            deployments:
+              - name: route-table
+                path: infra/common/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: network-security-group
+                path: infra/common/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: virtual-network
+                path: infra/common/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(virtualNetworkResourceGroup)
+                postDeployScriptsList:
+                  - displayName: Link the VNet to Hub
+                    scriptPath: infra/bootstrap/env/scripts/Trigger-VNetPeering.ps1
+                    type: PowerShell
+                    useSystemAccessToken: true
+                    scriptArguments: >
+                      -VirtualNetworkName $(virtualNetworkName)
+                      -SubscriptionName $(subscriptionName)
+                      -TenantId $(tenantId)
