@@ -20,12 +20,16 @@ param createdDate string = utcNow('yyyy-MM-dd')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 @description('Required. The parameter object for configuring flux with the aks cluster. The object must contain the fluxCore  and fluxServices values.')
 param fluxConfig object
-@description('Optional. The parameter object for the monitoringWorkspace. The object must contain name of the name and resourceGroup.')
+@description('Required. The parameter object for the monitoringWorkspace. The object must contain name of the name and resourceGroup.')
 param monitoringWorkspace object
+@description('Required. The parameter object for the managed grafana instance. The object must contain name of the name, resourceGroup and subscriptionId.')
+param grafana object
 @description('Required. Azure Service Operator managed identity name')
 param asoPlatformManagedIdentity string
 @description('Required. The parameter object for the app configuration service. The object must contain name, resourceGroup and managedIdentityName.')
 param appConfig object
+@description('Required. The parameter object for the azure monitor workspace service. The object must contain name, resourceGroup and subscriptionId.')
+param azureMonitorWorkspace object
 @description('Required. The parameter object for the environment KeyVault. The object must contain name, resourceGroup and keyVaultName.')
 param keyVault object
 
@@ -205,6 +209,23 @@ module networkContributor '.bicep/network-contributor.bicep' = {
   }
 }
 
+module prometheusLogsRequisiteResources '.bicep/prometheus-logs-requisite-resources.bicep' = {
+  name: 'aks-prometheus-logs-requisite-resources-${deploymentDate}'
+  params: {
+    azureMonitorWorkspace: {
+      name: azureMonitorWorkspace.name
+      resourceGroup: azureMonitorWorkspace.resourceGroup
+    }
+    grafana: {
+      name: grafana.name
+      resourceGroup: grafana.resourceGroup
+      subscriptionId: grafana.subscriptionId
+    }
+    clusterName: deployAKS.outputs.name
+    location: location
+  }
+}
+
 module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in kmsKeyVaultRbacs: {
   name: 'aks-cluster-${kmsKeyVaultRbac.name}-${deploymentDate}'
   scope: resourceGroup(keyVault.resourceGroup)
@@ -219,7 +240,7 @@ module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in km
 }
 ]
 
-module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.14' = {
+module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.15-prerelease' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
     privateDnsZoneContributor
@@ -272,6 +293,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.1
     aadProfileServerAppID: ''
     aadProfileServerAppSecret: ''
     aadProfileTenantId: subscription().tenantId
+    enableAzureMonitorProfileMetrics: true
     primaryAgentPoolProfile: [
       systemNodePool
     ]
