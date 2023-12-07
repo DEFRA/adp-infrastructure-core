@@ -26,6 +26,9 @@ param subnet = {
 
 param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}02'
 
+param ssvPlatformKeyVaultName = '#{{ ssvPlatformKeyVaultName }}'
+
+
 param environment = '#{{ environment }}'
 
 param location = '#{{ location }}'

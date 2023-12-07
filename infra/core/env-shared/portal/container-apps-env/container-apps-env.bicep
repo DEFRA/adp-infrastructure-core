@@ -22,6 +22,9 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Required. The name of the key vault where the secrets will be stored.')
 param keyvaultName string
 
+@description('Required. The name of the shared key vault where the app URL will be stored to be used by Front Door deployment')
+param ssvPlatformKeyVaultName string
+
 @description('Required. Object contains the Entra app details')
 param portalEntraApp object
 
@@ -102,9 +105,13 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
   name: keyvaultName
 }
 
+resource sharedKeyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
+  name: ssvPlatformKeyVaultName
+}
+
 resource secretdefaulturl 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
-  name: 'APP-DEFAULT-URL'
-  parent: keyVault
+  name: 'PORTAL-APP-DEFAULT-URL'
+  parent: sharedKeyVault
   properties: {
     value: 'https://${containerApp.name}.${toLower(managedEnvironment.properties.defaultDomain)}'
   }
