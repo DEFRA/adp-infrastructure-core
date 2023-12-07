@@ -1,3 +1,5 @@
+targetScope = 'subscription'
+
 @description('Required. Environment specfic subscription Id')
 param subscriptionId string
 
