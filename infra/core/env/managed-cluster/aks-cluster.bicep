@@ -348,7 +348,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.1
   }
 }
 
-module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.extension:0.4.5' = {
+module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.extension:0.4.4-prerelease' = {
   name: 'flux-extension-${deploymentDate}'
   params: {
     clusterName: cluster.name
