@@ -104,6 +104,7 @@ extends:
               - name: Create Tier 2 App Registrations
                 type: 'script'
                 scriptType: AzurePowerShell
+                scriptRepo: PipelineCommonScripts
                 path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
                 scriptArguments: > 
                   -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
@@ -121,6 +122,7 @@ extends:
                 scriptArguments: > 
                   -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
                   -WorkingDirectory $(Pipeline.Workspace)\s\self
+
 
               
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}
