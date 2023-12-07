@@ -37,7 +37,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: gg/231463-adp-param #main
+      ref: main
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -101,12 +101,12 @@ extends:
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'service-connections')) }}
         : - name: SharedResources
             deployments:
-              # - name: Create Tier 2 App Registrations
-              #   type: 'script'
-              #   scriptType: AzurePowerShell
-              #   path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
-              #   scriptArguments: > 
-              #     -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
+              - name: Create Tier 2 App Registrations
+                type: 'script'
+                scriptType: AzurePowerShell
+                path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+                scriptArguments: > 
+                  -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
               - name: Create Tier 2 Role Assignments
                 type: 'script'
                 scriptType: AzurePowerShell
@@ -123,30 +123,30 @@ extends:
                   -WorkingDirectory $(Pipeline.Workspace)\s\self
 
               
-      # - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}
-      #   : - name: network
-      #       ${{ if eq(parameters.deployResources, 'all') }}:
-      #         dependsOnGroupedDeployments:
-      #           - SharedResources
-      #       deployments:
-      #         - name: route-table
-      #           path: infra/common/network
-      #           serviceConnectionVariableName: "subscriptionName"
-      #           resourceGroupName: $(virtualNetworkResourceGroup)
-      #         - name: network-security-group
-      #           path: infra/common/network
-      #           serviceConnectionVariableName: "subscriptionName"
-      #           resourceGroupName: $(virtualNetworkResourceGroup)
-      #         - name: virtual-network
-      #           path: infra/common/network
-      #           serviceConnectionVariableName: "subscriptionName"
-      #           resourceGroupName: $(virtualNetworkResourceGroup)
-      #           postDeployScriptsList:
-      #             - displayName: Link the VNet to Hub
-      #               scriptPath: infra/bootstrap/env/scripts/Trigger-VNetPeering.ps1
-      #               type: PowerShell
-      #               useSystemAccessToken: true
-      #               scriptArguments: >
-      #                 -VirtualNetworkName $(virtualNetworkName)
-      #                 -SubscriptionName $(subscriptionName)
-      #                 -TenantId $(tenantId)
+      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}
+        : - name: network
+            ${{ if eq(parameters.deployResources, 'all') }}:
+              dependsOnGroupedDeployments:
+                - SharedResources
+            deployments:
+              - name: route-table
+                path: infra/common/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: network-security-group
+                path: infra/common/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(virtualNetworkResourceGroup)
+              - name: virtual-network
+                path: infra/common/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(virtualNetworkResourceGroup)
+                postDeployScriptsList:
+                  - displayName: Link the VNet to Hub
+                    scriptPath: infra/bootstrap/env/scripts/Trigger-VNetPeering.ps1
+                    type: PowerShell
+                    useSystemAccessToken: true
+                    scriptArguments: >
+                      -VirtualNetworkName $(virtualNetworkName)
+                      -SubscriptionName $(subscriptionName)
+                      -TenantId $(tenantId)
