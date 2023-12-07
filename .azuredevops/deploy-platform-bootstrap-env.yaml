@@ -104,7 +104,7 @@ extends:
               - name: tier2-role-assignments
                 path: infra/bootstrap/env/role-assignment
                 parameterFilePath: infra/bootstrap/env/role-assignment
-                resourceGroupName: $(ssvSharedResourceGroup)
+                scope: "Subscription"
                 # preDeployScriptsList:
                 #   - displayName: Create Tier 2 App Registrations
                 #     scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
