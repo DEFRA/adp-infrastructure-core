@@ -75,7 +75,7 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
   }
 }
 
-// module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.8' = {
+// module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.9' = {
 //   name: '${containerAppEnv.name}'
 //   params: { 
 //     // Required parameters
@@ -83,17 +83,17 @@ resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
 //     logAnalyticsWorkspaceResourceId: logAnalyticsWorkspace.id
 //     name: '${containerAppEnv.name}'
 //     // Non-required parameters
-//     dockerBridgeCidr: !empty(infrastructureSubnetId) && internal == true ? dockerBridgeCidr : null  
-//     infrastructureSubnetId: !empty(infrastructureSubnetId) && internal == true ? infrastructureSubnetId : null
-//     internal: false
+//     dockerBridgeCidr: !empty(infrastructureSubnetId) ? dockerBridgeCidr : null  
+//     infrastructureSubnetId: !empty(infrastructureSubnetId) ? infrastructureSubnetId : null
+//     internal: internal
 //     location: location
 //     lock: {
 //       kind: 'CanNotDelete'
 //       name: '${containerAppEnv.name}-CanNotDelete'
 //     }
-//     skuName: containerAppEnv.skuName
 //     workloadProfiles :!empty(workloadProfiles) ? workloadProfiles : null
 //     zoneRedundant: zoneRedundant
+//     infrastructureResourceGroup: infrastructureResourceGroupName 
 //     tags: union(defaultTags, additionalTags)
 //   }
 // }

@@ -32,8 +32,12 @@
                     "resourceAppId": "00000003-0000-0000-c000-000000000000",
                     "resourceAccess": [
                         {
-                            "id": "bc024368-1153-4739-b217-4326f2e966d0",
-                            "type": "Scope"
+                            "id": "98830695-27a2-44f7-8c18-0c3ebc9698f6",
+                            "type": "Role"
+                        },
+                        {
+                            "id": "df021288-bdef-4463-88db-98f22de89214",
+                            "type": "Role"
                         }
                     ]
                 },
