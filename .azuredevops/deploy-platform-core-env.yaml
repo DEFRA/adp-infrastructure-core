@@ -195,7 +195,6 @@ extends:
                         -ResourceGroupName $(ssvSharedResourceGroup)
                         -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
                         -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(servicesResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
-
         - ${{ if eq(variables.IsPlatformKeyVault, true) }}:
           - name: platform
             deployments:                  
@@ -206,7 +205,6 @@ extends:
                 privateEndpointDnsRecordsForResources:
                   - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)02
                     resourceGroupName: $(servicesResourceGroup)
-
         - ${{ if eq(variables.IsManagedCluster, true) }}:  
           - name: managed_cluster
             ${{ if eq(variables.IsAll, true) }}:
@@ -286,8 +284,7 @@ extends:
               - ${{ if eq(variables.IsFrontDoorWAF, true) }}: 
                 - name: azure-waf
                   path: infra/core/env/front-door
-                  resourceGroupName: $(cdnResourceGroup)
-                  
+                  resourceGroupName: $(cdnResourceGroup)                 
         - ${{ if eq(variables.IsApplication, true) }}:  
           - name: application_infra
             ${{ if eq(variables.IsAll, true) }}:
