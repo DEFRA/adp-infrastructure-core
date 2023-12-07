@@ -1,3 +1,6 @@
+@description('Required. Environment specfic subscription Id')
+param subscriptionId string
+
 @description('Required. The Principal or Object ID of the Service Principal.')
 param principalId string
 
@@ -12,11 +15,11 @@ param sharedContainerRegistry object
 
 var builtInRoleNames = {
   Contributor: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b24988ac-6180-42a0-ab88-20f7382dd24c')
-  'User Access Administrator': subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '18d7d88d-d35e-4fb5-a5c3-7773c20a72d9')
+  'UserAccessAdministrator': subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '18d7d88d-d35e-4fb5-a5c3-7773c20a72d9')
 }
 
 module subscriptionContUAA '.bicep/subscription-rbac.bicep' = [for (roleAssignment, index) in subcriptionRoleAssignments: {
-  scope: subscription()
+  scope: subscription(subscriptionId)
   name: '${uniqueString(deployment().name, subscription().id)}-Subscription-${roleAssignment.roleDefinitionName}-${index}'
   params: {
     principalId: principalId
@@ -28,7 +31,7 @@ module subscriptionContUAA '.bicep/subscription-rbac.bicep' = [for (roleAssignme
 
 module ssvResourceGroupContributor '.bicep/shared-resourcegroup-contributor.bicep' = {
   scope: resourceGroup(sharedContainerRegistry.subscriptionId, sharedContainerRegistry.resourceGroup)
-  name: '${uniqueString(deployment().name, subscription().id)}-Contributor'
+  name: '${uniqueString(deployment().name, subscription().id)}-ssvResourceGroupContributor'
   params: {
     principalId: principalId
     principalType: principalType
@@ -39,12 +42,12 @@ module ssvResourceGroupContributor '.bicep/shared-resourcegroup-contributor.bice
 
 module ssvACRUserAccessAdministrator '.bicep/shared-acr-uaa.bicep' = {
   scope: resourceGroup(sharedContainerRegistry.subscriptionId, sharedContainerRegistry.resourceGroup)
-  name: '${uniqueString(deployment().name, subscription().id)}-UAA'
+  name: '${uniqueString(deployment().name, subscription().id)}-ssvACRUserAccessAdministrator'
   params: {
     principalId: principalId
     principalType: principalType
     description: 'UAA role assignment to shared ACR'
-    roleDefinitionId: builtInRoleNames['User Access Administrator'] //User Access Administrator
+    roleDefinitionId: builtInRoleNames['UserAccessAdministrator'] //User Access Administrator
     containerRegistryName: sharedContainerRegistry.name
   }
 }

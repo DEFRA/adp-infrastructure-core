@@ -1,5 +1,7 @@
 using './tier2-role-assignments.bicep'
 
+param subscriptionId = '#{{ subscriptionId }}'
+
 param principalId = az.getSecret('#{{ ssvSubscriptionId }}', '#{{ ssvSharedResourceGroup }}', '#{{ ssvPlatformKeyVaultName }}', '#{{ tier2ApplicationSPObjectIdSecretName }}')
 
 param subcriptionRoleAssignments = [
@@ -9,7 +11,7 @@ param subcriptionRoleAssignments = [
     }
     {
         roleAssignmentDescription: 'User Acess Administrator to environment specific subscription'
-        roleDefinitionName: 'User Access Administrator'
+        roleDefinitionName: 'UserAccessAdministrator'
     }
 ]
 
