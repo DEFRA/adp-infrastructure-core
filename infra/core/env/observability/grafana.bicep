@@ -16,6 +16,9 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('The resourceIds of Azure Monitor Workspaces which will be linked to Grafana')
 param azureMonitorWorkspaceResourceIds string
 
+@description('The object ID of the SSV ADO App Registration')
+param ssvAppRegServicePrincipalObjectId string
+
 var commonTags = {
   Location: location
   CreatedDate: createdDate
@@ -27,6 +30,17 @@ var tags = union(loadJsonContent('../../../common/default-tags.json'), commonTag
 var azureMonitorWorkspaceResourceIdObject = [for azureMonitorWorkspaceResourceId in split(azureMonitorWorkspaceResourceIds, ' '): {
   azureMonitorWorkspaceResourceId: azureMonitorWorkspaceResourceId
 }]
+
+var grafanaAdminRoleAssignments = [
+  {
+    principalId: grafanaAdminsGroupObjectId
+    principalType: 'Group'
+  }
+  {
+    principalId: ssvAppRegServicePrincipalObjectId
+    principalType: 'ServicePrincipal'
+  }
+]
 
 resource grafanaDashboardResource 'Microsoft.Dashboard/grafana@2022-08-01' = {
   name: grafana.name
@@ -47,12 +61,12 @@ resource grafanaDashboardResource 'Microsoft.Dashboard/grafana@2022-08-01' = {
   }
 }
 
-resource grafanaRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(resourceGroup().id, 'GrafanaAdmin', grafanaAdminsGroupObjectId)
+resource grafanaRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = [for grafanaAdminRoleAssignment in grafanaAdminRoleAssignments: {
+  name: guid(resourceGroup().id, 'GrafanaAdmin', grafanaAdminRoleAssignment.principalId)
   scope: grafanaDashboardResource
   properties: {
-    principalId: grafanaAdminsGroupObjectId
+    principalId: grafanaAdminRoleAssignment.principalId
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '22926164-76b3-42b3-bc55-97df8dab3e41') // Grafana Admin
-    principalType: 'Group'
+    principalType: grafanaAdminRoleAssignment.principalType
   }
-}
+}]
