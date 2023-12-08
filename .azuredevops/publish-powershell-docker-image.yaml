@@ -38,7 +38,7 @@ resources:
       ref: refs/heads/jk/pg-db-access
 
 extends:
-  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  template: /pipelines/common-infra-deploy.yaml@DEFRA-ADPPipelineCommon
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.publishFromFeature }}
