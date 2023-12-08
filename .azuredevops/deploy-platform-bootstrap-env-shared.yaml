@@ -22,7 +22,6 @@ pr:
   paths:
     include:
       - infra/bootstrap/env-shared/*
-      - infra/common/policy-assignment/*
 
 trigger:
   batch: true
