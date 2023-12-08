@@ -34,7 +34,7 @@ Function Set-RoleAssignment {
     process {    
         Write-Debug "${functionName}:RoleAssignment=$($RoleAssignment | ConvertTo-Json -Depth 10)"
 
-        Write-Host "Fethcing Keyvault secret $($RoleAssignment.ObjectId.keyVault.secretKey) from KeyVaultName $($RoleAssignment.ObjectId.keyVault.name)"
+        Write-Host "Fetching Keyvault secret $($RoleAssignment.ObjectId.keyVault.secretKey) from KeyVaultName $($RoleAssignment.ObjectId.keyVault.name)"
         [string]$servicePrincipalObjectId = Get-AzKeyVaultSecret -VaultName $RoleAssignment.ObjectId.keyVault.name -Name $RoleAssignment.ObjectId.keyVault.secretKey -AsPlainText -ErrorAction Stop
         Write-Debug "${functionName}:$($RoleAssignment.ObjectId.keyVault.secretKey) = $($servicePrincipalObjectId)"
         
