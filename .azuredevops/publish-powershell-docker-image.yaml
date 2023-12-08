@@ -73,5 +73,5 @@ extends:
               -ImageVersion  ${{ variables.dockerImageVersion }} 
               -ImageCachePath $(Pipeline.Workspace)/docker 
               -Command "BuildAndPush" 
-              -PSHelperDirectory "templates/powershell/modules/ps-helpers"
+              -PSHelperDirectory "$(Pipeline.Workspace)/s/PipelineCommonFiles/templates/powershell/modules/ps-helpers"
               -DockerFilePath $(Pipeline.Workspace)/s/self/powershell-executor/powershell-executor.Dockerfile
