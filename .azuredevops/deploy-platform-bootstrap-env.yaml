@@ -148,6 +148,15 @@ extends:
               path: infra/common/operational-insights
               serviceConnectionVariableName: "subscriptionName"
               resourceGroupName: $(servicesResourceGroup)
+      - ${{ if eq(variables.IsPolicyAssignments,true) }}:
+        - name: policyAssignments
+          ${{ if eq(variables.IsAll, true) }}:
+            dependsOnGroupedDeployments:
+              - logAnalyticsWorkspace
+          deployments:
+            - name: assignment
+              path: infra/common/policy
+              scope: 'subscription'
       - ${{ if eq(variables.IsNetwork,true) }}:
         - name: network
           ${{ if eq(variables.IsAll, true) }}:
