@@ -1,6 +1,6 @@
 using './policy-diagnostic-settings-assignment.bicep'
 
-param diagnosticPolicies = array(json(#{{ noescape(diagnosticSettingsPolicies) }}))
+param diagnosticPolicies = json('#{{ noescape(diagnosticSettingsPolicies) }}')
 param logAnalyticsWorkspace = {
   name: '#{{ logAnalyticsWorkspace }}'
   resourceGroupName: '#{{ servicesResourceGroup}}'
