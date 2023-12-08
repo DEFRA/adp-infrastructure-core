@@ -146,6 +146,7 @@ extends:
           deployments:
             - name: log-analytics-workspace
               path: infra/common/operational-insights
+              serviceConnectionVariableName: "subscriptionName"
               resourceGroupName: $(servicesResourceGroup)
       - ${{ if eq(variables.IsNetwork,true) }}:
         - name: network
