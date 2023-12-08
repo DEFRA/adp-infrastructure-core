@@ -64,13 +64,14 @@ extends:
           - name: Publish Powershell Docker Image
             type: "script"
             scriptType: AzureCLI
+            scriptRepo: PipelineCommon
             azureCLIScriptType: pscore
-            path: "$(Pipeline.Workspace)/s/PipelineCommonFiles/templates/powershell/build/BuildAndPushDockerImage.ps1"
+            path: "templates/powershell/build/BuildAndPushDockerImage.ps1"
             scriptArguments: >
               -AcrName $(ssvSharedAcrName)
               -AcrRepoName "${{ variables.dockerImageName }}" 
               -ImageVersion  ${{ variables.dockerImageVersion }} 
               -ImageCachePath $(Pipeline.Workspace)/docker 
               -Command "BuildAndPush" 
-              -PSHelperDirectory $(Pipeline.Workspace)/s/PipelineCommonFiles/templates/powershell/modules/ps-helpers
+              -PSHelperDirectory "templates/powershell/modules/ps-helpers"
               -DockerFilePath $(Pipeline.Workspace)/s/self/powershell-executor/powershell-executor.Dockerfile
