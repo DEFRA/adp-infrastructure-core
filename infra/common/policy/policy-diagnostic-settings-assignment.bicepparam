@@ -1,6 +1,6 @@
 using './policy-diagnostic-settings-assignment.bicep'
 
-param diagnosticPolicies = json('[{"assignmentDisplayName": "Deploy - Configure diagnostic settings for Azure Key Vault to Log Analytics workspace","policyDefinitionId": "951af2fa-529b-416e-ab6e-066fd85ac459"}]')
+param diagnosticPolicies = json(#{{ noescape(diagnosticSettingsPolicies) }})
 param logAnalyticsWorkspace = {
   name: '#{{ logAnalyticsWorkspace }}'
   resourceGroupName: '#{{ servicesResourceGroup}}'
