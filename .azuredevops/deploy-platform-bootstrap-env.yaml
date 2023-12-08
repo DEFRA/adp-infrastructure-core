@@ -156,6 +156,7 @@ extends:
           deployments:
             - name: assignment
               path: infra/common/policy
+              serviceConnectionVariableName: "subscriptionName"
               scope: "Subscription"
       - ${{ if eq(variables.IsNetwork,true) }}:
         - name: network
