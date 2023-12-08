@@ -51,6 +51,3 @@ extends:
     groupedDeployments:
       - name: SharedResources 
         deployments:
-          - name: platform-container-registry
-            path: infra/core/env-shared/container-registry
-            resourceGroupName: $(ssvSharedResourceGroup)
