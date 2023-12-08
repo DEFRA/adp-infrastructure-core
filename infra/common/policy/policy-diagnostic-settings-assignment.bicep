@@ -1,10 +1,18 @@
 targetScope = 'subscription'
 
 @description('Required. Array of Diagnostic Setting Policies.')
-param diagnosticPolicies array
+param diagnosticPolicies array= [
+  {
+    assignmentDisplayName: 'Deploy - Configure diagnostic settings for Azure Key Vault to Log Analytics workspace'
+    policyDefinitionId: '951af2fa-529b-416e-ab6e-066fd85ac459'
+  }
+]
 
 @description('Required. Log Analytics workspace object. Must have the following properties: name, resourceGroupName')
-param logAnalyticsWorkspace object
+param logAnalyticsWorkspace object = {
+  name: 'SNDADPINFLW1401'
+  resourceGroupName: 'SNDADPINFRG1401'
+}
 
 @description('Required. Location for all resources.')
 param location string = 'uksouth'

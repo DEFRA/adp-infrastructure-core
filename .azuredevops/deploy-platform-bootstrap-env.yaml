@@ -154,7 +154,7 @@ extends:
             dependsOnGroupedDeployments:
               - logAnalyticsWorkspace
           deployments:
-            - name: assignment
+            - name: policy-diagnostic-settings-assignment
               path: infra/common/policy
               serviceConnectionVariableName: "subscriptionName"
               scope: "Subscription"
