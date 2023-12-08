@@ -15,16 +15,16 @@ param subscriptionId string = subscription().subscriptionId
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-module policyAssignmentModule '.bicep/policy-assignment.bicep' = [for (policyAssignment,index) in diagnosticPolicies: {
-  name: 'policy-definition-${index}-${deploymentDate}'  
+module policyAssignmentModule '.bicep/policy-assignment.bicep' = [for (policyAssignment, index) in diagnosticPolicies: {
+  name: 'policy-definition-${index}-${deploymentDate}'
   params: {
-    name: guid(subscriptionId,policyAssignment.assignmentDisplayName)
+    name: guid(subscriptionId, policyAssignment.assignmentDisplayName)
     subscriptionId: subscriptionId
     displayName: policyAssignment.assignmentDisplayName
     policyDefinitionId: tenantResourceId('Microsoft.Authorization/policyDefinitions', policyAssignment.policyDefinitionId)
     parameters: {
-      logAnalytics:{
-        value:  resourceId(logAnalyticsWorkspace.resourceGroupName, 'Microsoft.OperationalInsights/workspaces', logAnalyticsWorkspace.name)
+      logAnalytics: {
+        value: resourceId(subscriptionId, logAnalyticsWorkspace.resourceGroupName, 'Microsoft.OperationalInsights/workspaces', logAnalyticsWorkspace.name)
       }
     }
     roleDefinitionIds: [
@@ -36,5 +36,3 @@ module policyAssignmentModule '.bicep/policy-assignment.bicep' = [for (policyAss
     enableDefaultTelemetry: false
   }
 }]
-
-
