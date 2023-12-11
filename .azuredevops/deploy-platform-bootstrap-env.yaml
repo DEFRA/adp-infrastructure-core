@@ -41,7 +41,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: pp/policy-assignments
+      ref: main
 
 variables:
   - name: IsAll
