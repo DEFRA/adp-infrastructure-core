@@ -23,12 +23,14 @@ module policyAssignmentModule '.bicep/policy-assignment.bicep' = [for (policyAss
     displayName: policyAssignment.assignmentDisplayName
     policyDefinitionId: tenantResourceId('Microsoft.Authorization/policyDefinitions', policyAssignment.policyDefinitionId)
     parameters: {
+      categoryGroup: {
+        value: 'allLogs'
+      }
       logAnalytics: {
         value: resourceId(subscriptionId, logAnalyticsWorkspace.resourceGroupName, 'Microsoft.OperationalInsights/workspaces', logAnalyticsWorkspace.name)
       }
     }
     roleDefinitionIds: [
-      '/providers/Microsoft.Authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa' // Monitoring Contributor
       '/providers/Microsoft.Authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293' // Log Analytics Contributor
     ]
     identity: 'SystemAssigned'
