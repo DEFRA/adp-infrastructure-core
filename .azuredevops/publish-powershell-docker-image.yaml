@@ -30,12 +30,12 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: refs/heads/jk/pg-db-access
+      ref: refs/heads/main
     - repository: DEFRA-ADPFluxServices
       name: DEFRA/adp-flux-services
       endpoint: DEFRA
       type: github
-      ref: refs/heads/jk/pg-db-access
+      ref: refs/heads/main
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@DEFRA-ADPPipelineCommon
