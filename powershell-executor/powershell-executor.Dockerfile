@@ -14,8 +14,6 @@ RUN apt install -y -f postgresql postgresql-contrib
 # Change default shell to powershell
 SHELL ["pwsh", "-Command"]
 
-RUN pwsh -Command Get-PSRepository
-
 # Install Az Module in Powershell
 RUN pwsh -Command Install-Module -Name Az -Repository PSGallery -Force -AllowClobber
 
