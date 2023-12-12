@@ -7,6 +7,9 @@ param vnet object
 @description('Required. The parameter object for the private Dns zone. The object must contain the name and resourceGroup values')
 param privateDnsZone object
 
+@description('Required. The name of the AAD admin managed identity.')
+param managedIdentityName string
+
 @description('Required. The diagnostic object. The object must contain diagnosticLogCategoriesToEnable and diagnosticMetricsToEnable properties.')
 param diagnostics object
 
@@ -45,6 +48,21 @@ resource private_dns_zone 'Microsoft.Network/privateDnsZones@2020-06-01' existin
   scope: resourceGroup(privateDnsZone.resourceGroup)
 }
 
+var managedIdentityTags = {
+  Name: managedIdentityName
+  Purpose: 'ADP Platform Database AAD Admin Managed Identity'
+  Tier: 'Shared'
+}
+
+module aadAdminUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
+  name: 'managed-identity-${deploymentDate}'
+  params: {
+    name: managedIdentityName
+    tags: union(defaultTags, managedIdentityTags)
+    lock: 'CanNotDelete'
+  }
+}
+
 module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-server:0.4.4' = {
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
@@ -66,7 +84,13 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     diagnosticLogCategoriesToEnable: diagnostics.diagnosticLogCategoriesToEnable
     diagnosticMetricsToEnable: diagnostics.diagnosticMetricsToEnable
     diagnosticSettingsName:''
-    administrators: []
+    administrators: [
+      {
+        identityResourceId: aadAdminUserMi.outputs.resourceId
+        login: aadAdminUserMi.outputs.name
+        sid: aadAdminUserMi.outputs.principalId
+      }
+    ]
     configurations:[]
     delegatedSubnetResourceId : virtual_network::subnet.id
     privateDnsZoneArmResourceId: private_dns_zone.id
