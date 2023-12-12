@@ -28,9 +28,6 @@
         "managedIdentityName": {
             "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-adp-platform-db-aad-admin"
         },
-        "diagnosticSettings": {
-            "value": {}
-        },
         "location": {
             "value": "#{{ location }}"
         },

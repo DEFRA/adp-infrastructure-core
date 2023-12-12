@@ -10,9 +10,6 @@ param privateDnsZone object
 @description('Required. The name of the AAD admin managed identity.')
 param managedIdentityName string
 
-@description('Required. The diagnostic object. The object must contain the name and workspaceId properties.')
-param diagnosticSettings object
-
 @allowed([
   'UKSouth'
 ])
@@ -83,8 +80,6 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     }
     backupRetentionDays:14
     createMode: 'Default' 
-    diagnosticSettings: diagnosticSettings
-    
     administrators: [
       {
         identityResourceId: aadAdminUserMi.outputs.resourceId
