@@ -10,8 +10,8 @@ param privateDnsZone object
 @description('Required. The name of the AAD admin managed identity.')
 param managedIdentityName string
 
-@description('Required. The diagnostic object. The object must contain diagnosticLogCategoriesToEnable and diagnosticMetricsToEnable properties.')
-param diagnostics object
+@description('Required. The diagnostic object. The object must contain the name and workspaceId properties.')
+param diagnosticSettings object
 
 @allowed([
   'UKSouth'
@@ -63,7 +63,7 @@ module aadAdminUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-ide
   }
 }
 
-module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-server:0.4.4' = {
+module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-server:0.4.13' = {
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
     name: toLower(server.name)
@@ -78,12 +78,13 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     activeDirectoryAuth:'Enabled'
     passwordAuth: 'Disabled'
     enableDefaultTelemetry:false
-    lock: 'CanNotDelete'
+    lock: {
+      kind: 'CanNotDelete'
+    }
     backupRetentionDays:14
     createMode: 'Default' 
-    diagnosticLogCategoriesToEnable: diagnostics.diagnosticLogCategoriesToEnable
-    diagnosticMetricsToEnable: diagnostics.diagnosticMetricsToEnable
-    diagnosticSettingsName:''
+    diagnosticSettings: diagnosticSettings
+    
     administrators: [
       {
         identityResourceId: aadAdminUserMi.outputs.resourceId
@@ -94,6 +95,5 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     configurations:[]
     delegatedSubnetResourceId : virtual_network::subnet.id
     privateDnsZoneArmResourceId: private_dns_zone.id
-    diagnosticWorkspaceId: ''
   }
 }

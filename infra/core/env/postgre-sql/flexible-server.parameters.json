@@ -28,15 +28,8 @@
         "managedIdentityName": {
             "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-adp-platform-db-aad-admin"
         },
-        "diagnostics": {
-            "value": {
-                "diagnosticLogCategoriesToEnable": [
-                    "allLogs"
-                ],
-                "diagnosticMetricsToEnable": [
-                    "AllMetrics"
-                ]
-            }
+        "diagnosticSettings": {
+            "value": {}
         },
         "location": {
             "value": "#{{ location }}"
