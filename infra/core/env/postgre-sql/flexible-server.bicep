@@ -82,9 +82,9 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     createMode: 'Default' 
     administrators: [
       {
-        identityResourceId: aadAdminUserMi.outputs.resourceId
-        login: aadAdminUserMi.outputs.name
-        sid: aadAdminUserMi.outputs.principalId
+        objectId: aadAdminUserMi.outputs.clientId
+        principalName: aadAdminUserMi.outputs.name
+        principalType: 'ServicePrincipal'
       }
     ]
     configurations:[]
