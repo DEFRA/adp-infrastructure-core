@@ -6,8 +6,8 @@ param(
     [string]$OnBoardingManifest,
     [Parameter(Mandatory)] 
     [string]$FluxServicesPath,
-    [Parameter()]
-    [string]$WorkingDirectory = $PWD
+    [Parameter(Mandatory)]
+    [string]$PSHelperDirectory
 )
 
 function ReplaceTokens {
@@ -138,11 +138,11 @@ Write-Host "${functionName} started at $($startTime.ToString('u'))"
 Write-Debug "${functionName}:TemplatesPath=$TemplatesPath"
 Write-Debug "${functionName}:OnBoardingManifest=$OnBoardingManifest"
 Write-Debug "${functionName}:FluxServicesPath=$FluxServicesPath"
+Write-Debug "${functionName}:PSHelperDirectory=$PSHelperDirectory"
 
 try {
-    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ps-helpers"
-    Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
-    Import-Module $moduleDir.FullName -Force
+    Write-Host "Import module:PSHelperDirectory=$PSHelperDirectory"
+    Import-Module $PSHelperDirectory -Force
 
     [hashtable]$programmeDetails = $OnBoardingManifest | ConvertFrom-Json -AsHashtable
 

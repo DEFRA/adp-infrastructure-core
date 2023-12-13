@@ -39,4 +39,5 @@ steps:
         -TemplatesPath '$(Pipeline.Workspace)/s/source/flux-templates/templates'
         -OnBoardingManifest '${{ parameters.onboardingJson }}'        
         -FluxServicesPath '$(Pipeline.Workspace)/s/AdpFluxServices/services'
+        -PSHelperDirectory '$(Pipeline.Workspace)/s/source/scripts/modules/ps-helpers'
       workingDirectory: $(Pipeline.Workspace)/s/AdpFluxServices
