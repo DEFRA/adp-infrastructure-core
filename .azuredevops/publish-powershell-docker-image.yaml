@@ -1,0 +1,82 @@
+parameters:
+  - name: publishFromFeature
+    displayName: Publish from feature branch
+    type: boolean
+    default: false
+
+variables:
+  - name: dockerImageName
+    value: "powershell-executor"
+  - name: dockerImageVersion
+    value: $(Build.BuildId)
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - "main"
+  paths:
+    include:
+      - powershell-executor/*
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - powershell-executor/*     
+
+resources:
+  repositories:
+    - repository: DEFRA-ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: refs/heads/main
+    - repository: DEFRA-ADPFluxServices
+      name: DEFRA/adp-flux-services
+      endpoint: DEFRA
+      type: github
+      ref: refs/heads/main
+
+extends:
+  template: /pipelines/common-infra-deploy.yaml@DEFRA-ADPPipelineCommon
+  parameters:
+    privateAgentName: ''
+    agentImage: 'ubuntu-latest'
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.publishFromFeature }}
+    environments:
+      - name: "ssv3"
+        serviceConnection: AZD-ADP-SSV3
+        deploymentBranches:
+          - "refs/heads/main"
+        developmentEnvironment: true
+        azureRegions:
+          primary: "UKSouth"
+      - name: "ssv5"
+        serviceConnection: AZR-ADP-SSV5
+        deploymentBranches:
+          - "refs/heads/main"
+        azureRegions:
+          primary: "UKSouth"
+    additionalRepositories:
+      - DEFRA-ADPFluxServices
+    groupedDeployments:
+      - name: SharedResources
+        deployments:
+          - name: Publish Powershell Docker Image
+            type: "script"
+            scriptType: AzureCLI
+            scriptRepo: PipelineCommonFiles
+            azureCLIScriptType: pscore
+            path: "templates/powershell/build/BuildAndPushDockerImage.ps1"
+            scriptArguments: >
+              -AcrName $(ssvSharedAcrName)
+              -AcrRepoName "${{ variables.dockerImageName }}" 
+              -ImageVersion  ${{ variables.dockerImageVersion }} 
+              -ImageCachePath $(Pipeline.Workspace)/docker 
+              -Command "BuildAndPush" 
+              -PSHelperDirectory "$(Pipeline.Workspace)/s/PipelineCommonFiles/templates/powershell/modules/ps-helpers"
+              -DockerFilePath $(Pipeline.Workspace)/s/self/powershell-executor/powershell-executor.Dockerfile

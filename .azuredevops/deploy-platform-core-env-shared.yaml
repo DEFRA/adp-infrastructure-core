@@ -71,9 +71,6 @@ extends:
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'shared')) }}        
         : - name: SharedResources 
             deployments:
-              - name: platform-container-registry
-                path: infra/core/env-shared/container-registry
-                resourceGroupName: $(ssvSharedResourceGroup)
               - name: log-analytics-workspace
                 path: infra/core/env-shared/log-analytics-workspace
                 resourceGroupName: $(ssvSharedResourceGroup)

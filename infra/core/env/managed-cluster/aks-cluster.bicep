@@ -240,7 +240,7 @@ module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in km
 }
 ]
 
-module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.15-prerelease' = {
+module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.16' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
     privateDnsZoneContributor
@@ -348,7 +348,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.1
   }
 }
 
-module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.extension:0.4.4-prerelease' = {
+module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.extension:0.4.5' = {
   name: 'flux-extension-${deploymentDate}'
   params: {
     clusterName: cluster.name
