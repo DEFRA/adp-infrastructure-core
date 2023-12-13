@@ -142,8 +142,8 @@ try {
 
     [string]$programmeName = $programmeDetails.name
     [string]$serviceCode = $programmeDetails.servicecode
-    [string]$services = $programmeDetails.services
-    [string]$environments = $programmeDetails.environments
+    [array]$services = $programmeDetails.services
+    [array]$environments = $programmeDetails.environments
 
     [hashtable]$lookupTable = @{
         '__PROGRAMME_NAME__' = $programmeName
