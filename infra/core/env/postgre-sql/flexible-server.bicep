@@ -60,7 +60,7 @@ module aadAdminUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-ide
   }
 }
 
-module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-server:0.4.13' = {
+module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1' = {
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
     name: toLower(server.name)
@@ -74,7 +74,6 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     skuName: server.skuName
     activeDirectoryAuth:'Enabled'
     passwordAuth: 'Disabled'
-    enableDefaultTelemetry:false
     lock: {
       kind: 'CanNotDelete'
     }
