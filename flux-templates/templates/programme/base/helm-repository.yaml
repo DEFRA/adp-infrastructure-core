@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: HelmRepository
+metadata:
+  name: __PROGRAMME_NAME__-helm-repo
+  namespace: flux-config
+spec:
+  type: oci
+  interval: 5m
+  url: oci://${APPLICATION_ACR_NAME}.azurecr.io/helm
+  provider: azure

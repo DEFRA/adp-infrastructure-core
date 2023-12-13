@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: __SERVICE_NAME__-dbmigration
+  namespace: __PROGRAMME_NAME__
+spec:
+  template:
+    spec:
+      containers:
+      - name: __SERVICE_NAME__-dbmigration
+        image: __ENVIRONMENT__adpinfcr__ENV_INSTANCE__401.azurecr.io/image/__SERVICE_NAME__-dbmigration:5.1.26 # {"$imagepolicy": "flux-config:__SERVICE_NAME__-dbmigration-__ENVIRONMENT__-0__ENV_INSTANCE__"}
+        env:
+        - name: POSTGRES_HOST
+          value: "${SHARED_POSTGRES_SERVER_01}.postgres.database.azure.com"
+        - name: SCHEMA_NAME
+          value: "public"
+        - name: POSTGRES_DB
+          value: "__SERVICE_NAME__"
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: SCHEMA_USERNAME
+          value: ${TEAM_MI_PREFIX}-${SERVICE_NAME}

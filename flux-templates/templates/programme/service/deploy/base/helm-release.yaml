@@ -1,0 +1,24 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: __SERVICE_NAME__
+  namespace: flux-config
+spec:
+  releaseName: __SERVICE_NAME__
+  chart:
+    spec:
+      chart: __SERVICE_NAME__
+      version: "4.32.5"
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: __PROGRAMME_NAME__-helm-repo
+        namespace: flux-config
+  install:
+    createNamespace: true
+  interval: 5m0s
+  targetNamespace: __PROGRAMME_NAME__
+  values:
+    aadWorkloadIdentity: true
+    serviceAccount:
+      name: __PROGRAMME_NAME__

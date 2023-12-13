@@ -1,0 +1,34 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: __SERVICE_NAME__
+  namespace: flux-config
+spec:
+  chart:
+    spec:
+      version: "4.32.10" # {"$imagepolicy": "flux-config:__SERVICE_NAME__-__ENVIRONMENT__-__ENV_INSTANCE__:tag"}
+  values:
+    environment: production
+    name: __SERVICE_NAME__
+    namespace: __PROGRAMME_NAME__
+    image: __ENVIRONMENT__adpinfcr14__ENV_INSTANCE__.azurecr.io/image/__SERVICE_NAME__:4.32.10 # {"$imagepolicy": "flux-config:__SERVICE_NAME__-__ENVIRONMENT__-__ENV_INSTANCE__"}
+    serviceAccount:
+      name: __SERVICE_NAME__
+    labels:
+      component: web
+    container:
+      imagePullPolicy: Always
+      requestMemory: 50Mi
+      requestCpu: 50m
+      limitMemory: 200Mi
+      limitCpu: 400m
+    ingress:
+      class: nginx
+      endpoint: __SERVICE_NAME__
+      server: __ENVIRONMENT__1.adp.defra.gov.uk
+    deployment:
+      priorityClassName: default
+    containerConfigMap:
+      configServiceName: ${APPCONFIG_NAME}
+      configServiceMIClientId: ${APPCONFIG_MI_CLIENTID}
+      serviceMIClientId: ${clientId}
