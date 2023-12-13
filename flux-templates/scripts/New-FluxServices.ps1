@@ -193,4 +193,4 @@ git add -A
 [string]$author = "ADO Devops <ado@noemail.com>"
 git commit -am $commitMessage --author=$author
 
-git push --set-upstream origin "feature-$($programmeName)-onboarding"
+git push -f --set-upstream origin "feature-$($programmeName)-onboarding"
