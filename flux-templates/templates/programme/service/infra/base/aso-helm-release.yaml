@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: __SERVICE_NAME__-infra
-      version: "4.32.5"
+      version: "1.0.1"
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository

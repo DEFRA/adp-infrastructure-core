@@ -6,12 +6,12 @@ metadata:
 spec:
   chart:
     spec:
-      version: "4.3.14" # {"$imagepolicy": "flux-config:__SERVICE_NAME__-__ENVIRONMENT__-0__ENV_INSTANCE__:tag"}
+      version: "1.0.1" # {"$imagepolicy": "flux-config:__SERVICE_NAME__-__ENVIRONMENT__-0__ENV_INSTANCE__:tag"}
   values:
     environment: production
     name: __SERVICE_NAME__
     namespace: __PROGRAMME_NAME__
-    image: __ENVIRONMENT__adpinfcr__ENV_INSTANCE__401.azurecr.io/image/__SERVICE_NAME__:4.3.14 # {"$imagepolicy": "flux-config:__SERVICE_NAME__-__ENVIRONMENT__-0__ENV_INSTANCE__"}
+    image: __ENVIRONMENT__adpinfcr__ENV_INSTANCE__401.azurecr.io/image/__SERVICE_NAME__:1.0.1 # {"$imagepolicy": "flux-config:__SERVICE_NAME__-__ENVIRONMENT__-0__ENV_INSTANCE__"}
     serviceAccount:
       name: __SERVICE_NAME__
     deployment:
