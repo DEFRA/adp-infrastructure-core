@@ -187,7 +187,7 @@ try {
         $lookupTable['__SERVICE_NAME__'] = $service.name
         $lookupTable['__DEPENDS_ON__'] = 'infra'
 
-        if ($service.dbMigration) {
+        if ($service['dbMigration']) {
             $lookupTable['__DEPENDS_ON__'] = 'pre-deploy'
             New-Directory -DirectoryPath "$programmePath/$($service.name)/pre-deploy/base"
             Copy-Item -Path $templateProgrammeServicePath/pre-deploy/base/* -Destination $programmePath/$($service.name)/pre-deploy/base -Recurse
@@ -206,7 +206,7 @@ try {
         ReplaceTokens -TemplateFile "$templateProgrammeServicePath/infra/base/aso-helm-release.yaml" -DestinationFile "$programmePath/$($service.name)/infra/base/aso-helm-release.yaml"
         ReplaceTokens -TemplateFile "$templateProgrammeServicePath/infra/base/image-repository.yaml" -DestinationFile "$programmePath/$($service.name)/infra/base/image-repository.yaml"
 
-        if ($service.dbMigration) {
+        if ($service['dbMigration']) {
             New-Directory -DirectoryPath "$programmePath/$($service.name)/pre-deploy/base"
             Copy-Item -Path $templateProgrammeServicePath/pre-deploy/base/* -Destination $programmePath/$($service.name)/pre-deploy/base -Recurse
             ReplaceTokens -TemplateFile "$templateProgrammeServicePath/pre-deploy/base/image-repository-dbmigration.yaml" -DestinationFile "$programmePath/$($service.name)/pre-deploy/base/image-repository-dbmigration.yaml"
@@ -220,14 +220,14 @@ try {
                 New-Directory -DirectoryPath "$programmePath/$($service.name)/deploy/$($environment.name)/0$instance"
                 Copy-Item -Path $templateProgrammeServicePath/deploy/environment/kustomization.yaml -Destination $programmePath/$($service.name)/deploy/$($environment.name)/0$instance/kustomization.yaml
 
-                if ($service.ingress) {
+                if ($service['ingress']) {
                     ReplaceTokens -TemplateFile "$templateProgrammeServicePath/deploy/environment/patch-ingress.yaml" -DestinationFile "$programmePath/$($service.name)/deploy/$($environment.name)/0$instance/patch.yaml"
                 }
                 else {
                     ReplaceTokens -TemplateFile "$templateProgrammeServicePath/deploy/environment/patch.yaml" -DestinationFile "$programmePath/$($service.name)/deploy/$($environment.name)/0$instance/patch.yaml"
                 }
 
-                if ($service.dbMigration) {
+                if ($service['dbMigration']) {
                     New-Directory -DirectoryPath "$programmePath/$($service.name)/pre-deploy/$($environment.name)/0$instance"
                     Copy-Item -Path $templateProgrammeServicePath/pre-deploy/environment/* -Destination $programmePath/$($service.name)/pre-deploy/$($environment.name)/0$instance -Recurse
                     ReplaceTokens -TemplateFile "$templateProgrammeServicePath/pre-deploy/environment/image-policy.yaml" -DestinationFile "$programmePath/$($service.name)/pre-deploy/$($environment.name)/0$instance/image-policy.yaml"
