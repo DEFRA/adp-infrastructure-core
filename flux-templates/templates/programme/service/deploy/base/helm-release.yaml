@@ -8,7 +8,7 @@ spec:
   chart:
     spec:
       chart: __SERVICE_NAME__
-      version: "1.0.1"
+      version: "0.1.0"
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository

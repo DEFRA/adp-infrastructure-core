@@ -8,4 +8,4 @@ spec:
     name: __SERVICE_NAME__
   policy:
     semver:
-      range: '>=1.0.0'
+      range: '>=0.1.0'
