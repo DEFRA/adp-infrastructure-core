@@ -52,54 +52,30 @@ var infrastructureSubnetId = resourceId(subnet.resourceGroup, 'Microsoft.Network
 var dockerBridgeCidr = '172.16.0.1/28'
 var workloadProfiles = containerAppEnv.workloadProfiles
 var zoneRedundant = false
-var logsDestination = 'log-analytics'
 var infrastructureResourceGroupName = take('${containerAppEnv.name}_ME', 63)
 
-resource managedEnvironment 'Microsoft.App/managedEnvironments@2023-05-01' = {
-  name: containerAppEnv.name
-  location: location
-  tags: union(defaultTags, additionalTags)
-  properties: {
-    appLogsConfiguration: {
-      destination: logsDestination
-      logAnalyticsConfiguration: {
-        customerId: logAnalyticsWorkspace.properties.customerId
-        sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
-      }
+module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.10' = {
+  name: '${containerAppEnv.name}'
+  params: { 
+    // Required parameters
+    enableDefaultTelemetry: false
+    logAnalyticsWorkspaceResourceId: logAnalyticsWorkspace.id
+    name: '${containerAppEnv.name}'
+    // Non-required parameters
+    dockerBridgeCidr: !empty(infrastructureSubnetId) ? dockerBridgeCidr : null  
+    infrastructureSubnetId: !empty(infrastructureSubnetId) ? infrastructureSubnetId : null
+    internal: internal
+    location: location
+    lock: {
+      kind: 'CanNotDelete'
+      name: '${containerAppEnv.name}-CanNotDelete'
     }
-    vnetConfiguration: {
-      internal: internal
-      infrastructureSubnetId: !empty(infrastructureSubnetId) ? infrastructureSubnetId : null
-      dockerBridgeCidr: !empty(infrastructureSubnetId) ? dockerBridgeCidr : null
-    }
-    workloadProfiles: !empty(workloadProfiles) ? workloadProfiles : null
+    workloadProfiles :!empty(workloadProfiles) ? workloadProfiles : null
     zoneRedundant: zoneRedundant
-    infrastructureResourceGroup: infrastructureResourceGroupName
+    infrastructureResourceGroupName: infrastructureResourceGroupName 
+    tags: union(defaultTags, additionalTags)
   }
 }
-
-// module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.9' = {
-//   name: '${containerAppEnv.name}'
-//   params: { 
-//     // Required parameters
-//     enableDefaultTelemetry: false
-//     logAnalyticsWorkspaceResourceId: logAnalyticsWorkspace.id
-//     name: '${containerAppEnv.name}'
-//     // Non-required parameters
-//     dockerBridgeCidr: !empty(infrastructureSubnetId) ? dockerBridgeCidr : null  
-//     infrastructureSubnetId: !empty(infrastructureSubnetId) ? infrastructureSubnetId : null
-//     internal: internal
-//     location: location
-//     lock: {
-//       kind: 'CanNotDelete'
-//       name: '${containerAppEnv.name}-CanNotDelete'
-//     }
-//     workloadProfiles :!empty(workloadProfiles) ? workloadProfiles : null
-//     zoneRedundant: zoneRedundant
-//     infrastructureResourceGroup: infrastructureResourceGroupName 
-//     tags: union(defaultTags, additionalTags)
-//   }
-// }
 
 resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
   name: keyvaultName
@@ -113,7 +89,7 @@ resource secretdefaulturl 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'PORTAL-APP-DEFAULT-URL'
   parent: sharedKeyVault
   properties: {
-    value: 'https://${containerApp.name}.${toLower(managedEnvironment.properties.defaultDomain)}'
+    value: 'https://${containerApp.name}.${toLower(managedEnvironment.outputs.defaultDomain)}'
   }
 }
 
@@ -133,4 +109,4 @@ resource tenantId 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   }
 }
 
-output appUrl string = 'https://${containerApp.name}.${toLower(managedEnvironment.properties.defaultDomain)}'
+output appUrl string = 'https://${containerApp.name}.${toLower(managedEnvironment.outputs.defaultDomain)}'
