@@ -147,115 +147,120 @@ try {
     [hashtable]$programmeDetails = $OnBoardingManifest | ConvertFrom-Json -AsHashtable
 
     [string]$programmeName = $programmeDetails.name
-    [string]$serviceCode = $programmeDetails.servicecode
-    [array]$services = $programmeDetails.services
-    [array]$environments = $programmeDetails.environments
+    [array]$teams = $programmeDetails.teams
 
     [hashtable]$lookupTable = @{
         '__PROGRAMME_NAME__' = $programmeName
-        '__SERVICE_CODE__'   = $serviceCode
-        '__SERVICE_NAME__'   = 'PLACEHOLDER'
-        '__ENVIRONMENT__'    = 'PLACEHOLDER'
-        '__ENV_INSTANCE__'   = 'PLACEHOLDER'
-        '__DEPENDS_ON__'     = 'infra'
+        '__SERVICE_CODE__'   = 'INITIALIZE'
+        '__TEAM_NAME__' = 'INITIALIZE'
+        '__SERVICE_NAME__'   = 'INITIALIZE'
+        '__ENVIRONMENT__'    = 'INITIALIZE'
+        '__ENV_INSTANCE__'   = 'INITIALIZE'
+        '__DEPENDS_ON__'     = 'INITIALIZE'
     }
 
-    [string]$programmePath = "$FluxServicesPath\$programmeName"
-    [string]$programmeBaseDirectory = "$programmePath\base"
+    [string]$programmePath = "$FluxServicesPath/$programmeName"
+    [string]$templateProgrammePath = "$TemplatesPath/programme"
+    [string]$templateTeamPath = "$templateProgrammePath/team"
+    [string]$templateTeamBasePath = "$templateTeamPath/base"
+    [string]$templateTeamServicePath = "$templateTeamPath/service"
+    [string]$templateTeamEnvironmentPath = "$templateTeamPath/environment"
 
     New-Directory -DirectoryPath $programmePath
-    New-Directory -DirectoryPath $programmeBaseDirectory
 
-    [string]$templateProgrammePath = "$TemplatesPath/programme"
-    [string]$templateProgrammeBasePath = "$templateProgrammePath/base"
-    [string]$templateProgrammeServicePath = "$templateProgrammePath/service"
-    [string]$templateProgrammeEnvironmentPath = "$templateProgrammePath/environment"
+    # CREATE TEAM DIRECTORIES
+    foreach ($team in $teams) {
+        $lookupTable['__TEAM_NAME__'] = $team.name
+        $lookupTable['__SERVICE_CODE__'] = $team.servicecode
 
-    # CREATE BASE DIRECTORIES AND FILES
-    New-Directory -DirectoryPath "$programmeBaseDirectory/patch"
-    Copy-Item -Path "$templateProgrammeBasePath/kustomization.yaml" -Destination "$programmeBaseDirectory/kustomization.yaml"
-    Copy-Item -Path "$templateProgrammeBasePath/patch/kustomization.yaml" -Destination "$programmeBaseDirectory/patch/kustomization.yaml"
-    ReplaceTokens -TemplateFile "$templateProgrammeBasePath/patch/kustomize.yaml" -DestinationFile "$programmeBaseDirectory/patch/kustomize.yaml"
-    ReplaceTokens -TemplateFile "$templateProgrammeBasePath/helm-repository.yaml" -DestinationFile "$programmeBaseDirectory/helm-repository.yaml"
+        # CREATE TEAM BASE DIRECTORIES AND FILES
+        [string]$teamBaseDirectory = "$programmePath/$($team.name)/base"
+        New-Directory -DirectoryPath $teamBaseDirectory
+        New-Directory -DirectoryPath "$teamBaseDirectory/patch"
+        Copy-Item -Path "$templateTeamBasePath/kustomization.yaml" -Destination "$teamBaseDirectory/kustomization.yaml"
+        Copy-Item -Path "$templateTeamBasePath/patch/kustomization.yaml" -Destination "$teamBaseDirectory/patch/kustomization.yaml"
+        ReplaceTokens -TemplateFile "$templateTeamBasePath/patch/kustomize.yaml" -DestinationFile "$teamBaseDirectory/patch/kustomize.yaml"
+        ReplaceTokens -TemplateFile "$templateTeamBasePath/helm-repository.yaml" -DestinationFile "$teamBaseDirectory/helm-repository.yaml"
 
-    # CREATE SERVICES DIRECTORIES AND FILES
-    foreach ($service in $services) {
-        New-Directory -DirectoryPath "$programmePath/$($service.name)/deploy/base"
-        Copy-Item -Path "$templateProgrammeServicePath/kustomization.yaml" -Destination $programmePath/$($service.name)/kustomization.yaml
-        Copy-Item -Path $templateProgrammeServicePath/deploy/base/* -Destination $programmePath/$($service.name)/deploy/base -Recurse
+        # CREATE SERVICE DIRECTORIES AND FILES
+        foreach ($service in $team.services) {
+            New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/deploy/base"
+            Copy-Item -Path "$templateTeamServicePath/kustomization.yaml" -Destination $programmePath/$($team.name)/$($service.name)/kustomization.yaml
+            Copy-Item -Path $templateTeamServicePath/deploy/base/* -Destination $programmePath/$($team.name)/$($service.name)/deploy/base -Recurse
     
-        $lookupTable['__SERVICE_NAME__'] = $service.name
-        $lookupTable['__DEPENDS_ON__'] = 'infra'
+            $lookupTable['__SERVICE_NAME__'] = $service.name
+            $lookupTable['__DEPENDS_ON__'] = 'infra'
 
-        if ($service['dbMigration']) {
-            $lookupTable['__DEPENDS_ON__'] = 'pre-deploy'
-            New-Directory -DirectoryPath "$programmePath/$($service.name)/pre-deploy/base"
-            Copy-Item -Path $templateProgrammeServicePath/pre-deploy/base/* -Destination $programmePath/$($service.name)/pre-deploy/base -Recurse
-            ReplaceTokens -TemplateFile "$templateProgrammeServicePath/pre-deploy/base/image-repository-dbmigration.yaml" -DestinationFile "$programmePath/$($service.name)/pre-deploy/base/image-repository-dbmigration.yaml"
-            ReplaceTokens -TemplateFile "$templateProgrammeServicePath/pre-deploy/base/migration.job.yaml" -DestinationFile "$programmePath/$($service.name)/pre-deploy/base/migration.job.yaml"
-            ReplaceTokens -TemplateFile "$templateProgrammeServicePath/pre-deploy-kustomize.yaml" -DestinationFile "$programmePath/$($service.name)/pre-deploy-kustomize.yaml"
-            Add-Content -Path $programmePath/$($service.name)/kustomization.yaml -Value "  - pre-deploy-kustomize.yaml"
-        }
+            if ($service['dbMigration']) {
+                $lookupTable['__DEPENDS_ON__'] = 'pre-deploy'
+                New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/base"
+                Copy-Item -Path $templateTeamServicePath/pre-deploy/base/* -Destination $programmePath/$($team.name)/$($service.name)/pre-deploy/base -Recurse
+                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/base/image-repository-dbmigration.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/base/image-repository-dbmigration.yaml"
+                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/base/migration.job.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/base/migration.job.yaml"
+                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy-kustomize.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy-kustomize.yaml"
+                Add-Content -Path $programmePath/$($team.name)/$($service.name)/kustomization.yaml -Value "  - pre-deploy-kustomize.yaml"
+            }
 
-        ReplaceTokens -TemplateFile "$templateProgrammeServicePath/deploy-kustomize.yaml" -DestinationFile "$programmePath/$($service.name)/deploy-kustomize.yaml"
-        ReplaceTokens -TemplateFile "$templateProgrammeServicePath/infra-kustomize.yaml" -DestinationFile "$programmePath/$($service.name)/infra-kustomize.yaml"
-        ReplaceTokens -TemplateFile "$templateProgrammeServicePath/deploy/base/helm-release.yaml" -DestinationFile "$programmePath/$($service.name)/deploy/base/helm-release.yaml"
+            ReplaceTokens -TemplateFile "$templateTeamServicePath/deploy-kustomize.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/deploy-kustomize.yaml"
+            ReplaceTokens -TemplateFile "$templateTeamServicePath/infra-kustomize.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra-kustomize.yaml"
+            ReplaceTokens -TemplateFile "$templateTeamServicePath/deploy/base/helm-release.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/deploy/base/helm-release.yaml"
 
-        New-Directory -DirectoryPath "$programmePath/$($service.name)/infra/base"
-        Copy-Item -Path "$templateProgrammeServicePath/infra/base/*" -Destination $programmePath/$($service.name)/infra/base -Recurse
-        ReplaceTokens -TemplateFile "$templateProgrammeServicePath/infra/base/aso-helm-release.yaml" -DestinationFile "$programmePath/$($service.name)/infra/base/aso-helm-release.yaml"
-        ReplaceTokens -TemplateFile "$templateProgrammeServicePath/infra/base/image-repository.yaml" -DestinationFile "$programmePath/$($service.name)/infra/base/image-repository.yaml"
+            New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/infra/base"
+            Copy-Item -Path "$templateTeamServicePath/infra/base/*" -Destination $programmePath/$($team.name)/$($service.name)/infra/base -Recurse
+            ReplaceTokens -TemplateFile "$templateTeamServicePath/infra/base/aso-helm-release.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra/base/aso-helm-release.yaml"
+            ReplaceTokens -TemplateFile "$templateTeamServicePath/infra/base/image-repository.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra/base/image-repository.yaml"
 
-        if ($service['dbMigration']) {
-            New-Directory -DirectoryPath "$programmePath/$($service.name)/pre-deploy/base"
-            Copy-Item -Path $templateProgrammeServicePath/pre-deploy/base/* -Destination $programmePath/$($service.name)/pre-deploy/base -Recurse
-            ReplaceTokens -TemplateFile "$templateProgrammeServicePath/pre-deploy/base/image-repository-dbmigration.yaml" -DestinationFile "$programmePath/$($service.name)/pre-deploy/base/image-repository-dbmigration.yaml"
-            ReplaceTokens -TemplateFile "$templateProgrammeServicePath/pre-deploy/base/migration.job.yaml" -DestinationFile "$programmePath/$($service.name)/pre-deploy/base/migration.job.yaml"
-        }
+            if ($service['dbMigration']) {
+                New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/base"
+                Copy-Item -Path $templateTeamServicePath/pre-deploy/base/* -Destination $programmePath/$($team.name)/$($service.name)/pre-deploy/base -Recurse
+                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/base/image-repository-dbmigration.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/base/image-repository-dbmigration.yaml"
+                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/base/migration.job.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/base/migration.job.yaml"
+            }
 
-        foreach ($environment in $environments) {
-            $lookupTable['__ENVIRONMENT__'] = $($environment.name)
-            foreach ($instance in $environment.instances) {
-                $lookupTable['__ENV_INSTANCE__'] = $instance
-                New-Directory -DirectoryPath "$programmePath/$($service.name)/deploy/$($environment.name)/0$instance"
-                Copy-Item -Path $templateProgrammeServicePath/deploy/environment/kustomization.yaml -Destination $programmePath/$($service.name)/deploy/$($environment.name)/0$instance/kustomization.yaml
+            foreach ($environment in $team.environments) {
+                $lookupTable['__ENVIRONMENT__'] = $($environment.name)
+                foreach ($instance in $environment.instances) {
+                    $lookupTable['__ENV_INSTANCE__'] = $instance
+                    New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/deploy/$($environment.name)/0$instance"
+                    Copy-Item -Path $templateTeamServicePath/deploy/environment/kustomization.yaml -Destination $programmePath/$($team.name)/$($service.name)/deploy/$($environment.name)/0$instance/kustomization.yaml
 
-                if ($service['ingress']) {
-                    ReplaceTokens -TemplateFile "$templateProgrammeServicePath/deploy/environment/patch-ingress.yaml" -DestinationFile "$programmePath/$($service.name)/deploy/$($environment.name)/0$instance/patch.yaml"
+                    if ($service['ingress']) {
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/deploy/environment/patch-ingress.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/deploy/$($environment.name)/0$instance/patch.yaml"
+                    }
+                    else {
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/deploy/environment/patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/deploy/$($environment.name)/0$instance/patch.yaml"
+                    }
+
+                    if ($service['dbMigration']) {
+                        New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance"
+                        Copy-Item -Path $templateTeamServicePath/pre-deploy/environment/* -Destination $programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance -Recurse
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/environment/image-policy.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance/image-policy.yaml"
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/environment/patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance/patch.yaml"
+                    }
+
+                    New-Directory -DirectoryPath $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance
+                    Copy-Item -Path "$templateTeamServicePath/infra/environment/*" -Destination $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance -Recurse
+                    ReplaceTokens -TemplateFile "$templateTeamServicePath/infra/environment/patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/patch.yaml"
+                    ReplaceTokens -TemplateFile "$templateTeamServicePath/infra/environment/image-policy.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/image-policy.yaml"
                 }
-                else {
-                    ReplaceTokens -TemplateFile "$templateProgrammeServicePath/deploy/environment/patch.yaml" -DestinationFile "$programmePath/$($service.name)/deploy/$($environment.name)/0$instance/patch.yaml"
-                }
-
-                if ($service['dbMigration']) {
-                    New-Directory -DirectoryPath "$programmePath/$($service.name)/pre-deploy/$($environment.name)/0$instance"
-                    Copy-Item -Path $templateProgrammeServicePath/pre-deploy/environment/* -Destination $programmePath/$($service.name)/pre-deploy/$($environment.name)/0$instance -Recurse
-                    ReplaceTokens -TemplateFile "$templateProgrammeServicePath/pre-deploy/environment/image-policy.yaml" -DestinationFile "$programmePath/$($service.name)/pre-deploy/$($environment.name)/0$instance/image-policy.yaml"
-                    ReplaceTokens -TemplateFile "$templateProgrammeServicePath/pre-deploy/environment/patch.yaml" -DestinationFile "$programmePath/$($service.name)/pre-deploy/$($environment.name)/0$instance/patch.yaml"
-                }
-
-                New-Directory -DirectoryPath $programmePath/$($service.name)/infra/$($environment.name)/0$instance
-                Copy-Item -Path "$templateProgrammeServicePath/infra/environment/*" -Destination $programmePath/$($service.name)/infra/$($environment.name)/0$instance -Recurse
-                ReplaceTokens -TemplateFile "$templateProgrammeServicePath/infra/environment/patch.yaml" -DestinationFile "$programmePath/$($service.name)/infra/$($environment.name)/0$instance/patch.yaml"
-                ReplaceTokens -TemplateFile "$templateProgrammeServicePath/infra/environment/image-policy.yaml" -DestinationFile "$programmePath/$($service.name)/infra/$($environment.name)/0$instance/image-policy.yaml"
             }
         }
-    }
 
-    # CREATE ENVIRONMENT DIRECTORIES AND FILES
-    foreach ($environment in $environments) {
-        foreach ($instance in $environment.instances) {
-            New-Directory -DirectoryPath "$programmePath/$($environment.name)/0$instance"
-            Copy-Item -Path "$templateProgrammeEnvironmentPath/*" -Destination $programmePath/$($environment.name)/0$instance -Recurse
+        # CREATE ENVIRONMENT DIRECTORIES AND FILES
+        foreach ($environment in $team.environments) {
+            foreach ($instance in $environment.instances) {
+                New-Directory -DirectoryPath "$programmePath/$($team.name)/$($environment.name)/0$instance"
+                Copy-Item -Path "$templateTeamEnvironmentPath/*" -Destination $programmePath/$($team.name)/$($environment.name)/0$instance -Recurse
         
-            foreach ($service in $services) {
-                Add-Content -Path $programmePath/$($environment.name)/0$instance/kustomization.yaml -Value "  - ../../$($service.name)"
+                foreach ($service in $team.services) {
+                    Add-Content -Path $programmePath/$($team.name)/$($environment.name)/0$instance/kustomization.yaml -Value "  - ../../$($service.name)"
+                }
             }
         }
     }
 
     # CREATE FEATURE BRANCH IN ADP-SERVICES-FLUX
-    New-FeatureBranch -ProgrammeName $programmeName
+    # New-FeatureBranch -ProgrammeName $programmeName
 
     $exitCode = 0
 }

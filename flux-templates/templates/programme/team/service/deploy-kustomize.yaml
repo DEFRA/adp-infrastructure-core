@@ -11,7 +11,7 @@ spec:
     kind: GitRepository
     name: services-repository
     namespace: flux-config
-  path: ./services/__PROGRAMME_NAME__/__SERVICE_NAME__/deploy/${ENVIRONMENT}/${ENVIRONMENT_ID}
+  path: ./services/__PROGRAMME_NAME__/__TEAM_NAME__/__SERVICE_NAME__/deploy/${ENVIRONMENT}/${ENVIRONMENT_ID}
   interval: 5m
   timeout: 3m
   prune: true

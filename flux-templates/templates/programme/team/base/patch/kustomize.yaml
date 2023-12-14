@@ -11,7 +11,7 @@ spec:
   interval: 5m
   timeout: 3m
   prune: true
-  path: ./services/__PROGRAMME_NAME__/${ENVIRONMENT}/${ENVIRONMENT_ID}
+  path: ./services/__PROGRAMME_NAME__/__TEAM_NAME__/${ENVIRONMENT}/${ENVIRONMENT_ID}
   postBuild:
     substitute:
       TEAM_NAMESPACE: "__PROGRAMME_NAME__"

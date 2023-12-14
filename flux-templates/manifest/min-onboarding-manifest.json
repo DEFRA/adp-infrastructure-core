@@ -1,16 +1,21 @@
 {
     "name": "prorammename", // MANDATORY
-    "servicecode": "SA", // MANDATORY
-    "services": [ // MANDATORY - AT LEAST ONE SERVICE REQUIRED
+    "teams": [ // MANDATORY - AT LEAST ONE TEAM REQUIRED
         {
-            "name": "servicename"
-        }
-    ],
-    "environments": [ // MANDATORY - AT LEAST ONE ENVIRONMENT REQUIRED
-        {
-            "name": "snd", // MANDATORY - ALLOWED VALUES snd, dev, tst, pre, prd
-            "instances": [
-                "1" // MANDATORY - WHICH ENVIRONMENT INSTANCE TO USE.  CAN BE 1,2 OR IR CAN BE ALL.  PLEASE LOOK AT FULL EXAMPLE MANIFEST
+            "name": "teamname", // MANDATORY
+            "servicecode": "SC", // MANDATORY
+            "services": [ // MANDATORY - AT LEAST ONE SERVICE REQUIRED
+                {
+                    "name": "servicename"
+                }
+            ],
+            "environments": [ // MANDATORY - AT LEAST ONE ENVIRONMENT REQUIRED
+                {
+                    "name": "snd", // MANDATORY - ALLOWED VALUES snd, dev, tst, pre, prd
+                    "instances": [
+                        "1" // MANDATORY - WHICH ENVIRONMENT INSTANCE TO USE.  CAN BE 1,2 OR IR CAN BE ALL.  PLEASE LOOK AT FULL EXAMPLE MANIFEST
+                    ]
+                }
             ]
         }
     ]
