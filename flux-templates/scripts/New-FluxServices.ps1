@@ -108,7 +108,7 @@ function New-FeatureBranch {
         Write-Host $gitCommitCommand
         Invoke-CommandLine -Command $gitCommitCommand | Out-Null
 
-        [string]$gitPushCommand = "git push --set-upstream origin feature-$ProgrammeName-onboarding"
+        [string]$gitPushCommand = "git push -f --set-upstream origin feature-$ProgrammeName-onboarding"
         Write-Host $gitPushCommand
         Invoke-CommandLine -Command $gitPushCommand | Out-Null
     }
