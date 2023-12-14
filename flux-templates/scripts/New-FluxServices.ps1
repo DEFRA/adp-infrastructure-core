@@ -260,7 +260,7 @@ try {
     }
 
     # CREATE FEATURE BRANCH IN ADP-SERVICES-FLUX
-    # New-FeatureBranch -ProgrammeName $programmeName
+    New-FeatureBranch -ProgrammeName $programmeName
 
     $exitCode = 0
 }
