@@ -60,7 +60,7 @@ module aadAdminUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-ide
   }
 }
 
-module flexibleServerDeployment 'br/public:db-for-postgre-sql/flexible-server:0.1.1' = {
+module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1' = {
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
     name: toLower(server.name)
