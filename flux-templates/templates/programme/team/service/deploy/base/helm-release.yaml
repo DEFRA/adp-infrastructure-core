@@ -12,13 +12,13 @@ spec:
       reconcileStrategy: ChartVersion
       sourceRef:
         kind: HelmRepository
-        name: __PROGRAMME_NAME__-helm-repo
+        name: __TEAM_NAME__-helm-repo
         namespace: flux-config
   install:
     createNamespace: true
   interval: 5m0s
-  targetNamespace: __PROGRAMME_NAME__
+  targetNamespace: __TEAM_NAME__
   values:
     aadWorkloadIdentity: true
     serviceAccount:
-      name: __PROGRAMME_NAME__
+      name: __TEAM_NAME__

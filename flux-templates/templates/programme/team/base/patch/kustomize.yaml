@@ -1,7 +1,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: __PROGRAMME_NAME__-base
+  name: __TEAM_NAME__-base
   namespace: flux-config
 spec:
   sourceRef:
@@ -14,15 +14,15 @@ spec:
   path: ./services/__PROGRAMME_NAME__/__TEAM_NAME__/${ENVIRONMENT}/${ENVIRONMENT_ID}
   postBuild:
     substitute:
-      TEAM_NAMESPACE: "__PROGRAMME_NAME__"
-      TEAM_NAME: "__PROGRAMME_NAME__-team"
-      TEAM_RG: "${SERVICES_INFRA_RG}-__PROGRAMME_NAME__"
+      TEAM_NAMESPACE: "__TEAM_NAME__"
+      TEAM_NAME: "__TEAM_NAME__-team"
+      TEAM_RG: "${SERVICES_INFRA_RG}-__TEAM_NAME__"
       APPCONFIG_MI_CLIENTID: ${APPCONFIG_MI_CLIENTID}
       APPCONFIG_NAME: ${APPCONFIG_NAME}
       SERVICE_CODE: "__SERVICE_CODE__"
     substituteFrom:
       - kind: ConfigMap
-        name: __PROGRAMME_NAME__-mi-credential
+        name: __TEAM_NAME__-mi-credential
         optional: true
       - kind: ConfigMap
         name: adp-platform-vars

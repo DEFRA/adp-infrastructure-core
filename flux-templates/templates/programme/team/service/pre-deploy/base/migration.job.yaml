@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: __SERVICE_NAME__-dbmigration
-  namespace: __PROGRAMME_NAME__
+  namespace: __TEAM_NAME__
   labels:
     azure.workload.identity/use: "true"
 spec:
