@@ -334,12 +334,8 @@ extends:
                         -TenantId $(tenantId)
                 - name: flexible-server
                   path: infra/core/env/postgre-sql
+                  type: 'json'
                   resourceGroupName: $(dbsResourceGroup)
-                  preDeployScriptsList:
-                    - displayName: 'Update Bicep version'
-                      scriptPath: scripts/BuildAgentSetup.ps1
-                      type: PowerShell
-                      useSystemAccessToken: true
               - ${{ if eq(variables.IsApplicationRedisCache, true) }}:                    
                 - name: redis-cache
                   path: infra/core/env/redis-cache
