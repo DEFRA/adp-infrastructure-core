@@ -91,3 +91,6 @@ module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1
     privateDnsZoneArmResourceId: private_dns_zone.id
   }
 }
+
+@description('The Client Id of the AAD admin user managed identity.')
+output aadAdminUserMiClientId string = aadAdminUserMi.outputs.clientId
