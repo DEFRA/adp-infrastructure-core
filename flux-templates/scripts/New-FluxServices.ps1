@@ -210,13 +210,6 @@ try {
             ReplaceTokens -TemplateFile "$templateTeamServicePath/infra/base/aso-helm-release.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra/base/aso-helm-release.yaml"
             ReplaceTokens -TemplateFile "$templateTeamServicePath/infra/base/image-repository.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra/base/image-repository.yaml"
 
-            if ($service['dbMigration']) {
-                New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/base"
-                Copy-Item -Path $templateTeamServicePath/pre-deploy/base/* -Destination $programmePath/$($team.name)/$($service.name)/pre-deploy/base -Recurse
-                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/base/image-repository-dbmigration.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/base/image-repository-dbmigration.yaml"
-                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/base/migration.job.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/base/migration.job.yaml"
-            }
-
             foreach ($environment in $team.environments) {
                 $lookupTable['__ENVIRONMENT__'] = $($environment.name)
                 foreach ($instance in $environment.instances) {
