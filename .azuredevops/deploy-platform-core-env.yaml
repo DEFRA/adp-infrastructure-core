@@ -146,11 +146,6 @@ extends:
     filePathsForTransform: |
       **/core/env/app-configuration/config-data/config-data.json
     groupedDeployments:
-        - name: BuildAgentSetup
-          type: 'script'
-          scriptType: PowerShell
-          azurePowershellUseCore: true
-          path: 'scripts/BuildAgentSetup.ps1'
         - ${{ if eq(variables.IsNetwork, true) }}:
           - name: network
             deployments:
@@ -309,6 +304,11 @@ extends:
               dependsOnGroupedDeployments:
               - network
             deployments:
+              - name: BuildAgentSetup
+                type: 'script'
+                scriptType: PowerShell
+                azurePowershellUseCore: true
+                path: 'scripts/BuildAgentSetup.ps1'
               - ${{ if eq(variables.IsApplicationAppConfig, true) }}:  
                 - name: configuration-store
                   path: infra/core/env/app-configuration
