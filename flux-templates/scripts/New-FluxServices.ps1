@@ -152,7 +152,7 @@ try {
     [hashtable]$lookupTable = @{
         '__PROGRAMME_NAME__' = $programmeName
         '__SERVICE_CODE__'   = 'INITIALIZE'
-        '__TEAM_NAME__' = 'INITIALIZE'
+        '__TEAM_NAME__'      = 'INITIALIZE'
         '__SERVICE_NAME__'   = 'INITIALIZE'
         '__ENVIRONMENT__'    = 'INITIALIZE'
         '__ENV_INSTANCE__'   = 'INITIALIZE'
@@ -160,6 +160,7 @@ try {
     }
 
     [string]$programmePath = "$FluxServicesPath/$programmeName"
+    [string]$environmentsPath = "$FluxServicesPath/environments"
     [string]$templateProgrammePath = "$TemplatesPath/programme"
     [string]$templateTeamPath = "$templateProgrammePath/team"
     [string]$templateTeamBasePath = "$templateTeamPath/base"
@@ -249,6 +250,18 @@ try {
                     Add-Content -Path $programmePath/$($team.name)/$($environment.name)/0$instance/kustomization.yaml -Value "  - ../../$($service.name)"
                 }
             }
+
+            $pathExistsInKustomization = Select-String -Path "$environmentsPath/$environmentname/base/kustomization.yaml" -Pattern "  - ../../../$programmeName/$teamname/base/patch"
+
+            if ($null -ne $pathExistsInKustomization) {
+                Write-Host 'Path exists, no need to add it'
+            }
+            else {
+                Write-Host "Adding path '  - ../../../$($programmeName)/$($team.name)/base/patch' to '$environmentsPath/$($environment.name)/base/kustomization.yaml'"
+                Add-Content -Path "$environmentsPath/$($environment.name)/base/kustomization.yaml" -Value "  - ../../../$($programmeName)/$($team.name)/base/patch"
+                Write-Host "Added path"
+            }
+
         }
     }
 
