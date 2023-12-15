@@ -342,7 +342,7 @@ extends:
                       inlineScript: |
                         $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
                         Write-Host "##vso[task.setvariable variable=aadAdminUserMiClientId;]$($output.aadAdminUserMiClientId.value)"
-                    - displayName: Add Cluster Details to Config Service
+                    - displayName: Add ADD MI ClientId to Config Service
                       scriptPath: templates/powershell/Import-ConfigData.ps1
                       type: AzureCLI
                       AzureCLIScriptType: pscore
