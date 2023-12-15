@@ -1,4 +1,4 @@
-using './log-analytics-workspace.bicep'
+using '../../../common/operational-insights/log-analytics-workspace.bicep'
 
 param logAnalytics = {
   name: '#{{ logAnalyticsWorkspace }}'
