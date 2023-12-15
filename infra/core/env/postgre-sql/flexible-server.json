@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.24.24.22086",
-      "templateHash": "13344924293740227904"
+      "templateHash": "14002034640266817"
     }
   },
   "parameters": {
@@ -1792,5 +1792,14 @@
         "[resourceId('Microsoft.Resources/deployments', format('managed-identity-{0}', parameters('deploymentDate')))]"
       ]
     }
-  ]
+  ],
+  "outputs": {
+    "aadAdminUserMiClientId": {
+      "type": "string",
+      "metadata": {
+        "description": "The Client Id of the AAD admin user managed identity."
+      },
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', format('managed-identity-{0}', parameters('deploymentDate'))), '2022-09-01').outputs.clientId.value]"
+    }
+  }
 }
