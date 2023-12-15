@@ -14,6 +14,7 @@ parameters:
       - Policy Assignments
       - Platform Key Vault
       - Platform Container Registry
+      - Platform Log Analytics Workspace
 
 pr:
   branches:
@@ -51,6 +52,8 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Key Vault')) }}
   - name: IsContainerRegistry
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Container Registry')) }}
+  - name: IsLogAnalyticsWorkspace
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Log Analytics Workspace')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -85,4 +88,8 @@ extends:
             - ${{ if eq(variables.IsContainerRegistry,true) }}:
               - name: platform-container-registry
                 path: infra/bootstrap/env-shared/container-registry
+                resourceGroupName: $(ssvSharedResourceGroup)
+            - ${{ if eq(variables.IsLogAnalyticsWorkspace,true) }}:
+              - name: log-analytics-workspace
+                path: infra/bootstrap/env-shared/log-analytics-workspace
                 resourceGroupName: $(ssvSharedResourceGroup)

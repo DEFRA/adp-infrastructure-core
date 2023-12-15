@@ -9,7 +9,6 @@ parameters:
     default: "all"
     values:
       - "all"
-      - "shared"
       - "network"
       - "portal-app"
       - "portal-app-sa"
@@ -67,13 +66,7 @@ extends:
           primary: 'UKSouth'  
     filePathsForTransform: |
       **/core/env-shared/portal/app-registrations/portal-app-registration.json  
-    groupedDeployments:
-      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'shared')) }}        
-        : - name: SharedResources 
-            deployments:
-              - name: log-analytics-workspace
-                path: infra/core/env-shared/log-analytics-workspace
-                resourceGroupName: $(ssvSharedResourceGroup)
+    groupedDeployments:                
       - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}        
         : - name: network 
             deployments:
@@ -102,7 +95,7 @@ extends:
         : - name: Portal
             ${{ if eq(parameters.deployResources, 'all') }}:
               dependsOnGroupedDeployments:
-                - SharedResources        
+                - network        
             deployments:
               - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-sa')) }}:
                 - name: storage-account
