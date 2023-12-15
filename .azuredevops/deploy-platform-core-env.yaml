@@ -304,11 +304,6 @@ extends:
               dependsOnGroupedDeployments:
               - network
             deployments:
-              - name: BuildAgentSetup
-                type: 'script'
-                scriptType: PowerShell
-                azurePowershellUseCore: true
-                path: 'scripts/BuildAgentSetup.ps1'
               - ${{ if eq(variables.IsApplicationAppConfig, true) }}:  
                 - name: configuration-store
                   path: infra/core/env/app-configuration
@@ -340,6 +335,11 @@ extends:
                 - name: flexible-server
                   path: infra/core/env/postgre-sql
                   resourceGroupName: $(dbsResourceGroup)
+                  preDeployScriptsList:
+                    - displayName: 'Update Bicep version'
+                      scriptPath: scripts/BuildAgentSetup.ps1
+                      type: PowerShell
+                      useSystemAccessToken: true
               - ${{ if eq(variables.IsApplicationRedisCache, true) }}:                    
                 - name: redis-cache
                   path: infra/core/env/redis-cache
