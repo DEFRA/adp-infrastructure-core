@@ -85,5 +85,6 @@ extends:
                 resourceGroupName: $(ssvSharedResourceGroup)
             - ${{ if eq(variables.IsLogAnalyticsWorkspace,true) }}:
               - name: log-analytics-workspace
-                path: infra/bootstrap/env-shared/log-analytics-workspace
+                path: infra/common/operational-insights/log-analytics-workspace.bicep
+                parameterFilePath: infra/bootstrap/env-shared/log-analytics-workspace
                 resourceGroupName: $(ssvSharedResourceGroup)
