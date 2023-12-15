@@ -17,7 +17,6 @@ parameters:
       - Network - Route Tables
       - Network - Public DNS Zone
       - Monitoring - All
-      - Monitoring - Workspace
       - Monitoring - Insights
       - Monitoring - Azure Monitor Workspace
       - Monitoring - Grafana
@@ -80,20 +79,14 @@ variables:
     value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - Route Tables')) }}
   - name: IsNetworkPublicDNSZone
     value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - Public DNS Zone')) }}
-
-  - name: IsMonitoring
-    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Monitoring')) }}
   - name: IsMonitoringAll
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Monitoring - All')) }}
-  - name: IsMonitoringWorkspace
-    value: ${{ or(eq(variables.IsMonitoringAll,true), eq(parameters.deployResources,'Monitoring - Workspace')) }}
   - name: IsMonitoringInsights
     value: ${{ or(eq(variables.IsMonitoringAll,true), eq(parameters.deployResources,'Monitoring - Insights')) }}
   - name: IsMonitoringAzureMonitorWorkspace
     value: ${{ or(eq(variables.IsMonitoringAll,true), eq(parameters.deployResources,'Monitoring - Azure Monitor Workspace')) }}
   - name: IsMonitoringGrafana
     value: ${{ or(eq(variables.IsMonitoringAll,true), eq(parameters.deployResources,'Monitoring - Grafana')) }}
-
   - name: IsManagedCluster
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Managed Cluster')) }}
   - name: IsManagedClusterAll
@@ -169,10 +162,6 @@ extends:
         - ${{ if eq(variables.IsMonitoring, true) }}:
           - name: monitoring
             deployments:
-              - ${{ if eq(variables.IsMonitoringWorkspace, true) }}:
-                - name: workspace
-                  path: infra/core/env/operational-insights
-                  resourceGroupName: $(servicesResourceGroup)
               - ${{ if eq(variables.IsMonitoringInsights, true) }}:
                 - name: component
                   path: infra/core/env/insights

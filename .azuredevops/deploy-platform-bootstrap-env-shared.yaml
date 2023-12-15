@@ -11,7 +11,6 @@ parameters:
     default: "All"
     values:
       - All
-      - Policy Assignments
       - Platform Key Vault
       - Platform Container Registry
       - Platform Log Analytics Workspace
@@ -23,7 +22,6 @@ pr:
   paths:
     include:
       - infra/bootstrap/env-shared/*
-      - infra/common/policy-assignment/*
 
 trigger:
   batch: true
@@ -77,10 +75,6 @@ extends:
     groupedDeployments:
          - name: SharedEnvironment
            deployments:
-            #- ${{ if eq(variables.IsPolicyAssignments,true) }}:
-            #  - name: assignment
-            #    path: infra/common/policy
-            #    resourceGroupName: $(ssvSharedResourceGroup)
             - ${{ if eq(variables.IsKeyVault,true) }}:
               - name: platform-key-vault
                 path: infra/bootstrap/env-shared/key-vault
