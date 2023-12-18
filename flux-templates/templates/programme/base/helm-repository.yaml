@@ -8,3 +8,4 @@ spec:
   interval: 5m
   url: oci://${APPLICATION_ACR_NAME}.azurecr.io/helm
   provider: azure
+  
