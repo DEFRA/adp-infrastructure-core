@@ -261,10 +261,10 @@ try {
 
         $pathExistsInKustomization = Select-String -Path "$environmentsPath/$($environment.name)/base/kustomization.yaml" -Pattern "  - ../../../$($programmeName)/base/patch"
         if ($null -ne $pathExistsInKustomization) {
-            Write-Host 'Path exists, no need to add it'
+            Write-Host 'DEBUG:::: Path exists, no need to add it'
         }
         else {
-            Write-Host "Adding path '  - ../../../$($programmeName)/base/patch' to '$environmentsPath/$($environment.name)/base/kustomization.yaml'"
+            Write-Host "DEBUG:::: Adding path '  - ../../../$($programmeName)/base/patch' to '$environmentsPath/$($environment.name)/base/kustomization.yaml'"
             Add-Content -Path "$environmentsPath/$($environment.name)/base/kustomization.yaml" -Value "  - ../../../$($programmeName)/base/patch"
             Write-Host "Added path"
         }
