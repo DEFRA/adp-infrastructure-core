@@ -15,7 +15,7 @@ spec:
         - name: SCHEMA_NAME
           value: "public"
         - name: POSTGRES_DB
-          value: "__SERVICE_NAME__"
+          value: "${POSTGRES_DB}"
         - name: POSTGRES_PORT
           value: "5432"
         - name: SCHEMA_USERNAME
