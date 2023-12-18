@@ -10,19 +10,19 @@
                 },
                 {
                     "name": "ffc-demo-claim-service",
-                    "dbMigration": true
+                    "backend": true
                 },
                 {
                     "name": "ffc-demo-payment-service",
-                    "dbMigration": true
+                    "backend": true
                 },
                 {
                     "name": "ffc-demo-payment-web",
-                    "ingress": true
+                    "frontend": true
                 },
                 {
                     "name": "ffc-demo-web",
-                    "ingress": true
+                    "frontend": true
                 }
             ],
             "environments": [

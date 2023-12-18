@@ -252,7 +252,14 @@ try {
                 Copy-Item -Path "$templateTeamEnvironmentPath/*" -Destination $programmePath/$($team.name)/$($environment.name)/0$instance -Recurse
         
                 foreach ($service in $team.services) {
-                    Add-Content -Path $programmePath/$($team.name)/$($environment.name)/0$instance/kustomization.yaml -Value "  - ../../$($service.name)"
+                    $servicePathExistsInKustomization = Select-String -Path "$programmePath/$($team.name)/$($environment.name)/0$instance/kustomization.yaml" -Pattern "  - ../../$($service.name)"
+                    if ($null -ne $servicePathExistsInKustomization) {
+                        Write-Host 'Path exists, no need to add it'
+                    }
+                    else {
+                        Write-Host "Adding path '  - ../../$($service.name)' to '$programmePath/$($team.name)/$($environment.name)/0$instance/kustomization.yaml'"
+                        Add-Content -Path $programmePath/$($team.name)/$($environment.name)/0$instance/kustomization.yaml -Value "  - ../../$($service.name)"
+                    }
                 }
             }
 
