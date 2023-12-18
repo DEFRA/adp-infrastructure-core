@@ -10,19 +10,19 @@
                 },
                 {
                     "name": "claim-service", // MANDATORY
-                    "dbMigration": true // OPTIONAL - ADD IF DBMIGRATION IS REQUIRED
+                    "backend": true // OPTIONAL - ADD IF DBMIGRATION IS REQUIRED
                 },
                 {
                     "name": "payment-service", // MANDATORY
-                    "dbMigration": true // OPTIONAL - ADD IF DBMIGRATION IS REQUIRED
+                    "backend": true // OPTIONAL - ADD IF DBMIGRATION IS REQUIRED
                 },
                 {
                     "name": "payment-web-service", // MANDATORY
-                    "ingress": true // OPTIONAL - ADD IF INGRESS IS REQUIRED E.G. WEB FRONTEND
+                    "frontend": true // OPTIONAL - ADD IF INGRESS IS REQUIRED E.G. WEB FRONTEND
                 },
                 {
                     "name": "web-service", // MANDATORY
-                    "ingress": true // OPTIONAL - ADD IF INGRESS IS REQUIRED E.G. WEB FRONTEND
+                    "frontend": true // OPTIONAL - ADD IF INGRESS IS REQUIRED E.G. WEB FRONTEND
                 }
             ],
             "environments": [ // MANDATORY - AT LEAST ONE ENVIRONMENT REQUIRED

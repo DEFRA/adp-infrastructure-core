@@ -192,7 +192,7 @@ try {
             $lookupTable['__SERVICE_NAME__'] = $service.name
             $lookupTable['__DEPENDS_ON__'] = 'infra'
 
-            if ($service['dbMigration']) {
+            if ($service['backend']) {
                 $lookupTable['__DEPENDS_ON__'] = 'pre-deploy'
                 New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/base"
                 Copy-Item -Path $templateTeamServicePath/pre-deploy/base/* -Destination $programmePath/$($team.name)/$($service.name)/pre-deploy/base -Recurse
@@ -218,14 +218,14 @@ try {
                     New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/deploy/$($environment.name)/0$instance"
                     Copy-Item -Path $templateTeamServicePath/deploy/environment/kustomization.yaml -Destination $programmePath/$($team.name)/$($service.name)/deploy/$($environment.name)/0$instance/kustomization.yaml
 
-                    if ($service['ingress']) {
-                        ReplaceTokens -TemplateFile "$templateTeamServicePath/deploy/environment/patch-ingress.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/deploy/$($environment.name)/0$instance/patch.yaml"
+                    if ($service['frontend']) {
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/deploy/environment/patch-frontend.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/deploy/$($environment.name)/0$instance/patch.yaml"
                     }
                     else {
                         ReplaceTokens -TemplateFile "$templateTeamServicePath/deploy/environment/patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/deploy/$($environment.name)/0$instance/patch.yaml"
                     }
 
-                    if ($service['dbMigration']) {
+                    if ($service['backend']) {
                         New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance"
                         Copy-Item -Path $templateTeamServicePath/pre-deploy/environment/* -Destination $programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance -Recurse
                         ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/environment/image-policy.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance/image-policy.yaml"
@@ -234,7 +234,12 @@ try {
 
                     New-Directory -DirectoryPath $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance
                     Copy-Item -Path "$templateTeamServicePath/infra/environment/*" -Destination $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance -Recurse
-                    ReplaceTokens -TemplateFile "$templateTeamServicePath/infra/environment/patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/patch.yaml"
+                    if ($service['backend']) {
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/infra/environment/patch-backend.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/patch.yaml"
+                    }
+                    else {
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/infra/environment/patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/patch.yaml"
+                    }
                     ReplaceTokens -TemplateFile "$templateTeamServicePath/infra/environment/image-policy.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/image-policy.yaml"
                 }
             }
