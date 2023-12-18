@@ -233,7 +233,7 @@ try {
                     }
 
                     New-Directory -DirectoryPath $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance
-                    Copy-Item -Path "$templateTeamServicePath/infra/environment/*" -Destination $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance -Recurse
+                    Copy-Item -Path "$templateTeamServicePath/infra/environment/kustomization.yaml" -Destination $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/kustomization.yaml -Recurse
                     if ($service['backend']) {
                         ReplaceTokens -TemplateFile "$templateTeamServicePath/infra/environment/patch-backend.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/patch.yaml"
                     }
