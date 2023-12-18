@@ -161,6 +161,7 @@ try {
     }
 
     [string]$programmePath = "$FluxServicesPath\$programmeName"
+    [string]$environmentsPath = "$FluxServicesPath\environments"
     [string]$programmeBaseDirectory = "$programmePath\base"
 
     New-Directory -DirectoryPath $programmePath
@@ -187,7 +188,7 @@ try {
         $lookupTable['__SERVICE_NAME__'] = $service.name
         $lookupTable['__DEPENDS_ON__'] = 'infra'
 
-        if ($service['dbMigration']) {
+        if ($service['backend']) {
             $lookupTable['__DEPENDS_ON__'] = 'pre-deploy'
             New-Directory -DirectoryPath "$programmePath/$($service.name)/pre-deploy/base"
             Copy-Item -Path $templateProgrammeServicePath/pre-deploy/base/* -Destination $programmePath/$($service.name)/pre-deploy/base -Recurse
@@ -206,13 +207,6 @@ try {
         ReplaceTokens -TemplateFile "$templateProgrammeServicePath/infra/base/aso-helm-release.yaml" -DestinationFile "$programmePath/$($service.name)/infra/base/aso-helm-release.yaml"
         ReplaceTokens -TemplateFile "$templateProgrammeServicePath/infra/base/image-repository.yaml" -DestinationFile "$programmePath/$($service.name)/infra/base/image-repository.yaml"
 
-        if ($service['dbMigration']) {
-            New-Directory -DirectoryPath "$programmePath/$($service.name)/pre-deploy/base"
-            Copy-Item -Path $templateProgrammeServicePath/pre-deploy/base/* -Destination $programmePath/$($service.name)/pre-deploy/base -Recurse
-            ReplaceTokens -TemplateFile "$templateProgrammeServicePath/pre-deploy/base/image-repository-dbmigration.yaml" -DestinationFile "$programmePath/$($service.name)/pre-deploy/base/image-repository-dbmigration.yaml"
-            ReplaceTokens -TemplateFile "$templateProgrammeServicePath/pre-deploy/base/migration.job.yaml" -DestinationFile "$programmePath/$($service.name)/pre-deploy/base/migration.job.yaml"
-        }
-
         foreach ($environment in $environments) {
             $lookupTable['__ENVIRONMENT__'] = $($environment.name)
             foreach ($instance in $environment.instances) {
@@ -220,14 +214,14 @@ try {
                 New-Directory -DirectoryPath "$programmePath/$($service.name)/deploy/$($environment.name)/0$instance"
                 Copy-Item -Path $templateProgrammeServicePath/deploy/environment/kustomization.yaml -Destination $programmePath/$($service.name)/deploy/$($environment.name)/0$instance/kustomization.yaml
 
-                if ($service['ingress']) {
-                    ReplaceTokens -TemplateFile "$templateProgrammeServicePath/deploy/environment/patch-ingress.yaml" -DestinationFile "$programmePath/$($service.name)/deploy/$($environment.name)/0$instance/patch.yaml"
+                if ($service['frontend']) {
+                    ReplaceTokens -TemplateFile "$templateProgrammeServicePath/deploy/environment/patch-frontend.yaml" -DestinationFile "$programmePath/$($service.name)/deploy/$($environment.name)/0$instance/patch.yaml"
                 }
                 else {
                     ReplaceTokens -TemplateFile "$templateProgrammeServicePath/deploy/environment/patch.yaml" -DestinationFile "$programmePath/$($service.name)/deploy/$($environment.name)/0$instance/patch.yaml"
                 }
 
-                if ($service['dbMigration']) {
+                if ($service['backend']) {
                     New-Directory -DirectoryPath "$programmePath/$($service.name)/pre-deploy/$($environment.name)/0$instance"
                     Copy-Item -Path $templateProgrammeServicePath/pre-deploy/environment/* -Destination $programmePath/$($service.name)/pre-deploy/$($environment.name)/0$instance -Recurse
                     ReplaceTokens -TemplateFile "$templateProgrammeServicePath/pre-deploy/environment/image-policy.yaml" -DestinationFile "$programmePath/$($service.name)/pre-deploy/$($environment.name)/0$instance/image-policy.yaml"
@@ -235,8 +229,13 @@ try {
                 }
 
                 New-Directory -DirectoryPath $programmePath/$($service.name)/infra/$($environment.name)/0$instance
-                Copy-Item -Path "$templateProgrammeServicePath/infra/environment/*" -Destination $programmePath/$($service.name)/infra/$($environment.name)/0$instance -Recurse
-                ReplaceTokens -TemplateFile "$templateProgrammeServicePath/infra/environment/patch.yaml" -DestinationFile "$programmePath/$($service.name)/infra/$($environment.name)/0$instance/patch.yaml"
+                Copy-Item -Path "$templateProgrammeServicePath/infra/environment/kustomization.yaml" -Destination $programmePath/$($service.name)/infra/$($environment.name)/0$instance/kustomization.yaml -Recurse
+                if ($service['backend']) {
+                    ReplaceTokens -TemplateFile "$templateProgrammeServicePath/infra/environment/patch-backend.yaml" -DestinationFile "$programmePath/$($service.name)/infra/$($environment.name)/0$instance/patch.yaml"
+                }
+                else {
+                    ReplaceTokens -TemplateFile "$templateProgrammeServicePath/infra/environment/patch.yaml" -DestinationFile "$programmePath/$($service.name)/infra/$($environment.name)/0$instance/patch.yaml"
+                }
                 ReplaceTokens -TemplateFile "$templateProgrammeServicePath/infra/environment/image-policy.yaml" -DestinationFile "$programmePath/$($service.name)/infra/$($environment.name)/0$instance/image-policy.yaml"
             }
         }
@@ -249,8 +248,25 @@ try {
             Copy-Item -Path "$templateProgrammeEnvironmentPath/*" -Destination $programmePath/$($environment.name)/0$instance -Recurse
         
             foreach ($service in $services) {
-                Add-Content -Path $programmePath/$($environment.name)/0$instance/kustomization.yaml -Value "  - ../../$($service.name)"
+                $servicePathExistsInKustomization = Select-String -Path "$programmePath/$($environment.name)/0$instance/kustomization.yaml" -Pattern "  - ../../$($service.name)"
+                    if ($null -ne $servicePathExistsInKustomization) {
+                        Write-Host 'Path exists, no need to add it'
+                    }
+                    else {
+                        Write-Host "Adding path '  - ../../$($service.name)' to '$programmePath/$($environment.name)/0$instance/kustomization.yaml'"
+                        Add-Content -Path $programmePath/$($environment.name)/0$instance/kustomization.yaml -Value "  - ../../$($service.name)"
+                    }
             }
+        }
+
+        $pathExistsInKustomization = Select-String -Path "$environmentsPath/$($environment.name)/base/kustomization.yaml" -Pattern "  - ../../../$($programmeName)/base/patch"
+        if ($null -ne $pathExistsInKustomization) {
+            Write-Host 'Path exists, no need to add it'
+        }
+        else {
+            Write-Host "Adding path '  - ../../../$($programmeName)/base/patch' to '$environmentsPath/$($environment.name)/base/kustomization.yaml'"
+            Add-Content -Path "$environmentsPath/$($environment.name)/base/kustomization.yaml" -Value "  - ../../../$($programmeName)/base/patch"
+            Write-Host "Added path"
         }
     }
 
