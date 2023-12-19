@@ -144,7 +144,6 @@ try {
     Write-Host "Import module:PSHelperDirectory=$PSHelperDirectory"
     Import-Module $PSHelperDirectory -Force
 
-    Write-Host "OnBoardingManifest: '$OnBoardingManifest'"
     [hashtable]$programmeDetails = $OnBoardingManifest | ConvertFrom-Json -AsHashtable
 
     [string]$programmeName = $programmeDetails.name
