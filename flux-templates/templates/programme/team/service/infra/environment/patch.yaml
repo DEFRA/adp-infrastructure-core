@@ -19,7 +19,7 @@ spec:
     teamMIPrefix: ${TEAM_MI_PREFIX}
     serviceName: ${SERVICE_NAME}
     keyVaultResourceGroupName: ${SERVICES_INFRA_RG}
-    keyVaultName: __ENVIRONMENT__ADPINFVT__ENV_INSTANCE__401
+    keyVaultName: __ENVIRONMENT__adpinfvt__ENV_INSTANCE__401
     userAssignedIdentity:
       federatedCreds:
         - namespace: ${TEAM_NAMESPACE}
