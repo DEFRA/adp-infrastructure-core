@@ -331,6 +331,7 @@ extends:
                       inlineScript: |
                         $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
                         Write-Host "##vso[task.setvariable variable=aadAdminUserMiClientId;]$($output.aadAdminUserMiClientId.value)"
+                        Write-Host "##vso[task.setvariable variable=aadAdminUserMiPrincipalId;]$($output.aadAdminUserMiPrincipalId.value)"
                     - displayName: Add ADD MI ClientId to Config Service
                       scriptPath: templates/powershell/Import-ConfigData.ps1
                       type: AzureCLI
