@@ -18,6 +18,12 @@
     "contentType": "text/plain"
   },
   {
+    "key": "SSV_SHARED_ACR_NAME",
+    "value": "#{{ lower(ssvResourceNamePrefix) }}#{{ lower(nc_resource_containerregistry) }}#{{ nc_shared_instance_regionid }}01",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
     "key": "FLUX_CONFIG_NAMESPACE",
     "value": "flux-config",
     "label": "adp-platform",

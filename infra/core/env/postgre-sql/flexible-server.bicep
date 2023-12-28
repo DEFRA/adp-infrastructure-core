@@ -94,3 +94,6 @@ module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1
 
 @description('The Client Id of the AAD admin user managed identity.')
 output aadAdminUserMiClientId string = aadAdminUserMi.outputs.clientId
+
+@description('The Principal Id of the AAD admin user managed identity.')
+output aadAdminUserMiPrincipalId string = aadAdminUserMi.outputs.principalId
