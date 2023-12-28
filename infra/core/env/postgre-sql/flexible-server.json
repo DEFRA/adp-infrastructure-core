@@ -1800,6 +1800,13 @@
         "description": "The Client Id of the AAD admin user managed identity."
       },
       "value": "[reference(resourceId('Microsoft.Resources/deployments', format('managed-identity-{0}', parameters('deploymentDate'))), '2022-09-01').outputs.clientId.value]"
+    },
+    "aadAdminUserMiPrincipalId": {
+      "type": "string",
+      "metadata": {
+        "description": "The Prinicipal Id of the AAD admin user managed identity."
+      },
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', format('managed-identity-{0}', parameters('deploymentDate'))), '2022-09-01').outputs.principalId.value]"
     }
   }
 }
