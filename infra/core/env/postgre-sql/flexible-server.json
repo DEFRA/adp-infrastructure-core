@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.24.24.22086",
-      "templateHash": "14002034640266817"
+      "templateHash": "4625670721124717136"
     }
   },
   "parameters": {
@@ -91,7 +91,7 @@
         "mode": "Incremental",
         "parameters": {
           "name": {
-            "value": "[parameters('managedIdentityName')]"
+            "value": "[toLower(parameters('managedIdentityName'))]"
           },
           "tags": {
             "value": "[union(variables('defaultTags'), variables('managedIdentityTags'))]"
@@ -1804,7 +1804,7 @@
     "aadAdminUserMiPrincipalId": {
       "type": "string",
       "metadata": {
-        "description": "The Prinicipal Id of the AAD admin user managed identity."
+        "description": "The Principal Id of the AAD admin user managed identity."
       },
       "value": "[reference(resourceId('Microsoft.Resources/deployments', format('managed-identity-{0}', parameters('deploymentDate'))), '2022-09-01').outputs.principalId.value]"
     }
