@@ -54,7 +54,7 @@ var managedIdentityTags = {
 module aadAdminUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'managed-identity-${deploymentDate}'
   params: {
-    name: managedIdentityName
+    name: toLower(managedIdentityName)
     tags: union(defaultTags, managedIdentityTags)
     lock: 'CanNotDelete'
   }
