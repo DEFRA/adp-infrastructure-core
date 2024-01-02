@@ -6,6 +6,7 @@ metadata:
 spec:
   chart:
     spec:
+      chart: __SERVICE_NAME__-infra
       version: "0.1.0" # {"$imagepolicy": "flux-config:__SERVICE_NAME__-__ENVIRONMENT__-0__ENV_INSTANCE__:tag"}
   values:
     namespace: ${TEAM_NAMESPACE}
@@ -20,7 +21,7 @@ spec:
     teamMIPrefix: ${TEAM_MI_PREFIX}
     serviceName: ${SERVICE_NAME}
     keyVaultResourceGroupName: ${SERVICES_INFRA_RG}
-    keyVaultName: __ENVIRONMENT__ADPINFVT__ENV_INSTANCE__401
+    keyVaultName: __ENVIRONMENT__adpinfvt__ENV_INSTANCE__401
     userAssignedIdentity:
       federatedCreds:
         - namespace: ${TEAM_NAMESPACE}

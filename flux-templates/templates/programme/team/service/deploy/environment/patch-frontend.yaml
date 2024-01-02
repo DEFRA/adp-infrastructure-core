@@ -25,7 +25,7 @@ spec:
     ingress:
       class: nginx
       endpoint: __SERVICE_NAME__
-      server: __ENVIRONMENT__1.adp.defra.gov.uk
+      server: __ENVIRONMENT____ENV_INSTANCE__.adp.defra.gov.uk
     deployment:
       priorityClassName: default
     containerConfigMap:
