@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.24.24.22086",
-      "templateHash": "4625670721124717136"
+      "templateHash": "17618714879935351499"
     }
   },
   "parameters": {
@@ -77,9 +77,23 @@
       "Name": "[parameters('managedIdentityName')]",
       "Purpose": "ADP Platform Database AAD Admin Managed Identity",
       "Tier": "Shared"
-    }
+    },
+    "readerRoleDefinitionId": "acdd72a7-3385-48ef-bd42-f606fba81ae7"
   },
   "resources": [
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2022-04-01",
+      "name": "[guid(resourceGroup().id, 'Reader', resourceGroup().name)]",
+      "properties": {
+        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', variables('readerRoleDefinitionId'))]",
+        "principalId": "[reference(resourceId('Microsoft.Resources/deployments', format('managed-identity-{0}', parameters('deploymentDate'))), '2022-09-01').outputs.principalId.value]",
+        "principalType": "ServicePrincipal"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', format('managed-identity-{0}', parameters('deploymentDate')))]"
+      ]
+    },
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
