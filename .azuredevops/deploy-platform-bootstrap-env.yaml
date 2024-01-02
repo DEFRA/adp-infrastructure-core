@@ -8,11 +8,13 @@ parameters:
   - name: deployResources
     displayName: "Resources to Deploy"
     type: string
-    default: "all"
+    default: "All"
     values:
-      - "all"
-      - "service-connections"
-      - "network"
+      - All
+      - Service Connections
+      - Monitoring - Workspace
+      - Policy Assignments
+      - Network
 
 pr:
   branches:
@@ -40,6 +42,18 @@ resources:
       endpoint: DEFRA
       type: github
       ref: main
+
+variables:
+  - name: IsAll
+    value: ${{ eq(parameters.deployResources,'All') }}
+  - name: IsServiceConnections
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Service Connections')) }}
+  - name: IsLogAnalyticsWorkspace
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Monitoring - Workspace')) }}
+  - name: IsPolicyAssignments
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Policy Assignments')) }}
+  - name: IsNetwork
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Network')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -100,57 +114,74 @@ extends:
       **/bootstrap/env/config/service-connections/tier2-service-connection.json
       **/bootstrap/env/config/role-assignments/tier2-role-assignments.json
     groupedDeployments:
-      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'service-connections')) }}
-        : - name: SharedResources
-            deployments:
-              - name: Create Tier 2 App Registrations
-                type: 'script'
-                scriptType: AzurePowerShell
-                scriptRepo: PipelineCommonScripts
-                path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
-                scriptArguments: > 
-                  -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
-              - name: Create Tier 2 Role Assignments
-                type: 'script'
-                scriptType: AzurePowerShell
-                path: "infra/bootstrap/env/scripts/Set-RoleAssignments.ps1"
-                scriptArguments: > 
-                  -RoleAssignmentsJsonPath 'infra/bootstrap/env/config/role-assignments/tier2-role-assignments.json'   
-              - name: Create or Update AzureRm Service Endpoint(Service Connection)
-                type: 'script'
-                scriptType: AzureCLI
-                useSystemAccessTokeninScript: true
-                path: "infra/bootstrap/env/scripts/ado/Initialize-ServiceEndpoint.ps1"
-                scriptArguments: > 
-                  -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
-                  -WorkingDirectory $(Pipeline.Workspace)\s\self
-
-
-              
-      - ? ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'network')) }}
-        : - name: network
-            ${{ if eq(parameters.deployResources, 'all') }}:
-              dependsOnGroupedDeployments:
-                - SharedResources
-            deployments:
-              - name: route-table
-                path: infra/common/network
-                serviceConnectionVariableName: "subscriptionName"
-                resourceGroupName: $(virtualNetworkResourceGroup)
-              - name: network-security-group
-                path: infra/common/network
-                serviceConnectionVariableName: "subscriptionName"
-                resourceGroupName: $(virtualNetworkResourceGroup)
-              - name: virtual-network
-                path: infra/common/network
-                serviceConnectionVariableName: "subscriptionName"
-                resourceGroupName: $(virtualNetworkResourceGroup)
-                postDeployScriptsList:
-                  - displayName: Link the VNet to Hub
-                    scriptPath: infra/bootstrap/env/scripts/Trigger-VNetPeering.ps1
-                    type: PowerShell
-                    useSystemAccessToken: true
-                    scriptArguments: >
-                      -VirtualNetworkName $(virtualNetworkName)
-                      -SubscriptionName $(subscriptionName)
-                      -TenantId $(tenantId)
+      - ${{ if eq(variables.IsServiceConnections,true) }}:
+        - name: serviceConnections
+          deployments:
+            - name: Create Tier 2 App Registrations
+              type: 'script'
+              scriptType: AzurePowerShell
+              scriptRepo: PipelineCommonScripts
+              path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+              scriptArguments: > 
+                -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
+            - name: Create Tier 2 Role Assignments
+              type: 'script'
+              scriptType: AzurePowerShell
+              path: "infra/bootstrap/env/scripts/Set-RoleAssignments.ps1"
+              scriptArguments: > 
+                -RoleAssignmentsJsonPath 'infra/bootstrap/env/config/role-assignments/tier2-role-assignments.json'   
+            - name: Create or Update AzureRm Service Endpoint(Service Connection)
+              type: 'script'
+              scriptType: AzureCLI
+              useSystemAccessTokeninScript: true
+              path: "infra/bootstrap/env/scripts/ado/Initialize-ServiceEndpoint.ps1"
+              scriptArguments: > 
+                -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
+                -WorkingDirectory $(Pipeline.Workspace)\s\self
+      - ${{ if eq(variables.IsLogAnalyticsWorkspace,true) }}:
+        - name: logAnalyticsWorkspace
+          ${{ if eq(variables.IsAll, true) }}:
+            dependsOnGroupedDeployments:
+              - serviceConnections
+          deployments:
+            - name: log-analytics-workspace
+              path: infra/common/operational-insights
+              serviceConnectionVariableName: "subscriptionName"
+              resourceGroupName: $(servicesResourceGroup)
+      - ${{ if eq(variables.IsPolicyAssignments,true) }}:
+        - name: policyAssignments
+          ${{ if eq(variables.IsAll, true) }}:
+            dependsOnGroupedDeployments:
+              - logAnalyticsWorkspace
+          deployments:
+            - name: policy-diagnostic-settings-assignment
+              path: infra/common/policy
+              serviceConnectionVariableName: "subscriptionName"
+              scope: "Subscription"
+      - ${{ if eq(variables.IsNetwork,true) }}:
+        - name: network
+          ${{ if eq(variables.IsAll, true) }}:
+            dependsOnGroupedDeployments:
+              - serviceConnections
+          deployments:
+            - name: route-table
+              path: infra/common/network
+              serviceConnectionVariableName: "subscriptionName"
+              resourceGroupName: $(virtualNetworkResourceGroup)
+            - name: network-security-group
+              path: infra/common/network
+              serviceConnectionVariableName: "subscriptionName"
+              resourceGroupName: $(virtualNetworkResourceGroup)
+            - name: virtual-network
+              path: infra/common/network
+              serviceConnectionVariableName: "subscriptionName"
+              resourceGroupName: $(virtualNetworkResourceGroup)
+              postDeployScriptsList:
+                - displayName: Link the VNet to Hub
+                  scriptPath: infra/bootstrap/env/scripts/Trigger-VNetPeering.ps1
+                  type: PowerShell
+                  useSystemAccessToken: true
+                  scriptArguments: >
+                    -VirtualNetworkName $(virtualNetworkName)
+                    -SubscriptionName $(subscriptionName)
+                    -TenantId $(tenantId)
