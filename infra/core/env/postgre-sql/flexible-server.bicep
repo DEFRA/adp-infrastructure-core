@@ -92,6 +92,21 @@ module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1
   }
 }
 
+var readerRoleDefinitionId = 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
+
+resource dbRsgGrpRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(resourceGroup().id, 'Reader', resourceGroup().name)
+  scope: resourceGroup()
+  dependsOn:[
+    aadAdminUserMi
+  ]
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', readerRoleDefinitionId) 
+    principalId: aadAdminUserMi.outputs.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
 @description('The Client Id of the AAD admin user managed identity.')
 output aadAdminUserMiClientId string = aadAdminUserMi.outputs.clientId
 
