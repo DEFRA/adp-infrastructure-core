@@ -143,14 +143,6 @@ extends:
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
-    environments:
-      - name: 'snd3'
-        serviceConnection: AZD-ADP-SND3
-        deploymentBranches:
-          - '*'
-        developmentEnvironment: true
-        azureRegions:
-          primary: 'UKSouth'
     filePathsForTransform: |
       **/core/env/app-configuration/config-data/config-data.json
     groupedDeployments:
