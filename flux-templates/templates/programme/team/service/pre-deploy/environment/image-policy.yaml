@@ -1,0 +1,11 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: __SERVICE_NAME__-dbmigration-__ENVIRONMENT__-01
+  namespace: flux-config
+spec:
+  imageRepositoryRef:
+    name: __SERVICE_NAME__-dbmigration
+  policy:
+    semver:
+      range: '>=0.1.0'
