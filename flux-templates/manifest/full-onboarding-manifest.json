@@ -1,0 +1,65 @@
+{
+    "name": "adp", // MANDATORY
+    "teams": [ // MANDATORY - AT LEAST ONE TEAM REQUIRED
+        {
+            "name": "teamname", // MANDATORY
+            "servicecode": "ADP", // MANDATORY
+            "services": [ // MANDATORY - AT LEAST ONE SERVICE REQUIRED
+                {
+                    "name": "calculation-service" // MANDATORY
+                },
+                {
+                    "name": "claim-service", // MANDATORY
+                    "backend": true // OPTIONAL - ADD IF DBMIGRATION IS REQUIRED
+                },
+                {
+                    "name": "payment-service", // MANDATORY
+                    "backend": true // OPTIONAL - ADD IF DBMIGRATION IS REQUIRED
+                },
+                {
+                    "name": "payment-web-service", // MANDATORY
+                    "frontend": true // OPTIONAL - ADD IF INGRESS IS REQUIRED E.G. WEB FRONTEND
+                },
+                {
+                    "name": "web-service", // MANDATORY
+                    "frontend": true // OPTIONAL - ADD IF INGRESS IS REQUIRED E.G. WEB FRONTEND
+                }
+            ],
+            "environments": [ // MANDATORY - AT LEAST ONE ENVIRONMENT REQUIRED
+                {
+                    "name": "snd", // REQUIRED
+                    "instances": [ // REQUIRED - ATLEAST ONE VALUE REQUIRED CAN BE A COMBINATION OF 1,2 OR 3
+                        "1",
+                        "2",
+                        "3"
+                    ]
+                },
+                {
+                    "name": "dev", // REQUIRED
+                    "instances": [ // REQUIRED - ONLY 1 IS ALLOWED
+                        "1"
+                    ]
+                },
+                {
+                    "name": "tst", // REQUIRED
+                    "instances": [ // REQUIRED - ATLEAST ONE VALUE REQUIRED CAN BE BOTH 1 AND 2
+                        "1",
+                        "2"
+                    ]
+                },
+                {
+                    "name": "pre", // REQUIRED
+                    "instances": [ // REQUIRED - ONLY 1 IS ALLOWED
+                        "1"
+                    ]
+                },
+                {
+                    "name": "prd", // REQUIRED
+                    "instances": [ // REQUIRED - ONLY 1 IS ALLOWED
+                        "1"
+                    ]
+                }
+            ]
+        }
+    ]
+}

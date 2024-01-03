@@ -1,0 +1,22 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: __SERVICE_NAME__-infra
+  namespace: flux-config
+spec:
+  releaseName: __SERVICE_NAME__-infra
+  chart:
+    spec:
+      chart: __SERVICE_NAME__-infra
+      version: "0.1.0"
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: __TEAM_NAME__-helm-repo
+        namespace: flux-config
+  install:
+    createNamespace: true
+  interval: 5m0s
+  targetNamespace: __TEAM_NAME__
+  values:
+    namespace: __TEAM_NAME__
