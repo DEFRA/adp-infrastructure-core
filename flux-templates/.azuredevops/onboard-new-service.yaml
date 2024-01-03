@@ -29,7 +29,6 @@ steps:
 
   - task: PowerShell@2
     displayName: 'Add new project manifests'
-    # condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), eq('${{ parameters.publishFromFeature }}', true)))
     inputs:
       pwsh: true
       azurePowerShellVersion: latestVersion
