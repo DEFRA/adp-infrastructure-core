@@ -76,7 +76,7 @@ Please see example manifests below:
 #### **MINIMUM EXAMPLE Structure of the manifest file**
 ```json
 {
-    "name": "prorammename", // MANDATORY
+    "name": "progammename", // MANDATORY
     "teams": [ // MANDATORY - AT LEAST ONE TEAM REQUIRED
         {
             "name": "teamname", // MANDATORY
