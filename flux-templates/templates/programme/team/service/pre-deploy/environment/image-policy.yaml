@@ -1,7 +1,7 @@
 apiVersion: image.toolkit.fluxcd.io/v1beta2
 kind: ImagePolicy
 metadata:
-  name: __SERVICE_NAME__-dbmigration-__ENVIRONMENT__-01
+  name: __SERVICE_NAME__-dbmigration-__ENVIRONMENT__-0__ENV_INSTANCE__
   namespace: flux-config
 spec:
   imageRepositoryRef:
