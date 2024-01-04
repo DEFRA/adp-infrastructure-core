@@ -324,6 +324,22 @@ extends:
                 - name: flexible-server
                   path: infra/core/env/postgre-sql
                   resourceGroupName: $(dbsResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: 'Process Output Variable'
+                      type: PowerShell
+                      inlineScript: |
+                        $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
+                        Write-Host "##vso[task.setvariable variable=aadAdminUserMiClientId;]$($output.aadAdminUserMiClientId.value)"
+                        Write-Host "##vso[task.setvariable variable=aadAdminUserMiPrincipalId;]$($output.aadAdminUserMiPrincipalId.value)"
+                    - displayName: Add ADD MI ClientId to Config Service
+                      scriptPath: templates/powershell/Import-ConfigData.ps1
+                      type: AzureCLI
+                      AzureCLIScriptType: pscore
+                      scriptRepo: PipelineCommonFiles
+                      scriptArguments: >
+                        -Label "adp-platform"
+                        -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                        -ConfigData '[{"key": "DB_AAD_ADMIN_CLIENT_ID", "value": "$(aadAdminUserMiClientId)", "label": "adp-platform", "contentType": "text/plain" },{"key": "DB_AAD_ADMIN_PRINCIPAL_ID", "value": "$(aadAdminUserMiPrincipalId)", "label": "adp-platform", "contentType": "text/plain" }]'
               - ${{ if eq(variables.IsApplicationRedisCache, true) }}:                    
                 - name: redis-cache
                   path: infra/core/env/redis-cache

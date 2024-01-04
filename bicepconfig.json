@@ -6,6 +6,10 @@
       "SharedDefraRegistry": {
         "registry": "ssvcdoinfcr3401.azurecr.io",
         "modulePath": "bicep/modules"
+      },
+      "avm": {
+        "registry": "mcr.microsoft.com",
+        "modulePath": "bicep/avm/res"
       }
     }
   }

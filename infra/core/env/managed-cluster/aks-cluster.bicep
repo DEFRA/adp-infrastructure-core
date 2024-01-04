@@ -455,4 +455,5 @@ module appConfigurationDataReaderRoleAssignment '.bicep/app-config-data-reader.b
   }
 }
 
+@description('The oidcIssuerUrl of the AKS cluster')
 output oidcIssuerUrl string = deployAKS.outputs.oidcIssuerUrl

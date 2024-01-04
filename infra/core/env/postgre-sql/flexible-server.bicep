@@ -7,8 +7,8 @@ param vnet object
 @description('Required. The parameter object for the private Dns zone. The object must contain the name and resourceGroup values')
 param privateDnsZone object
 
-@description('Required. The diagnostic object. The object must contain diagnosticLogCategoriesToEnable and diagnosticMetricsToEnable properties.')
-param diagnostics object
+@description('Required. The name of the AAD admin managed identity.')
+param managedIdentityName string
 
 @allowed([
   'UKSouth'
@@ -45,7 +45,22 @@ resource private_dns_zone 'Microsoft.Network/privateDnsZones@2020-06-01' existin
   scope: resourceGroup(privateDnsZone.resourceGroup)
 }
 
-module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexible-server:0.4.4' = {
+var managedIdentityTags = {
+  Name: managedIdentityName
+  Purpose: 'ADP Platform Database AAD Admin Managed Identity'
+  Tier: 'Shared'
+}
+
+module aadAdminUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
+  name: 'managed-identity-${deploymentDate}'
+  params: {
+    name: toLower(managedIdentityName)
+    tags: union(defaultTags, managedIdentityTags)
+    lock: 'CanNotDelete'
+  }
+}
+
+module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1' = {
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
     name: toLower(server.name)
@@ -59,17 +74,41 @@ module flexibleServerDeployment 'br/SharedDefraRegistry:db-for-postgre-sql.flexi
     skuName: server.skuName
     activeDirectoryAuth:'Enabled'
     passwordAuth: 'Disabled'
-    enableDefaultTelemetry:false
-    lock: 'CanNotDelete'
+    lock: {
+      kind: 'CanNotDelete'
+    }
     backupRetentionDays:14
     createMode: 'Default' 
-    diagnosticLogCategoriesToEnable: diagnostics.diagnosticLogCategoriesToEnable
-    diagnosticMetricsToEnable: diagnostics.diagnosticMetricsToEnable
-    diagnosticSettingsName:''
-    administrators: []
+    administrators: [
+      {
+        objectId: aadAdminUserMi.outputs.clientId
+        principalName: aadAdminUserMi.outputs.name
+        principalType: 'ServicePrincipal'
+      }
+    ]
     configurations:[]
     delegatedSubnetResourceId : virtual_network::subnet.id
     privateDnsZoneArmResourceId: private_dns_zone.id
-    diagnosticWorkspaceId: ''
   }
 }
+
+var roleDefinitionId = 'acdd72a7-3385-48ef-bd42-f606fba81ae7' // Reader role
+
+resource dbRsgGrpRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(resourceGroup().id, 'Reader', resourceGroup().name)
+  scope: resourceGroup()
+  dependsOn:[
+    aadAdminUserMi
+  ]
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleDefinitionId) 
+    principalId: aadAdminUserMi.outputs.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+@description('The Client Id of the AAD admin user managed identity.')
+output aadAdminUserMiClientId string = aadAdminUserMi.outputs.clientId
+
+@description('The Principal Id of the AAD admin user managed identity.')
+output aadAdminUserMiPrincipalId string = aadAdminUserMi.outputs.principalId
