@@ -323,7 +323,6 @@ extends:
                         -TenantId $(tenantId)
                 - name: flexible-server
                   path: infra/core/env/postgre-sql
-                  type: 'json'
                   resourceGroupName: $(dbsResourceGroup)
                   postDeployScriptsList:
                     - displayName: 'Process Output Variable'
@@ -341,7 +340,6 @@ extends:
                         -Label "adp-platform"
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                         -ConfigData '[{"key": "DB_AAD_ADMIN_CLIENT_ID", "value": "$(aadAdminUserMiClientId)", "label": "adp-platform", "contentType": "text/plain" },{"key": "DB_AAD_ADMIN_PRINCIPAL_ID", "value": "$(aadAdminUserMiPrincipalId)", "label": "adp-platform", "contentType": "text/plain" }]'
-
               - ${{ if eq(variables.IsApplicationRedisCache, true) }}:                    
                 - name: redis-cache
                   path: infra/core/env/redis-cache
