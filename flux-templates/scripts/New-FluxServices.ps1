@@ -158,6 +158,7 @@ try {
         '__ENVIRONMENT__'    = 'INITIALIZE'
         '__ENV_INSTANCE__'   = 'INITIALIZE'
         '__DEPENDS_ON__'     = 'INITIALIZE'
+        '__POSTGRES_DB__'    = 'INITIALIZE'
     }
 
     [string]$programmePath = "$FluxServicesPath/$programmeName"
@@ -195,10 +196,13 @@ try {
 
             if ($service['backend']) {
                 $lookupTable['__DEPENDS_ON__'] = 'pre-deploy'
+                $lookupTable['__POSTGRES_DB__'] = $service['dbname']
                 New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/base"
                 Copy-Item -Path $templateTeamServicePath/pre-deploy/base/* -Destination $programmePath/$($team.name)/$($service.name)/pre-deploy/base -Recurse
                 ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/base/image-repository-dbmigration.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/base/image-repository-dbmigration.yaml"
                 ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/base/migration.job.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/base/migration.job.yaml"
+                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/base/post-migration-script.job.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/base/post-migration-script.job.yaml"
+                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/base/pre-migration-script.job.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/base/pre-migration-script.job.yaml"
                 ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy-kustomize.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy-kustomize.yaml"
                 Add-Content -Path $programmePath/$($team.name)/$($service.name)/kustomization.yaml -Value "  - pre-deploy-kustomize.yaml"
             }
@@ -230,7 +234,10 @@ try {
                         New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance"
                         Copy-Item -Path $templateTeamServicePath/pre-deploy/environment/* -Destination $programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance -Recurse
                         ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/environment/image-policy.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance/image-policy.yaml"
-                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/environment/patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance/patch.yaml"
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/environment/migration-patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance/migration-patch.yaml"
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/environment/kustomization.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance/kustomization.yaml"
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/environment/post-migration-script-patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance/post-migration-script-patch.yaml"
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/environment/pre-migration-script-patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance/pre-migration-script-patch.yaml"
                     }
 
                     New-Directory -DirectoryPath $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance
@@ -271,6 +278,16 @@ try {
             else {
                 Write-Host "Adding path '  - ../../../$($programmeName)/$($team.name)/base/patch' to '$environmentsPath/$($environment.name)/base/kustomization.yaml'"
                 Add-Content -Path "$environmentsPath/$($environment.name)/base/kustomization.yaml" -Value "  - ../../../$($programmeName)/$($team.name)/base/patch"
+                Write-Host "Added path"
+            }
+
+            $platformPathExistsInKustomization = Select-String -Path "$environmentsPath/$($environment.name)/base/kustomization.yaml" -Pattern "  - ../../../adp-platform/kustomize.yaml"
+            if ($null -ne $platformPathExistsInKustomization) {
+                Write-Host 'Path exists, no need to add it'
+            }
+            else {
+                Write-Host "Adding path '  - ../../../adp-platform/kustomize.yaml' to '$environmentsPath/$($environment.name)/base/kustomization.yaml'"
+                Add-Content -Path "$environmentsPath/$($environment.name)/base/kustomization.yaml" -Value "  - ../../../adp-platform/kustomize.yaml"
                 Write-Host "Added path"
             }
 
