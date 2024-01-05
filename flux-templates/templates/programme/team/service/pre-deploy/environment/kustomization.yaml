@@ -4,4 +4,15 @@ resources:
   - ../../base
   - image-policy.yaml
 patches:
-  - path: patch.yaml
+  - path: pre-migration-script-patch.yaml
+    target:
+      kind: Job
+      name: __SERVICE_NAME__-pre-dbmigration
+  - path: migration-patch.yaml
+    target:
+      kind: Job
+      name: __SERVICE_NAME__-dbmigration
+  - path: post-migration-script-patch.yaml
+    target:
+      kind: Job
+      name: __SERVICE_NAME__-post-dbmigration

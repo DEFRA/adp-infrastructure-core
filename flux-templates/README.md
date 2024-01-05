@@ -18,11 +18,13 @@ Please see example manifests below:
                 },
                 {
                     "name": "claim-service", // MANDATORY
-                    "backend": true // OPTIONAL - ADD IF DBMIGRATION IS REQUIRED
+                    "backend": true, // OPTIONAL - ADD IF DBMIGRATION IS REQUIRED
+                    "dbname": "databasename" // REQUIRED - IF backend is set to true
                 },
                 {
                     "name": "payment-service", // MANDATORY
-                    "backend": true // OPTIONAL - ADD IF DBMIGRATION IS REQUIRED
+                    "backend": true, // OPTIONAL - ADD IF DBMIGRATION IS REQUIRED
+                    "dbname": "databasename" // REQUIRED - IF backend is set to true
                 },
                 {
                     "name": "payment-web-service", // MANDATORY

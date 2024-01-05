@@ -1,8 +1,8 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: __SERVICE_NAME__-dbmigration
-  namespace: __TEAM_NAME__
+  name: __SERVICE_NAME__-pre-dbmigration
+  namespace: flux-config
   labels:
     azure.workload.identity/use: "true"
 spec:
@@ -11,8 +11,8 @@ spec:
       labels:
         azure.workload.identity/use: "true"
     spec:
-      serviceAccountName: ${TEAM_NAMESPACE}
+      serviceAccountName: ${PLATFORM_DB_ADMIN}
       restartPolicy: Never
       containers:
-      - name: __SERVICE_NAME__-dbmigration
+      - name: __SERVICE_NAME__-pre-dbmigration
         imagePullPolicy: Always

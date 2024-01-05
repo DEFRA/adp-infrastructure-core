@@ -20,6 +20,7 @@ spec:
       APPCONFIG_MI_CLIENTID: ${APPCONFIG_MI_CLIENTID}
       APPCONFIG_NAME: ${APPCONFIG_NAME}
       SERVICE_CODE: "__SERVICE_CODE__"
+      PLATFORM_DB_ADMIN: "adp-platform-db-aad-admin"
     substituteFrom:
       - kind: ConfigMap
         name: __TEAM_NAME__-mi-credential
