@@ -197,12 +197,24 @@ try {
             if ($service['backend']) {
                 $lookupTable['__DEPENDS_ON__'] = 'pre-deploy'
                 $lookupTable['__POSTGRES_DB__'] = $service['dbname']
-                New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/base"
-                Copy-Item -Path $templateTeamServicePath/pre-deploy/base/* -Destination $programmePath/$($team.name)/$($service.name)/pre-deploy/base -Recurse
-                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/base/image-repository-dbmigration.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/base/image-repository-dbmigration.yaml"
-                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/base/migration.job.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/base/migration.job.yaml"
-                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/base/post-migration-script.job.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/base/post-migration-script.job.yaml"
-                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/base/pre-migration-script.job.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/base/pre-migration-script.job.yaml"
+                New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/migration/base"
+                Copy-Item -Path $templateTeamServicePath/pre-deploy/migration/base/* -Destination $programmePath/$($team.name)/$($service.name)/pre-deploy/migration/base -Recurse
+                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/migration/base/image-repository-dbmigration.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/migration/base/image-repository-dbmigration.yaml"
+                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/migration/base/migration.job.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/migration/base/migration.job.yaml"
+
+                New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/post-migration/base"
+                Copy-Item -Path $templateTeamServicePath/pre-deploy/post-migration/base/* -Destination $programmePath/$($team.name)/$($service.name)/pre-deploy/post-migration/base -Recurse
+                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/post-migration/base/post-migration-script.job.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/post-migration/base/post-migration-script.job.yaml"
+
+                New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/pre-migration/base"
+                Copy-Item -Path $templateTeamServicePath/pre-deploy/pre-migration/base/* -Destination $programmePath/$($team.name)/$($service.name)/pre-deploy/pre-migration/base -Recurse
+                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/pre-migration/base/pre-migration-script.job.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/pre-migration/base/pre-migration-script.job.yaml"
+
+                Copy-Item -Path $templateTeamServicePath/pre-deploy/kustomization.yaml -Destination $programmePath/$($team.name)/$($service.name)/pre-deploy/kustomization.yaml
+                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/migration-kustomize.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/migration-kustomize.yaml"
+                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/post-migration-kustomize.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/post-migration-kustomize.yaml"                
+                ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/pre-migration-kustomize.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/pre-migration-kustomize.yaml" 
+                
                 ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy-kustomize.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy-kustomize.yaml"
                 Add-Content -Path $programmePath/$($team.name)/$($service.name)/kustomization.yaml -Value "  - pre-deploy-kustomize.yaml"
             }
@@ -231,13 +243,18 @@ try {
                     }
 
                     if ($service['backend']) {
-                        New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance"
-                        Copy-Item -Path $templateTeamServicePath/pre-deploy/environment/* -Destination $programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance -Recurse
-                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/environment/image-policy.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance/image-policy.yaml"
-                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/environment/migration-patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance/migration-patch.yaml"
-                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/environment/kustomization.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance/kustomization.yaml"
-                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/environment/post-migration-script-patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance/post-migration-script-patch.yaml"
-                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/environment/pre-migration-script-patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/$($environment.name)/0$instance/pre-migration-script-patch.yaml"
+                        New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/migration/$($environment.name)/0$instance"
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/migration/environment/image-policy.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/migration/$($environment.name)/0$instance/image-policy.yaml"
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/migration/environment/migration-patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/migration/$($environment.name)/0$instance/migration-patch.yaml"
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/migration/environment/kustomization.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/migration/$($environment.name)/0$instance/kustomization.yaml"
+
+                        New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/post-migration/$($environment.name)/0$instance"
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/post-migration/environment/kustomization.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/post-migration/$($environment.name)/0$instance/kustomization.yaml"
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/post-migration/environment/post-migration-script-patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/post-migration/$($environment.name)/0$instance/post-migration-script-patch.yaml"
+
+                        New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/pre-migration/$($environment.name)/0$instance"
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/pre-migration/environment/kustomization.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/pre-migration/$($environment.name)/0$instance/kustomization.yaml"
+                        ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/pre-migration/environment/pre-migration-script-patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/pre-migration/$($environment.name)/0$instance/pre-migration-script-patch.yaml"
                     }
 
                     New-Directory -DirectoryPath $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance
