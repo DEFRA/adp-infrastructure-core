@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
       - name: __SERVICE_NAME__-dbmigration
-        image: __ENVIRONMENT__adpinfcr__ENV_INSTANCE__401.azurecr.io/image/__SERVICE_NAME__-dbmigration:5.1.27 # {"$imagepolicy": "flux-config:__SERVICE_NAME__-dbmigration-__ENVIRONMENT__-0__ENV_INSTANCE__"}
+        image:  __ENVIRONMENT__adpinfcr__ENV_INSTANCE__401.azurecr.io/image/__SERVICE_NAME__-dbmigration:0.1.0 # {"$imagepolicy": "flux-config:__SERVICE_NAME__-dbmigration-__ENVIRONMENT__-0__ENV_INSTANCE__"}
         env:
         - name: POSTGRES_HOST
           value: "${SHARED_POSTGRES_SERVER_01}.postgres.database.azure.com"

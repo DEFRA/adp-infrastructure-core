@@ -1,8 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - ../../../../../base/service-account.yaml
-  - image-repository-dbmigration.yaml
-  - pre-migration-script.job.yaml
-  - migration.job.yaml
-  - post-migration-script.job.yaml

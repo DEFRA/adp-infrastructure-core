@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+patches:
+  - path: post-migration-script-patch.yaml
+    target:
+      kind: Job
+      name: __SERVICE_NAME__-post-dbmigration
