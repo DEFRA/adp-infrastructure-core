@@ -29,4 +29,4 @@ spec:
         - name: SUBSCRIPTION_NAME
           value: ${SUBSCRIPTION_NAME}
         - name: DB_MIGRATION_VERSION
-          value: "0.1.0" # {"$imagepolicy": "flux-config:__SERVICE_NAME__-dbmigration-snd-01:tag"}
+          value: "0.1.0" # {"$imagepolicy": "flux-config:__SERVICE_NAME__-dbmigration-__ENVIRONMENT__-0__ENV_INSTANCE__:tag"}
