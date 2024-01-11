@@ -1,0 +1,11 @@
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: powershell-executor-__ENVIRONMENT__-0__ENV_INSTANCE__
+  namespace: flux-config
+spec:
+  imageRepositoryRef:
+    name: powershell-executor
+  policy:
+    numerical:
+      order: asc

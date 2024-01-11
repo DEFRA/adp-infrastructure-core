@@ -163,6 +163,7 @@ try {
 
     [string]$programmePath = "$FluxServicesPath/$programmeName"
     [string]$environmentsPath = "$FluxServicesPath/environments"
+    [string]$templateEnvironmentsPath = "$TemplatesPath/environments"
     [string]$templateProgrammePath = "$TemplatesPath/programme"
     [string]$templateTeamPath = "$templateProgrammePath/team"
     [string]$templateTeamBasePath = "$templateTeamPath/base"
@@ -272,7 +273,9 @@ try {
 
         # CREATE ENVIRONMENT DIRECTORIES AND FILES
         foreach ($environment in $team.environments) {
+            $lookupTable['__ENVIRONMENT__'] = $($environment.name)
             foreach ($instance in $environment.instances) {
+                $lookupTable['__ENV_INSTANCE__'] = $instance
                 New-Directory -DirectoryPath "$programmePath/$($team.name)/$($environment.name)/0$instance"
                 Copy-Item -Path "$templateTeamEnvironmentPath/*" -Destination $programmePath/$($team.name)/$($environment.name)/0$instance -Recurse
         
@@ -286,6 +289,9 @@ try {
                         Add-Content -Path $programmePath/$($team.name)/$($environment.name)/0$instance/kustomization.yaml -Value "  - ../../$($service.name)"
                     }
                 }
+
+                Copy-Item -Path "$templateEnvironmentsPath/environment/kustomization.yaml" -Destination "$environmentsPath/$($environment.name)/0$instance/kustomization.yaml"
+                ReplaceTokens -TemplateFile "$templateEnvironmentsPath/environment/ps-exec-image-policy.yaml" -DestinationFile "$environmentsPath/$($environment.name)/0$instance/ps-exec-image-policy.yaml"
             }
 
             $pathExistsInKustomization = Select-String -Path "$environmentsPath/$($environment.name)/base/kustomization.yaml" -Pattern "  - ../../../$($programmeName)/$($team.name)/base/patch"
