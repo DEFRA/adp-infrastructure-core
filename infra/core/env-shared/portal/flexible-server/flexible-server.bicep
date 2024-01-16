@@ -91,7 +91,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
 
 resource secretdbhost 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'POSTGRES-HOST'
-  parent: keyVault  // Pass key vault symbolic name as parent
+  parent: keyVault 
   properties: {
     value: '${flexibleServerDeployment.outputs.name}.postgres.database.azure.com'
   }
@@ -99,7 +99,7 @@ resource secretdbhost 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
 
 resource secretdbuser 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'POSTGRES-USER'
-  parent: keyVault  // Pass key vault symbolic name as parent
+  parent: keyVault 
   properties: {
     value: administratorLogin
   }
@@ -107,7 +107,7 @@ resource secretdbuser 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
 
 resource secretdbpassword 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'POSTGRES-PASSWORD'
-  parent: keyVault  // Pass key vault symbolic name as parent
+  parent: keyVault 
   properties: {
     value: administratorLoginPassword
   }
