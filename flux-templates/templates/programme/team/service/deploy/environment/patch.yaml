@@ -18,10 +18,6 @@ spec:
       priorityClassName: default
     container:
       imagePullPolicy: Always
-      requestMemory: 50Mi
-      requestCpu: 50m
-      limitMemory: 200Mi
-      limitCpu: 400m
     containerConfigMap:
       configServiceName: ${APPCONFIG_NAME}
       configServiceMIClientId: ${APPCONFIG_MI_CLIENTID}
