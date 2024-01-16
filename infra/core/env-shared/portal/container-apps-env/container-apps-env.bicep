@@ -25,6 +25,9 @@ param keyvaultName string
 @description('Required. The name of the shared key vault where the app URL will be stored to be used by Front Door deployment')
 param ssvPlatformKeyVaultName string
 
+@description('Required. The name of the shared key vault Resource Group')
+param ssvPlatformKeyVaultRG string
+
 @description('Required. Object contains the Entra app details')
 param portalEntraApp object
 
@@ -81,15 +84,13 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
   name: keyvaultName
 }
 
-resource sharedKeyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
-  name: ssvPlatformKeyVaultName
-}
-
-resource secretdefaulturl 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+module setKeyvaultSecret '.bicep/set-secret.bicep' =  {
   name: 'PORTAL-APP-DEFAULT-URL'
-  parent: sharedKeyVault
-  properties: {
-    value: 'https://${containerApp.name}.${toLower(managedEnvironment.outputs.defaultDomain)}'
+  params: {
+      ssvPlatformKeyVaultName: ssvPlatformKeyVaultName
+      ssvPlatformKeyVaultRG: ssvPlatformKeyVaultRG
+      secretName: 'PORTAL-APP-DEFAULT-URL'
+      secretValue: 'https://${containerApp.name}.${toLower(managedEnvironment.outputs.defaultDomain)}'
   }
 }
 

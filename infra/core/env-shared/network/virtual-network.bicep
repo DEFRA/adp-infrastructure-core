@@ -24,12 +24,13 @@ var commonTags = {
 }
 var tags = union(loadJsonContent('../../../common/default-tags.json'), commonTags)
 
+//Removed lock to deploy postgress db. VNet cannot be deleted when there are child resources
 module virtualNetwork 'br/SharedDefraRegistry:network.virtual-network:0.4.2' = {
   name: 'virtual-network-${deploymentDate}'
   params: {
     name: vnet.name
     location: location
-    lock: 'CanNotDelete'
+    lock: '' 
     tags: tags
     enableDefaultTelemetry: true
     addressPrefixes: vnet.addressPrefixes

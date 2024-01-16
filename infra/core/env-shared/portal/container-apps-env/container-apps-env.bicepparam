@@ -28,6 +28,7 @@ param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{
 
 param ssvPlatformKeyVaultName = '#{{ ssvPlatformKeyVaultName }}'
 
+param ssvPlatformKeyVaultRG = '#{{ ssvSharedResourceGroup }}'
 
 param environment = '#{{ environment }}'
 
