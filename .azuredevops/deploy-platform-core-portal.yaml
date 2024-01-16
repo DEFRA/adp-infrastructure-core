@@ -97,13 +97,6 @@ extends:
               dependsOnGroupedDeployments:
                 - network        
             deployments:
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-sa')) }}:
-                - name: storage-account
-                  path: infra/core/env-shared/portal/storage-account
-                  resourceGroupName: $(portalResourceGroup)
-                  privateEndpointDnsRecordsForResources:
-                    - resourceName: $(ssvResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
-                      resourceGroupName: $(portalResourceGroup)
               - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-kv')) }}:
                 - name: key-vault
                   path: infra/core/env-shared/portal/key-vault
@@ -111,6 +104,13 @@ extends:
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(ssvResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)02
                       resourceGroupName: $(portalResourceGroup)
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-sa')) }}:
+                - name: storage-account
+                  path: infra/core/env-shared/portal/storage-account
+                  resourceGroupName: $(portalResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(ssvResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
+                      resourceGroupName: $(portalResourceGroup)                      
               - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-mi')) }}:
                 - name: managed-identity
                   path: infra/core/env-shared/portal/managed-identity
