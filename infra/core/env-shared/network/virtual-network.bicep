@@ -30,7 +30,6 @@ module virtualNetwork 'br/SharedDefraRegistry:network.virtual-network:0.4.2' = {
   params: {
     name: vnet.name
     location: location
-    lock: '' 
     tags: tags
     enableDefaultTelemetry: true
     addressPrefixes: vnet.addressPrefixes
