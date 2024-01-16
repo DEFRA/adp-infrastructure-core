@@ -18,10 +18,6 @@ spec:
       component: web
     container:
       imagePullPolicy: Always
-      requestMemory: 50Mi
-      requestCpu: 50m
-      limitMemory: 200Mi
-      limitCpu: 400m
     ingress:
       class: nginx
       endpoint: __SERVICE_NAME__
