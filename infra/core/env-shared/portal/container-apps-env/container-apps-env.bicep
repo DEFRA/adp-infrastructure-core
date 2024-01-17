@@ -59,13 +59,13 @@ var infrastructureResourceGroupName = take('${containerAppEnv.name}_ME', 63)
 
 module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.10' = {
   name: '${containerAppEnv.name}'
-  params: { 
+  params: {
     // Required parameters
     enableDefaultTelemetry: false
     logAnalyticsWorkspaceResourceId: logAnalyticsWorkspace.id
     name: '${containerAppEnv.name}'
     // Non-required parameters
-    dockerBridgeCidr: !empty(infrastructureSubnetId) ? dockerBridgeCidr : null  
+    dockerBridgeCidr: !empty(infrastructureSubnetId) ? dockerBridgeCidr : null
     infrastructureSubnetId: !empty(infrastructureSubnetId) ? infrastructureSubnetId : null
     internal: internal
     location: location
@@ -73,9 +73,9 @@ module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.10
       kind: 'CanNotDelete'
       name: '${containerAppEnv.name}-CanNotDelete'
     }
-    workloadProfiles :!empty(workloadProfiles) ? workloadProfiles : null
+    workloadProfiles: !empty(workloadProfiles) ? workloadProfiles : null
     zoneRedundant: zoneRedundant
-    infrastructureResourceGroupName: infrastructureResourceGroupName 
+    infrastructureResourceGroupName: infrastructureResourceGroupName
     tags: union(defaultTags, additionalTags)
   }
 }
@@ -84,13 +84,13 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
   name: keyvaultName
 }
 
-module setKeyvaultSecret '.bicep/set-secret.bicep' =  {
+module setKeyvaultSecret '.bicep/set-secret.bicep' = {
   name: 'PORTAL-APP-DEFAULT-URL'
+  scope: resourceGroup(ssvPlatformKeyVaultRG)
   params: {
-      ssvPlatformKeyVaultName: ssvPlatformKeyVaultName
-      ssvPlatformKeyVaultRG: ssvPlatformKeyVaultRG
-      secretName: 'PORTAL-APP-DEFAULT-URL'
-      secretValue: 'https://${containerApp.name}.${toLower(managedEnvironment.outputs.defaultDomain)}'
+    ssvPlatformKeyVaultName: ssvPlatformKeyVaultName
+    secretName: 'PORTAL-APP-DEFAULT-URL'
+    secretValue: 'https://${containerApp.name}.${toLower(managedEnvironment.outputs.defaultDomain)}'
   }
 }
 
