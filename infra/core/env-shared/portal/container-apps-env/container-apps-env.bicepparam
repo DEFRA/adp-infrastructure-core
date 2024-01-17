@@ -35,6 +35,6 @@ param environment = '#{{ environment }}'
 param location = '#{{ location }}'
 
 param portalEntraApp = {
-  tenantIdSecretName: '#{{ portalApplicationClientTenantName }}' 
+  tenantIdSecretName: '#{{ portalApplicationClientTenantName }}'
   tenantIdSecretValue: '#{{ tenantId }}'
 }
