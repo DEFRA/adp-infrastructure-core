@@ -48,44 +48,79 @@ variables:
     instanceNumber: 03
   ${{ if eq(parameters.imageType, 'ubuntu2004') }}:
     instanceNumber: 04
-  
 
 extends:
-  template: /pipelines/common-script-deploy.yaml@ADPPipelineCommon
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
+    projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
       - name: 'snd1'
         serviceConnection: AZD-ADP-SND1-VMSS
         deploymentBranches:
-          - '*'
+          - 'refs/heads/main'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd2'
         serviceConnection: AZD-ADP-SND2-VMSS
+        dependsOn: Validate
+        deploymentBranches:
+          - 'refs/heads/main'
+          - 'refs/pull/*/merge'
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'dev1'
+        serviceConnection: AZR-ADP-DEV1
+        dependsOn: 'snd1'
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'tst1'
+        serviceConnection: AZR-ADP-TST1
+        dependsOn: 'dev1'
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd3'
         serviceConnection: AZD-ADP-SND3-VMSS
+        dependsOn: 'snd1'
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
-    scriptsList:
-      - displayName: Deploy Build Agent - ${{ parameters.imageType }}
-        scriptPath: infra/build-agent/Create-AdoBuildAgent.ps1
-        scriptArguments: >
-          -ImageGalleryTenantId $(imageGalleryTenant)
-          -TenantId $(tenantId)
-          -SubscriptionName $(subscriptionName)
-          -ResourceGroup $(servicesResourceGroup)
-          -VMSSName $(infraResourceNamePrefix)$(nc_resource_virtualmachine_scalesets)$(nc_instance_regionid)$(instanceNumber)
-          -SubnetId /subscriptions/$(subscriptionId)/resourceGroups/$(virtualNetworkResourceGroup)/providers/Microsoft.Network/virtualNetworks/$(virtualNetworkName)/subnets/$(networkResourceNamePrefix)$(nc_resource_subnet)$(nc_instance_regionid)99
-          -ImageId /subscriptions/$(imageGallerySubscription)/resourceGroups/$(imageGalleryResourceGroup)/providers/Microsoft.Compute/galleries/$(imageGalleryName)/images/${{ parameters.imageType }}
-          -KeyVaultName $(ssvPlatformKeyVaultName)
-          -Location $(location)
-          -SecretsPrefix $(environment)$(nc_instance_regionid)-$(instanceNumber)
-        type: AzureCLI
+      - name: 'pre1'
+        serviceConnection: AZR-ADP-PRE1
+        dependsOn: 'tst1'
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'
+      # - name: 'prd1'
+      #   serviceConnection: AZR-ADP-PRD1
+      #   dependsOn: 'pre1'
+      #   deploymentBranches:
+      #     - 'refs/heads/main'
+      #   azureRegions:
+      #     primary: 'UKSouth'
+    groupedDeployments:
+      - name: build_agent
+        deployments:
+        - name: Deploy Build Agent - ${{ parameters.imageType }}
+          type: 'script'
+          scriptType: AzureCLI
+          azureCLIScriptType: pscore
+          path: infra/build-agent/Create-AdoBuildAgent.ps1
+          scriptArguments: > 
+            -ImageGalleryTenantId $(imageGalleryTenant)
+            -TenantId $(tenantId)
+            -SubscriptionName $(subscriptionName)
+            -ResourceGroup $(servicesResourceGroup)
+            -VMSSName $(infraResourceNamePrefix)$(nc_resource_virtualmachine_scalesets)$(nc_instance_regionid)$(instanceNumber)
+            -SubnetId /subscriptions/$(subscriptionId)/resourceGroups/$(virtualNetworkResourceGroup)/providers/Microsoft.Network/virtualNetworks/$(virtualNetworkName)/subnets/$(networkResourceNamePrefix)$(nc_resource_subnet)$(nc_instance_regionid)99
+            -ImageId /subscriptions/$(imageGallerySubscription)/resourceGroups/$(imageGalleryResourceGroup)/providers/Microsoft.Compute/galleries/$(imageGalleryName)/images/${{ parameters.imageType }}
+            -KeyVaultName $(ssvPlatformKeyVaultName)
+            -Location $(location)
+            -SecretsPrefix $(environment)$(nc_instance_regionid)-$(instanceNumber)

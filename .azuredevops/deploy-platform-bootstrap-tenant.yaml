@@ -1,0 +1,85 @@
+name: 1.0.$(BuildID)-${{ parameters.deployResources }}
+
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+  - name: deployResources
+    displayName: "Resources to Deploy"
+    type: string
+    default: "All"
+    values:
+      - All
+      - Platform - AAD Groups
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra/bootstrap/tenant/config/aad-groups/*
+      - infra/scripts/ado/Create-AADGroups.ps1
+      - scripts/modules/aad-groups/*
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra/bootstrap/tenant/config/aad-groups/*
+      - infra/scripts/ado/Create-AADGroups.ps1
+      - scripts/modules/aad-groups/*
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: main
+      
+variables:
+  - name: IsAll
+    value: ${{ eq(parameters.deployResources,'All') }}
+
+  - name: IsPlatfromADGroup
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform - AAD Groups')) }}
+
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.deployFromFeature }}
+    variableFiles: 
+      - /pipelines/vars/common.yaml@_self
+      - /pipelines/vars/tenant/{environment}.yaml@_self
+    regionalVariableFiles: []
+    environments:
+      - name: 'defradev'
+        serviceConnection: AZD-ADP-SSV3
+        deploymentBranches:
+          - 'refs/heads/main'
+        developmentEnvironment: true
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'defra'
+        serviceConnection: AZR-ADP-SSV5
+        deploymentBranches:
+           - 'refs/heads/main'
+           - 'refs/pull/*/merge'
+        azureRegions:
+          primary: 'UKSouth'
+    groupedDeployments:
+        - ${{ if eq(variables.IsPlatfromADGroup, true) }}:  
+          - name: platform_aadgroup
+            deployments:
+              - name: Create or Update Platform AAD groups
+                type: 'script'
+                scriptType: AzurePowerShell
+                path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+                scriptArguments: > 
+                  -AADGroupsJsonManifestPath 'infra/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json'

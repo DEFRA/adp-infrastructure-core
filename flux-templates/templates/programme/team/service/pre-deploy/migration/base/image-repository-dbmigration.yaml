@@ -1,0 +1,10 @@
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: __SERVICE_NAME__-dbmigration
+  namespace: flux-config
+spec:
+  image: ${APPLICATION_ACR_NAME}.azurecr.io/image/__SERVICE_NAME__-dbmigration
+  interval: 5m0s
+  provider: azure

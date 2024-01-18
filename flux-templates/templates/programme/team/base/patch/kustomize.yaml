@@ -1,0 +1,29 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: __TEAM_NAME__-base
+  namespace: flux-config
+spec:
+  sourceRef:
+    kind: GitRepository
+    name: services-repository
+    namespace: flux-config
+  interval: 5m
+  timeout: 3m
+  prune: true
+  path: ./services/__PROGRAMME_NAME__/__TEAM_NAME__/${ENVIRONMENT}/${ENVIRONMENT_ID}
+  postBuild:
+    substitute:
+      TEAM_NAMESPACE: "__TEAM_NAME__"
+      TEAM_NAME: "__TEAM_NAME__-team"
+      TEAM_RG: "${SERVICES_INFRA_RG}-__TEAM_NAME__"
+      APPCONFIG_MI_CLIENTID: ${APPCONFIG_MI_CLIENTID}
+      APPCONFIG_NAME: ${APPCONFIG_NAME}
+      SERVICE_CODE: "__SERVICE_CODE__"
+      PLATFORM_DB_ADMIN: "adp-platform-db-aad-admin"
+    substituteFrom:
+      - kind: ConfigMap
+        name: __TEAM_NAME__-mi-credential
+        optional: true
+      - kind: ConfigMap
+        name: adp-platform-vars

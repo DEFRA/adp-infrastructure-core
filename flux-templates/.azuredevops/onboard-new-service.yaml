@@ -1,0 +1,42 @@
+name: $(BuildID)
+
+parameters:
+  - name: onboardingJson
+    displayName: "Json structure to OnBoard new project"
+    type: string
+
+trigger: none
+
+pool:
+  vmImage: windows-latest
+
+resources:
+  repositories:
+    - repository: AdpFluxServices
+      name: defra/adp-flux-services
+      endpoint: DEFRA
+      type: github
+      ref: main
+
+steps:
+  - checkout: self
+    path: s/source
+    persistCredentials: true
+
+  - checkout: AdpFluxServices
+    path: s/AdpFluxServices
+    persistCredentials: true
+
+  - task: PowerShell@2
+    displayName: 'Add new project manifests'
+    inputs:
+      pwsh: true
+      azurePowerShellVersion: latestVersion
+      targetType: 'filePath'
+      filePath: $(Pipeline.Workspace)/s/source/flux-templates/scripts/New-FluxServices.ps1
+      arguments: >
+        -TemplatesPath '$(Pipeline.Workspace)/s/source/flux-templates/templates'
+        -OnBoardingManifest '${{ parameters.onboardingJson }}'        
+        -FluxServicesPath '$(Pipeline.Workspace)/s/AdpFluxServices/services'
+        -PSHelperDirectory '$(Pipeline.Workspace)/s/source/scripts/modules/ps-helpers'
+      workingDirectory: $(Pipeline.Workspace)/s/AdpFluxServices

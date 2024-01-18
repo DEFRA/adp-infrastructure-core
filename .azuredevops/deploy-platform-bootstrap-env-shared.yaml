@@ -1,0 +1,90 @@
+name: 1.0.$(BuildID)-${{ parameters.deployResources }}
+
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+  - name: deployResources
+    displayName: "Resources to Deploy"
+    type: string
+    default: "All"
+    values:
+      - All
+      - Platform Key Vault
+      - Platform Container Registry
+      - Platform Log Analytics Workspace
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra/bootstrap/env-shared/*
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+      - infra/bootstrap/env-shared/*
+      - infra/common/policy-assignment/*
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: main
+
+variables:
+  - name: IsAll
+    value: ${{ eq(parameters.deployResources,'All') }}
+  - name: IsPolicyAssignments
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Policy Assignments')) }}
+  - name: IsKeyVault
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Key Vault')) }}
+  - name: IsContainerRegistry
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Container Registry')) }}
+  - name: IsLogAnalyticsWorkspace
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Log Analytics Workspace')) }}
+
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.deployFromFeature }}
+    environments:
+      - name: 'ssv3'
+        serviceConnection: AZD-ADP-SSV3
+        deploymentBranches:
+          - 'refs/heads/main'
+        developmentEnvironment: true
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'ssv5'
+        serviceConnection: AZR-ADP-SSV5
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'    
+    groupedDeployments:
+         - name: SharedEnvironment
+           deployments:
+            - ${{ if eq(variables.IsKeyVault,true) }}:
+              - name: platform-key-vault
+                path: infra/bootstrap/env-shared/key-vault
+                resourceGroupName: $(ssvSharedResourceGroup)
+            - ${{ if eq(variables.IsContainerRegistry,true) }}:
+              - name: platform-container-registry
+                path: infra/bootstrap/env-shared/container-registry
+                resourceGroupName: $(ssvSharedResourceGroup)
+            - ${{ if eq(variables.IsLogAnalyticsWorkspace,true) }}:
+              - name: log-analytics-workspace
+                path: infra/common/operational-insights
+                parameterFilePath: infra/bootstrap/env-shared/log-analytics-workspace
+                resourceGroupName: $(ssvSharedResourceGroup)

@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: __SERVICE_NAME__-dbmigration
+  namespace: __TEAM_NAME__
+  labels:
+    azure.workload.identity/use: "true"
+spec:
+  template:
+    metadata:
+      labels:
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: ${TEAM_NAMESPACE}
+      restartPolicy: Never
+      containers:
+      - name: __SERVICE_NAME__-dbmigration
+        imagePullPolicy: Always

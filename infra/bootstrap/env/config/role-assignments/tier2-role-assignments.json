@@ -1,0 +1,48 @@
+{
+    "azureRoleAssignments": [
+        {
+            "RoleAssignmentDescription": "User Acess Administrator role assignment on subscription",
+            "Scope": "/subscriptions/#{{ subscriptionId }}",
+            "RoleDefinitionName": "User Access Administrator",
+            "ObjectId": {
+                "keyVault": {
+                    "name": "#{{ ssvPlatformKeyVaultName }}",
+                    "secretKey": "#{{ tier2ApplicationSPObjectIdSecretName }}"
+                }
+            }
+        },
+        {
+            "RoleAssignmentDescription": "Contributor role assignment on subscription",
+            "Scope": "/subscriptions/#{{ subscriptionId }}",
+            "RoleDefinitionName": "Contributor",
+            "ObjectId": {
+                "keyVault": {
+                    "name": "#{{ ssvPlatformKeyVaultName }}",
+                    "secretKey": "#{{ tier2ApplicationSPObjectIdSecretName }}"
+                }
+            }
+        },
+        {
+            "RoleAssignmentDescription": "Contributor role assignment on shared resource group",
+            "Scope": "/subscriptions/#{{ ssvSubscriptionId }}/resourceGroups/#{{ ssvSharedResourceGroup }}",
+            "RoleDefinitionName": "Contributor",
+            "ObjectId": {
+                "keyVault": {
+                    "name": "#{{ ssvPlatformKeyVaultName }}",
+                    "secretKey": "#{{ tier2ApplicationSPObjectIdSecretName }}"
+                }
+            }
+        },
+        {
+            "RoleAssignmentDescription": "User Acess Administrator role assignment on shared ACR",
+            "Scope": "/subscriptions/#{{ ssvSubscriptionId }}/resourceGroups/#{{ ssvSharedResourceGroup }}/providers/Microsoft.ContainerRegistry/registries/#{{ ssvSharedAcrName }}",
+            "RoleDefinitionName": "User Access Administrator",
+            "ObjectId": {
+                "keyVault": {
+                    "name": "#{{ ssvPlatformKeyVaultName }}",
+                    "secretKey": "#{{ tier2ApplicationSPObjectIdSecretName }}"
+                }
+            }
+        }
+    ]
+}

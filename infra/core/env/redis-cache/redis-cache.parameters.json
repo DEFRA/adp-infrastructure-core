@@ -1,0 +1,34 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "redisCache": {
+      "value": {
+        "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_redis }}#{{ nc_instance_regionid }}01",
+        "skuName": "#{{ redisCacheSkuName }}",
+        "capacity": "#{{ redisCacheCapacity }}"
+      }
+    },
+    "vnet": {
+      "value": {
+        "name": "#{{ virtualNetworkName }}",
+        "resourceGroup": "#{{ virtualNetworkResourceGroup }}",
+        "rediscachesubnet": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}97"
+      }
+    },
+    "location": {
+      "value": "#{{ location }}"
+    },
+    "environment": {
+      "value": "#{{ environment }}"
+    },
+    "firewallRules": {
+      "value": [
+        {
+          "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_kubernetesservice }}#{{ nc_instance_regionid }}01",
+          "addressprefix": "#{{ subnet3AddressPrefix }}"
+        }
+      ]
+    }
+  }
+}

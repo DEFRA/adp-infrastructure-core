@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: __SERVICE_NAME__-pre-dbmigration
+  namespace: flux-config
+spec:
+  template:
+    spec:
+      containers:
+      - name: __SERVICE_NAME__-pre-dbmigration
+        image: ssvadpinfcr3401.azurecr.io/image/powershell-executor:424529 # {"$imagepolicy": "flux-config:powershell-executor-__ENVIRONMENT__-0__ENV_INSTANCE__"}
+        env:
+        - name: GIT_REPO_URL
+          value: "https://github.com/DEFRA/adp-flux-services.git"
+        - name: GIT_BRANCH
+          value: "main"
+        - name: SCRIPT_FILE_NAME
+          value: "common/scripts/access-control/flexible-server/Grant-FlexibleServerAccess.ps1"
+        - name: POSTGRES_HOST
+          value: "${SHARED_POSTGRES_SERVER_01}.postgres.database.azure.com"
+        - name: POSTGRES_DATABASE
+          value: ${POSTGRES_DB}
+        - name: SERVICE_MI_NAME
+          value: ${TEAM_MI_PREFIX}-${SERVICE_NAME}
+        - name: TEAM_MI_NAME
+          value: ${TEAM_MI_PREFIX}-${TEAM_NAMESPACE}
+        - name: PLATFORM_MI_NAME
+          value: ${TEAM_MI_PREFIX}-${PLATFORM_DB_ADMIN}
+        - name: PLATFORM_MI_SUBSCRIPTION_ID
+          value: ${SUBSCRIPTION_ID}
+        - name: SUBSCRIPTION_NAME
+          value: ${SUBSCRIPTION_NAME}

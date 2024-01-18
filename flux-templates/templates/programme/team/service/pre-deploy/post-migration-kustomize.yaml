@@ -1,0 +1,33 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: __SERVICE_NAME__-pre-deploy-post-migration
+  namespace: flux-config
+spec:
+  dependsOn:
+    - name: __SERVICE_NAME__-pre-deploy-migration
+      namespace: flux-config
+  sourceRef:
+    kind: GitRepository
+    name: services-repository
+    namespace: flux-config
+  path: ./services/__PROGRAMME_NAME__/__TEAM_NAME__/__SERVICE_NAME__/pre-deploy/post-migration/${ENVIRONMENT}/${ENVIRONMENT_ID}
+  interval: 5m
+  timeout: 3m
+  prune: true
+  wait: true
+  force: true
+  postBuild:
+    substitute:
+      SHARED_POSTGRES_SERVER_01: "${SHARED_POSTGRES_SERVER_01}"
+      SERVICE_NAME: ${SERVICE_NAME}
+      TEAM_NAMESPACE: ${TEAM_NAMESPACE}
+      TEAM_NAME: ${TEAM_NAME}
+      PLATFORM_DB_ADMIN: ${PLATFORM_DB_ADMIN}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_SCHEMA_NAME: ${POSTGRES_SCHEMA_NAME}
+    substituteFrom:
+      - kind: ConfigMap
+        name: adp-platform-vars
+      - kind: ConfigMap
+        name: "__SERVICE_NAME__-mi-credential"

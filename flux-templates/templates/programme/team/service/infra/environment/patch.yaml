@@ -1,0 +1,36 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: __SERVICE_NAME__-infra
+  namespace: flux-config
+spec:
+  chart:
+    spec:
+      chart: __SERVICE_NAME__-infra
+      version: "0.1.0" # {"$imagepolicy": "flux-config:__SERVICE_NAME__-__ENVIRONMENT__-0__ENV_INSTANCE__:tag"}
+  values:
+    namespace: ${TEAM_NAMESPACE}
+    fluxConfigNamespace: ${FLUX_CONFIG_NAMESPACE}
+    subscriptionId: ${SUBSCRIPTION_ID}
+    serviceBusResourceGroupName: ${SERVICES_INFRA_RG}
+    serviceBusNamespaceName: ${SHARED_SERVICEBUS_NAME}
+    clusterOIDCIssuerUrl: ${CLUSTER_OIDC_ISSUER_URL}
+    teamResourceGroupName: ${TEAM_RG}
+    teamMIPrefix: ${TEAM_MI_PREFIX}
+    serviceName: ${SERVICE_NAME}
+    keyVaultResourceGroupName: ${SERVICES_INFRA_RG}
+    keyVaultName: ${APPLICATION_KEYVAULT}
+    userAssignedIdentity:
+      federatedCreds:
+        - namespace: ${TEAM_NAMESPACE}
+          serviceAccountName: ${SERVICE_NAME}
+        - namespace: 'app-config-service'
+          serviceAccountName: 'az-appconfig-k8s-provider'
+    commonTags:
+      environment: ${ENVIRONMENT}
+      serviceCode: ${SERVICE_CODE}
+      serviceName: ${SERVICE_NAME}
+      serviceType: "Dedicated"
+      kubernetes_cluster: ${CLUSTER_NAME}
+      kubernetes_namespace: ${TEAM_NAMESPACE}
+      kubernetes_label_serviceCode: ${SERVICE_CODE}

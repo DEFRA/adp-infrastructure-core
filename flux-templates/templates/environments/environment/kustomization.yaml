@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+metadata:
+  name: cluster-base
+resources:
+  - kustomize.yaml
+  - ../base
+  - ps-exec-image-policy.yaml
+  
