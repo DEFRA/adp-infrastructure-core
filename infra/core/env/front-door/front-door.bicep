@@ -38,17 +38,14 @@ var frontDoorTags = {
   Tier: 'Shared'
 }
 
-module frontDoor 'br/SharedDefraRegistry:cdn.profile:0.4.9' = {
+module frontDoor 'br/SharedDefraRegistry:cdn.profile:0.4.4-prerelease' = {
   name: 'front-door-${deploymentDate}'
   params: {
     enableDefaultTelemetry: true
     name: name
     location: location
     afdEndpoints : endpoints
-    lock: {
-      kind: 'CanNotDelete'
-      name: '${name}-CanNotDelete-lock'
-    }
+    lock: 'CanNotDelete'
     tags: union(tags, frontDoorTags)
     sku: sku
     ruleSets: ruleSets
