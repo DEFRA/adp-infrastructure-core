@@ -45,7 +45,10 @@ module frontDoor 'br/SharedDefraRegistry:cdn.profile:0.4.9' = {
     name: name
     location: location
     afdEndpoints : endpoints
-    lock: 'CanNotDelete'
+    lock: {
+      kind: 'CanNotDelete'
+      name: '${name}-CanNotDelete-lock'
+    }
     tags: union(tags, frontDoorTags)
     sku: sku
     ruleSets: ruleSets
