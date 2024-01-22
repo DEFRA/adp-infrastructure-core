@@ -20,6 +20,30 @@
         "name": "#{{ environment }}#{{ environmentId }}-adp-cluster"
        } 
       ]
+    },
+    "ruleSets": {
+      "value": [
+        {
+          "name": "ResponseHeaderRuleSet",
+          "rules": [
+            {
+              "name": "AppendStrictTransportSecurityHeader",
+              "order": 0,
+              "actions": [
+                {
+                  "name": "ModifyResponseHeader",
+                  "parameters": {
+                      "typeName": "DeliveryRuleHeaderActionParameters",
+                      "headerAction": "Append",
+                      "headerName": "Strict-Transport-Security",
+                      "value": "max-age=31536000; includeSubDomains"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   }
 }

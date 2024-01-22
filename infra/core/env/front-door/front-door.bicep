@@ -13,6 +13,9 @@ param environment string
 @description('Required. Array of objects containing the endpoint details.')
 param endpoints array
 
+@description('Optional. Array of rule set objects.')
+param ruleSets array
+
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
@@ -45,5 +48,6 @@ module frontDoor 'br/SharedDefraRegistry:cdn.profile:0.4.4-prerelease' = {
     lock: 'CanNotDelete'
     tags: union(tags, frontDoorTags)
     sku: sku
+    ruleSets: ruleSets
   }
 }
