@@ -1,0 +1,45 @@
+{
+    "userADGroups": [
+        {
+            "displayName": "AAG-Users-ADP-FFC-FFD_TechUser",
+            "description": "Azure AD User group for FFD Tech Users",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-CDO-SSV5"
+                ],
+                "users" : [
+                    "a-john.watson@Defra.onmicrosoft.com",
+                    "a-simon.dunn@defra.onmicrosoft.com"
+                ]
+            },
+            "Members": {
+                "users" : [
+                    "a-john.watson@Defra.onmicrosoft.com",
+                    "a-simon.dunn@defra.onmicrosoft.com"
+                ]
+            }
+        }
+    ],
+    "accessADGroups": [
+        {
+            "displayName": "AAG-Azure-ADP-GlobalRead",
+            "description": "Azure AD Access group with read permissions to the ADP platform.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-CDO-SSV5"
+                ],
+                "users" : [
+                    "a-dan.roszkowski@defra.onmicrosoft.com",
+                    "Kenneth.Babigumira@Defra.onmicrosoft.com",
+                    "ajay.soni@defradev.onmicrosoft.com",
+                    "logan.talbot@defra.onmicrosoft.com"
+                ]
+            },
+            "Members": {
+                "groups" : [
+                    "AAG-Users-ADP-FFC-FFD_TechUser"
+                ]
+            }
+        }
+    ]
+}
