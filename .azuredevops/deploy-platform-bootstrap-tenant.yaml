@@ -69,8 +69,7 @@ extends:
       - name: 'defra'
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
-           - 'refs/heads/main'
-           - 'refs/pull/*/merge'
+           - '*'
         azureRegions:
           primary: 'UKSouth'
     groupedDeployments:
