@@ -100,6 +100,22 @@ Function Update-ADGroup() {
             description = $AADGroupObject.description
         }
 
+        [object[]]$owners = Build-GroupOwners -AADGroupOwners $AADGroupObject.Owners
+        if ($owners) {
+            $groupParameters.Add("owners@odata.bind", $owners)
+        }
+        else {
+            Write-Host "No owners defined for '$($AADGroupObject.displayName)' group."
+        }
+
+        [object[]]$members = Build-GroupMembers -AADGroupMembers $AADGroupObject.Members
+        if ($members) {
+            $groupParameters.Add("members@odata.bind", $members)
+        }
+        else {
+            Write-Host "No members defined for '$($AADGroupObject.displayName)' group."
+        }
+
         Update-MgGroup -GroupId $GroupId -BodyParameter $groupParameters
         Write-Host "AD Group '$($AADGroupObject.displayName)' updated successfully."
     }
