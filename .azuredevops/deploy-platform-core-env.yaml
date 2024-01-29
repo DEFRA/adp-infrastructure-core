@@ -282,10 +282,12 @@ extends:
                 - name: front-door
                   path: infra/core/env/front-door
                   resourceGroupName: $(cdnResourceGroup)
+                  serviceConnectionVariableName: 'secServiceConnection'
               - ${{ if eq(variables.IsFrontDoorWAF, true) }}: 
                 - name: azure-waf
                   path: infra/core/env/front-door
                   resourceGroupName: $(cdnResourceGroup)
+                  serviceConnectionVariableName: 'secServiceConnection'
                   
         - ${{ if eq(variables.IsApplication, true) }}:  
           - name: application_infra
