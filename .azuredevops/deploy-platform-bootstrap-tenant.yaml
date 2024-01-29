@@ -63,6 +63,7 @@ extends:
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - 'refs/heads/main'
+          - 'refs/pull/*/merge'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
@@ -70,7 +71,6 @@ extends:
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
            - 'refs/heads/main'
-           - 'refs/pull/*/merge'
         azureRegions:
           primary: 'UKSouth'
     filePathsForTransform: |
