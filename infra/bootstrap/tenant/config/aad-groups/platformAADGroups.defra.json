@@ -6,7 +6,8 @@
             "Owners": {
                 "serviceprincipals" : [
                     "ADO-DefraGovUK-AAD-CDO-SSV5"
-                ]
+                ],
+                "users" : #{{ noescape(platformAADGroupOwners) }}
             }
         }
     ],
