@@ -17,6 +17,12 @@
             "Owners": {
                 "serviceprincipals" : [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ],
+                "users" : [
+                    "a-dan.roszkowski@defra.onmicrosoft.com",
+                    "Kenneth.Babigumira@Defra.onmicrosoft.com",
+                    "ajay.soni@defradev.onmicrosoft.com",
+                    "logan.talbot@defra.onmicrosoft.com"
                 ]
             },
             "Members": {
