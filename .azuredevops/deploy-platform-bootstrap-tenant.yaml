@@ -69,16 +69,17 @@ extends:
       - name: 'defra'
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
-           - '*'
+           - 'refs/heads/main'
+           - 'refs/pull/*/merge'
         azureRegions:
           primary: 'UKSouth'
     groupedDeployments:
         - ${{ if eq(variables.IsPlatfromADGroup, true) }}:  
-          - name: FFD_aadgroup
+          - name: platform_aadgroup
             deployments:
-              - name: Create or Update FFD AAD groups
+              - name: Create or Update Platform AAD groups
                 type: 'script'
                 scriptType: AzurePowerShell
                 path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
                 scriptArguments: > 
-                  -AADGroupsJsonManifestPath 'infra/bootstrap/tenant/config/aad-groups/FFD-AADGroups.$(environment).json'
+                  -AADGroupsJsonManifestPath 'infra/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json'
