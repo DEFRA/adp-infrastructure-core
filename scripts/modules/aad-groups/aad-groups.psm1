@@ -100,17 +100,9 @@ Function Update-ADGroup() {
             description = $AADGroupObject.description
         }
 
-        # Update-GroupOwners -GroupId $GroupId -AADGroupOwners $AADGroupObject.Owners
+        Update-GroupOwners -GroupId $GroupId -AADGroupOwners $AADGroupObject.Owners
 
-        # Update-GroupMembers -GroupId $GroupId -AADGroupMembers $AADGroupObject.Members
-
-        [object[]]$owners = Build-GroupOwners -AADGroupOwners $AADGroupObject.Owners
-        if ($owners) {
-            $groupParameters.Add("owners@odata.bind", $owners)
-        }
-        else {
-            Write-Host "No owners defined for '$($AADGroupObject.displayName)' group."
-        }
+        Update-GroupMembers -GroupId $GroupId -AADGroupMembers $AADGroupObject.Members
 
         Update-MgGroup -GroupId $GroupId -BodyParameter $groupParameters -ErrorAction Stop
 
@@ -472,14 +464,14 @@ Function Find-NewUsersToAdd() {
         
         $users = [System.Collections.Generic.List[string]]@()
         $AADUsers | ForEach-Object {
-            Write-Debug "${functionName}:Getting User ID for user email '$_'"
+            Write-Host "${functionName}:Getting User ID for user email '$_'"
             $user = Get-MgUser -Filter "Mail eq '$_' or UserPrincipalName eq '$_'" -Property "id,mail,UserPrincipalName" -ErrorAction Stop
             if ($user) {
                 if($ExistingGroupMembers.Id -notcontains $user.id){
                     $users.Add($user.id)
                 }
                 else{
-                    Write-Debug "User with UserEmail $($_) is already a member of the Group."
+                    Write-Host "User with UserEmail $($_) is already a member of the Group."
                 }
             }
             else {
@@ -516,14 +508,14 @@ Function Find-NewGroupsToAdd() {
         
         $groups = [System.Collections.Generic.List[string]]@()
         $AADGroups | ForEach-Object {
-            Write-Debug "${functionName}:Getting AD Group ID for group name '$_'"
+            Write-Host "${functionName}:Getting AD Group ID for group name '$_'"
             $group = Get-MgGroup -Filter "DisplayName eq '$_'" -Property "id"
             if ($group) {
                 if($ExistingGroupMembers.Id -notcontains $group.id){
                     $groups.Add($group.id)
                 }
                 else{
-                    Write-Debug "Group $($_) is already a member of the Group."
+                    Write-Host "Group $($_) is already a member of the Group."
                 }
             }
             else {
