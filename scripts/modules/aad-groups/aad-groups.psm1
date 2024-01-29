@@ -249,7 +249,7 @@ Function Build-Users() {
         $users = [System.Collections.Generic.List[string]]@()
         $AADUsers | ForEach-Object {
             Write-Debug "${functionName}:Getting User ID for user email '$_'"
-            $user = Get-MgUser -Filter "Mail eq '$_' or UserPrincipalName eq '$_'" -Property "id,mail,UserPrincipalName"
+            $user = Get-MgUser -Filter "Mail eq '$_' or UserPrincipalName eq '$_'" -Property "id,mail,UserPrincipalName" -ErrorAction Stop
             if ($user) {
                 $users.Add("https://graph.microsoft.com/v1.0/users/$($user.id)")
             }
@@ -465,7 +465,7 @@ Function Find-NewUsersToAdd() {
         $users = [System.Collections.Generic.List[string]]@()
         $AADUsers | ForEach-Object {
             Write-Debug "${functionName}:Getting User ID for user email '$_'"
-            $user = Get-MgUser -Filter "Mail eq '$_' or UserPrincipalName eq '$_'" -Property "id,mail,UserPrincipalName"
+            $user = Get-MgUser -Filter "Mail eq '$_' or UserPrincipalName eq '$_'" -Property "id,mail,UserPrincipalName" -ErrorAction Stop
             if ($user) {
                 if($ExistingGroupMembers.Id -notcontains $user.id){
                     $users.Add($user.id)
