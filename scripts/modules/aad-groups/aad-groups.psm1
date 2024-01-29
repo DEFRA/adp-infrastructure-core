@@ -529,7 +529,7 @@ Function Find-NewUsersToAdd() {
                     $users.Add($user.id)
                 }
                 else{
-                    Write-Host "User with UserEmail '$($_)' is already a member of the Group."
+                    Write-Host "User with UserEmail '$($_)' is already a member/owner of the Group."
                 }
             }
             else {
@@ -595,7 +595,7 @@ Function Find-NewGroupsToAdd() {
                     $groups.Add($group.id)
                 }
                 else{
-                    Write-Host "Group '$($_)' is already a member of the Group."
+                    Write-Host "Group '$($_)' is already a member/owner of the Group."
                 }
             }
             else {

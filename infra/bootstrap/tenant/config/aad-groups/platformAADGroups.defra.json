@@ -7,7 +7,7 @@
                 "serviceprincipals" : [
                     "ADO-DefraGovUK-AAD-CDO-SSV5"
                 ],
-                "users" : #{{ noescape(platformAADGroupOwners) }}
+                "users" : #{{ noescape(platformUserAndAccessAADGroupOwners) }}
             }
         }
     ],
@@ -19,7 +19,7 @@
                 "serviceprincipals" : [
                     "ADO-DefraGovUK-AAD-CDO-SSV5"
                 ],
-                "users" : #{{ noescape(platformAADGroupOwners) }}
+                "users" : #{{ noescape(platformUserAndAccessAADGroupOwners) }}
             },
             "Members": {
                 "groups" : [
