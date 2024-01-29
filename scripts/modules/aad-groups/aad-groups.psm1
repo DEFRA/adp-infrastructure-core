@@ -100,23 +100,12 @@ Function Update-ADGroup() {
             description = $AADGroupObject.description
         }
 
-        [object[]]$owners = Build-GroupOwners -AADGroupOwners $AADGroupObject.Owners
-        if ($owners) {
-            $groupParameters.Add("owners@odata.bind", $owners)
-        }
-        else {
-            Write-Host "No owners defined for '$($AADGroupObject.displayName)' group."
-        }
+        Update-GroupOwners -GroupId $GroupId -AADGroupOwners $AADGroupObject.Owners
 
-        [object[]]$members = Build-GroupMembers -AADGroupMembers $AADGroupObject.Members
-        if ($members) {
-            $groupParameters.Add("members@odata.bind", $members)
-        }
-        else {
-            Write-Host "No members defined for '$($AADGroupObject.displayName)' group."
-        }
+        Update-GroupMembers -GroupId $GroupId -AADGroupMembers $AADGroupObject.Members
 
         Update-MgGroup -GroupId $GroupId -BodyParameter $groupParameters
+
         Write-Host "AD Group '$($AADGroupObject.displayName)' updated successfully."
     }
 
@@ -260,7 +249,7 @@ Function Build-Users() {
         $users = [System.Collections.Generic.List[string]]@()
         $AADUsers | ForEach-Object {
             Write-Debug "${functionName}:Getting User ID for user email '$_'"
-            $user = Get-MgUser -Filter "Mail eq '$_'" -Property "id,mail"
+            $user = Get-MgUser -Filter "Mail eq '$_' or UserPrincipalName eq '$_'" -Property "id,mail,UserPrincipalName"
             if ($user) {
                 $users.Add("https://graph.microsoft.com/v1.0/users/$($user.id)")
             }
@@ -329,10 +318,10 @@ Function Build-ServicePrincipals() {
 Builds Array of AADGroups.
 
 .DESCRIPTION
-Builds Array of Users. It uses 'AADGroups Name' to find Group object ID and build "https://graph.microsoft.com/v1.0/groups/{groupId}" strings.
+Builds Array of Groups. It uses 'AADGroups Name' to find Group object ID and build "https://graph.microsoft.com/v1.0/groups/{groupId}" strings.
 It is internal function used by 'Build-GroupMembers'.
 
-.PARAMETER AADUsers
+.PARAMETER AADGroups
 Mandatory. AADGroups Object
 
 .EXAMPLE
@@ -366,6 +355,175 @@ Function Build-Groups() {
         }  
         return $groups
 
+        end {
+            Write-Debug "${functionName}:Exited"
+        }    
+    }
+}
+
+
+Function Update-GroupMembers() {
+    [CmdletBinding()]
+    Param(        
+        [Object]$AADGroupMembers,
+        [Parameter(Mandatory)]
+        [string]$GroupId
+    )
+
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand    
+        Write-Debug "${functionName}:Entered"   
+        Write-Debug "${functionName}:GroupId=$($GroupId)" 
+    }
+
+    process {    
+        Write-Debug "${functionName}:AADGroupMembers=$($AADGroupMembers | ConvertTo-Json -Depth 10)"
+        
+        if ($AADGroupMembers) {
+
+            [Object[]]$existingGroupMembers = Get-MgGroupMember -GroupId $GroupId -Property "id" -All
+
+            if ($AADGroupMembers.users) {
+                $usersResult = Find-NewUsersToAdd -GroupId $GroupId -ExistingGroupMembers $existingGroupMembers -AADUsers $AADGroupMembers.users
+                $usersResult | ForEach-Object {
+                    New-MgGroupMember -GroupId $GroupId -DirectoryObjectId $_
+                    Write-Debug "User $($_) Added as a member of the Group."
+                }
+            } 
+
+            if ($AADGroupMembers.groups) {
+                $aadGroupsResult = Find-NewGroupsToAdd -GroupId $GroupId -ExistingGroupMembers $existingGroupMembers -AADGroups $AADGroupMembers.groups
+                $aadGroupsResult | ForEach-Object {
+                    New-MgGroupMember -GroupId $GroupId -DirectoryObjectId $_
+                    Write-Debug "Group $($_) Added as a member of the Group."
+                }
+            } 
+        }    
+    }
+
+    end {
+        Write-Debug "${functionName}:Exited"
+    }    
+}
+
+Function Update-GroupOwners() {
+    [CmdletBinding()]
+    Param(        
+        [Object]$AADGroupOwners,
+        [Parameter(Mandatory)]
+        [string]$GroupId
+    )
+
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand    
+        Write-Debug "${functionName}:Entered"   
+        Write-Debug "${functionName}:GroupId=$($GroupId)" 
+    }
+
+    process {    
+        Write-Debug "${functionName}:AADGroupOwners=$($AADGroupOwners | ConvertTo-Json -Depth 10)"
+        
+        if ($AADGroupOwners) {
+
+            [Object[]]$existingGroupMembers = Get-MgGroupMember -GroupId $GroupId -Property "id" -All
+
+            if ($AADGroupOwners.users) {
+                $usersResult = Find-NewUsersToAdd -GroupId $GroupId -ExistingGroupMembers $existingGroupMembers -AADUsers $AADGroupOwners.users
+                $usersResult | ForEach-Object {
+                    New-MgGroupOwner -GroupId $GroupId -DirectoryObjectId $_
+                    Write-Debug "User $($_) Added as a owner of the Group."
+                }
+            } 
+        }    
+    }
+
+    end {
+        Write-Debug "${functionName}:Exited"
+    }    
+}
+
+Function Find-NewUsersToAdd() {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory)]
+        [string]$GroupId,
+        [Object[]]$ExistingGroupMembers,
+        [ValidateNotNullOrEmpty()]
+        [Object[]]$AADUsers
+    )
+
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand    
+        Write-Debug "${functionName}:Entered"   
+        Write-Debug "${functionName}:GroupId=$($GroupId)" 
+    }
+
+    process {    
+        Write-Debug "${functionName}:ExistingGroupMembers=$($ExistingGroupMembers | ConvertTo-Json -Depth 10)"
+        Write-Debug "${functionName}:Users=$($AADUsers | ConvertTo-Json -Depth 10)"
+        
+        $users = [System.Collections.Generic.List[string]]@()
+        $AADUsers | ForEach-Object {
+            Write-Debug "${functionName}:Getting User ID for user email '$_'"
+            $user = Get-MgUser -Filter "Mail eq '$_' or UserPrincipalName eq '$_'" -Property "id,mail,UserPrincipalName"
+            if ($user) {
+                if($ExistingGroupMembers.Id -notcontains $user.id){
+                    $users.Add($user.id)
+                }
+                else{
+                    Write-Debug "User with UserEmail $($_) is already a member of the Group."
+                }
+            }
+            else {
+                Write-Error "User with UserEmail $($_) does not exist."
+            }
+        }
+        return $users
+
+        end {
+            Write-Debug "${functionName}:Exited"
+        }    
+    }
+}
+
+Function Find-NewGroupsToAdd() {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory)]
+        [string]$GroupId,
+        [Object[]]$ExistingGroupMembers,
+        [ValidateNotNullOrEmpty()]
+        [Object[]]$AADGroups
+    )
+
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand    
+        Write-Debug "${functionName}:Entered"   
+        Write-Debug "${functionName}:GroupId=$($GroupId)" 
+    }
+
+    process {    
+        Write-Debug "${functionName}:ExistingGroupMembers=$($ExistingGroupMembers | ConvertTo-Json -Depth 10)"
+        Write-Debug "${functionName}:AADGroups=$($AADGroups | ConvertTo-Json -Depth 10)"
+        
+        $groups = [System.Collections.Generic.List[string]]@()
+        $AADGroups | ForEach-Object {
+            Write-Debug "${functionName}:Getting AD Group ID for group name '$_'"
+            $group = Get-MgGroup -Filter "DisplayName eq '$_'" -Property "id"
+            if ($group) {
+                if($ExistingGroupMembers.Id -notcontains $group.id){
+                    $groups.Add($group.id)
+                }
+                else{
+                    Write-Debug "Group $($_) is already a member of the Group."
+                }
+            }
+            else {
+                Write-Error "Group $($_) does not exist."
+            }
+        }  
+        return $groups
+        
         end {
             Write-Debug "${functionName}:Exited"
         }    
