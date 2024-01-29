@@ -40,7 +40,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: gg/aad-user-variables #main
       
 variables:
   - name: IsAll
@@ -73,6 +73,8 @@ extends:
            - 'refs/pull/*/merge'
         azureRegions:
           primary: 'UKSouth'
+    filePathsForTransform: |
+      infra/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json  
     groupedDeployments:
         - ${{ if eq(variables.IsPlatfromADGroup, true) }}:  
           - name: platform_aadgroup
