@@ -248,7 +248,7 @@ Function Build-Users() {
         
         $users = [System.Collections.Generic.List[string]]@()
         $AADUsers | ForEach-Object {
-            Write-Debug "${functionName}:Getting User ID for user email '$_'"
+            Write-Host "Getting User ID for user email '$_'"
             $user = Get-MgUser -Filter "Mail eq '$_' or UserPrincipalName eq '$_'" -Property "id,mail,UserPrincipalName" -ErrorAction Stop
             if ($user) {
                 $users.Add("https://graph.microsoft.com/v1.0/users/$($user.id)")
@@ -296,7 +296,7 @@ Function Build-ServicePrincipals() {
         
         $servicePrincipalList = [System.Collections.Generic.List[string]]@()
         $Serviceprincipals | ForEach-Object {
-            Write-Debug "${functionName}:Getting Serviceprincipal ID for Serviceprincipal name '$_'"
+            Write-Host "Getting Serviceprincipal ID for Serviceprincipal name '$_'"
             $serviceprincipal = Get-MgServicePrincipal -Filter "DisplayName eq '$_'" -Property "id"
             if ($serviceprincipal) {
                 $servicePrincipalList.Add("https://graph.microsoft.com/v1.0/servicePrincipals/$($serviceprincipal.id)")
@@ -344,7 +344,7 @@ Function Build-Groups() {
         
         $groups = [System.Collections.Generic.List[string]]@()
         $AADGroups | ForEach-Object {
-            Write-Debug "${functionName}:Getting AD Group ID for group name '$_'"
+            Write-Host "Getting AD Group ID for group name '$_'"
             $group = Get-MgGroup -Filter "DisplayName eq '$_'" -Property "id"
             if ($group) {
                 $groups.Add("https://graph.microsoft.com/v1.0/groups/$($group.id)")
@@ -404,7 +404,7 @@ Function Update-GroupMembers() {
                 $usersResult = Find-NewUsersToAdd -GroupId $GroupId -ExistingGroupMembersOrOwners $existingGroupMembers -AADUsers $AADGroupMembers.users
                 $usersResult | ForEach-Object {
                     New-MgGroupMember -GroupId $GroupId -DirectoryObjectId $_ -ErrorAction Stop
-                    Write-Debug "User $($_) Added as a member of the Group."
+                    Write-Host "User '$($_)' Added as a member of the Group."
                 }
             } 
 
@@ -412,7 +412,7 @@ Function Update-GroupMembers() {
                 $aadGroupsResult = Find-NewGroupsToAdd -GroupId $GroupId -ExistingGroupMembersOrOwners $existingGroupMembers -AADGroups $AADGroupMembers.groups
                 $aadGroupsResult | ForEach-Object {
                     New-MgGroupMember -GroupId $GroupId -DirectoryObjectId $_ -ErrorAction Stop
-                    Write-Debug "Group $($_) Added as a member of the Group."
+                    Write-Host "Group '$($_)' Added as a member of the Group."
                 }
             } 
         }    
@@ -468,7 +468,7 @@ Function Update-GroupOwners() {
                 $usersResult = Find-NewUsersToAdd -GroupId $GroupId -ExistingGroupMembersOrOwners $existingGroupOwners -AADUsers $AADGroupOwners.users
                 $usersResult | ForEach-Object {
                     New-MgGroupOwner -GroupId $GroupId -DirectoryObjectId $_ -ErrorAction Stop
-                    Write-Debug "User $($_) Added as a owner of the Group."
+                    Write-Host "User '$($_)' Added as a owner of the Group."
                 }
             } 
         }    
@@ -522,18 +522,18 @@ Function Find-NewUsersToAdd() {
         
         $users = [System.Collections.Generic.List[string]]@()
         $AADUsers | ForEach-Object {
-            Write-Host "${functionName}:Getting User ID for user email '$_'"
+            Write-Host "Getting User ID for user email '$_'"
             $user = Get-MgUser -Filter "Mail eq '$_' or UserPrincipalName eq '$_'" -Property "id,mail,UserPrincipalName" -ErrorAction Stop
             if ($user) {
                 if($ExistingGroupMembersOrOwners.Id -notcontains $user.id){
                     $users.Add($user.id)
                 }
                 else{
-                    Write-Host "User with UserEmail $($_) is already a member of the Group."
+                    Write-Host "User with UserEmail '$($_)' is already a member of the Group."
                 }
             }
             else {
-                Write-Error "User with UserEmail $($_) does not exist."
+                Write-Error "User with UserEmail '$($_)' does not exist."
             }
         }
         return $users
@@ -588,18 +588,18 @@ Function Find-NewGroupsToAdd() {
         
         $groups = [System.Collections.Generic.List[string]]@()
         $AADGroups | ForEach-Object {
-            Write-Host "${functionName}:Getting AD Group ID for group name '$_'"
+            Write-Host "Getting AD Group ID for group name '$_'"
             $group = Get-MgGroup -Filter "DisplayName eq '$_'" -Property "id"
             if ($group) {
                 if($ExistingGroupMembersOrOwners.Id -notcontains $group.id){
                     $groups.Add($group.id)
                 }
                 else{
-                    Write-Host "Group $($_) is already a member of the Group."
+                    Write-Host "Group '$($_)' is already a member of the Group."
                 }
             }
             else {
-                Write-Error "Group $($_) does not exist."
+                Write-Error "Group '$($_)' does not exist."
             }
         }  
         return $groups
