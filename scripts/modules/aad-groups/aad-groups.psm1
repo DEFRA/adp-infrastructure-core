@@ -362,6 +362,23 @@ Function Build-Groups() {
 }
 
 
+<#
+.SYNOPSIS
+Add Members to the existing group
+
+.DESCRIPTION
+Add Members to the existing group if it does not exist. Members can be type of 'User' or 'Group'.
+For update operation there is no use case to include 'service principal' as member hence 'Service principals' is not included as a part of update member list.
+
+.PARAMETER AADGroupMembers
+AAD Group Members Object (users, groups)
+
+.PARAMETER GroupId
+AAD Group Object Id
+
+.EXAMPLE
+Update-GroupMembers -AADGroupMembers <AADGroupMembers> -GroupId <GroupId>
+#> 
 Function Update-GroupMembers() {
     [CmdletBinding()]
     Param(        
@@ -384,17 +401,17 @@ Function Update-GroupMembers() {
             [Object[]]$existingGroupMembers = Get-MgGroupMember -GroupId $GroupId -Property "id" -All
 
             if ($AADGroupMembers.users) {
-                $usersResult = Find-NewUsersToAdd -GroupId $GroupId -ExistingGroupMembers $existingGroupMembers -AADUsers $AADGroupMembers.users
+                $usersResult = Find-NewUsersToAdd -GroupId $GroupId -ExistingGroupMembersOrOwners $existingGroupMembers -AADUsers $AADGroupMembers.users
                 $usersResult | ForEach-Object {
-                    New-MgGroupMember -GroupId $GroupId -DirectoryObjectId $_
+                    New-MgGroupMember -GroupId $GroupId -DirectoryObjectId $_ -ErrorAction Stop
                     Write-Debug "User $($_) Added as a member of the Group."
                 }
             } 
 
             if ($AADGroupMembers.groups) {
-                $aadGroupsResult = Find-NewGroupsToAdd -GroupId $GroupId -ExistingGroupMembers $existingGroupMembers -AADGroups $AADGroupMembers.groups
+                $aadGroupsResult = Find-NewGroupsToAdd -GroupId $GroupId -ExistingGroupMembersOrOwners $existingGroupMembers -AADGroups $AADGroupMembers.groups
                 $aadGroupsResult | ForEach-Object {
-                    New-MgGroupMember -GroupId $GroupId -DirectoryObjectId $_
+                    New-MgGroupMember -GroupId $GroupId -DirectoryObjectId $_ -ErrorAction Stop
                     Write-Debug "Group $($_) Added as a member of the Group."
                 }
             } 
@@ -406,6 +423,26 @@ Function Update-GroupMembers() {
     }    
 }
 
+
+<#
+.SYNOPSIS
+Add Owners to the existing group
+
+.DESCRIPTION
+Add Owners to the existing group if it does not exist. Owners can be type of 'User'.
+Currently, service principals are not listed as group owners due to the staged rollout of service principals to the Microsoft Graph v1.0 endpoint.
+Hence 'Service principals' is not included as a part of this module and also for update operation there is no use case to include 'service principal' as owner 
+https://learn.microsoft.com/en-us/graph/api/group-list-owners?view=graph-rest-1.0&tabs=http
+
+.PARAMETER AADGroupOwners
+Mandatory. AAD Group Owners Object (which can be type of users, groups)
+
+.PARAMETER GroupId
+AAD Group Object Ids
+
+.EXAMPLE
+Update-GroupOwners -AADGroupOwners <AADGroupMembers> -GroupId <GroupId>
+#> 
 Function Update-GroupOwners() {
     [CmdletBinding()]
     Param(        
@@ -425,12 +462,12 @@ Function Update-GroupOwners() {
         
         if ($AADGroupOwners) {
 
-            [Object[]]$existingGroupMembers = Get-MgGroupMember -GroupId $GroupId -Property "id" -All
+            [Object[]]$existingGroupOwners = Get-MgGroupOwner -GroupId $GroupId -Property "id" -All
 
             if ($AADGroupOwners.users) {
-                $usersResult = Find-NewUsersToAdd -GroupId $GroupId -ExistingGroupMembers $existingGroupMembers -AADUsers $AADGroupOwners.users
+                $usersResult = Find-NewUsersToAdd -GroupId $GroupId -ExistingGroupMembersOrOwners $existingGroupOwners -AADUsers $AADGroupOwners.users
                 $usersResult | ForEach-Object {
-                    New-MgGroupOwner -GroupId $GroupId -DirectoryObjectId $_
+                    New-MgGroupOwner -GroupId $GroupId -DirectoryObjectId $_ -ErrorAction Stop
                     Write-Debug "User $($_) Added as a owner of the Group."
                 }
             } 
@@ -442,12 +479,33 @@ Function Update-GroupOwners() {
     }    
 }
 
+<#
+.SYNOPSIS
+Build list of new Users to add to the existing group
+
+.DESCRIPTION
+Build list of new Users to add to the existing group either as owner or member.
+It takes users emails array as input, checks if users is already a member/owner of the group and return only list 
+of users which are not already a member/owner of the group
+
+.PARAMETER GroupId
+AAD Group Object Ids
+
+.PARAMETER ExistingGroupMembersOrOwners
+List of Existing Group Members or Owners (Users or groups)
+
+.PARAMETER AADUsers
+Mandatory. AAD Users Object
+
+.EXAMPLE
+Find-NewUsersToAdd -GroupId <GroupId> -ExistingGroupMembersOrOwners <ExistingGroupMembersOrOwners> -AADUsers <AADUsers>
+#> 
 Function Find-NewUsersToAdd() {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory)]
         [string]$GroupId,
-        [Object[]]$ExistingGroupMembers,
+        [Object[]]$ExistingGroupMembersOrOwners,
         [ValidateNotNullOrEmpty()]
         [Object[]]$AADUsers
     )
@@ -459,15 +517,15 @@ Function Find-NewUsersToAdd() {
     }
 
     process {    
-        Write-Debug "${functionName}:ExistingGroupMembers=$($ExistingGroupMembers | ConvertTo-Json -Depth 10)"
-        Write-Debug "${functionName}:Users=$($AADUsers | ConvertTo-Json -Depth 10)"
+        Write-Debug "${functionName}:ExistingGroupMembersOrOwners=$($ExistingGroupMembersOrOwners | ConvertTo-Json -Depth 10)"
+        Write-Debug "${functionName}:AADUsers=$($AADUsers | ConvertTo-Json -Depth 10)"
         
         $users = [System.Collections.Generic.List[string]]@()
         $AADUsers | ForEach-Object {
             Write-Host "${functionName}:Getting User ID for user email '$_'"
             $user = Get-MgUser -Filter "Mail eq '$_' or UserPrincipalName eq '$_'" -Property "id,mail,UserPrincipalName" -ErrorAction Stop
             if ($user) {
-                if($ExistingGroupMembers.Id -notcontains $user.id){
+                if($ExistingGroupMembersOrOwners.Id -notcontains $user.id){
                     $users.Add($user.id)
                 }
                 else{
@@ -486,12 +544,34 @@ Function Find-NewUsersToAdd() {
     }
 }
 
+
+<#
+.SYNOPSIS
+Build list of new groups to add to the existing group
+
+.DESCRIPTION
+Build list of new Groups to add to the existing group either as owner or member.
+It takes group name array as input, checks if group is already a member/owner of the group and return only list 
+of groups which are not already a member/owner of the group
+
+.PARAMETER GroupId
+AAD Group Object Ids
+
+.PARAMETER ExistingGroupMembersOrOwners
+List of Existing Group Members or Owners (Users or groups)
+
+.PARAMETER AADGroups
+Mandatory. AAD groups Object
+
+.EXAMPLE
+Find-NewGroupsToAdd -GroupId <GroupId> -ExistingGroupMembersOrOwners <ExistingGroupMembersOrOwners> -AADGroups <AADGroups>
+#> 
 Function Find-NewGroupsToAdd() {
     [CmdletBinding()]
     Param(
         [Parameter(Mandatory)]
         [string]$GroupId,
-        [Object[]]$ExistingGroupMembers,
+        [Object[]]$ExistingGroupMembersOrOwners,
         [ValidateNotNullOrEmpty()]
         [Object[]]$AADGroups
     )
@@ -503,7 +583,7 @@ Function Find-NewGroupsToAdd() {
     }
 
     process {    
-        Write-Debug "${functionName}:ExistingGroupMembers=$($ExistingGroupMembers | ConvertTo-Json -Depth 10)"
+        Write-Debug "${functionName}:ExistingGroupMembersOrOwners=$($ExistingGroupMembersOrOwners | ConvertTo-Json -Depth 10)"
         Write-Debug "${functionName}:AADGroups=$($AADGroups | ConvertTo-Json -Depth 10)"
         
         $groups = [System.Collections.Generic.List[string]]@()
@@ -511,7 +591,7 @@ Function Find-NewGroupsToAdd() {
             Write-Host "${functionName}:Getting AD Group ID for group name '$_'"
             $group = Get-MgGroup -Filter "DisplayName eq '$_'" -Property "id"
             if ($group) {
-                if($ExistingGroupMembers.Id -notcontains $group.id){
+                if($ExistingGroupMembersOrOwners.Id -notcontains $group.id){
                     $groups.Add($group.id)
                 }
                 else{
