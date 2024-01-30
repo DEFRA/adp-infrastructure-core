@@ -41,7 +41,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: refs/heads/sm/298311-createadgroup  
+      ref: refs/heads/main
       
 variables:
   - name: IsAll
@@ -66,7 +66,7 @@ extends:
       - name: 'defradev'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - 'refs/heads/sm/298311-createadgroup'
+          - 'refs/heads/main'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
