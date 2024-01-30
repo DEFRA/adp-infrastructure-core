@@ -62,7 +62,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: features/cdn-changes
+      ref: main
       
 variables:
   - name: IsAll
@@ -110,7 +110,7 @@ variables:
   - name: IsFrontDoorCore
     value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - Core')) }}
   - name: IsFrontDoorWAF
-    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Network - WAF')) }}
+    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF')) }}
 
   - name: IsApplication
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application')) }}
