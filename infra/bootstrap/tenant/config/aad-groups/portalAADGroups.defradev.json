@@ -1,5 +1,5 @@
 {
-    "accessADGroups": [
+    "userADGroups": [
         {
             "displayName": " AAG-Users-ADP-Portal",
             "description": "Azure AD Access group with Sign in permissions to the ADP Portal.",
