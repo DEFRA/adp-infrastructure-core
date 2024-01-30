@@ -1,0 +1,23 @@
+{
+    "accessADGroups": [
+        {
+            "displayName": " AAG-Users-ADP-Portal",
+            "description": "Azure AD Access group with Sign in permissions to the ADP Portal.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ],
+                "users" : #{{ noescape(portalUserAndAccessAADGroupOwners) }}
+            },
+            "Members": {
+                "groups" : [
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "GG-Users-ADP-PlatformEngineers",
+                    "AAG-Users-ADP-PlatformEngineers"
+                ],                
+                "users" : #{{ noescape(portalUserAndAccessAADGroupMembers) }}
+            }
+        }      
+    ]
+}
+

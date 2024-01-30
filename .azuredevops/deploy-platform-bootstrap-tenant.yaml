@@ -12,6 +12,7 @@ parameters:
     values:
       - All
       - Platform - AAD Groups
+      - Portal - AAD Groups
 
 pr:
   branches:
@@ -49,6 +50,9 @@ variables:
   - name: IsPlatfromADGroup
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform - AAD Groups')) }}
 
+  - name: IsPortalADGroup
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Portal - AAD Groups')) }}
+
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
@@ -69,18 +73,35 @@ extends:
       - name: 'defra'
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
-           - 'refs/heads/main'
+          - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
-    filePathsForTransform: |
-      **/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json  
+    
+    ${{ if eq(variables.IsPlatfromADGroup,true)) }}:
+      filePathsForTransform: |
+        **/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json  
+
+    ${{ if eq(variables.IsPortalADGroup,true)) }}:
+      filePathsForTransform: |
+        **/bootstrap/tenant/config/aad-groups/portalAADGroups.$(environment).json  
+
     groupedDeployments:
-        - ${{ if eq(variables.IsPlatfromADGroup, true) }}:  
-          - name: platform_aadgroup
-            deployments:
-              - name: Create or Update Platform AAD groups
-                type: 'script'
-                scriptType: AzurePowerShell
-                path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
-                scriptArguments: > 
-                  -AADGroupsJsonManifestPath 'infra/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json'
+      - ${{ if eq(variables.IsPlatfromADGroup, true) }}:  
+        - name: platform_aadgroup
+          deployments:
+            - name: Create or Update Platform AAD groups
+              type: 'script'
+              scriptType: AzurePowerShell
+              path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+              scriptArguments: > 
+                -AADGroupsJsonManifestPath 'infra/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json'
+
+      - ${{ if eq(variables.IsPortalADGroup, true) }}:  
+        - name: portal_aadgroup
+          deployments:
+            - name: Create or Update portal AAD groups
+              type: 'script'
+              scriptType: AzurePowerShell
+              path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+              scriptArguments: > 
+                -AADGroupsJsonManifestPath 'infra/bootstrap/tenant/config/aad-groups/portalAADGroups.$(environment).json'
