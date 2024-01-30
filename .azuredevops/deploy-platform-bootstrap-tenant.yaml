@@ -75,15 +75,10 @@ extends:
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
-          primary: 'UKSouth'
-    
-    ${{ if eq(variables.IsPlatfromADGroup,true) }}:
-      filePathsForTransform: |
-        **/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json  
+          primary: 'UKSouth'    
 
-    ${{ if eq(variables.IsPortalADGroup,true) }}:
-      filePathsForTransform: |
-        **/bootstrap/tenant/config/aad-groups/portalAADGroups.$(environment).json  
+    filePathsForTransform: |
+      **/bootstrap/tenant/config/aad-groups/*.$(environment).json      
 
     groupedDeployments:
       - ${{ if eq(variables.IsPlatfromADGroup, true) }}:  
