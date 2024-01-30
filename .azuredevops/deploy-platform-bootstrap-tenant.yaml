@@ -41,7 +41,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: refs/heads/sm/298311-createadgroup  
       
 variables:
   - name: IsAll
