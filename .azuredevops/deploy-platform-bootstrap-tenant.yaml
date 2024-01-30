@@ -77,11 +77,11 @@ extends:
         azureRegions:
           primary: 'UKSouth'
     
-    ${{ if eq(variables.IsPlatfromADGroup,true)) }}:
+    ${{ if eq(variables.IsPlatfromADGroup,true) }}:
       filePathsForTransform: |
         **/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json  
 
-    ${{ if eq(variables.IsPortalADGroup,true)) }}:
+    ${{ if eq(variables.IsPortalADGroup,true) }}:
       filePathsForTransform: |
         **/bootstrap/tenant/config/aad-groups/portalAADGroups.$(environment).json  
 
