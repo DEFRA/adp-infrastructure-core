@@ -44,7 +44,9 @@ module frontDoor 'br/SharedDefraRegistry:cdn.profile:0.4.4-prerelease' = {
     enableDefaultTelemetry: true
     name: name
     location: location
-    afdEndpoints : endpoints
+    afdEndpoints: map(endpoints, endpoint => {
+        name: endpoint
+      })
     lock: 'CanNotDelete'
     tags: union(tags, frontDoorTags)
     sku: sku

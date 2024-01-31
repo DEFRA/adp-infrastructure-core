@@ -15,11 +15,7 @@
       "value": "#{{ environment }}"
     },
     "endpoints":{
-      "value": [
-       {
-        "name": "#{{ environment }}#{{ environmentId }}-adp-cluster"
-       } 
-      ]
+      "value": #{{ afdEndpoints }}
     },
     "ruleSets": {
       "value": [
