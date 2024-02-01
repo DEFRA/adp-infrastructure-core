@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "name": {
-      "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_frontdoor }}#{{ nc_instance_regionid }}01"
+      "value": "#{{ cdnProfileName }}"
     },
     "sku": {
       "value": "#{{ cdnProfileSkuName }}"
@@ -15,11 +15,7 @@
       "value": "#{{ environment }}"
     },
     "endpoints":{
-      "value": [
-       {
-        "name": "#{{ environment }}#{{ environmentId }}-adp-cluster"
-       } 
-      ]
+      "value": #{{ noescape(afdEndpoints) }}
     },
     "ruleSets": {
       "value": [

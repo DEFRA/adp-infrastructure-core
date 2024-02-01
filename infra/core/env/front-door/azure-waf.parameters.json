@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "wafPolicyName": {
-      "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_frontdoorwaf }}#{{ nc_instance_regionid }}01"
+      "value": "#{{ wafPolicyName }}"
     },
     "policySettings": {
       "value": {
