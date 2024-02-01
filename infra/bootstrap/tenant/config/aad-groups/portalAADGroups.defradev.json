@@ -11,8 +11,7 @@
             },
             "Members": {
                 "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers",
-                    "GG-Users-ADP-PlatformEngineers",
+                    "AG-Azure-CDO-ADP-PlatformEngineers",                    
                     "AAG-Users-ADP-PlatformEngineers"
                 ],                
                 "users" : #{{ noescape(portalUserAndAccessAADGroupMembers) }}
