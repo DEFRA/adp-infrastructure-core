@@ -89,7 +89,7 @@ param fluxConfig = {
       syncIntervalInSeconds: 300
       timeoutInSeconds: 180
       url: 'https://github.com/DEFRA/adp-flux-core'
-      branch: 'main'
+      branch: 'kb/debug'
     }
     kustomizations: {
       timeoutInSeconds: 600
