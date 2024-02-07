@@ -1,13 +1,15 @@
 {
     "userADGroups": [
         {
-            "displayName": "AAG-Users-ADP-PlatformEngineers",
-            "description": "Azure AD User group for ADP Platform Engineers",
+            "displayName": "AAG-Users-ADP-FFC-DAL_TechUser",
+            "description": "Azure AD User group for DAL TechUser",
             "Owners": {
                 "serviceprincipals" : [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ],
-                "users" : #{{ noescape(platformUserAndAccessAADGroupOwners) }}
+                "users" : [
+                    "jack.mccabe@defra.gov.uk"
+                ]
             }
         }
     ],
@@ -23,63 +25,7 @@
             },
             "Members": {
                 "groups" : [
-                    "AAG-Users-ADP-PlatformEngineers"
-                ]
-            }
-        },
-        {
-            "displayName": "AAG-Azure-AZD-ADP-SND1-Cont",
-            "description": "Azure AD Access group with contributor permissions to the AZD-ADP-SND1 subscription.",
-            "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV3"
-                ]
-            },
-            "Members": {
-                "groups" : [
-                    "AAG-Users-ADP-PlatformEngineers"
-                ]
-            }
-        },
-        {
-            "displayName": "AAG-Azure-AZD-ADP-SND1-UAA",
-            "description": "Azure AD Access group with User Access administrator permissions to the AZD-ADP-SND1 subscription.",
-            "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV3"
-                ]
-            },
-            "Members": {
-                "groups" : [
-                    "AAG-Users-ADP-PlatformEngineers"
-                ]
-            }
-        },
-        {
-            "displayName": "AAG-Azure-AZD-ADP-SND2-Cont",
-            "description": "Azure AD Access group with contributor permissions to the AZD-ADP-SND2 subscription.",
-            "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV3"
-                ]
-            },
-            "Members": {
-                "groups" : [
-                    "AAG-Users-ADP-PlatformEngineers"
-                ]
-            }
-        },
-        {
-            "displayName": "AAG-Azure-AZD-ADP-SND2-UAA",
-            "description": "Azure AD Access group with User Access administrator permissions to the AZD-ADP-SND2 subscription.",
-            "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV3"
-                ]
-            },
-            "Members": {
-                "groups" : [
-                    "AAG-Users-ADP-PlatformEngineers"
+                    "AAG-Users-ADP-FFC-DAL_TechUser"
                 ]
             }
         },
@@ -93,21 +39,7 @@
             },
             "Members": {
                 "groups" : [
-                    "AAG-Users-ADP-PlatformEngineers"
-                ]
-            }
-        },
-        {
-            "displayName": "AAG-Azure-AZD-ADP-SND3-UAA",
-            "description": "Azure AD Access group with User Access administrator permissions to the AZD-ADP-SND3 subscription.",
-            "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV3"
-                ]
-            },
-            "Members": {
-                "groups" : [
-                    "AAG-Users-ADP-PlatformEngineers"
+                    "AAG-Users-ADP-FFC-DAL_TechUser"
                 ]
             }
         }
