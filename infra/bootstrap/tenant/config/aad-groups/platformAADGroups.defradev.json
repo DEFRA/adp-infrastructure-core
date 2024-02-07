@@ -10,6 +10,11 @@
                 "users" : [
                     "jack.mccabe@defra.gov.uk"
                 ]
+            },
+            "Members": {
+                "users" : [
+                    "jack.mccabe@defra.gov.uk"
+                ]
             }
         }
     ],
