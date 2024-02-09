@@ -169,7 +169,7 @@
   },
   {
     "key": "PRIVATE_ENDPOINT_SUBNET",
-    "value": "#{{ lower(networkResourceNamePrefix) }}#{{ lower(nc_resource_subnet) }}#{{ lower(nc_instance_regionid) }}93",
+    "value": "#{{ lower(networkResourceNamePrefix) }}#{{ lower(nc_resource_subnet) }}#{{ lower(nc_instance_regionid) }}95",
     "label": "adp-platform",
     "contentType": "text/plain"
   }
