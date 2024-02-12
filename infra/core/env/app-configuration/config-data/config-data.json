@@ -132,18 +132,6 @@
     "contentType": "text/plain"
   },
   {
-    "key": "AZR_MST_PRIVATELINKDNS_NORTHEUROPE_RG",
-    "value": "#{{ mstPrivateLinkDnsNorthEuropeRsg }}",
-    "label": "adp-platform",
-    "contentType": "text/plain"
-  },
-  {
-    "key": "AZR_MST_PRIVATELINKDNS_WESTEUROPE_RG",
-    "value": "#{{ mstPrivateLinkDnsWestEuropeRsg }}",
-    "label": "adp-platform",
-    "contentType": "text/plain"
-  },
-  {
     "key": "AZR_MST_PRIVATELINKDNS_UKSOUTH_RG",
     "value": "#{{ mstPrivateLinkDnsUkSouthRsg }}",
     "label": "adp-platform",
