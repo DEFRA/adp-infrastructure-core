@@ -160,5 +160,11 @@
     "value": "#{{ lower(networkResourceNamePrefix) }}#{{ lower(nc_resource_subnet) }}#{{ lower(nc_instance_regionid) }}95",
     "label": "adp-platform",
     "contentType": "text/plain"
+  },
+  {
+    "key": "PRIVATE_ENDPOINT_PREFIX",
+    "value": "#{{ lower(infraResourceNamePrefix) }}#{{ lower(nc_resource_privateendpoint) }}#{{ nc_instance_regionid }}01",
+    "label": "adp-platform",
+    "contentType": "text/plain"
   }
 ]
