@@ -124,5 +124,41 @@
     "value": "#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}01",
     "label": "adp-platform",
     "contentType": "text/plain"
+  },
+  {
+    "key": "AZR_MST_PRIVATELINKDNS_SUBSCRIPTION_ID",
+    "value": "#{{ mstPrivateLinkDnsSubscriptionId }}",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
+    "key": "AZR_MST_PRIVATELINKDNS_UKSOUTH_RG",
+    "value": "#{{ mstPrivateLinkDnsUkSouthRsg }}",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
+    "key": "AZR_MST_PRIVATELINKDNS_UKWEST_RG",
+    "value": "#{{ mstPrivateLinkDnsUkWestRsg }}",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
+    "key": "VIRTUAL_NETWORK_NAME",
+    "value": "#{{ lower(virtualNetworkName) }}",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
+    "key": "VIRTUAL_NETWORK_RG",
+    "value": "#{{ lower(virtualNetworkResourceGroup) }}",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
+    "key": "PRIVATE_ENDPOINT_SUBNET",
+    "value": "#{{ lower(networkResourceNamePrefix) }}#{{ lower(nc_resource_subnet) }}#{{ lower(nc_instance_regionid) }}95",
+    "label": "adp-platform",
+    "contentType": "text/plain"
   }
 ]
