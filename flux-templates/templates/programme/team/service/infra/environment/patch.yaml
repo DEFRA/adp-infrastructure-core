@@ -20,6 +20,11 @@ spec:
     serviceName: ${SERVICE_NAME}
     keyVaultResourceGroupName: ${SERVICES_INFRA_RG}
     keyVaultName: ${APPLICATION_KEYVAULT}
+    virtualNetworkResourceGroupName: ${VIRTUAL_NETWORK_RG}
+    virtualNetworkName: ${VIRTUAL_NETWORK_NAME}
+    privateEndpointSubnetName: ${PRIVATE_ENDPOINT_SUBNET}
+    privateEndpointPrefix: ${PRIVATE_ENDPOINT_PREFIX}
+    createPrivateEndpointsPrivateDnsZoneGroup: false
     userAssignedIdentity:
       federatedCreds:
         - namespace: ${TEAM_NAMESPACE}

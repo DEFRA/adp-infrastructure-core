@@ -1,0 +1,23 @@
+{
+    "name": "ffc",
+    "teams": [
+        {
+            "name": "ffc-demo",
+            "servicecode": "FFC-DEMO",
+            "services": [
+                {
+                    "name": "ffc-demo-web",
+                    "frontend": true
+                }
+            ],
+            "environments": [
+                {
+                    "name": "snd",
+                    "instances": [
+                        "1"
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -10,6 +10,35 @@ param(
     [string]$PSHelperDirectory
 )
 
+$jsonmanifest = '{
+    "name": "ffc",
+    "teams": [
+        {
+            "name": "ffc-demo",
+            "servicecode": "FFC-DEMO",
+            "services": [
+                {
+                    "name": "ffc-demo-web",
+                    "frontend": true
+                }
+            ],
+            "environments": [
+                {
+                    "name": "snd",
+                    "instances": [
+                        "1"
+                    ]
+                }
+            ]
+        }
+    ]
+}'
+
+$TemplatesPath = 'C:\ganesh\projects\defra\repo\github\Defra\adp-infrastructure-core\flux-templates\templates'
+$OnBoardingManifest = $jsonmanifest
+$FluxServicesPath = 'C:\ganesh\projects\defra\repo\github\Defra\adp-flux-services\services'
+$PSHelperDirectory = 'C:\ganesh\projects\defra\repo\github\Defra\adp-infrastructure-core\scripts\modules\ps-helpers'
+
 function ReplaceTokens {
     param(
         [Parameter(Mandatory)]
@@ -318,7 +347,7 @@ try {
     }
 
     # CREATE FEATURE BRANCH IN ADP-SERVICES-FLUX
-    New-FeatureBranch -ProgrammeName $programmeName
+    # New-FeatureBranch -ProgrammeName $programmeName
 
     $exitCode = 0
 }
