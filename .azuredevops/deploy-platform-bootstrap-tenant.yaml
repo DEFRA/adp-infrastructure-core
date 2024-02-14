@@ -84,7 +84,7 @@ extends:
       - ${{ if eq(variables.IsPlatfromADGroup, true) }}:  
         - name: platform_aadgroup
           deployments:
-            - name: Create or Update MCU AAD groups
+            - name: Create or Update LAP MIT AAD groups
               type: 'script'
               scriptType: AzurePowerShell
               path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
