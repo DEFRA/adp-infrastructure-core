@@ -1,19 +1,19 @@
 {
     "userADGroups": [
         {
-            "displayName": "AAG-Users-ADP-FFC-DAL_TechUser",
-            "description": "Azure AD User group for DAL TechUser",
+            "displayName": "AAG-Users-ADP-Core-MCU_TechUser",
+            "description": "Azure AD User group for MCU TechUser",
             "Owners": {
                 "serviceprincipals" : [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ],
                 "users" : [
-                    "jack.mccabe@defra.gov.uk"
+                    "steve.dickinson@defra.gov.uk"
                 ]
             },
             "Members": {
                 "users" : [
-                    "jack.mccabe@defra.gov.uk"
+                    "shaun.fitzsimmons@defra.gov.uk"
                 ]
             }
         }
@@ -30,7 +30,7 @@
             },
             "Members": {
                 "groups" : [
-                    "AAG-Users-ADP-FFC-DAL_TechUser"
+                    "AAG-Users-ADP-Core-MCU_TechUser"
                 ]
             }
         },
@@ -44,7 +44,7 @@
             },
             "Members": {
                 "groups" : [
-                    "AAG-Users-ADP-FFC-DAL_TechUser"
+                    "AAG-Users-ADP-Core-MCU_TechUser"
                 ]
             }
         }
