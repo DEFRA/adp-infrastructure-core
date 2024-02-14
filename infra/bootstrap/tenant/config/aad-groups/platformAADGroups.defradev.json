@@ -1,19 +1,19 @@
 {
     "userADGroups": [
         {
-            "displayName": "AAG-Users-ADP-LAP-MIT_TechUser",
+            "displayName": "AAG-Users-ADP-FCP-FIND_TechUser",
             "description": "Azure AD User group for MCU TechUser",
             "Owners": {
                 "serviceprincipals" : [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ],
                 "users" : [
-                    "david.baker@defra.gov.uk"
+                    "foysal.mohammed@defra.gov.uk"
                 ]
             },
             "Members": {
                 "users" : [
-                    "david.baker@defra.gov.uk"
+                    "foysal.mohammed@defra.gov.uk"
                 ]
             }
         }
@@ -30,7 +30,7 @@
             },
             "Members": {
                 "groups" : [
-                    "AAG-Users-ADP-LAP-MIT_TechUser"
+                    "AAG-Users-ADP-FCP-FIND_TechUser"
                 ]
             }
         },
@@ -44,7 +44,7 @@
             },
             "Members": {
                 "groups" : [
-                    "AAG-Users-ADP-LAP-MIT_TechUser"
+                    "AAG-Users-ADP-FCP-FIND_TechUser"
                 ]
             }
         }
