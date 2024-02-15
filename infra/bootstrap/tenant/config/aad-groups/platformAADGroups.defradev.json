@@ -1,13 +1,8 @@
 {
     "userADGroups": [
         {
-            "displayName": "DemoGroup-To-Test-AddUserfromAPI",
-            "description": "DemoGroup To TestAdd Userfrom C# API",
-            "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV3"
-                ]
-            }
+            "displayName": "DemoGroup-To-Test-AddUserfromAPI-2",
+            "description": "DemoGroup To TestAdd Userfrom C# API"
         }
     ]
 }
