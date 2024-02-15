@@ -5,11 +5,15 @@ metadata:
   namespace: flux-config
   labels:
     azure.workload.identity/use: "true"
+    backstage.io/kubernetes-id: __SERVICE_NAME__
+    backstage.io/kubernetes-team: __TEAM_NAME__
 spec:
   template:
     metadata:
       labels:
         azure.workload.identity/use: "true"
+        backstage.io/kubernetes-id: __SERVICE_NAME__
+        backstage.io/kubernetes-team: __TEAM_NAME__
     spec:
       serviceAccountName: ${PLATFORM_DB_ADMIN}
       restartPolicy: Never
