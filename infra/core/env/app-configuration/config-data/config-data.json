@@ -120,7 +120,7 @@
     "contentType": "text/plain"
   },
   {
-    "key": "defra-egress-firewall-cert-01",
+    "key": "defra-egress-firewall-cert-01.crt",
     "value": "{\"uri\":\"https://#{{ ssvPlatformKeyVaultName }}.vault.azure.net/secrets/AKS-Defra-Egress-Firewall-Cert-01\"}",
     "label": "adp-platform",
     "contentType": "text/plain"
