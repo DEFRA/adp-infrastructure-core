@@ -11,18 +11,6 @@
                     "jeevan.kuduva-ravindran@defra.onmicrosoft.com"
                 ]
             }
-        },
-        {
-            "displayName": "AAG-Azure-ADP-SND1-PostgresDB_Writer",
-            "description": "Temp group for Jeevan's testing",
-            "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV3"
-                ],
-                "users" : [
-                    "jeevan.kuduva-ravindran@defra.onmicrosoft.com"
-                ]
-            }
         }
     ]
 }
