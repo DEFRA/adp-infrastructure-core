@@ -20,6 +20,14 @@ spec:
     serviceName: ${SERVICE_NAME}
     keyVaultResourceGroupName: ${SERVICES_INFRA_RG}
     keyVaultName: ${APPLICATION_KEYVAULT}
+    environment: ${ENVIRONMENT}
+    virtualNetworkResourceGroupName: ${VIRTUAL_NETWORK_RG}
+    virtualNetworkName: ${VIRTUAL_NETWORK_NAME}
+    privateEndpointSubnetName: ${PRIVATE_ENDPOINT_SUBNET}
+    privateEndpointPrefix: ${PRIVATE_ENDPOINT_PREFIX}
+    azrMSTPrivateLinkDNSSubscriptionID: ${AZR_MST_PRIVATELINKDNS_SUBSCRIPTION_ID}
+    azrMSTPrivateLinkDNSUKSouthResourceGroupName: ${AZR_MST_PRIVATELINKDNS_UKSOUTH_RG}
+    azrMSTPrivateLinkDNSUKWestResourceGroupName: ${AZR_MST_PRIVATELINKDNS_UKWEST_RG}
     userAssignedIdentity:
       federatedCreds:
         - namespace: ${TEAM_NAMESPACE}
