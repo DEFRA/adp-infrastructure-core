@@ -3,6 +3,9 @@ kind: Kustomization
 metadata:
   name: __SERVICE_NAME__-pre-deploy
   namespace: flux-config
+  labels:
+    backstage.io/kubernetes-id: __SERVICE_NAME__
+    backstage.io/kubernetes-team: __TEAM_NAME__
 spec:
   dependsOn:
     - name: __SERVICE_NAME__-infra

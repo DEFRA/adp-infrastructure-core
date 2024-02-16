@@ -3,6 +3,9 @@ kind: HelmRelease
 metadata:
   name: __SERVICE_NAME__
   namespace: flux-config
+  labels:
+    backstage.io/kubernetes-id: __SERVICE_NAME__
+    backstage.io/kubernetes-team: __TEAM_NAME__
 spec:
   releaseName: __SERVICE_NAME__
   chart:
