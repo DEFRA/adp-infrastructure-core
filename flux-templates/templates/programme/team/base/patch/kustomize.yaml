@@ -3,6 +3,8 @@ kind: Kustomization
 metadata:
   name: __TEAM_NAME__-base
   namespace: flux-config
+  labels:
+    backstage.io/kubernetes-team: __TEAM_NAME__
 spec:
   sourceRef:
     kind: GitRepository

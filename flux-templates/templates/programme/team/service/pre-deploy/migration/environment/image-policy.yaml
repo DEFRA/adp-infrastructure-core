@@ -3,6 +3,9 @@ kind: ImagePolicy
 metadata:
   name: __SERVICE_NAME__-dbmigration-__ENVIRONMENT__-0__ENV_INSTANCE__
   namespace: flux-config
+  labels:
+    backstage.io/kubernetes-id: __SERVICE_NAME__
+    backstage.io/kubernetes-team: __TEAM_NAME__
 spec:
   imageRepositoryRef:
     name: __SERVICE_NAME__-dbmigration

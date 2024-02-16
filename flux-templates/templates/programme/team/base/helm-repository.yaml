@@ -3,6 +3,8 @@ kind: HelmRepository
 metadata:
   name: __TEAM_NAME__-helm-repo
   namespace: flux-config
+  labels:
+    backstage.io/kubernetes-team: __TEAM_NAME__
 spec:
   type: oci
   interval: 5m
