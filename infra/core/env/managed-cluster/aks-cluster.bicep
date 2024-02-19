@@ -461,10 +461,7 @@ module appConfigurationDataReaderRoleAssignment '.bicep/app-config-data-reader.b
 
 module defraFwCertSecretUserRoleAssignment '.bicep/keyvault-secret-rbac.bicep' = {
   name: 'defra-fw-cert-secret-user-role-assignment-${deploymentDate}'
-  scope: resourceGroup(keyvaultFwCertificate.resourceGroup)
-  dependsOn: [
-    managedIdentityAppConfig
-  ]
+  scope: resourceGroup(keyvaultFwCertificate.subscriptionId, keyvaultFwCertificate.resourceGroup)
   params: {
     keyVaultName: keyvaultFwCertificate.keyVaultName
     secretName: keyvaultFwCertificate.secretName

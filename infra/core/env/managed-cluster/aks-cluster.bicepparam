@@ -110,6 +110,7 @@ param appConfig = {
 }
 
 param keyvaultFwCertificate = {
+  subscriptionId: '#{{ ssvSubscriptionId }}'
   resourceGroup: '#{{ ssvSharedResourceGroup }}'
   keyVaultName: '#{{ ssvPlatformKeyVaultName }}'
   secretName: 'AKS-Defra-Egress-Firewall-Cert-01'
