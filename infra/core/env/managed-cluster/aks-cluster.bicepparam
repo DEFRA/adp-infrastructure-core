@@ -109,6 +109,8 @@ param appConfig = {
   managedIdentityName: '#{{ acManagedIdentityName }}'
 }
 
+param firewallCertificateSecretName = 'AKS-Defra-Egress-Firewall-Cert-01'
+
 param keyVault = {
   resourceGroup: '#{{ servicesResourceGroup }}'
   keyVaultName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}02'

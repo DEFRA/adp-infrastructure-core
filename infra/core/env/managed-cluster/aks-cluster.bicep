@@ -30,6 +30,10 @@ param asoPlatformManagedIdentity string
 param appConfig object
 @description('Required. The parameter object for the azure monitor workspace service. The object must contain name, resourceGroup and subscriptionId.')
 param azureMonitorWorkspace object
+
+@description('Required. The parameter object for the firewall certificate secret name.')
+param firewallCertificateSecretName string
+
 @description('Required. The parameter object for the environment KeyVault. The object must contain name, resourceGroup and keyVaultName.')
 param keyVault object
 
@@ -452,6 +456,23 @@ module appConfigurationDataReaderRoleAssignment '.bicep/app-config-data-reader.b
   params: {
     principalId: managedIdentityAppConfig.outputs.principalId
     appConfigName: appConfig.name
+  }
+}
+
+module defraFwCertSecretUserRoleAssignment '.bicep/keyvault-secret-rbac.bicep' = {
+  name: 'defra-fw-cert-secret-user-role-assignment-${deploymentDate}'
+  scope: resourceGroup(keyVault.resourceGroup)
+  dependsOn: [
+    managedIdentityAppConfig
+  ]
+  params: {
+    keyVaultName: keyVault.keyVaultName
+    secretName: firewallCertificateSecretName
+    roleAssignment: {
+      roleDefinitionIdOrName: 'Key Vault Secrets User'
+      principalId: managedIdentityAppConfig.outputs.principalId
+      principalType: 'ServicePrincipal'
+    }
   }
 }
 
