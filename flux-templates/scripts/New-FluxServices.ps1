@@ -10,6 +10,119 @@ param(
     [string]$PSHelperDirectory
 )
 
+[string]$TemplatesPath = 'flux-templates/templates'
+[string]$OnBoardingManifest = '{
+    "name": "ffc",
+    "teams": [
+        {
+            "name": "ffc-demo",
+            "servicecode": "FFC-DEMO",
+            "services": [
+                {
+                    "name": "ffc-demo-calculation-service"
+                },
+                {
+                    "name": "ffc-demo-claim-service",
+                    "backend": true,
+                    "dbname": "ffc-demo-claim"
+                },
+                {
+                    "name": "ffc-demo-payment-service",
+                    "backend": true,
+                    "dbname": "ffc-demo-payment"
+                },
+                {
+                    "name": "ffc-demo-payment-web",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-demo-web",
+                    "frontend": true
+                }
+            ],
+            "environments": [
+                {
+                    "name": "snd",
+                    "instances": [
+                        "1",
+                        "2",
+                        "3"
+                    ]
+                },
+                {
+                    "name": "dev",
+                    "instances": [
+                        "1"
+                    ]
+                },
+                {
+                    "name": "tst",
+                    "instances": [
+                        "1",
+                        "2"
+                    ]
+                },
+                {
+                    "name": "pre",
+                    "instances": [
+                        "1"
+                    ]
+                },
+                {
+                    "name": "prd",
+                    "instances": [
+                        "1"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "ffc-ffd",
+            "servicecode": "FFC-FFD",
+            "services": [
+                {
+                    "name": "ffc-ffd-frontend-poc",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-ffd-backend-poc",
+                    "backend": true,
+                    "dbname": "ffc-ffd-backend"
+                }
+            ],
+            "environments": [
+                {
+                    "name": "snd",
+                    "instances": [
+                        "1",
+                        "2",
+                        "3"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "ffc-dal",
+            "servicecode": "FFC-DAL",
+            "services": [
+                {
+                    "name": "fcp-data-access-layer-api"
+                }
+            ],
+            "environments": [
+                {
+                    "name": "snd",
+                    "instances": [
+                        "3"
+                    ]
+                }
+            ]
+        }
+    ]
+}'
+[string]$FluxServicesPath = 'C:/Users/asaarif/GitRepos/adp-flux-services/services'
+[string]$PSHelperDirectory = './scripts/modules/ps-helpers'
+
 function ReplaceTokens {
     param(
         [Parameter(Mandatory)]
@@ -117,6 +230,26 @@ function New-FeatureBranch {
     }
 }
 
+function Set-Version {
+    param(
+        [Parameter(Mandatory)]
+        [string]$FilePath
+    )
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand
+        Write-Debug "${functionName}:Entered"
+        Write-Debug "${functionName}:FilePath=$FilePath"
+    }
+    process {
+        if (test-path $FilePath) {
+            $versionNumberString = Select-String -Path "$FilePath" -Pattern '"*[0-9]+\.[0-9]+\.[0-9]+"*\s#\s\{"\$imagepolicy":'
+            $versionNumberString[0] -match '[0-9]+\.[0-9]+\.[0-9]+'
+            $version = $matches[0]
+            $lookupTable['__VERSION__'] = $version
+        }
+    }
+}
+
 Set-StrictMode -Version 3.0
 
 [string]$functionName = $MyInvocation.MyCommand
@@ -152,6 +285,7 @@ try {
 
     [hashtable]$lookupTable = @{
         '__PROGRAMME_NAME__' = $programmeName
+        '__VERSION__'        = '0.1.0'
         '__SERVICE_CODE__'   = 'INITIALIZE'
         '__TEAM_NAME__'      = 'INITIALIZE'
         '__SERVICE_NAME__'   = 'INITIALIZE'
@@ -236,6 +370,8 @@ try {
                     New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/deploy/$($environment.name)/0$instance"
                     Copy-Item -Path $templateTeamServicePath/deploy/environment/kustomization.yaml -Destination $programmePath/$($team.name)/$($service.name)/deploy/$($environment.name)/0$instance/kustomization.yaml
 
+                    Set-Version -FilePath $programmePath/$($team.name)/$($service.name)/deploy/$($environment.name)/0$instance/patch.yaml
+
                     if ($service['frontend']) {
                         ReplaceTokens -TemplateFile "$templateTeamServicePath/deploy/environment/patch-frontend.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/deploy/$($environment.name)/0$instance/patch.yaml"
                     }
@@ -260,12 +396,16 @@ try {
 
                     New-Directory -DirectoryPath $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance
                     Copy-Item -Path "$templateTeamServicePath/infra/environment/kustomization.yaml" -Destination $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/kustomization.yaml -Recurse
+
+                    Set-Version $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/patch.yaml
+                    
                     if ($service['backend']) {
                         ReplaceTokens -TemplateFile "$templateTeamServicePath/infra/environment/patch-backend.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/patch.yaml"
                     }
                     else {
                         ReplaceTokens -TemplateFile "$templateTeamServicePath/infra/environment/patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/patch.yaml"
                     }
+                    
                     ReplaceTokens -TemplateFile "$templateTeamServicePath/infra/environment/image-policy.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/image-policy.yaml"
                 }
             }
@@ -318,7 +458,7 @@ try {
     }
 
     # CREATE FEATURE BRANCH IN ADP-SERVICES-FLUX
-    New-FeatureBranch -ProgrammeName $programmeName
+    # New-FeatureBranch -ProgrammeName $programmeName
 
     $exitCode = 0
 }

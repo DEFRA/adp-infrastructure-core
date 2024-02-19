@@ -97,7 +97,7 @@ var systemNodePool = {
   maxCount: cluster.npSystem.maxCount
   vnetSubnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnet02Name)
   enableAutoScaling: true
-  enableCustomCATrust: false
+  enableCustomCATrust: true
   enableFIPS: false
   enableEncryptionAtHost: false
   type: 'VirtualMachineScaleSets'
@@ -240,7 +240,7 @@ module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in km
 }
 ]
 
-module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.16' = {
+module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.19-prerelease' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
     privateDnsZoneContributor
@@ -312,7 +312,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.1
         maxCount: cluster.npUser.maxCount
         vnetSubnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnet03Name)
         enableAutoScaling: true
-        enableCustomCATrust: false
+        enableCustomCATrust: true
         enableFIPS: false
         enableEncryptionAtHost: false
         type: 'VirtualMachineScaleSets'
