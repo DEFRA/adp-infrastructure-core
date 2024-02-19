@@ -1,7 +1,7 @@
 {
     "accessADGroups": [
         {
-            "displayName": "AAG-Azure-ADP-SND1-PostgresDB_Reader",
+            "displayName": "AAG-Azure-ADP-SND1-PostgresDB_Writer",
             "description": "Temp group for Jeevan's testing",
             "Owners": {
                 "serviceprincipals" : [
