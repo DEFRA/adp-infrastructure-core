@@ -448,7 +448,7 @@ module sharedAcrPullRoleAssignment '.bicep/acr-pull.bicep' = [for containerRegis
 }]
 
 module appConfigurationDataReaderRoleAssignment '.bicep/app-config-data-reader.bicep' = {
-  name: 'app-config-data-reader-role-assignment-${deploymentDate}'
+  name: 'app-config-data-reader-rbac-${deploymentDate}'
   scope: resourceGroup(appConfig.resourceGroup)
   dependsOn: [
     deployAKS
@@ -460,7 +460,7 @@ module appConfigurationDataReaderRoleAssignment '.bicep/app-config-data-reader.b
 }
 
 module defraFwCertSecretUserRoleAssignment '.bicep/keyvault-secret-rbac.bicep' = {
-  name: 'key-vault-firewall-cert-secret-user-role-assignment-${deploymentDate}'
+  name: 'keyvault-fw-cert-secret-user-rbac-${deploymentDate}'
   scope: resourceGroup(keyvaultFwCertificate.subscriptionId, keyvaultFwCertificate.resourceGroup)
   params: {
     keyVaultName: keyvaultFwCertificate.keyVaultName
