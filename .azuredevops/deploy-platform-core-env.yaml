@@ -157,8 +157,7 @@ extends:
               - ${{ if eq(variables.IsNetworkPublicDNSZone, true) }}:
                 - name: dns-zone
                   path: infra/core/env/public-dns-zone
-                  resourceGroupName: $(cdnResourceGroup)
-                  serviceConnectionVariableName: 'secServiceConnection'
+                  resourceGroupName: $(dnsResourceGroup)
 
         - ${{ if eq(variables.IsMonitoring, true) }}:
           - name: monitoring
@@ -283,12 +282,10 @@ extends:
                 - name: front-door
                   path: infra/core/env/front-door
                   resourceGroupName: $(cdnResourceGroup)
-                  serviceConnectionVariableName: 'secServiceConnection'
               - ${{ if eq(variables.IsFrontDoorWAF, true) }}: 
                 - name: azure-waf
                   path: infra/core/env/front-door
                   resourceGroupName: $(cdnResourceGroup)
-                  serviceConnectionVariableName: 'secServiceConnection'
                   
         - ${{ if eq(variables.IsApplication, true) }}:  
           - name: application_infra
