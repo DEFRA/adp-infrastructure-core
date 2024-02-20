@@ -30,8 +30,12 @@ param asoPlatformManagedIdentity string
 param appConfig object
 @description('Required. The parameter object for the azure monitor workspace service. The object must contain name, resourceGroup and subscriptionId.')
 param azureMonitorWorkspace object
+
 @description('Required. The parameter object for the environment KeyVault. The object must contain name, resourceGroup and keyVaultName.')
 param keyVault object
+
+@description('Required. The parameter object for the firewall certificate key vault. The object must contain name, resourceGroup, keyVaultName and secretName.')
+param keyvaultFwCertificate object
 
 var commonTags = {
   Location: location
@@ -444,7 +448,7 @@ module sharedAcrPullRoleAssignment '.bicep/acr-pull.bicep' = [for containerRegis
 }]
 
 module appConfigurationDataReaderRoleAssignment '.bicep/app-config-data-reader.bicep' = {
-  name: 'app-config-data-reader-role-assignment-${deploymentDate}'
+  name: 'app-config-data-reader-rbac-${deploymentDate}'
   scope: resourceGroup(appConfig.resourceGroup)
   dependsOn: [
     deployAKS
@@ -452,6 +456,20 @@ module appConfigurationDataReaderRoleAssignment '.bicep/app-config-data-reader.b
   params: {
     principalId: managedIdentityAppConfig.outputs.principalId
     appConfigName: appConfig.name
+  }
+}
+
+module defraFwCertSecretUserRoleAssignment '.bicep/keyvault-secret-rbac.bicep' = {
+  name: 'keyvault-fw-cert-secret-user-rbac-${deploymentDate}'
+  scope: resourceGroup(keyvaultFwCertificate.subscriptionId, keyvaultFwCertificate.resourceGroup)
+  params: {
+    keyVaultName: keyvaultFwCertificate.keyVaultName
+    secretName: keyvaultFwCertificate.secretName
+    roleAssignment: {
+      roleDefinitionIdOrName: 'Key Vault Secrets User'
+      principalId: managedIdentityAppConfig.outputs.principalId
+      principalType: 'ServicePrincipal'
+    }
   }
 }
 

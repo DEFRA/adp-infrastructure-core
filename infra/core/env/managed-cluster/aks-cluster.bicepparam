@@ -109,6 +109,13 @@ param appConfig = {
   managedIdentityName: '#{{ acManagedIdentityName }}'
 }
 
+param keyvaultFwCertificate = {
+  subscriptionId: '#{{ ssvSubscriptionId }}'
+  resourceGroup: '#{{ ssvSharedResourceGroup }}'
+  keyVaultName: '#{{ ssvPlatformKeyVaultName }}'
+  secretName: 'AKS-Defra-Egress-Firewall-Cert-01'
+}
+
 param keyVault = {
   resourceGroup: '#{{ servicesResourceGroup }}'
   keyVaultName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}02'
