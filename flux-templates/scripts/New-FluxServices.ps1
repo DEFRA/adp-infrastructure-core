@@ -132,6 +132,7 @@ function Set-Version {
             $versionNumberString = Select-String -Path "$FilePath" -Pattern '"*[0-9]+\.[0-9]+\.[0-9]+"*\s#\s\{"\$imagepolicy":'
             $versionNumberString[0] -match '[0-9]+\.[0-9]+\.[0-9]+'
             $version = $matches[0]
+            Write-Host "Version Number in file '$FilePath': '$version'"
             $lookupTable['__VERSION__'] = $version
         }
     }
@@ -284,7 +285,7 @@ try {
                     New-Directory -DirectoryPath $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance
                     Copy-Item -Path "$templateTeamServicePath/infra/environment/kustomization.yaml" -Destination $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/kustomization.yaml -Recurse
 
-                    Set-Version $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/patch.yaml
+                    Set-Version -FilePath $programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/patch.yaml
                     
                     if ($service['backend']) {
                         ReplaceTokens -TemplateFile "$templateTeamServicePath/infra/environment/patch-backend.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/infra/$($environment.name)/0$instance/patch.yaml"
