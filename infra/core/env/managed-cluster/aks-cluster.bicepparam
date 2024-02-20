@@ -10,7 +10,7 @@ param vnet = {
 
 param cluster = {
   name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_kubernetesservice }}#{{ nc_instance_regionid }}01'
-  kubernetesVersion: '1.28.5'
+  kubernetesVersion: '#{{ aksVersion }}'
   skuTier: '#{{ aksClusterSkuTier }}'
   nodeResourceGroup: '#{{ aksResourceGroup }}-Managed'
   miControlPlane: '#{{ aksControlPlaneManagedIdentity }}'
