@@ -202,7 +202,7 @@ try {
             az vmss create ``
             --resource-group $ResourceGroup ``
             --name $VMSSName ``
-            --computer-name-prefix $VMSSName ``
+            --computer-name-prefix sndwin02 ``
             --vm-sku Standard_D4s_v4 ``
             --instance-count 2 ``
             --subnet '$SubnetId' ``
