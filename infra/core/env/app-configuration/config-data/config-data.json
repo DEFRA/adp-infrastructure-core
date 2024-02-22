@@ -172,5 +172,11 @@
     "value": "#{{ lower(infraResourceNamePrefix) }}#{{ lower(nc_resource_privateendpoint) }}#{{ nc_instance_regionid }}01",
     "label": "adp-platform",
     "contentType": "text/plain"
+  },
+  {
+    "key": "STORAGEACCOUNT_PREFIX",
+    "value": "#{{ lower(infraResourceNamePrefix) }}#{{ lower(nc_resource_storageaccount) }}#{{ nc_instance_regionid }}01",
+    "label": "adp-platform",
+    "contentType": "text/plain"
   }
 ]
