@@ -116,9 +116,6 @@ var systemNodePool = {
   nodeTaints: [
     'CriticalAddonsOnly=true:NoSchedule'
   ]
-  nodeLabels: {
-    Ingress: 'true'
-  }
 }
 
 module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
@@ -408,6 +405,7 @@ module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.ex
                 SUBSCRIPTION_ID: subscription().subscriptionId
                 TENANT_ID: tenant().tenantId
                 LOAD_BALANCER_SUBNET: vnet.subnet01Name
+                LOAD_BALANCER_SUBNET_ADDRESS_PREFIX: vnet.subnet1AddressPrefix
                 SHARED_CONTAINER_REGISTRY: containerRegistries[0].name
               }
             }

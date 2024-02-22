@@ -151,7 +151,7 @@ try {
     Write-Debug "${functionName}:appConfigMiPrincipalId=$appConfigMiPrincipalId"
 
     Write-Host "Generating SSH keys for key type: ${SSHKeyType}"
-    Invoke-CommandLine -Command "ssh-keygen -t $SSHKeyType -f id_ecdsa -N '""""' -C '""""'" -NoOutput
+    Invoke-CommandLine -Command "ssh-keygen -t $SSHKeyType -f id_ecdsa -N '' -C ''" -NoOutput
     Write-Host "Generated SSH keys"
 
     Set-KeyVaultSecret -KeyVaultName $KeyVaultName -SecretName $SSHPrivateKeySecretName -File "id_ecdsa"
