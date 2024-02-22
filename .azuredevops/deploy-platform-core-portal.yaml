@@ -52,7 +52,7 @@ extends:
       - name: 'ssv3'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - 'refs/heads/main'
+          - 'refs/heads/rv/304330-addsuffix'
         developmentEnvironment: true
         privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
         azureRegions:

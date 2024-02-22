@@ -9,7 +9,7 @@ param containerAppEnv = {
   ]
 }
 param containerApp = {
-  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerapps }}#{{ nc_shared_instance_regionid }}01'
+  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerapps }}#{{ nc_shared_instance_regionid }}01-portal-web'
   hostName: '#{{ ssvPortalHostName }}'
 }
 param workspace = {
