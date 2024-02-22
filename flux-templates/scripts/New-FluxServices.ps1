@@ -1,14 +1,158 @@
-[CmdletBinding()]
-param(
-    [Parameter(Mandatory)] 
-    [string]$TemplatesPath,
-    [Parameter(Mandatory)]
-    [string]$OnBoardingManifest,
-    [Parameter(Mandatory)] 
-    [string]$FluxServicesPath,
-    [Parameter(Mandatory)]
-    [string]$PSHelperDirectory
-)
+# [CmdletBinding()]
+# param(
+#     [Parameter(Mandatory)] 
+#     [string]$TemplatesPath,
+#     [Parameter(Mandatory)]
+#     [string]$OnBoardingManifest,
+#     [Parameter(Mandatory)] 
+#     [string]$FluxServicesPath,
+#     [Parameter(Mandatory)]
+#     [string]$PSHelperDirectory
+# )
+
+[string]$TemplatesPath = 'flux-templates/templates'
+[string]$OnBoardingManifest = '{
+    "name": "ffc",
+    "teams": [
+        {
+            "name": "ffc-demo",
+            "servicecode": "FFC-DEMO",
+            "services": [
+                {
+                    "name": "ffc-demo-calculation-service"
+                },
+                {
+                    "name": "ffc-demo-claim-service",
+                    "backend": true,
+                    "dbname": "ffc-demo-claim"
+                },
+                {
+                    "name": "ffc-demo-payment-service",
+                    "backend": true,
+                    "dbname": "ffc-demo-payment"
+                },
+                {
+                    "name": "ffc-demo-payment-web",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-demo-web",
+                    "frontend": true
+                }
+            ],
+            "environments": [
+                {
+                    "name": "snd",
+                    "instances": [
+                        "1",
+                        "2",
+                        "3"
+                    ]
+                },
+                {
+                    "name": "dev",
+                    "instances": [
+                        "1"
+                    ]
+                },
+                {
+                    "name": "tst",
+                    "instances": [
+                        "1",
+                        "2"
+                    ]
+                },
+                {
+                    "name": "pre",
+                    "instances": [
+                        "1"
+                    ]
+                },
+                {
+                    "name": "prd",
+                    "instances": [
+                        "1"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "ffc-ffd",
+            "servicecode": "FFC-FFD",
+            "services": [
+                {
+                    "name": "ffc-ffd-frontend-poc",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-ffd-backend-poc",
+                    "backend": true,
+                    "dbname": "ffc-ffd-backend"
+                }
+            ],
+            "environments": [
+                {
+                    "name": "snd",
+                    "instances": [
+                        "1",
+                        "2",
+                        "3"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "ffc-dal",
+            "servicecode": "FCP-DAL",
+            "services": [
+                {
+                    "name": "fcp-data-access-layer-api",
+                    "frontend": true
+                }
+            ],
+            "environments": [
+                {
+                    "name": "snd",
+                    "instances": [
+                        "3"
+                    ]
+                },
+                {
+                    "name": "dev",
+                    "instances": [
+                        "1"
+                    ]
+                }
+            ]
+        },
+        {
+            "environments": [
+                {
+                    "instances": [
+                        "3"
+                    ],
+                    "name": "snd"
+                },
+                {
+                    "instances": [
+                        "1"
+                    ],
+                    "name": "dev"
+                }
+            ],
+            "name": "ffc-find",
+            "servicecode": "FCP-FIND",
+            "services": [
+                {
+                    "frontend": true,
+                    "name": "fcp-find-ai-frontend"
+                }
+            ]
+        }
+    ]
+}'
+[string]$FluxServicesPath = 'C:/Users/asaarif/GitRepos/adp-flux-services/services'
+[string]$PSHelperDirectory = './scripts/modules/ps-helpers'
 
 function ReplaceTokens {
     param(
@@ -346,7 +490,7 @@ try {
     }
 
     # CREATE FEATURE BRANCH IN ADP-SERVICES-FLUX
-    New-FeatureBranch -ProgrammeName $programmeName
+    # New-FeatureBranch -ProgrammeName $programmeName
 
     $exitCode = 0
 }
