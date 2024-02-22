@@ -30,6 +30,7 @@ spec:
     azrMSTPrivateLinkDNSSubscriptionID: ${AZR_MST_PRIVATELINKDNS_SUBSCRIPTION_ID}
     azrMSTPrivateLinkDNSUKSouthResourceGroupName: ${AZR_MST_PRIVATELINKDNS_UKSOUTH_RG}
     azrMSTPrivateLinkDNSUKWestResourceGroupName: ${AZR_MST_PRIVATELINKDNS_UKWEST_RG}
+    storageAccountPrefix: ${STORAGEACCOUNT_PREFIX}
     userAssignedIdentity:
       federatedCreds:
         - namespace: ${TEAM_NAMESPACE}
