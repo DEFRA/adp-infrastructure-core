@@ -1,7 +1,7 @@
 {
     "applications": [
         {
-            "displayName": "Azure-ADP-ADPPortal-SSV3-App",
+            "displayName": "Azure-ADP-ADPPortal-$(environment)$(environmentId)-Auth",
             "IdentifierUris": "",
             "keyVault": {
                 "name": "#{{ ssvPortalKeyVaultName }}",
@@ -18,8 +18,6 @@
             },
             "web": {
                 "redirectUris": [
-                    "http://localhost:7007/api/auth/microsoft/handler/frame",
-                    "{{portalAppUrl}}/api/auth/microsoft/handler/frame",
                     "https://#{{ ssvPortalHostName }}/api/auth/microsoft/handler/frame"
                 ],
                 "implicitGrantSettings": {
