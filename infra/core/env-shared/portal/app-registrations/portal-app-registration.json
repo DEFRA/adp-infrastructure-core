@@ -1,7 +1,7 @@
 {
     "applications": [
         {
-            "displayName": "Azure-ADP-ADPPortal-$(environment)$(environmentId)-Auth",
+            "displayName": "#{{ portalAppRegName }}",
             "IdentifierUris": "",
             "keyVault": {
                 "name": "#{{ ssvPortalKeyVaultName }}",
