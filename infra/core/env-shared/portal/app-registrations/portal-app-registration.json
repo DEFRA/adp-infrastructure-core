@@ -1,7 +1,7 @@
 {
     "applications": [
         {
-            "displayName": "#{{ portalAppRegName }}",
+            "displayName": "Azure-ADP-ADPPortal-SSV3-App",
             "IdentifierUris": "",
             "keyVault": {
                 "name": "#{{ ssvPortalKeyVaultName }}",
