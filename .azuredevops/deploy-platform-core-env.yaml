@@ -62,7 +62,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: jk/add-ssv-instance-var
+      ref: main
       
 variables:
   - name: IsAll
