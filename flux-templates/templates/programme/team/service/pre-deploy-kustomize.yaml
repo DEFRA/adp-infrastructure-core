@@ -30,6 +30,8 @@ spec:
       POSTGRES_DB: "__POSTGRES_DB__"
       POSTGRES_PORT: "5432"
       POSTGRES_SCHEMA_NAME: "public"
+      PG_WRITER_AD_GROUP: "AAG-Azure-ADP-__ENVIRONMENT____ENV_INSTANCE__-__TEAM_NAME__-PostgresDB_Writer"
+      PG_READER_AD_GROUP: "AAG-Azure-ADP-__ENVIRONMENT____ENV_INSTANCE__-__TEAM_NAME__-PostgresDB_Reader"
     substituteFrom:
       - kind: ConfigMap
         name: adp-platform-vars

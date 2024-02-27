@@ -19,4 +19,4 @@ spec:
         - name: POSTGRES_PORT
           value: "${POSTGRES_PORT}"
         - name: SCHEMA_USERNAME
-          value: ${TEAM_MI_PREFIX}-${TEAM_NAMESPACE}
+          value: ${PG_WRITER_AD_GROUP}
