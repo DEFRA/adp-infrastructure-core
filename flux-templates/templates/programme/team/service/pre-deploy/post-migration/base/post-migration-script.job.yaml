@@ -17,16 +17,6 @@ spec:
     spec:
       serviceAccountName: ${TEAM_NAMESPACE}
       restartPolicy: Never
-      volumes:
-      - name: custom-root-ca
-        secret:
-          secretName: custom-ca-trust-secret
-          optional: true
       containers:
       - name: __SERVICE_NAME__-post-dbmigration
         imagePullPolicy: Always
-        volumeMounts:
-          - name: custom-root-ca
-            readOnly: true
-            mountPath: /etc/ssl/certs/defra-egress-firewall-cert-01.crt
-            subPath: defra-egress-firewall-cert-01.crt

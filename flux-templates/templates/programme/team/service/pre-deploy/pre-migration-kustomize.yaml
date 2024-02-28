@@ -26,8 +26,6 @@ spec:
       PLATFORM_DB_ADMIN: ${PLATFORM_DB_ADMIN}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_SCHEMA_NAME: ${POSTGRES_SCHEMA_NAME}
-      PG_WRITER_AD_GROUP: ${PG_WRITER_AD_GROUP}
-      PG_READER_AD_GROUP: ${PG_READER_AD_GROUP}
     substituteFrom:
       - kind: ConfigMap
         name: adp-platform-vars
