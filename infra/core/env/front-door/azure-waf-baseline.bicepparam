@@ -63,6 +63,30 @@ param managedRuleSets = [
               ]
               exclusions: []
             }
+            { //backstage issues
+              ruleGroupName: 'PROTOCOL-ENFORCEMENT'
+              rules: [
+                {
+                  ruleId: '920440'
+                  enabledState: 'Disabled'
+                  action: 'AnomalyScoring'
+                  exclusions: []
+                }
+              ]
+              exclusions: []
+            }
+            { //backstage issues
+              ruleGroupName: 'LFI'
+              rules: [
+                {
+                  ruleId: '930130'
+                  enabledState: 'Disabled'
+                  action: 'AnomalyScoring'
+                  exclusions: []
+                }
+              ]
+              exclusions: []
+            }
           ]
           exclusions: []
         }
