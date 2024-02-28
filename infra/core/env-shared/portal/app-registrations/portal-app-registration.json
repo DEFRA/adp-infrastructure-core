@@ -17,9 +17,7 @@
                 ]
             },
             "web": {
-                "redirectUris": [
-                    "https://#{{ ssvPortalHostName }}/api/auth/microsoft/handler/frame"
-                ],
+                "redirectUris": #{{ noescape(portalRedirectUris) }},
                 "implicitGrantSettings": {
                     "enableAccessTokenIssuance": false,
                     "enableIdTokenIssuance": true
