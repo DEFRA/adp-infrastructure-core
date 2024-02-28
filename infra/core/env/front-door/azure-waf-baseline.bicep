@@ -4,17 +4,8 @@ param wafPolicyName string
 @description('Optional. The list of custom rule sets to configure on the WAF.')
 param customRules array = []
 
-@description('Optional. The list of RuleSetExclusions to be configured on the Default Microsoft managed rule set')
-param microsoftDefaultRuleSetRuleGroupOverrides array = []
-
-@description('Optional. The list of exclusions to be configured on the Default Microsoft managed rule set.')
-param microsoftDefaultRuleSetExclusions array = []
-
-@description('Optional. The list of RuleSetExclusions to be configured on the Default Microsoft Bot Manager rule set')
-param microsoftBotManagerRuleSetRuleGroupOverrides array = []
-
-@description('Optional. The list of exclusions to be configured for Microsoft Bot Manager ruleset  ')
-param microsoftBotManagerRuleSetExclusions array = []
+@description('Optional. The list of managed rule sets to configure on the WAF (DRS).')
+param managedRuleSets array = []
 
 @description('Optional. The PolicySettings object (enabledState,mode) for policy.')
 param policySettings object = {
@@ -33,22 +24,6 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
-
-var managedRuleSets = [
-  {
-    ruleSetType: 'Microsoft_DefaultRuleSet'
-    ruleSetVersion: '2.1'
-    ruleGroupOverrides: microsoftDefaultRuleSetRuleGroupOverrides
-    exclusions: microsoftDefaultRuleSetExclusions
-    ruleSetAction: 'Block'
-  }
-  {
-    ruleSetType: 'Microsoft_BotManagerRuleSet'
-    ruleSetVersion: '1.0'
-    ruleGroupOverrides: microsoftBotManagerRuleSetRuleGroupOverrides
-    exclusions: microsoftBotManagerRuleSetExclusions
-  }
-]
 
 var location = 'global'
 
