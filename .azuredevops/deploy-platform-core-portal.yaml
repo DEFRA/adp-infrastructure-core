@@ -41,7 +41,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref:  refs/heads/main
+      ref:  refs/heads/rv/304330
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -52,7 +52,7 @@ extends:
       - name: 'ssv3'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - 'refs/heads/main'
+          - 'refs/heads/rv/304330'
         developmentEnvironment: true
         privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
         azureRegions:
