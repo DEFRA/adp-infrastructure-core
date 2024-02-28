@@ -30,3 +30,15 @@ spec:
           value: ${SUBSCRIPTION_ID}
         - name: SUBSCRIPTION_NAME
           value: ${SUBSCRIPTION_NAME}
+        - name: SSV_SHARED_SUBSCRIPTION_ID
+          value: ${SSV_SHARED_SUBSCRIPTION_ID}
+        - name: PG_WRITER_AD_GROUP
+          value: ${PG_WRITER_AD_GROUP}
+        - name: PG_READER_AD_GROUP
+          value: ${PG_READER_AD_GROUP}
+        - name: SP_CLIENT_ID_KV
+          value: ${SSV_SPN_CLIENT_ID_KV_NAME}
+        - name: SP_CLIENT_SECRET_KV
+          value: ${SSV_SPN_CLIENT_SECRET_KV_NAME}
+        - name: KEY_VAULT_NAME
+          value: ${SSV_PLATFORM_KEYVAULT}
