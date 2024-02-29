@@ -1,19 +1,27 @@
 {
     "userADGroups": [
         {
-            "displayName": "AAG-Users-ADP-FCP-FIND_TechUser",
-            "description": "Azure AD User group for MCU TechUser",
+            "displayName": "AAG-Users-ADP-FFC-SFD_TechUser",
+            "description": "Azure AD User group for FFC SFD TechUser",
             "Owners": {
                 "serviceprincipals" : [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ],
                 "users" : [
-                    "foysal.mohammed@defra.gov.uk"
+                    "a-dan.roszkowski@defra.onmicrosoft.com",
+                    "Kenneth.Babigumira@Defra.onmicrosoft.com",
+                    "ajay.soni@defradev.onmicrosoft.com",
+                    "logan.talbot@defra.onmicrosoft.com",
+                    "james.coxhead@defra.onmicrosoft.com"
                 ]
             },
             "Members": {
                 "users" : [
-                    "foysal.mohammed@defra.gov.uk"
+                    "a-john.watson@defra.onmicrosoft.com",
+                    "rana.salem@defra.onmicrosoft.com",
+                    "siddharth.goddhania@defra.onmicrosoft.com",
+                    "a-simon.dunn@defra.onmicrosoft.com",
+                    "a-fay.toward@.defra.onmicrosoft.com"
                 ]
             }
         }
@@ -30,7 +38,7 @@
             },
             "Members": {
                 "groups" : [
-                    "AAG-Users-ADP-FCP-FIND_TechUser"
+                    "AAG-Users-ADP-FFC-SFD_TechUser"
                 ]
             }
         },
@@ -44,7 +52,7 @@
             },
             "Members": {
                 "groups" : [
-                    "AAG-Users-ADP-FCP-FIND_TechUser"
+                    "AAG-Users-ADP-FFC-SFD_TechUser"
                 ]
             }
         }
