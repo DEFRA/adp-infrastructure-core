@@ -22,7 +22,7 @@ param appKeyVault = {
 param platformKeyVault = {
   name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}01'
   subscriptionId: '#{{ subscriptionId }}'
-  resourceGroup: '#{{ portalResourceGroup }}'
+  resourceGroup: '#{{ ssvSharedResourceGroup }}'
 }
 
 param secrets = [
