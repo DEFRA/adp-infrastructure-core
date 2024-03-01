@@ -15,7 +15,8 @@ parameters:
       - "portal-app-kv"
       - "portal-app-mi"
       - "portal-app-db"
-      - "portal-app-env"      
+      - "portal-app-env"
+      - "portal-api-mi"      
 
 pr:
   branches:
@@ -91,8 +92,8 @@ extends:
                       -VirtualNetworkName $(ssvVirtualNetworkName)
                       -SubscriptionName $(subscriptionName)
                       -TenantId $(tenantId)
-      - ? ${{ if or(eq(parameters.deployResources, 'all'), contains(parameters.deployResources, 'portal-app')) }}        
-        : - name: Portal
+      - ${{ if or(eq(parameters.deployResources, 'all'), contains(parameters.deployResources, 'portal-app')) }} :
+          - name: Portal
             ${{ if eq(parameters.deployResources, 'all') }}:
               dependsOnGroupedDeployments:
                 - network        
@@ -149,3 +150,11 @@ extends:
                     scriptRepo: PipelineCommonScripts
                     ScriptArguments: >
                       -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/portal/app-registrations/portal-app-registration.json'
+
+      - ${{ if or(eq(parameters.deployResources, 'all'), contains(parameters.deployResources, 'portal-api')) }} :
+          - name: PortalAPI
+            deployments:
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-api-mi')) }}:
+                - name: managed-identity
+                  path: infra/core/env-shared/portal-api/managed-identity
+                  resourceGroupName: $(portalResourceGroup)      
