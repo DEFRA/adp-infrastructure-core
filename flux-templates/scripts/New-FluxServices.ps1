@@ -219,7 +219,7 @@ try {
 
             if ($service['backend']) {
                 $lookupTable['__DEPENDS_ON__'] = 'pre-deploy'
-                $lookupTable['__POSTGRES_DB__'] = "$($team.name)$($service['dbname'])"
+                $lookupTable['__POSTGRES_DB__'] = "$($team.name)-$($service['dbname'])"
                 New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/migration/base"
                 Copy-Item -Path $templateTeamServicePath/pre-deploy/migration/base/* -Destination $programmePath/$($team.name)/$($service.name)/pre-deploy/migration/base -Recurse
                 ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/migration/base/image-repository-dbmigration.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/migration/base/image-repository-dbmigration.yaml"
