@@ -27,7 +27,7 @@ parameters:
       - Managed Cluster - Platform Variables
       - Front Door - All
       - Front Door - Core
-      - Front Door - WAF
+      - Front Door - WAF Baseline
       - Application - All
       - Application - App Configuration
       - Application - Apps Container Registry
@@ -109,8 +109,8 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Front Door - All')) }}
   - name: IsFrontDoorCore
     value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - Core')) }}
-  - name: IsFrontDoorWAF
-    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF')) }}
+  - name: IsFrontDoorWAFBaseline
+    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF Baseline')) }}
 
   - name: IsApplication
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application')) }}
@@ -282,8 +282,8 @@ extends:
                 - name: front-door
                   path: infra/core/env/front-door
                   resourceGroupName: $(cdnResourceGroup)
-              - ${{ if eq(variables.IsFrontDoorWAF, true) }}: 
-                - name: azure-waf
+              - ${{ if eq(variables.IsFrontDoorWAFBaseline, true) }}: 
+                - name: azure-waf-baseline
                   path: infra/core/env/front-door
                   resourceGroupName: $(cdnResourceGroup)
                   
