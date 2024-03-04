@@ -105,8 +105,8 @@ extends:
               path: 'infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1'
               scriptArguments: >
                 -PrivateDnsZoneName "whitesky-0d491f0c.uksouth.azurecontainerapps.io"
-                -ResourceGroupName $(dnsResourceGroup)
-                -SubscriptionName $(subscriptionName)
+                -ResourceGroupName "container-rg"
+                -SubscriptionName "AZD-ADP-SSV3"
                 -TenantId $(tenantId)  
 
       - ${{ if eq(variables.IsPortalADGroup, true) }}:  
