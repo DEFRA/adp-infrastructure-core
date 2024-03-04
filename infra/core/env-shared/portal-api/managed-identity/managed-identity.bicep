@@ -5,7 +5,13 @@ param managedIdentity object
 param containerRegistry object
 
 @description('Required. The name of the Key vault.')
-param keyVault object
+param appKeyVault object
+
+@description('Required. The name of the Key vault.')
+param platformKeyVault object
+
+@description('Required. List of secrects to be Rbac to the managed identity.')
+param secrets array = []
 
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
@@ -59,13 +65,26 @@ module sharedAcrPullRoleAssignment '../../.bicep/acr-pull.bicep' = {
 }
 
 module appKvSecretsUserRoleAssignment '../../.bicep/kv-role-secrets-user.bicep' = {
-  name: '${keyVault.Name}-secrets-user-role-${deploymentDate}'
-  scope: resourceGroup(keyVault.subscriptionId, keyVault.resourceGroup)
+  name: '${appKeyVault.Name}-secrets-user-role-${deploymentDate}'
+  scope: resourceGroup(appKeyVault.subscriptionId, appKeyVault.resourceGroup)
   dependsOn: [
     managedIdentities
   ]
   params: {
     principalId: managedIdentities.outputs.principalId 
-    keyVaultName: '${keyVault.Name}'
+    keyVaultName: '${appKeyVault.Name}'
   }
 }
+
+module appKvSecretsSecretsUserRoleAssignment '../../.bicep/kv-secrect-role-secrets-user.bicep' = [for (secret, index) in secrets: {
+  name: '${platformKeyVault.Name}-secrect-user-role-${deploymentDate}-${index}'
+  scope: resourceGroup(platformKeyVault.subscriptionId, platformKeyVault.resourceGroup)
+  dependsOn: [
+    managedIdentities
+  ]
+  params: {
+    principalId: managedIdentities.outputs.principalId 
+    keyVaultName: '${platformKeyVault.Name}'
+    secretName: secret
+  }
+}]

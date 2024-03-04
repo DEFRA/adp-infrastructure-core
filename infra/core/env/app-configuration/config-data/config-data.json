@@ -24,6 +24,18 @@
     "contentType": "text/plain"
   },
   {
+    "key": "SSV_SHARED_SUBSCRIPTION_ID",
+    "value": "#{{ lower(ssvSubscriptionId) }}",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
+    "key": "SSV_PLATFORM_KEYVAULT",
+    "value": "#{{ lower(ssvPlatformKeyVaultName) }}",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
     "key": "FLUX_CONFIG_NAMESPACE",
     "value": "flux-config",
     "label": "adp-platform",
@@ -176,6 +188,18 @@
   {
     "key": "STORAGEACCOUNT_PREFIX",
     "value": "#{{ lower(infraResourceNamePrefix) }}#{{ lower(nc_resource_storageaccount) }}#{{ nc_instance_regionid }}01",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
+    "key": "SSV_SPN_CLIENT_ID_KV_NAME",
+    "value": "ADO-DefraGovUK-AAD-ADP-#{{ ssvEnvironment }}#{{ nc_shared_instance }}-ClientId",
+    "label": "adp-platform",
+    "contentType": "text/plain"
+  },
+  {
+    "key": "SSV_SPN_CLIENT_SECRET_KV_NAME",
+    "value": "ADO-DefraGovUK-AAD-ADP-#{{ ssvEnvironment }}#{{ nc_shared_instance }}",
     "label": "adp-platform",
     "contentType": "text/plain"
   }
