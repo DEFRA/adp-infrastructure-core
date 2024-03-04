@@ -107,7 +107,7 @@ extends:
                 -PrivateDnsZoneName "whitesky-0d491f0c.uksouth.azurecontainerapps.io"
                 -ResourceGroupName "container-rg"
                 -SubscriptionName "AZD-ADP-SSV3"
-                -TenantId $(tenantId)  
+                -TenantId "6f504113-6b64-43f2-ade9-242e05780007"
 
       - ${{ if eq(variables.IsPortalADGroup, true) }}:  
         - name: portal_aadgroup
