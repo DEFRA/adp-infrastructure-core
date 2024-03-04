@@ -13,6 +13,7 @@ parameters:
       - All
       - Platform - AAD Groups
       - Portal - AAD Groups
+      - Local DNS
 
 pr:
   branches:
@@ -53,6 +54,9 @@ variables:
   - name: IsPortalADGroup
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Portal - AAD Groups')) }}
 
+  - name: IsLocaldns
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Local DNS')) }}  
+
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
@@ -90,6 +94,20 @@ extends:
               path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
               scriptArguments: > 
                 -AADGroupsJsonManifestPath 'infra/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json'
+
+      - ${{ if eq(variables.IsLocaldns, true) }}:  
+        - name: localdns
+          deployments:
+            - name: Link the Temp Private DNS Zone to Central networks
+              type: 'script'
+              scriptType: PowerShell
+              useSystemAccessToken: true
+              path: 'infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1'
+              scriptArguments: >
+                -PrivateDnsZoneName "whitesky-0d491f0c.uksouth.azurecontainerapps.io"
+                -ResourceGroupName $(dnsResourceGroup)
+                -SubscriptionName $(subscriptionName)
+                -TenantId $(tenantId)  
 
       - ${{ if eq(variables.IsPortalADGroup, true) }}:  
         - name: portal_aadgroup
