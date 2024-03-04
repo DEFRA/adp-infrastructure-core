@@ -14,8 +14,9 @@ RUN apt install -y -f postgresql postgresql-contrib
 # Change default shell to powershell
 SHELL ["pwsh", "-Command"]
 
-# Install Az Module in Powershell
+# Install Az, Microsoft.Graph Module in Powershell
 RUN pwsh -Command Install-Module -Name Az -Repository PSGallery -Force -AllowClobber
+RUN pwsh -Command Install-Module -Name Microsoft.Graph -Repository PSGallery -Force
 
 # Clone the repo and Run the powershell script and pass the params to it
-CMD git clone $env:GIT_REPO_URL -b $env:GIT_BRANCH; $workingDir = $env:GIT_REPO_URL.Split('/')[-1].Replace('.git', ''); cd $workingDir; $cmd ="pwsh -File $env:SCRIPT_FILE_NAME"; Write-Host $cmd; Invoke-Expression $cmd
+CMD git clone $env:GIT_REPO_URL -b $env:GIT_BRANCH; $workingDir = $env:GIT_REPO_URL.Split('/')[-1].Replace('.git', ''); cd $workingDir; $cmd ="pwsh -File $env:SCRIPT_FILE_NAME"; Write-Host $cmd; Invoke-Expression $cmd; exit $LASTEXITCODE
