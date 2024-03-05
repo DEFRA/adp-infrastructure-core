@@ -8,12 +8,46 @@
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ],
                 "users" : [
-                    "jack.mccabe@defra.gov.uk"
+                    "jack.mccabe@defra.gov.uk",
+                    "a-dan.roszkowski@defra.onmicrosoft.com",
+                    "Kenneth.Babigumira@Defra.onmicrosoft.com",
+                    "logan.talbot@defra.onmicrosoft.com"
                 ]
             },
             "Members": {
                 "users" : [
-                    "jack.mccabe@defra.gov.uk"
+                    "jack.mccabe@defra.gov.uk",
+                    "Chris.Salt-Mountain@defra.gov.uk",
+                    "Hadi.Tajallaei@defra.gov.uk",
+                    "Dom.Taylor@defra.gov.uk"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Users-ADP-FCP-FIND_TechUser",
+            "description": "Azure AD User group for FIND TechUser",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ],
+                "users" : [
+                    "a-dan.roszkowski@defra.onmicrosoft.com",
+                    "Kenneth.Babigumira@Defra.onmicrosoft.com",
+                    "logan.talbot@defra.onmicrosoft.com"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Users-ADP-Core-MCU_TechUser",
+            "description": "Azure AD User group for MCU TechUser",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ],
+                "users" : [
+                    "a-dan.roszkowski@defra.onmicrosoft.com",
+                    "Kenneth.Babigumira@Defra.onmicrosoft.com",
+                    "logan.talbot@defra.onmicrosoft.com"
                 ]
             }
         }
