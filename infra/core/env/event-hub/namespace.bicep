@@ -59,6 +59,7 @@ module eventHubNamespaceResource 'br/SharedDefraRegistry:event-hub.namespace:0.5
         tags: union(tags, appConfigPrivateEndpointTags)
       }
     ]
+    disableLocalAuth: false
     eventhubs: [
       {
         name: 'flux-events'
