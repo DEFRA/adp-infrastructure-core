@@ -29,8 +29,6 @@ spec:
       PLATFORM_DB_ADMIN: ${PLATFORM_DB_ADMIN}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_SCHEMA_NAME: ${POSTGRES_SCHEMA_NAME}
-      PG_WRITER_AD_GROUP: "AAG-Azure-ADP-__SERVICE_CODE__-__ENVIRONMENT____ENV_INSTANCE__-PostgresDB_Writer"
-      PG_READER_AD_GROUP: "AAG-Azure-ADP-__SERVICE_CODE__-__ENVIRONMENT____ENV_INSTANCE__-PostgresDB_Reader"
     substituteFrom:
       - kind: ConfigMap
         name: adp-platform-vars

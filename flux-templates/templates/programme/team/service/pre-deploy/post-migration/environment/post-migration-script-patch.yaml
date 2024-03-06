@@ -27,8 +27,8 @@ spec:
         - name: SUBSCRIPTION_NAME
           value: ${SUBSCRIPTION_NAME}
         - name: PG_WRITER_AD_GROUP
-          value: ${PG_WRITER_AD_GROUP}
+          value: "AAG-Azure-ADP-__SERVICE_CODE__-__ENVIRONMENT____ENV_INSTANCE__-PostgresDB_Writer"
         - name: PG_READER_AD_GROUP
-          value: ${PG_READER_AD_GROUP}
+          value: "AAG-Azure-ADP-__SERVICE_CODE__-__ENVIRONMENT____ENV_INSTANCE__-PostgresDB_Reader"
         - name: DB_MIGRATION_VERSION
           value: "__VERSION__" # {"$imagepolicy": "flux-config:__SERVICE_NAME__-dbmigration-__ENVIRONMENT__-0__ENV_INSTANCE__:tag"}
