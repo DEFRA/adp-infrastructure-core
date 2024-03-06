@@ -36,6 +36,7 @@ parameters:
       - Application - Storage Account
       - Application - Service Bus
       - Application - Key Vault
+      - Application - Event Hub
       - Platform - Key Vault
 
 pr:
@@ -62,7 +63,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: aa/eventHub
       
 variables:
   - name: IsAll
@@ -130,6 +131,8 @@ variables:
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Service Bus')) }}
   - name: IsApplicationKeyVault
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
+  - name: IsApplicationEventHub
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Event Hub')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -365,4 +368,11 @@ extends:
                   resourceGroupName: $(servicesResourceGroup)
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsApplicationEventHub, true) }}:                    
+                - name: event-hub
+                  path: infra/core/env/event-hub
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_eventhub)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
