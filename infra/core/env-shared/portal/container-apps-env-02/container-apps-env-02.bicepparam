@@ -1,4 +1,4 @@
-using './container-apps-env.bicep'
+using './container-apps-env-02.bicep'
 
 param containerAppEnv = {
   name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerappsenv }}#{{ nc_shared_instance_regionid }}02'
