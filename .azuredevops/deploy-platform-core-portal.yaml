@@ -202,7 +202,7 @@ extends:
                   resourceGroupName: $(portalResourceGroup2)
 
               - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app-2'), eq(parameters.deployResources, 'portal-app-env-2')) }}:  
-                - name: container-apps-env-02
+                - name: container-apps-env
                   path: infra/core/env-shared/portal/container-apps-env
                   parameterFilePath: infra/core/env-shared/portal/container-apps-env/env-2
                   resourceGroupName: $(portalResourceGroup2)
