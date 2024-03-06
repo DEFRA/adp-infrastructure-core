@@ -35,7 +35,7 @@ var appConfigPrivateEndpointTags = {
   Tier: 'Shared'
 }
 
-module eventHubResource 'br/SharedDefraRegistry:event-hub.namespace:0.5.18' = {
+module eventHubNamespaceResource 'br/SharedDefraRegistry:event-hub.namespace:0.5.18' = {
   name: 'event-hub-${deploymentDate}'
   params: {
     enableDefaultTelemetry: true
@@ -46,12 +46,30 @@ module eventHubResource 'br/SharedDefraRegistry:event-hub.namespace:0.5.18' = {
       kind: 'CanNotDelete'
     }
     tags: union(tags, eventHubTags)
+    networkRuleSets: {
+      defaultAction: 'Deny'
+      trustedServiceAccessEnabled: true
+      publicNetworkAccess: 'Disabled'
+    }
     privateEndpoints: [
       {
         name: eventHub.privateEndpointName
         service: 'namespace'
         subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
         tags: union(tags, appConfigPrivateEndpointTags)
+      }
+    ]
+    eventhubs: [
+      {
+        name: 'flux-events'
+        authorizationRules: [
+          {
+            name: 'Send'
+            rights: [
+              'Send'
+            ]
+          }
+        ]
       }
     ]
   }
