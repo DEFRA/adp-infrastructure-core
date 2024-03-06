@@ -370,7 +370,7 @@ extends:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
               - ${{ if eq(variables.IsApplicationEventHub, true) }}:                    
-                - name: event-hub
+                - name: namespace
                   path: infra/core/env/event-hub
                   resourceGroupName: $(servicesResourceGroup)
                   privateEndpointDnsRecordsForResources:
