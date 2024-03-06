@@ -38,3 +38,7 @@ param portalEntraApp = {
   tenantIdSecretName: '#{{ portalApplicationClientTenantName }}'
   tenantIdSecretValue: '#{{ tenantId }}'
 }
+
+param internal = false 
+
+param frontDoorEndpointURL = 'PORTAL-APP-DEFAULT-URL'

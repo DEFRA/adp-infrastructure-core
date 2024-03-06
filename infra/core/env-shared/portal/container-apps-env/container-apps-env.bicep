@@ -31,6 +31,12 @@ param ssvPlatformKeyVaultRG string
 @description('Required. Object contains the Entra app details')
 param portalEntraApp object
 
+@description('Required. portal app env type internal. Default to true')
+param internal bool = true
+
+@description('Required. Keyvault Secret Name for the Front Door Endpoint URL')
+param frontDoorEndpointURL string
+
 var customTags = {
   Location: location
   CreatedDate: createdDate
@@ -50,7 +56,6 @@ resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2021-06
   scope: resourceGroup(workspace.subscriptionId, workspace.resourceGroup)
 }
 
-var internal = false
 var infrastructureSubnetId = resourceId(subnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', subnet.vnetName, subnet.Name)
 var dockerBridgeCidr = '172.16.0.1/28'
 var workloadProfiles = containerAppEnv.workloadProfiles
@@ -84,12 +89,13 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
   name: keyvaultName
 }
 
+// Sets the default value in shared keyvault to be used by Front Door deployment
 module setKeyvaultSecret '.bicep/set-secret.bicep' = {
-  name: 'PORTAL-APP-DEFAULT-URL'
+  name: frontDoorEndpointURL
   scope: resourceGroup(ssvPlatformKeyVaultRG)
   params: {
     ssvPlatformKeyVaultName: ssvPlatformKeyVaultName
-    secretName: 'PORTAL-APP-DEFAULT-URL'
+    secretName: frontDoorEndpointURL
     secretValue: 'https://${containerApp.name}.${toLower(managedEnvironment.outputs.defaultDomain)}'
   }
 }

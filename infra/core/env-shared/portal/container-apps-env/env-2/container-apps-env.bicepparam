@@ -1,4 +1,4 @@
-using './container-apps-env-02.bicep'
+using '../container-apps-env.bicep'
 
 param containerAppEnv = {
   name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerappsenv }}#{{ nc_shared_instance_regionid }}02'
@@ -38,3 +38,7 @@ param portalEntraApp = {
   tenantIdSecretName: '#{{ portalApplicationClientTenantName }}'
   tenantIdSecretValue: '#{{ tenantId }}'
 }
+
+param internal = true 
+
+param frontDoorEndpointURL = 'PORTAL-APP-2-DEFAULT-URL'
