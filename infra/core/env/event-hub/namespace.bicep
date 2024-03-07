@@ -65,9 +65,15 @@ module eventHubNamespaceResource 'br/SharedDefraRegistry:event-hub.namespace:0.5
         name: 'flux-events'
         authorizationRules: [
           {
-            name: 'Send'
+            name: 'FluxSendAccess'
             rights: [
               'Send'
+            ]
+          }
+          {
+            name: 'FunctionListenAccess'
+            rights: [
+              'Listen'
             ]
           }
         ]
