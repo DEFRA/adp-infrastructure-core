@@ -10,13 +10,13 @@ parameters:
     values:
       - "all"
       - "network"
-      - "portal-app"
-      - "portal-app-sa"
-      - "portal-app-kv"
-      - "portal-app-mi"
-      - "portal-app-db"
-      - "portal-app-env"
-      - "portal-api-mi"  
+      - "portal-app-1"
+      - "portal-app-1-sa"
+      - "portal-app-1-kv"
+      - "portal-app-1-mi"
+      - "portal-app-1-db"
+      - "portal-app-1-env"
+      - "portal-api-1-mi"  
       - "portal-app-2"
       - "portal-app-2-sa"
       - "portal-app-2-kv"
@@ -102,31 +102,31 @@ extends:
                       -VirtualNetworkName $(ssvVirtualNetworkName)
                       -SubscriptionName $(subscriptionName)
                       -TenantId $(tenantId)
-      - ${{ if or(eq(parameters.deployResources, 'all'), contains(parameters.deployResources, 'portal-app')) }} :
+      - ${{ if or(eq(parameters.deployResources, 'all'), contains(parameters.deployResources, 'portal-app-1')) }} :
           - name: Portal
             ${{ if eq(parameters.deployResources, 'all') }}:
               dependsOnGroupedDeployments:
                 - network        
             deployments:
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-kv')) }}:
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app-1'), eq(parameters.deployResources, 'portal-app-1-kv')) }}:
                 - name: key-vault
                   path: infra/core/env-shared/portal/key-vault
                   resourceGroupName: $(portalResourceGroup)
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(ssvResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)02
                       resourceGroupName: $(portalResourceGroup)
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-sa')) }}:
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app-1'), eq(parameters.deployResources, 'portal-app-1-sa')) }}:
                 - name: storage-account
                   path: infra/core/env-shared/portal/storage-account
                   resourceGroupName: $(portalResourceGroup)
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(ssvResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)01
                       resourceGroupName: $(portalResourceGroup)                      
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-mi')) }}:
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app-1'), eq(parameters.deployResources, 'portal-app-1-mi')) }}:
                 - name: managed-identity
                   path: infra/core/env-shared/portal/managed-identity
                   resourceGroupName: $(portalResourceGroup)
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-db')) }}:
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app-1'), eq(parameters.deployResources, 'portal-app-1-db')) }}:
                 - name: flexible-server-zone
                   path: infra/core/env-shared/portal/flexible-server-zone
                   resourceGroupName: $(dnsResourceGroup)
@@ -143,7 +143,7 @@ extends:
                 - name: flexible-server
                   path: infra/core/env-shared/portal/flexible-server
                   resourceGroupName: $(portalResourceGroup)
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-env')) }}:
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app-1'), eq(parameters.deployResources, 'portal-app-1-env')) }}:
                 - name: container-apps-env
                   path: infra/core/env-shared/portal/container-apps-env
                   resourceGroupName: $(portalResourceGroup)
@@ -211,10 +211,10 @@ extends:
               resourceGroupName: $(portalResourceGroup2)
                  
 
-      - ${{ if or(eq(parameters.deployResources, 'all'), contains(parameters.deployResources, 'portal-api')) }} :
+      - ${{ if or(eq(parameters.deployResources, 'all'), contains(parameters.deployResources, 'portal-api-1')) }} :
           - name: PortalAPI
             deployments:
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-api-mi')) }}:
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-api-1-mi')) }}:
                 - name: managed-identity
                   path: infra/core/env-shared/portal-api/managed-identity
                   resourceGroupName: $(portalResourceGroup)      
