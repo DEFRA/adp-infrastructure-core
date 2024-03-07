@@ -16,13 +16,14 @@ parameters:
       - "portal-app-mi"
       - "portal-app-db"
       - "portal-app-env"
+      - "portal-api-mi"  
       - "portal-app-2"
-      - "portal-app-sa-2"
-      - "portal-app-kv-2"
-      - "portal-app-mi-2"
-      - "portal-app-db-2"
-      - "portal-app-env-2"
-      - "portal-api-mi"      
+      - "portal-app-2-sa"
+      - "portal-app-2-kv"
+      - "portal-app-2-mi"
+      - "portal-app-2-db"
+      - "portal-app-2-env"  
+      - "portal-api-2-mi"   
 
 pr:
   branches:
@@ -159,53 +160,55 @@ extends:
                     scriptRepo: PipelineCommonScripts
                     ScriptArguments: >
                       -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/portal/app-registrations/portal-app-registration.json'
-              
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app-2'), eq(parameters.deployResources, 'portal-app-kv-2')) }}: 
-                - name: key-vault
-                  path: infra/core/env-shared/portal/key-vault
-                  parameterFilePath: infra/core/env-shared/portal/key-vault/env-2
+      - ${{ if contains(parameters.deployResources, 'portal-app-2') }} :
+        - name: Portal2    
+          deployments:      
+          - ${{ if or(eq(parameters.deployResources, 'portal-app-2'), eq(parameters.deployResources, 'portal-app-2-kv')) }}: 
+            - name: key-vault
+              path: infra/core/env-shared/portal/key-vault
+              parameterFilePath: infra/core/env-shared/portal/key-vault/env-2
+              resourceGroupName: $(portalResourceGroup2)
+              privateEndpointDnsRecordsForResources:
+                - resourceName: $(ssvResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)03
                   resourceGroupName: $(portalResourceGroup2)
-                  privateEndpointDnsRecordsForResources:
-                    - resourceName: $(ssvResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)03
-                      resourceGroupName: $(portalResourceGroup2)
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app-2'), eq(parameters.deployResources, 'portal-app-sa-2')) }}:
-                - name: storage-account
-                  path: infra/core/env-shared/portal/storage-account
-                  parameterFilePath: infra/core/env-shared/portal/storage-account/env-2
-                  resourceGroupName: $(portalResourceGroup2)
-                  privateEndpointDnsRecordsForResources:
-                    - resourceName: $(ssvResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)02
-                      resourceGroupName: $(portalResourceGroup2)                      
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app-2'), eq(parameters.deployResources, 'portal-app-mi-2')) }}:
-                - name: managed-identity
-                  path: infra/core/env-shared/portal/managed-identity
-                  parameterFilePath: infra/core/env-shared/portal/managed-identity/env-2
-                  resourceGroupName: $(portalResourceGroup2)
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app-2'), eq(parameters.deployResources, 'portal-app-db-2')) }}:
-                - name: flexible-server-zone
-                  path: infra/core/env-shared/portal/flexible-server-zone
-                  parameterFilePath: infra/core/env-shared/portal/flexible-server-zone/env-2
-                  resourceGroupName: $(dnsResourceGroup)
-                  postDeployScriptsList:
-                    - displayName: Link the Private DNS Zone to Central networks
-                      scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
-                      type: PowerShell
-                      useSystemAccessToken: true
-                      scriptArguments: >
-                        -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)02.private.postgres.database.azure.com"
-                        -ResourceGroupName $(dnsResourceGroup)
-                        -SubscriptionName $(subscriptionName)
-                        -TenantId $(tenantId)
-                - name: flexible-server
-                  path: infra/core/env-shared/portal/flexible-server
-                  parameterFilePath: infra/core/env-shared/portal/flexible-server/env-2
-                  resourceGroupName: $(portalResourceGroup2)
+          - ${{ if or(eq(parameters.deployResources, 'portal-app-2'), eq(parameters.deployResources, 'portal-app-2-sa')) }}:
+            - name: storage-account
+              path: infra/core/env-shared/portal/storage-account
+              parameterFilePath: infra/core/env-shared/portal/storage-account/env-2
+              resourceGroupName: $(portalResourceGroup2)
+              privateEndpointDnsRecordsForResources:
+                - resourceName: $(ssvResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)02
+                  resourceGroupName: $(portalResourceGroup2)                      
+          - ${{ if or( eq(parameters.deployResources, 'portal-app-2'), eq(parameters.deployResources, 'portal-app-2-mi')) }}:
+            - name: managed-identity
+              path: infra/core/env-shared/portal/managed-identity
+              parameterFilePath: infra/core/env-shared/portal/managed-identity/env-2
+              resourceGroupName: $(portalResourceGroup2)
+          - ${{ if or(eq(parameters.deployResources, 'portal-app-2'), eq(parameters.deployResources, 'portal-app-2-db')) }}:
+            - name: flexible-server-zone
+              path: infra/core/env-shared/portal/flexible-server-zone
+              parameterFilePath: infra/core/env-shared/portal/flexible-server-zone/env-2
+              resourceGroupName: $(dnsResourceGroup)
+              postDeployScriptsList:
+                - displayName: Link the Private DNS Zone to Central networks
+                  scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
+                  type: PowerShell
+                  useSystemAccessToken: true
+                  scriptArguments: >
+                    -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)02.private.postgres.database.azure.com"
+                    -ResourceGroupName $(dnsResourceGroup)
+                    -SubscriptionName $(subscriptionName)
+                    -TenantId $(tenantId)
+            - name: flexible-server
+              path: infra/core/env-shared/portal/flexible-server
+              parameterFilePath: infra/core/env-shared/portal/flexible-server/env-2
+              resourceGroupName: $(portalResourceGroup2)
 
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app-2'), eq(parameters.deployResources, 'portal-app-env-2')) }}:  
-                - name: container-apps-env
-                  path: infra/core/env-shared/portal/container-apps-env
-                  parameterFilePath: infra/core/env-shared/portal/container-apps-env/env-2
-                  resourceGroupName: $(portalResourceGroup2)
+          - ${{ if or(eq(parameters.deployResources, 'portal-app-2'), eq(parameters.deployResources, 'portal-app-2-env')) }}:  
+            - name: container-apps-env
+              path: infra/core/env-shared/portal/container-apps-env
+              parameterFilePath: infra/core/env-shared/portal/container-apps-env/env-2
+              resourceGroupName: $(portalResourceGroup2)
                  
 
       - ${{ if or(eq(parameters.deployResources, 'all'), contains(parameters.deployResources, 'portal-api')) }} :
@@ -215,3 +218,11 @@ extends:
                 - name: managed-identity
                   path: infra/core/env-shared/portal-api/managed-identity
                   resourceGroupName: $(portalResourceGroup)      
+      - ${{ if or(eq(parameters.deployResources, 'portal-app-2'), contains(parameters.deployResources, 'portal-api-2')) }} :
+          - name: PortalAPI2
+            deployments:                  
+              - ${{ if or(eq(parameters.deployResources, 'portal-app-2'), eq(parameters.deployResources, 'portal-api-2-mi')) }}:
+                - name: managed-identity
+                  path: infra/core/env-shared/portal-api/managed-identity
+                  parameterFilePath: infra/core/env-shared/portal-api/managed-identity/env-2
+                  resourceGroupName: $(portalResourceGroup2)                        
