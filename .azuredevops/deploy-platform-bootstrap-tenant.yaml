@@ -104,8 +104,8 @@ extends:
               useSystemAccessToken: true
               path: 'infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1'
               scriptArguments: >
-                -PrivateDnsZoneName "whitesky-0d491f0c.uksouth.azurecontainerapps.io"
-                -ResourceGroupName "container-rg"
+                -PrivateDnsZoneName "thankfulcliff-27c655b9.uksouth.azurecontainerapps.io"
+                -ResourceGroupName "SSVADPINFRG3403"
                 -SubscriptionName "AZD-ADP-SSV3"
                 -TenantId "6f504113-6b64-43f2-ade9-242e05780007"
 
