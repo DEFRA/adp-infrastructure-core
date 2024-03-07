@@ -25,6 +25,7 @@ parameters:
       - Managed Cluster - Cluster
       - Managed Cluster - Flux Services SSH Keys
       - Managed Cluster - Platform Variables
+      - Application Gateway - All
       - Front Door - All
       - Front Door - Core
       - Front Door - WAF Baseline
@@ -102,6 +103,11 @@ variables:
 
   - name: IsPlatformKeyVault
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Platform - Key Vault')) }}
+
+  - name: IsApplicationGateway
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application Gateway')) }}
+  - name: IsApplicationGatewayAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Application Gateway - All')) }}
 
   - name: IsFrontDoor
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Front Door')) }}
@@ -286,7 +292,15 @@ extends:
                 - name: azure-waf-baseline
                   path: infra/core/env/front-door
                   resourceGroupName: $(cdnResourceGroup)
-                  
+
+        - ${{ if eq(variables.IsApplicationGateway, true) }}:  
+          - name: application_gateway
+            deployments:
+              - ${{ if eq(variables.IsApplicationGatewayAll, true) }}: 
+                - name: application-gateway
+                  path: infra/core/env/application-gateway
+                  resourceGroupName: $(cdnResourceGroup)
+
         - ${{ if eq(variables.IsApplication, true) }}:  
           - name: application_infra
             ${{ if eq(variables.IsAll, true) }}:
