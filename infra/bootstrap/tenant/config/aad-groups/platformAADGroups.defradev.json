@@ -4,12 +4,12 @@
             "displayName": "AAG-Azure-ADP-FFC-DEMO-SND1-PostgresDB_Reader",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ]
             }
@@ -18,13 +18,15 @@
             "displayName": "AAG-Azure-ADP-FFC-DEMO-SND1-PostgresDB_Writer",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                "groups": [
+                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                ],
+                "users": [
                     "sndadpinfmi1401-ffc-demo"
                 ]
             }
@@ -33,12 +35,12 @@
             "displayName": "AAG-Azure-ADP-FFC-DEMO-SND2-PostgresDB_Reader",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ]
             }
@@ -47,13 +49,15 @@
             "displayName": "AAG-Azure-ADP-FFC-DEMO-SND2-PostgresDB_Writer",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                "groups": [
+                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                ],
+                "users": [
                     "sndadpinfmi2401-ffc-demo"
                 ]
             }
@@ -62,12 +66,12 @@
             "displayName": "AAG-Azure-ADP-FFC-DEMO-SND3-PostgresDB_Reader",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ]
             }
@@ -76,13 +80,15 @@
             "displayName": "AAG-Azure-ADP-FFC-DEMO-SND3-PostgresDB_Writer",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                "groups": [
+                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                ],
+                "users": [
                     "sndadpinfmi3401-ffc-demo"
                 ]
             }
@@ -91,12 +97,12 @@
             "displayName": "AAG-Azure-ADP-FFC-FFD-SND1-PostgresDB_Reader",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ]
             }
@@ -105,13 +111,15 @@
             "displayName": "AAG-Azure-ADP-FFC-FFD-SND1-PostgresDB_Writer",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                "groups": [
+                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                ],
+                "users": [
                     "sndadpinfmi1401-ffc-ffd"
                 ]
             }
@@ -120,12 +128,12 @@
             "displayName": "AAG-Azure-ADP-FFC-FFD-SND2-PostgresDB_Reader",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ]
             }
@@ -134,13 +142,15 @@
             "displayName": "AAG-Azure-ADP-FFC-FFD-SND2-PostgresDB_Writer",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                "groups": [
+                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                ],
+                "users": [
                     "sndadpinfmi2401-ffc-ffd"
                 ]
             }
@@ -149,12 +159,12 @@
             "displayName": "AAG-Azure-ADP-FFC-FFD-SND3-PostgresDB_Reader",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ]
             }
@@ -163,13 +173,15 @@
             "displayName": "AAG-Azure-ADP-FFC-FFD-SND3-PostgresDB_Writer",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                "groups": [
+                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                ],
+                "users": [
                     "sndadpinfmi3401-ffc-ffd"
                 ]
             }
@@ -178,12 +190,12 @@
             "displayName": "AAG-Azure-ADP-FCP-DAL-SND3-PostgresDB_Reader",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ]
             }
@@ -192,13 +204,15 @@
             "displayName": "AAG-Azure-ADP-FCP-DAL-SND3-PostgresDB_Writer",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                "groups": [
+                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                ],
+                "users": [
                     "sndadpinfmi3401-ffc-dal"
                 ]
             }
@@ -207,12 +221,12 @@
             "displayName": "AAG-Azure-ADP-FCP-FIND-SND3-PostgresDB_Reader",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ]
             }
@@ -221,13 +235,15 @@
             "displayName": "AAG-Azure-ADP-FCP-FIND-SND3-PostgresDB_Writer",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                "groups": [
+                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                ],
+                "users": [
                     "sndadpinfmi3401-ffc-find"
                 ]
             }
@@ -236,12 +252,12 @@
             "displayName": "AAG-Azure-ADP-EXP-SND1-PostgresDB_Reader",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ]
             }
@@ -250,13 +266,15 @@
             "displayName": "AAG-Azure-ADP-EXP-SND1-PostgresDB_Writer",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                "groups": [
+                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                ],
+                "users": [
                     "sndadpinfmi1401-eutd-trade-exports-ai"
                 ]
             }
@@ -265,12 +283,12 @@
             "displayName": "AAG-Azure-ADP-EXP-SND2-PostgresDB_Reader",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ]
             }
@@ -279,13 +297,15 @@
             "displayName": "AAG-Azure-ADP-EXP-SND2-PostgresDB_Writer",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                "groups": [
+                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                ],
+                "users": [
                     "sndadpinfmi2401-eutd-trade-exports-ai"
                 ]
             }
@@ -294,12 +314,12 @@
             "displayName": "AAG-Azure-ADP-EXP-SND3-PostgresDB_Reader",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ]
             }
@@ -308,13 +328,15 @@
             "displayName": "AAG-Azure-ADP-EXP-SND3-PostgresDB_Writer",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                "groups": [
+                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                ],
+                "users": [
                     "sndadpinfmi3401-eutd-trade-exports-ai"
                 ]
             }
@@ -323,12 +345,12 @@
             "displayName": "AAG-Azure-ADP-FFC-SFD-SND3-PostgresDB_Reader",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ]
             }
@@ -337,13 +359,15 @@
             "displayName": "AAG-Azure-ADP-FFC-SFD-SND3-PostgresDB_Writer",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                "groups": [
+                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                ],
+                "users": [
                     "sndadpinfmi3401-ffc-sfd"
                 ]
             }
@@ -352,12 +376,12 @@
             "displayName": "AAG-Azure-ADP-COREAI-MCU-SND3-PostgresDB_Reader",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ]
             }
@@ -366,13 +390,15 @@
             "displayName": "AAG-Azure-ADP-COREAI-MCU-SND3-PostgresDB_Writer",
             "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
+                "serviceprincipals": [
                     "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                "groups": [
+                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                ],
+                "users": [
                     "sndadpinfmi3401-coreai-mcu"
                 ]
             }
