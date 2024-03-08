@@ -73,7 +73,7 @@ extends:
       - name: 'defra'
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
-          - 'refs/heads/main'
+          - '*'
         azureRegions:
           primary: 'UKSouth'    
 
