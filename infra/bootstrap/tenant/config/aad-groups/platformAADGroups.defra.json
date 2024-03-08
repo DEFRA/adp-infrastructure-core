@@ -1,113 +1,95 @@
 {
-    "userADGroups": [
-        {
-            "displayName": "AAG-Users-ADP-PlatformEngineers",
-            "description": "Azure AD User group for ADP Platform Engineers",
-            "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-CDO-SSV5"
-                ],
-                "users" : #{{ noescape(platformUserAndAccessAADGroupOwners) }}
-            }
-        }
-    ],
     "accessADGroups": [
         {
-            "displayName": "AAG-Azure-ADP-GlobalRead",
-            "description": "Azure AD Access group with read permissions to the ADP platform.",
+            "displayName": "AAG-Azure-ADP-FFC-DEMO-DEV1-PostgresDB_Reader",
+            "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-CDO-SSV5"
+                "serviceprincipals": [
+                    "ADO-DefraGovUK-AAD-ADP-SSV5"
+                ]
+            },
+            "Members": {
+                "groups": [
+                    "AAG-Users-ADP-PlatformEngineers"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Azure-ADP-FFC-DEMO-DEV1-PostgresDB_Writer",
+            "description": "AD group to grant access to postgres DB",
+            "Owners": {
+                "serviceprincipals": [
+                    "ADO-DefraGovUK-AAD-ADP-SSV5"
+                ]
+            },
+            "Members": {
+                "groups": [
+                    "AAG-Users-ADP-PlatformEngineers"
                 ],
-                "users" : #{{ noescape(platformUserAndAccessAADGroupOwners) }}
+                "serviceprincipals": [
+                    "devadpinfmi1401-ffc-demo"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Azure-ADP-FFC-DEMO-TST1-PostgresDB_Reader",
+            "description": "AD group to grant access to postgres DB",
+            "Owners": {
+                "serviceprincipals": [
+                    "ADO-DefraGovUK-AAD-ADP-SSV5"
+                ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
                     "AAG-Users-ADP-PlatformEngineers"
                 ]
             }
         },
         {
-            "displayName": "AAG-Azure-AZR-ADP-DEV1-Cont",
-            "description": "Azure AD Access group with contributor permissions to the AZR-ADP-DEV1 subscription.",
+            "displayName": "AAG-Azure-ADP-FFC-DEMO-TST1-PostgresDB_Writer",
+            "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-CDO-SSV5"
+                "serviceprincipals": [
+                    "ADO-DefraGovUK-AAD-ADP-SSV5"
                 ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
+                    "AAG-Users-ADP-PlatformEngineers"
+                ],
+                "serviceprincipals": [
+                    "tstadpinfmi1401-ffc-demo"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Azure-ADP-FFC-SFD-DEV1-PostgresDB_Reader",
+            "description": "AD group to grant access to postgres DB",
+            "Owners": {
+                "serviceprincipals": [
+                    "ADO-DefraGovUK-AAD-ADP-SSV5"
+                ]
+            },
+            "Members": {
+                "groups": [
                     "AAG-Users-ADP-PlatformEngineers"
                 ]
             }
         },
         {
-            "displayName": "AAG-Azure-AZR-ADP-DEV1-UAA",
-            "description": "Azure AD Access group with User Access administrator permissions to the AZR-ADP-DEV1 subscription.",
+            "displayName": "AAG-Azure-ADP-FFC-SFD-DEV1-PostgresDB_Writer",
+            "description": "AD group to grant access to postgres DB",
             "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-CDO-SSV5"
+                "serviceprincipals": [
+                    "ADO-DefraGovUK-AAD-ADP-SSV5"
                 ]
             },
             "Members": {
-                "groups" : [
+                "groups": [
                     "AAG-Users-ADP-PlatformEngineers"
-                ]
-            }
-        },
-        {
-            "displayName": "AAG-Azure-AZR-ADP-TST1-Cont",
-            "description": "Azure AD Access group with contributor permissions to the AZR-ADP-TST1 subscription.",
-            "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-CDO-SSV5"
-                ]
-            },
-            "Members": {
-                "groups" : [
-                    "AAG-Users-ADP-PlatformEngineers"
-                ]
-            }
-        },
-        {
-            "displayName": "AAG-Azure-AZR-ADP-TST1-UAA",
-            "description": "Azure AD Access group with User Access administrator permissions to the AZR-ADP-TST1 subscription.",
-            "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-CDO-SSV5"
-                ]
-            },
-            "Members": {
-                "groups" : [
-                    "AAG-Users-ADP-PlatformEngineers"
-                ]
-            }
-        },
-        {
-            "displayName": "AAG-Azure-AZR-ADP-TST2-Cont",
-            "description": "Azure AD Access group with contributor permissions to the AZR-ADP-TST2 subscription.",
-            "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-CDO-SSV5"
-                ]
-            },
-            "Members": {
-                "groups" : [
-                    "AAG-Users-ADP-PlatformEngineers"
-                ]
-            }
-        },
-        {
-            "displayName": "AAG-Azure-AZR-ADP-TST2-UAA",
-            "description": "Azure AD Access group with User Access administrator permissions to the AZR-ADP-TST2 subscription.",
-            "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-CDO-SSV5"
-                ]
-            },
-            "Members": {
-                "groups" : [
-                    "AAG-Users-ADP-PlatformEngineers"
+                ],
+                "serviceprincipals": [
+                    "devadpinfmi1401-ffc-sfd"
                 ]
             }
         }
