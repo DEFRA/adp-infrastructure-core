@@ -66,7 +66,7 @@ module storageAccountResource 'br/SharedDefraRegistry:storage.storage-account:0.
     fileServices: {
       shares: [
         {
-          name: '${storageAccount.fileShareName}'
+          name: storageAccount.fileShareName
         }
       ]
     }
