@@ -420,7 +420,7 @@ Function Update-GroupMembers() {
                 $spResult = Find-NewServicePrincipalsToAdd -GroupId $GroupId -ExistingGroupMembersOrOwners $existingGroupMembers -ServicePrincipals $AADGroupMembers.serviceprincipals
                 Write-Debug $spResult
                 $spResult | ForEach-Object {
-                    New-MgGroupMember -GroupId $GroupId -DirectoryObjectId $_ -ErrorAction Stop
+                    New-MgGroupMember -GroupId $GroupId -DirectoryObjectId $_ -ErrorAction Continue
                     Write-Host "ServicePrincipal '$($_)' Added as a member of the Group."
                 }
             } 
