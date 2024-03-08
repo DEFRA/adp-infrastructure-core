@@ -38,6 +38,8 @@ parameters:
       - Application - Key Vault
       - Application - Event Hub
       - Platform - Key Vault
+      - Function - All
+      - Function - Storage
 
 pr:
   branches:
