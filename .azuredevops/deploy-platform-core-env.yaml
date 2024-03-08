@@ -104,6 +104,13 @@ variables:
   - name: IsPlatformKeyVault
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Platform - Key Vault')) }}
 
+  - name: IsFunctionAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Function - All')) }}
+  - name: IsFunctionStorage
+    value: ${{ or(eq(variables.IsFunctionAll,true), eq(parameters.deployResources,'Function - Storage')) }}
+  # - name: IsFunction
+  #   value: ${{ or(eq(variables.IsFunctionAll,true), eq(parameters.deployResources,'Function - App and Service Plan')) }}
+
   - name: IsFrontDoor
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Front Door')) }}
   - name: IsFrontDoorAll
@@ -208,6 +215,21 @@ extends:
                 privateEndpointDnsRecordsForResources:
                   - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)02
                     resourceGroupName: $(servicesResourceGroup)
+
+        - ${{ if eq(variables.IsFunctionAll, true) }}:
+          - name: function
+            deployments:
+              - ${{ if eq(variables.IsFunctionStorage, true) }}:
+                - name: storage
+                  path: infra/core/env/web/storage
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                  - resourceName: $(infraResourceNamePrefix)$(nc_resource_storageaccount)$(nc_instance_regionid)02
+                    resourceGroupName: $(servicesResourceGroup)
+              # - ${{ if eq(variables.IsMonitoringAzureMonitorWorkspace, true) }}:
+              #   - name: azure-monitor-workspace
+              #     path: infra/core/env/observability
+              #     resourceGroupName: $(servicesResourceGroup)
 
         - ${{ if eq(variables.IsManagedCluster, true) }}:  
           - name: managed_cluster
