@@ -415,6 +415,14 @@ Function Update-GroupMembers() {
                     Write-Host "Group '$($_)' Added as a member of the Group."
                 }
             } 
+
+            if ($AADGroupMembers.serviceprincipals) {
+                $spResult = Find-NewServicePrincipalsToAdd -GroupId $GroupId -ExistingGroupMembersOrOwners $existingGroupMembers -ServicePrincipals $AADGroupMembers.serviceprincipals
+                $spResult | ForEach-Object {
+                    New-MgGroupMember -GroupId $GroupId -DirectoryObjectId $_ -ErrorAction Stop
+                    Write-Host "ServicePrincipal '$($_)' Added as a member of the Group."
+                }
+            } 
         }    
     }
 
@@ -588,7 +596,7 @@ Function Find-NewGroupsToAdd() {
         
         $groups = [System.Collections.Generic.List[string]]@()
         $AADGroups | ForEach-Object {
-            Write-Host "Getting AD Group ID for group name '$_'"
+            Write-Host "Getting ServicePrincipal ID for ServicePrincipal name '$_'"
             $group = Get-MgGroup -Filter "DisplayName eq '$_'" -Property "id"
             if ($group) {
                 if($ExistingGroupMembersOrOwners.Id -notcontains $group.id){
@@ -603,6 +611,51 @@ Function Find-NewGroupsToAdd() {
             }
         }  
         return $groups
+        
+        end {
+            Write-Debug "${functionName}:Exited"
+        }    
+    }
+}
+
+
+Function Find-NewServicePrincipalsToAdd() {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory)]
+        [string]$GroupId,
+        [Object[]]$ExistingGroupMembersOrOwners,
+        [ValidateNotNullOrEmpty()]
+        [Object[]]$ServicePrincipals
+    )
+
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand    
+        Write-Debug "${functionName}:Entered"   
+        Write-Debug "${functionName}:GroupId=$($GroupId)" 
+    }
+
+    process {    
+        Write-Debug "${functionName}:ExistingGroupMembersOrOwners=$($ExistingGroupMembersOrOwners | ConvertTo-Json -Depth 10)"
+        Write-Debug "${functionName}:ServicePrincipals=$($ServicePrincipals | ConvertTo-Json -Depth 10)"
+        
+        $spIds = [System.Collections.Generic.List[string]]@()
+        $ServicePrincipals | ForEach-Object {
+            Write-Host "Getting AD Group ID for group name '$_'"
+            $sp = Get-MgServicePrincipal -Filter "DisplayName eq '$_'" -Property "id"
+            if ($sp) {
+                if($ExistingGroupMembersOrOwners.Id -notcontains $sp.id){
+                    $spIds.Add($sp.id)
+                }
+                else{
+                    Write-Host "ServicePrincipal '$($_)' is already a member/owner of the Group."
+                }
+            }
+            else {
+                Write-Error "ServicePrincipal '$($_)' does not exist."
+            }
+        }  
+        return $spIds
         
         end {
             Write-Debug "${functionName}:Exited"
