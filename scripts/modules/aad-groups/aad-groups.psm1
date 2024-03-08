@@ -641,7 +641,7 @@ Function Find-NewServicePrincipalsToAdd() {
         
         $spIds = [System.Collections.Generic.List[string]]@()
         $ServicePrincipals | ForEach-Object {
-            Write-Host "Getting AD Group ID for group name '$_'"
+            Write-Host "Getting ServicePrincipal ID for group name '$_'"
             $sp = Get-MgServicePrincipal -Filter "DisplayName eq '$_'" -Property "id"
             if ($sp) {
                 if($ExistingGroupMembersOrOwners.Id -notcontains $sp.id){
