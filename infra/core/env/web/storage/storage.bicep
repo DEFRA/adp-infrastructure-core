@@ -6,7 +6,8 @@ param vnet object = {
 
 param storageAccount object = {
   name: 'sndadpinfst1402'
-  privateEndpointName: 'SNDADPINFPE1408'
+  privateEndpointNameBlob: 'SNDADPINFPE1408'
+  privateEndpointNameFile: 'SNDADPINFPE1409'
   skuName: 'Standard_ZRS'
   fileShareName: 'function-content-share'
   kind: 'StorageV2'
@@ -37,8 +38,14 @@ var storageAccountTags = {
   Tier: 'Shared'
 }
 
-var storageAccountPrivateEndpointTags = {
-  Name: storageAccount.privateEndpointName
+var storageAccountBlobPrivateEndpointTags = {
+  Name: storageAccount.privateEndpointNameBlob
+  Purpose: 'FunctionApp Storage Account private endpoint'
+  Tier: 'Shared'
+}
+
+var storageAccountFilePrivateEndpointTags = {
+  Name: storageAccount.privateEndpointNameFile
   Purpose: 'FunctionApp Storage Account private endpoint'
   Tier: 'Shared'
 }
@@ -65,10 +72,16 @@ module storageAccountResource 'br/SharedDefraRegistry:storage.storage-account:0.
     }
     privateEndpoints: [
       {
-        name: storageAccount.privateEndpointName
+        name: storageAccount.privateEndpointNameBlob
         service: 'blob'
         subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
-        tags: union(tags, storageAccountPrivateEndpointTags)
+        tags: union(tags, storageAccountBlobPrivateEndpointTags)
+      }
+      {
+        name: storageAccount.privateEndpointNameFile
+        service: 'file'
+        subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
+        tags: union(tags, storageAccountFilePrivateEndpointTags)
       }
     ]
   }
