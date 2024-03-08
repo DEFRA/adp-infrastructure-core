@@ -24,7 +24,8 @@
             },
             "Members": {
                 "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "sndadpinfmi1401-ffc-demo"
                 ]
             }
         },
@@ -52,7 +53,8 @@
             },
             "Members": {
                 "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "sndadpinfmi2401-ffc-demo"
                 ]
             }
         },
@@ -80,7 +82,8 @@
             },
             "Members": {
                 "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "sndadpinfmi3401-ffc-demo"
                 ]
             }
         },
@@ -108,7 +111,8 @@
             },
             "Members": {
                 "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "sndadpinfmi1401-ffc-ffd"
                 ]
             }
         },
@@ -136,7 +140,8 @@
             },
             "Members": {
                 "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "sndadpinfmi2401-ffc-ffd"
                 ]
             }
         },
@@ -164,7 +169,8 @@
             },
             "Members": {
                 "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "sndadpinfmi3401-ffc-ffd"
                 ]
             }
         },
@@ -192,7 +198,8 @@
             },
             "Members": {
                 "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "sndadpinfmi3401-ffc-dal"
                 ]
             }
         },
@@ -220,7 +227,8 @@
             },
             "Members": {
                 "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "sndadpinfmi3401-ffc-find"
                 ]
             }
         },
@@ -248,7 +256,8 @@
             },
             "Members": {
                 "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "sndadpinfmi1401-eutd-trade-exports-ai"
                 ]
             }
         },
@@ -276,7 +285,8 @@
             },
             "Members": {
                 "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "sndadpinfmi2401-eutd-trade-exports-ai"
                 ]
             }
         },
@@ -304,7 +314,66 @@
             },
             "Members": {
                 "groups" : [
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "sndadpinfmi3401-eutd-trade-exports-ai"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Azure-ADP-FFC-SFD-SND3-PostgresDB_Reader",
+            "description": "AD group to grant access to postgres DB",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ]
+            },
+            "Members": {
+                "groups" : [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Azure-ADP-FFC-SFD-SND3-PostgresDB_Writer",
+            "description": "AD group to grant access to postgres DB",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ]
+            },
+            "Members": {
+                "groups" : [
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "sndadpinfmi3401-ffc-sfd"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Azure-ADP-COREAI-MCU-SND3-PostgresDB_Reader",
+            "description": "AD group to grant access to postgres DB",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ]
+            },
+            "Members": {
+                "groups" : [
+                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Azure-ADP-COREAI-MCU-SND3-PostgresDB_Writer",
+            "description": "AD group to grant access to postgres DB",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ]
+            },
+            "Members": {
+                "groups" : [
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "sndadpinfmi3401-coreai-mcu"
                 ]
             }
         }
