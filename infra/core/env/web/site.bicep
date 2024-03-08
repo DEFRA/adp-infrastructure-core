@@ -2,7 +2,7 @@
 param vnet object = {
   name: 'SNDADPNETVN1401'
   resourceGroup: 'SNDADPNETRG1401'
-  subnetFunctionApp: 'SNDADPNETSU1494AA'
+  subnetFunctionApp: 'SNDADPNETSU1494'
   subnetPrivateEndpoints: 'SNDADPNETSU1498'
 }
 

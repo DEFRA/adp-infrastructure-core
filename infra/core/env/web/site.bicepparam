@@ -7,7 +7,7 @@ param environment = '#{{ environment }}'
 param vnet = {
   name: '#{{ virtualNetworkName }}'
   resourceGroup: '#{{ virtualNetworkResourceGroup }}'
-  subnetFunctionApp: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}94AA'
+  subnetFunctionApp: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}94'
   subnetPrivateEndpoints: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}98'
 }
 
