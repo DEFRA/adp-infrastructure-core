@@ -26,7 +26,7 @@
                 "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ],
-                "users": [
+                "serviceprincipals": [
                     "sndadpinfmi1401-ffc-demo"
                 ]
             }
@@ -57,7 +57,7 @@
                 "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ],
-                "users": [
+                "serviceprincipals": [
                     "sndadpinfmi2401-ffc-demo"
                 ]
             }
@@ -88,7 +88,7 @@
                 "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ],
-                "users": [
+                "serviceprincipals": [
                     "sndadpinfmi3401-ffc-demo"
                 ]
             }
@@ -119,7 +119,7 @@
                 "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ],
-                "users": [
+                "serviceprincipals": [
                     "sndadpinfmi1401-ffc-ffd"
                 ]
             }
@@ -150,7 +150,7 @@
                 "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ],
-                "users": [
+                "serviceprincipals": [
                     "sndadpinfmi2401-ffc-ffd"
                 ]
             }
@@ -181,7 +181,7 @@
                 "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ],
-                "users": [
+                "serviceprincipals": [
                     "sndadpinfmi3401-ffc-ffd"
                 ]
             }
@@ -212,7 +212,7 @@
                 "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ],
-                "users": [
+                "serviceprincipals": [
                     "sndadpinfmi3401-ffc-dal"
                 ]
             }
@@ -243,7 +243,7 @@
                 "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ],
-                "users": [
+                "serviceprincipals": [
                     "sndadpinfmi3401-ffc-find"
                 ]
             }
@@ -274,7 +274,7 @@
                 "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ],
-                "users": [
+                "serviceprincipals": [
                     "sndadpinfmi1401-eutd-trade-exports-ai"
                 ]
             }
@@ -305,7 +305,7 @@
                 "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ],
-                "users": [
+                "serviceprincipals": [
                     "sndadpinfmi2401-eutd-trade-exports-ai"
                 ]
             }
@@ -336,7 +336,7 @@
                 "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ],
-                "users": [
+                "serviceprincipals": [
                     "sndadpinfmi3401-eutd-trade-exports-ai"
                 ]
             }
@@ -367,7 +367,7 @@
                 "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ],
-                "users": [
+                "serviceprincipals": [
                     "sndadpinfmi3401-ffc-sfd"
                 ]
             }
@@ -398,7 +398,7 @@
                 "groups": [
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ],
-                "users": [
+                "serviceprincipals": [
                     "sndadpinfmi3401-coreai-mcu"
                 ]
             }
