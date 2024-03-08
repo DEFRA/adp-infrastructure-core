@@ -643,8 +643,10 @@ Function Find-NewServicePrincipalsToAdd() {
         $ServicePrincipals | ForEach-Object {
             Write-Host "Getting ServicePrincipal ID for group name '$_'"
             $sp = Get-MgServicePrincipal -Filter "DisplayName eq '$_'" -Property "id"
+            Write-Debug $sp
             if ($sp) {
                 if($ExistingGroupMembersOrOwners.Id -notcontains $sp.id){
+                    Write-Debug "SP not in existing members"
                     $spIds.Add($sp.id)
                 }
                 else{
