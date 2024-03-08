@@ -367,8 +367,7 @@ Function Build-Groups() {
 Add Members to the existing group
 
 .DESCRIPTION
-Add Members to the existing group if it does not exist. Members can be type of 'User' or 'Group'.
-For update operation there is no use case to include 'service principal' as member hence 'Service principals' is not included as a part of update member list.
+Add Members to the existing group if it does not exist. Members can be type of 'User', 'Group' or 'ServicePrincipals'.
 
 .PARAMETER AADGroupMembers
 AAD Group Members Object (users, groups)
@@ -619,7 +618,27 @@ Function Find-NewGroupsToAdd() {
     }
 }
 
+<#
+.SYNOPSIS
+Build list of new service principals to add to the existing group
 
+.DESCRIPTION
+Build list of new service principals to add to the existing group either as owner or member.
+It takes group name array as input, checks if service principal is already a member/owner of the group and return only list 
+of service principals which are not already a member/owner of the group
+
+.PARAMETER GroupId
+AAD Group Object Ids
+
+.PARAMETER ExistingGroupMembersOrOwners
+List of Existing Group Members or Owners (Users or groups)
+
+.PARAMETER ServicePrincipals
+Mandatory. ServicePrincipals Object
+
+.EXAMPLE
+Find-NewServicePrincipalsToAdd -GroupId <GroupId> -ExistingGroupMembersOrOwners <ExistingGroupMembersOrOwners> ServicePrincipals <ServicePrincipals>
+#> 
 Function Find-NewServicePrincipalsToAdd() {
     [CmdletBinding()]
     Param(
@@ -644,10 +663,8 @@ Function Find-NewServicePrincipalsToAdd() {
         $ServicePrincipals | ForEach-Object {
             Write-Host "Getting ServicePrincipal ID for group name '$_'"
             $sp = Get-MgServicePrincipal -Filter "DisplayName eq '$_'" -Property "id"
-            Write-Debug $sp
             if ($sp) {
                 if($ExistingGroupMembersOrOwners.Id -notcontains $sp.id){
-                    Write-Debug "SP not in existing members"
                     $spIds.Add($sp.id)
                 }
                 else{
