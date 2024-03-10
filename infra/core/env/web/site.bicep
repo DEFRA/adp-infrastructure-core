@@ -109,7 +109,7 @@ module functionApp 'br/SharedDefraRegistry:web.site:0.4.19' = {
           value: 'dotnet-isolated'
         }
         {
-          name: 'WEBSITE_VNET_ROUTE_ALL'
+          name: 'WEBSITE_SKIP_CONTENTSHARE_VALIDATION'
           value: '1'
         }
         {
