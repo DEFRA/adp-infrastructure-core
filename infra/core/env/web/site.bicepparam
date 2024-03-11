@@ -20,7 +20,7 @@ param storageAccount = {
 
 param appService = {
   name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_functionapp }}#{{ nc_instance_regionid }}01'
-  planName: '#{{ infraResourceNamePrefix }}}#{{ nc_resource_appserviceplan }}#{{ nc_instance_regionid }}01'
+  planName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_appserviceplan }}#{{ nc_instance_regionid }}01'
   planSku: {
     name: 'EP1'
     tier: 'ElasticPremium'
