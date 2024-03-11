@@ -1,44 +1,7 @@
 {
     "userADGroups": [
         {
-            "displayName": "AAG-Users-ADP-FFC-DAL_TechUser",
-            "description": "Azure AD User group for DAL TechUser",
-            "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV3"
-                ],
-                "users" : [
-                    "jack.mccabe@defra.gov.uk",
-                    "a-dan.roszkowski@defra.onmicrosoft.com",
-                    "Kenneth.Babigumira@Defra.onmicrosoft.com",
-                    "logan.talbot@defra.onmicrosoft.com"
-                ]
-            },
-            "Members": {
-                "users" : [
-                    "jack.mccabe@defra.gov.uk",
-                    "Chris.Salt-Mountain@defra.gov.uk",
-                    "Hadi.Tajallaei@defra.gov.uk",
-                    "Dom.Taylor@defra.gov.uk"
-                ]
-            }
-        },
-        {
-            "displayName": "AAG-Users-ADP-FCP-FIND_TechUser",
-            "description": "Azure AD User group for FIND TechUser",
-            "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV3"
-                ],
-                "users" : [
-                    "a-dan.roszkowski@defra.onmicrosoft.com",
-                    "Kenneth.Babigumira@Defra.onmicrosoft.com",
-                    "logan.talbot@defra.onmicrosoft.com"
-                ]
-            }
-        },
-        {
-            "displayName": "AAG-Users-ADP-Core-MCU_TechUser",
+            "displayName": "AAG-Users-ADP-LAP-MIT_TechUser",
             "description": "Azure AD User group for MCU TechUser",
             "Owners": {
                 "serviceprincipals" : [
@@ -48,6 +11,12 @@
                     "a-dan.roszkowski@defra.onmicrosoft.com",
                     "Kenneth.Babigumira@Defra.onmicrosoft.com",
                     "logan.talbot@defra.onmicrosoft.com"
+                ]
+            },
+            "Members": {
+                "users" : [
+                    "matthew.quinton@defra.gov.uk",
+                    "nick.blows@defra.gov.uk"
                 ]
             }
         }
@@ -64,7 +33,7 @@
             },
             "Members": {
                 "groups" : [
-                    "AAG-Users-ADP-FFC-DAL_TechUser"
+                    "AAG-Users-ADP-LAP-MIT_TechUser"
                 ]
             }
         },
@@ -78,7 +47,7 @@
             },
             "Members": {
                 "groups" : [
-                    "AAG-Users-ADP-FFC-DAL_TechUser"
+                    "AAG-Users-ADP-LAP-MIT_TechUser"
                 ]
             }
         }
