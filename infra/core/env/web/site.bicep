@@ -108,14 +108,14 @@ module functionApp 'br/SharedDefraRegistry:web.site:0.4.19' = {
           name: 'FUNCTIONS_WORKER_RUNTIME'
           value: 'dotnet-isolated'
         }
-        {
-          name: 'WEBSITE_SKIP_CONTENTSHARE_VALIDATION'
-          value: '1'
-        }
         // {
-        //   name: 'WEBSITE_CONTENTOVERVNET'
+        //   name: 'WEBSITE_SKIP_CONTENTSHARE_VALIDATION'
         //   value: '1'
         // }
+        {
+          name: 'WEBSITE_CONTENTOVERVNET'
+          value: '1'
+        }
       ]
       ipSecurityRestrictions: [
         {
