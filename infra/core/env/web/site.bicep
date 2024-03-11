@@ -26,11 +26,11 @@ param appService object = {
 
 param applicationInsightsName string = 'SNDADPINFAI1401'
 
-param platformKeyVault object = {
-  name: 'SNDADPINFVT1402'
-  secretName: 'deploymentTriggerFunctionAppStorageAccountConnectionString'
-  deploymentTriggerStorageConnectionString: 'https://SNDADPINFVT1402.vault.azure.net/secrets/deploymentTriggerFunctionAppStorageAccountConnectionString'
-}
+param platformKeyVault object //= {
+//   name: 'SNDADPINFVT1402'
+//   secretName: 'deploymentTriggerFunctionAppStorageAccountConnectionString'
+//   deploymentTriggerStorageConnectionString: 'https://SNDADPINFVT1402.vault.azure.net/secrets/deploymentTriggerFunctionAppStorageAccountConnectionString'
+// }
 
 @description('Required. Environment name.')
 param environment string = 'SND1'
@@ -57,6 +57,12 @@ var appServiceTags = {
   Tier: 'Shared'
 }
 
+var tagsMi = {
+  Name: appService.managedIdentityName
+  Purpose: 'Function App Managed Identity'
+  Tier: 'Security'
+}
+
 var keyVaultSecretUri = '@Microsoft.KeyVault(SecretUri=${platformKeyVault.deploymentTriggerStorageConnectionString}/)'
 
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' existing = {
@@ -76,6 +82,26 @@ resource secretResource 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   name: platformKeyVault.secretName
   properties: {
     value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccountResource.id,'2022-05-01').keys[0].value}'
+  }
+}
+
+module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
+  name: 'function-app-mi-${deploymentDate}'
+  params: {
+    name: appService.managedIdentityName
+    location: location
+    lock: 'CanNotDelete'
+    tags: union(tags, tagsMi)
+  }
+}
+
+resource keyVaultRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(resourceGroup().id, appService.managedIdentityName, 'b86a8fe4-44ce-4948-aee5-eccb2c155cd7', platformKeyVault.name)
+  scope: keyVaultResource
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b86a8fe4-44ce-4948-aee5-eccb2c155cd7') //KeyVault Secret Officer
+    principalId: managedIdentity.outputs.principalId
+    principalType: 'ServicePrincipal'
   }
 }
 
@@ -157,6 +183,12 @@ module functionApp 'br/SharedDefraRegistry:web.site:0.4.19' = {
     publicNetworkAccess: 'Enabled'
     vnetRouteAllEnabled: true
     httpsOnly: true
+    keyVaultAccessIdentityResourceId: managedIdentity.outputs.resourceId
+    managedIdentities: {
+      userAssignedResourceIds: [
+        managedIdentity.outputs.resourceId
+      ]
+    }
   }
 }
 

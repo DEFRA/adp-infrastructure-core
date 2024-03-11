@@ -23,12 +23,13 @@ param appService = {
     name: 'EP1'
     tier: 'ElasticPremium'
   }
+  managedIdentityName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-adp-function-app'
 }
 
 param platformKeyVault = {
   name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}02'
-  secretName: 'deploymentTriggerFunctionAppStorageAccountConnectionString'
-  deploymentTriggerStorageConnectionString: 'https://SNDADPINFVT1402.vault.azure.net/secrets/deploymentTriggerFunctionAppStorageAccountConnectionString'
+  secretName: '#{{ deploymentTriggerStorageConnectionStringSecretName }}'
+  deploymentTriggerStorageConnectionString: '#{{ deploymentTriggerStorageConnectionString }}'
 }
 
 param applicationInsightsName = '#{{ applicationInsightsName }}'
