@@ -29,6 +29,7 @@ param applicationInsightsName string = 'SNDADPINFAI1401'
 param platformKeyVault object = {
   name: 'SNDADPINFVT1402'
   secretName: 'deploymentTriggerFunctionAppStorageAccountConnectionString'
+  deploymentTriggerStorageConnectionString: 'https://SNDADPINFVT1402.vault.azure.net/secrets/deploymentTriggerFunctionAppStorageAccountConnectionString'
 }
 
 @description('Required. Environment name.')
@@ -56,7 +57,7 @@ var appServiceTags = {
   Tier: 'Shared'
 }
 
-var keyVaultSecretUri = '@Microsoft.KeyVault(SecretUri=https://${platformKeyVault.name}.vault.azure.net/secrets/${platformKeyVault.secretName}/)'
+var keyVaultSecretUri = '@Microsoft.KeyVault(SecretUri=${platformKeyVault.deploymentTriggerStorageConnectionString}/)'
 
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: applicationInsightsName

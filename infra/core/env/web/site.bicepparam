@@ -28,6 +28,7 @@ param appService = {
 param platformKeyVault = {
   name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}02'
   secretName: 'deploymentTriggerFunctionAppStorageAccountConnectionString'
+  deploymentTriggerStorageConnectionString: 'https://SNDADPINFVT1402.vault.azure.net/secrets/deploymentTriggerFunctionAppStorageAccountConnectionString'
 }
 
 param applicationInsightsName = '#{{ applicationInsightsName }}'
