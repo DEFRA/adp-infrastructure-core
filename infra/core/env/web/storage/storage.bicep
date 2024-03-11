@@ -8,7 +8,7 @@ param storageAccount object = {
   name: 'sndadpinfst1402'
   privateEndpointNameBlob: 'SNDADPINFPE1408'
   privateEndpointNameFile: 'SNDADPINFPE1409'
-  skuName: 'Standard_GRS'
+  skuName: 'Standard_ZRS'
   fileShareName: 'function-content-share'
   kind: 'StorageV2'
 }
