@@ -1,9 +1,7 @@
-param vnet object = {
-  name: 'SNDADPNETVN1401'
-  resourceGroup: 'SNDADPNETRG1401'
-  subnetPrivateEndpoints: 'SNDADPNETSU1498'
-}
+@description('Required. The parameter object for the virtual network. The object must contain the name,resourceGroup and subnetPrivateEndpoints values.')
+param vnet object
 
+@description('Required. The parameter object for the App Service storage account. The object must contain the name, privateEndpointNameBlob, privateEndpointNameFile, skuName, kind and fileShareName')
 param storageAccount object = {
   name: 'sndadpinfst1402'
   privateEndpointNameBlob: 'SNDADPINFPE1408'
@@ -14,7 +12,7 @@ param storageAccount object = {
 }
 
 @description('Required. Environment name.')
-param environment string = 'SND1'
+param environment string
 
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')

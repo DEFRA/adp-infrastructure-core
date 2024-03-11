@@ -14,6 +14,8 @@ param vnet = {
 param storageAccount = {
   name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_storageaccount }}#{{ nc_instance_regionid }}02'
   fileShareName: 'function-content-share'
+  deploymentTriggerStorageConnectionStringSecretName: '#{{ deploymentTriggerStorageConnectionStringSecretName }}'
+  deploymentTriggerStorageConnectionString: '#{{ deploymentTriggerStorageConnectionString }}'
 }
 
 param appService = {
@@ -26,10 +28,6 @@ param appService = {
   managedIdentityName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-adp-function-app'
 }
 
-param platformKeyVault = {
-  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}02'
-  secretName: '#{{ deploymentTriggerStorageConnectionStringSecretName }}'
-  deploymentTriggerStorageConnectionString: '#{{ deploymentTriggerStorageConnectionString }}'
-}
+param platformKeyVaultName = '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}02'
 
 param applicationInsightsName = '#{{ applicationInsightsName }}'
