@@ -26,6 +26,11 @@ param appService object = {
 
 param applicationInsightsName string = 'SNDADPINFAI1401'
 
+param platformKeyVault object = {
+  name: 'SNDADPINFVT1402'
+  secretName: 'deploymentTriggerFunctionAppStorageAccountConnectionString'
+}
+
 @description('Required. Environment name.')
 param environment string = 'SND1'
 
@@ -51,12 +56,26 @@ var appServiceTags = {
   Tier: 'Shared'
 }
 
+var keyVaultSecretUri = '@Microsoft.KeyVault(SecretUri=https://${platformKeyVault.name}.vault.azure.net/secrets/${platformKeyVault.secretName}/)'
+
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: applicationInsightsName
 }
 
 resource storageAccountResource 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
   name: storageAccount.name
+}
+
+resource keyVaultResource 'Microsoft.KeyVault/vaults@2022-07-01' existing = {
+  name: platformKeyVault.name
+}
+
+resource secretResource 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
+  parent: keyVaultResource
+  name: platformKeyVault.secretName
+  properties: {
+    value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccountResource.id,'2022-05-01').keys[0].value}'
+  }
 }
 
 module webServerFarmResource 'br/SharedDefraRegistry:web.serverfarm:0.4.12' = {
@@ -90,11 +109,13 @@ module functionApp 'br/SharedDefraRegistry:web.site:0.4.19' = {
         }
         {
           name: 'AzureWebJobsStorage'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccountResource.id,'2022-05-01').keys[0].value}'
+          value: keyVaultSecretUri
+          // value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccountResource.id,'2022-05-01').keys[0].value}'
         }
         {
           name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccountResource.id,'2022-05-01').keys[0].value}'
+          value: keyVaultSecretUri
+          // value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};AccountKey=${listKeys(storageAccountResource.id,'2022-05-01').keys[0].value}'
         }
         {
           name: 'WEBSITE_CONTENTSHARE'
@@ -108,10 +129,10 @@ module functionApp 'br/SharedDefraRegistry:web.site:0.4.19' = {
           name: 'FUNCTIONS_WORKER_RUNTIME'
           value: 'dotnet-isolated'
         }
-        // {
-        //   name: 'WEBSITE_SKIP_CONTENTSHARE_VALIDATION'
-        //   value: '1'
-        // }
+        {
+          name: 'WEBSITE_SKIP_CONTENTSHARE_VALIDATION'
+          value: '1'
+        }
         {
           name: 'WEBSITE_CONTENTOVERVNET'
           value: '1'

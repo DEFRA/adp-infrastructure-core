@@ -25,4 +25,9 @@ param appService = {
   }
 }
 
+param platformKeyVault = {
+  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}02'
+  secretName: 'deploymentTriggerFunctionAppStorageAccountConnectionString'
+}
+
 param applicationInsightsName = '#{{ applicationInsightsName }}'
