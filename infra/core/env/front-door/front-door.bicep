@@ -34,7 +34,7 @@ var tags = union(loadJsonContent('../../../common/default-tags.json'), customTag
 
 var frontDoorTags = {
   Name: name
-  Purpose: 'ADP Core Front Door'
+  Purpose: 'ADP Application Gateway'
   Tier: 'Shared'
 }
 

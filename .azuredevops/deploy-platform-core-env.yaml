@@ -299,7 +299,8 @@ extends:
               - ${{ if eq(variables.IsApplicationGatewayAll, true) }}: 
                 - name: application-gateway
                   path: infra/core/env/application-gateway
-                  resourceGroupName: $(cdnResourceGroup)
+                  resourceGroupName: $(secInfraResourceGroup)
+                  serviceConnectionVariableName: 'secServiceConnection'
 
         - ${{ if eq(variables.IsApplication, true) }}:  
           - name: application_infra
