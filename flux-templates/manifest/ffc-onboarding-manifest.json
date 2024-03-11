@@ -135,6 +135,61 @@
                     "name": "fcp-find-ai-frontend"
                 }
             ]
+        },
+        {
+            "name": "ffc-sfd",
+            "servicecode": "ffc-sfd",
+            "services": [
+                {
+                    "name": "ffc-sfd-permissions",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-sfd-ahwp-stub",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-sfd-auth",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-sfd-messages",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-sfd-messages-processor",
+                    "backend": true,
+                    "dbname": "messages-processor"
+                },
+                {
+                    "name": "ffc-sfd-landing-page",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-sfd-data",
+                    "backend": true,
+                    "dbname": "backend"
+                },
+                {
+                    "name": "ffc-sfd-permissions-api",
+                    "backend": true,
+                    "dbname": "permissions-api"
+                }
+            ],
+            "environments": [
+                {
+                    "name": "snd",
+                    "instances": [
+                        "3"
+                    ]
+                },
+                {
+                    "name": "dev",
+                    "instances": [
+                        "1"
+                    ]
+                }
+            ]
         }
     ]
 }
