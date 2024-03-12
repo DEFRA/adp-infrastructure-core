@@ -166,9 +166,7 @@
                     "frontend": true
                 },
                 {
-                    "name": "ffc-sfd-data",
-                    "backend": true,
-                    "dbname": "backend"
+                    "name": "ffc-sfd-data"
                 },
                 {
                     "name": "ffc-sfd-permissions-api",
