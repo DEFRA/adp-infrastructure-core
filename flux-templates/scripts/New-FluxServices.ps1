@@ -130,10 +130,18 @@ function Set-Version {
     process {
         if (test-path $FilePath) {
             $versionNumberString = Select-String -Path "$FilePath" -Pattern '"*[0-9]+\.[0-9]+\.[0-9]+"*\s#\s\{"\$imagepolicy":'
-            $versionNumberString[0] -match '[0-9]+\.[0-9]+\.[0-9]+'
-            $version = $matches[0]
-            Write-Host "Version Number in file '$FilePath': '$version'"
-            $lookupTable['__VERSION__'] = $version
+            if ($versionNumberString -and $versionNumberString[0] -match '[0-9]+\.[0-9]+\.[0-9]+') {
+                $version = $matches[0]
+                Write-Host "Version Number in file '$FilePath': '$version'"
+                $lookupTable['__VERSION__'] = $version
+            }
+
+            $psExecVersionNumberString = Select-String -Path "$FilePath" -Pattern '\d{6}\s#\s\{"\$imagepolicy":'
+            if ($psExecVersionNumberString -and $psExecVersionNumberString[0] -match '\d{6}') {
+                $version = $matches[0]
+                Write-Host "Version Number in file '$FilePath': '$version'"
+                $lookupTable['__PS_EXEC_VERSION__'] = $version
+            }
         }
     }
 }
@@ -172,15 +180,17 @@ try {
     [array]$teams = $programmeDetails.teams
 
     [hashtable]$lookupTable = @{
-        '__PROGRAMME_NAME__' = $programmeName
-        '__VERSION__'        = '0.1.0'
-        '__SERVICE_CODE__'   = 'INITIALIZE'
-        '__TEAM_NAME__'      = 'INITIALIZE'
-        '__SERVICE_NAME__'   = 'INITIALIZE'
-        '__ENVIRONMENT__'    = 'INITIALIZE'
-        '__ENV_INSTANCE__'   = 'INITIALIZE'
-        '__DEPENDS_ON__'     = 'INITIALIZE'
-        '__POSTGRES_DB__'    = 'INITIALIZE'
+        '__PROGRAMME_NAME__'  = $programmeName
+        '__VERSION__'         = '0.1.0'
+        '__SERVICE_CODE__'    = 'INITIALIZE'
+        '__TEAM_NAME__'       = 'INITIALIZE'
+        '__SERVICE_NAME__'    = 'INITIALIZE'
+        '__ENVIRONMENT__'     = 'INITIALIZE'
+        '__ENV_INSTANCE__'    = 'INITIALIZE'
+        '__DEPENDS_ON__'      = 'INITIALIZE'
+        '__POSTGRES_DB__'     = 'INITIALIZE'
+        '__SSV_INSTANCE__'    = 'INITIALIZE'
+        '__PS_EXEC_VERSION__' = '123456'
     }
 
     [string]$programmePath = "$FluxServicesPath/$programmeName"
@@ -273,11 +283,19 @@ try {
                         ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/migration/environment/migration-patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/migration/$($environment.name)/0$instance/migration-patch.yaml"
                         ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/migration/environment/kustomization.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/migration/$($environment.name)/0$instance/kustomization.yaml"
 
+                        if ($environment.name.ToLower() -eq "snd") {
+                            $lookupTable['__SSV_INSTANCE__'] = "3"
+                        }
+                        else {
+                            $lookupTable['__SSV_INSTANCE__'] = "5"
+                        }
                         New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/post-migration/$($environment.name)/0$instance"
+                        Set-Version -FilePath $programmePath/$($team.name)/$($service.name)/pre-deploy/post-migration/$($environment.name)/0$instance/post-migration-script-patch.yaml
                         ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/post-migration/environment/kustomization.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/post-migration/$($environment.name)/0$instance/kustomization.yaml"
                         ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/post-migration/environment/post-migration-script-patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/post-migration/$($environment.name)/0$instance/post-migration-script-patch.yaml"
 
                         New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/pre-deploy/pre-migration/$($environment.name)/0$instance"
+                        Set-Version -FilePath $programmePath/$($team.name)/$($service.name)/pre-deploy/pre-migration/$($environment.name)/0$instance/pre-migration-script-patch.yaml
                         ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/pre-migration/environment/kustomization.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/pre-migration/$($environment.name)/0$instance/kustomization.yaml"
                         ReplaceTokens -TemplateFile "$templateTeamServicePath/pre-deploy/pre-migration/environment/pre-migration-script-patch.yaml" -DestinationFile "$programmePath/$($team.name)/$($service.name)/pre-deploy/pre-migration/$($environment.name)/0$instance/pre-migration-script-patch.yaml"
                     }
