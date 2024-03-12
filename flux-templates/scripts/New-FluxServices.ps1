@@ -191,6 +191,8 @@ try {
         '__POSTGRES_DB__'     = 'INITIALIZE'
         '__SSV_INSTANCE__'    = 'INITIALIZE'
         '__PS_EXEC_VERSION__' = '123456'
+        '__SERVICE_CODE_UC__' = 'INITIALIZE'
+        '__ENVIRONMENT_UC__'  = 'INITIALIZE'
     }
 
     [string]$programmePath = "$FluxServicesPath/$programmeName"
@@ -208,6 +210,7 @@ try {
     foreach ($team in $teams) {
         $lookupTable['__TEAM_NAME__'] = $team.name
         $lookupTable['__SERVICE_CODE__'] = $team.servicecode
+        $lookupTable['__SERVICE_CODE_UC__'] = $team.servicecode.ToUpper()
 
         # CREATE TEAM BASE DIRECTORIES AND FILES
         [string]$teamBaseDirectory = "$programmePath/$($team.name)/base"
@@ -263,6 +266,7 @@ try {
 
             foreach ($environment in $team.environments) {
                 $lookupTable['__ENVIRONMENT__'] = $($environment.name)
+                $lookupTable['__ENVIRONMENT_UC__'] = $($environment.name).ToUpper()
                 foreach ($instance in $environment.instances) {
                     $lookupTable['__ENV_INSTANCE__'] = $instance
                     New-Directory -DirectoryPath "$programmePath/$($team.name)/$($service.name)/deploy/$($environment.name)/0$instance"

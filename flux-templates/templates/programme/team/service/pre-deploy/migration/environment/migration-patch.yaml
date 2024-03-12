@@ -19,4 +19,4 @@ spec:
         - name: POSTGRES_PORT
           value: "${POSTGRES_PORT}"
         - name: SCHEMA_USERNAME
-          value: "AAG-Azure-ADP-__SERVICE_CODE__-__ENVIRONMENT____ENV_INSTANCE__-PostgresDB_Writer"
+          value: "AAG-Azure-ADP-__SERVICE_CODE_UC__-__ENVIRONMENT_UC____ENV_INSTANCE__-PostgresDB_Writer"
