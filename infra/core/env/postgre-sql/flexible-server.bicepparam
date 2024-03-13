@@ -28,6 +28,6 @@ param platformKeyVault = {
 }
 
 param secrets = [
-  'ADO-DefraGovUK-AAD-ADP-#{{ssvEnvironment}}#{{environmentId}}'
-  'ADO-DefraGovUK-AAD-ADP-#{{ssvEnvironment}}#{{environmentId}}-ClientId'
+  'ADO-DefraGovUK-AAD-ADP-#{{ssvEnvironment}}#{{nc_shared_instance}}'
+  'ADO-DefraGovUK-AAD-ADP-#{{ssvEnvironment}}#{{nc_shared_instance}}-ClientId'
 ]
