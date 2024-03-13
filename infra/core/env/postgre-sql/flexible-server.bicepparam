@@ -20,3 +20,14 @@ param privateDnsZone = {
 param managedIdentityName = '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-adp-platform-db-aad-admin'
 param location = '#{{ location }}'
 param environment = '#{{ environment }}'
+
+param platformKeyVault = {
+  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}01'
+  subscriptionId: '#{{ ssvSubscriptionId }}'
+  resourceGroup: '#{{ ssvSharedResourceGroup }}'
+}
+
+param secrets = [
+  'ADO-DefraGovUK-AAD-ADP-#{{ssvEnvironment}}#{{environmentId}}'
+  'ADO-DefraGovUK-AAD-ADP-#{{ssvEnvironment}}#{{environmentId}}-ClientId'
+]

@@ -10,6 +10,12 @@ param privateDnsZone object
 @description('Required. The name of the AAD admin managed identity.')
 param managedIdentityName string
 
+@description('Required. The name of the Key vault.')
+param platformKeyVault object
+
+@description('Required. List of secrects to be Rbac to the managed identity.')
+param secrets array = []
+
 @allowed([
   'UKSouth'
 ])
@@ -60,6 +66,19 @@ module aadAdminUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-ide
   }
 }
 
+module keyvaultSecretsUserRoleAssignment '.bicep/kv-secret-role-secrets-user.bicep' = [for (secret, index) in secrets: {
+  name: '${platformKeyVault.Name}-secrect-user-role-${deploymentDate}-${index}'
+  scope: resourceGroup(platformKeyVault.subscriptionId, platformKeyVault.resourceGroup)
+  dependsOn: [
+    aadAdminUserMi
+  ]
+  params: {
+    principalId: aadAdminUserMi.outputs.principalId 
+    keyVaultName: '${platformKeyVault.Name}'
+    secretName: secret
+  }
+}]
+
 module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1' = {
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
@@ -104,6 +123,15 @@ resource dbRsgGrpRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleDefinitionId) 
     principalId: aadAdminUserMi.outputs.principalId
     principalType: 'ServicePrincipal'
+  }
+}
+
+module ssvSharedRsgRoleAssignment '.bicep/resource-group-rbac.bicep' = {
+  name: '${platformKeyVault.resourceGroup}-reader-role-${deploymentDate}'
+  scope: resourceGroup(platformKeyVault.subscriptionId, platformKeyVault.resourceGroup)
+  params: {
+    principalId: aadAdminUserMi.outputs.principalId 
+    roleDefinitionId:roleDefinitionId
   }
 }
 
