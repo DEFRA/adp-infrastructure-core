@@ -82,7 +82,7 @@ extends:
             - ${{ if eq(variables.IsApplicationEventHub, true) }}:                    
               - name: namespace
                 path: infra/env-shared/event-hub
-                resourceGroupName: $(ssvSharedResourceGroup)
+                resourceGroupName: $(ssvInfraResourceGroup)
                 privateEndpointDnsRecordsForResources:
                   - resourceName: $(eventHubName)
-                    resourceGroupName: $(ssvSharedResourceGroup)
+                    resourceGroupName: $(ssvInfraResourceGroup)
