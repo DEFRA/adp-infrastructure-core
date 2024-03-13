@@ -126,14 +126,14 @@ resource dbRsgGrpRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04
   }
 }
 
-module ssvSharedRsgRoleAssignment '.bicep/resource-group-rbac.bicep' = {
-  name: '${platformKeyVault.resourceGroup}-reader-role-${deploymentDate}'
-  scope: resourceGroup(platformKeyVault.subscriptionId, platformKeyVault.resourceGroup)
-  params: {
-    principalId: aadAdminUserMi.outputs.principalId 
-    roleDefinitionId:roleDefinitionId
-  }
-}
+// module ssvSharedRsgRoleAssignment '.bicep/resource-group-rbac.bicep' = {
+//   name: '${platformKeyVault.resourceGroup}-reader-role-${deploymentDate}'
+//   scope: resourceGroup(platformKeyVault.subscriptionId, platformKeyVault.resourceGroup)
+//   params: {
+//     principalId: aadAdminUserMi.outputs.principalId 
+//     roleDefinitionId:roleDefinitionId
+//   }
+// }
 
 @description('The Client Id of the AAD admin user managed identity.')
 output aadAdminUserMiClientId string = aadAdminUserMi.outputs.clientId
