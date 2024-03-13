@@ -1,0 +1,125 @@
+@description('Required. Name of the Application gateway.')
+param name string
+
+@description('Required. Environment name.')
+param environment string
+
+@description('Optional. The Azure region where the resources will be deployed.')
+param location string = resourceGroup().location
+
+@description('Required. The name of the SKU for the Application Gateway.')
+@allowed([
+  'WAF_v2'
+])
+param sku string = 'WAF_v2'
+
+@description('Required. backends Object(backendAddressPool, backendHttpSetting, httpListener, requestRoutingRule)')
+param backends array
+
+@description('Optional. Date in the format yyyyMMdd-HHmmss.')
+param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
+
+@description('Optional. Date in the format yyyy-MM-dd.')
+param createdDate string = utcNow('yyyy-MM-dd')
+
+var customTags = {
+  Location: location
+  CreatedDate: createdDate
+  Environment: environment
+}
+var tags = union(loadJsonContent('../../common/default-tags.json'), customTags)
+
+var applicationGatewayTags = {
+  Name: name
+  Purpose: 'ADP Application Gateway'
+  Tier: 'Shared'
+}
+
+module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.5.15' = {
+  name: 'application-gateway-${deploymentDate}'
+  dependsOn: [
+    appGWpublicIpAddress
+    applicationGatewayWAFPolicy
+  ]
+  params: {
+    name: name
+    location: location
+    sku: sku
+    enableHttp2: true
+    lock: {
+      kind: 'CanNotDelete'
+      name: 'myCustomLockName'
+    }
+    tags: union(tags, applicationGatewayTags)
+    
+    backendAddressPools: [for backend in backends: {
+      name: '${backend.name}-Pool'
+      properties: {
+        backendAddresses: [
+          {
+            fqdn: backend.backendAddressPool.fqdn
+          }
+        ]
+      }
+    }]
+    probes: [for backend in backends: {
+        name: '${backend.name}-health-probe'
+        properties: {
+          protocol: backend.backendHttpSetting.protocol
+          path: backend.backendHttpSetting.probe.path
+          interval: 30
+          timeout: 15
+          match: {
+            statusCodes: [ backend.backendHttpSetting.probe.healthProbeStatusCode ]
+          }
+          minServers: 0          
+          pickHostNameFromBackendHttpSettings: backend.backendHttpSetting.pickHostNameFromBackendAddress          
+          unhealthyThreshold: 3
+        }
+    }]  
+    backendHttpSettingsCollection: [for backend in backends: {
+        name: '${backend.name}-backend-setting'
+        properties: {
+          cookieBasedAffinity: backend.backendHttpSetting.cookieBasedAffinity
+          pickHostNameFromBackendAddress: backend.backendHttpSetting.pickHostNameFromBackendAddress
+          port: backend.backendHttpSetting.port
+          protocol: backend.backendHttpSetting.protocol
+          probe: {
+            id: resourceId('Microsoft.Network/applicationGateways', name , '/probes', '${backend.name}-health-probe')
+          }
+          requestTimeout: backend.backendHttpSetting.requestTimeout
+        }
+    }]
+    httpListeners: [for backend in backends: {
+        name: '${backend.name}-listener'
+        properties: {
+          frontendIPConfiguration: {
+            id: resourceId('Microsoft.Network/applicationGateways', name , '/frontendIPConfigurations/public_frontends')
+          }
+          frontendPort: {
+            id: resourceId('Microsoft.Network/applicationGateways', name , '/frontendPorts/http_80')
+          }
+          hostNames: backend.httpListener.hostNames
+          protocol: backend.httpListener.protocol
+          requireServerNameIndication: backend.httpListener.requireServerNameIndication
+        }
+    }]
+    requestRoutingRules: [for backend in backends: {
+        name: '${backend.name}-rule'
+        properties: {
+          backendAddressPool: {
+            id: resourceId('Microsoft.Network/applicationGateways', name , '/backendAddressPools/${backend.requestRoutingRule.backendAddressPool}-Pool')
+          }
+          backendHttpSettings: {
+            id: resourceId('Microsoft.Network/applicationGateways', name , '/backendHttpSettingsCollection/${backend.requestRoutingRule.backendName}-backend-setting')
+          }
+          httpListener: {
+            id: resourceId('Microsoft.Network/applicationGateways', name , '/httpListeners/${backend.requestRoutingRule.listenerName}-listener')
+          }
+          priority: 200
+          ruleType: backend.requestRoutingRule.ruleType
+        }
+    }]
+  }
+}
+

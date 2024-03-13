@@ -15,44 +15,19 @@ param vnet = {
 
 param publicIPName = '#{{ SEC$(projectName)$(environment)$(nc_resource_publicip)$(nc_instance_regionid)01 }}'
 
-param backendAddressPools = [
+param wafPolicyName = '#{{ secApplicationGatewayWAFPolicyName }}'
+
+param policySettings = {
+  state: 'Enabled'
+  mode: 'Prevention'
+}
+
+param managedRuleSets = [
   {
-    name: 'portal-web'
-    fqdn: 'ssvadpinfca3403-portal-web.thankfulcliff-27c655b9.uksouth.azurecontainerapps.io' //temp
+    ruleSetType: 'OWASP'
+    ruleSetVersion: '3.0'
+    ruleGroupOverrides: []
   }
 ]
 
-param backendHttpSettingsCollections = [
-  {
-    name: 'portal-web'
-    port: 443
-    protocol: 'Https'
-    cookieBasedAffinity: 'Disabled'
-    pickHostNameFromBackendAddress: true
-    requestTimeout: 20
-    probe: {
-      path: '/' 
-      healthProbeStatusCode: '200-404'
-    }
-  }
-]
-
-param httpListeners = [
-  {
-    name: 'portal-web'
-    protocol: 'Http'
-    hostNames: []
-    requireServerNameIndication: false
-  }
-]
-
-param requestRoutingRules = [
-  {
-    name: 'portal-web'
-    backendAddressPool: 'portal-web' 
-    listenerName: 'portal-web'
-    backendName: 'portal-web'
-    ruleType: 'Basic'
-    priority: 1
-  }
-]
+param frontDoorId = '#{{ azureFrontDoorProfileFrontDoorId }}'
