@@ -93,7 +93,7 @@ extends:
             - ${{ if eq(variables.IsApplicationGatewayBackends, true) }}:                    
               - name: application-gateway-backends
                 path: infra/env-shared/application-gateway
-                resourceGroupName: $(ssvInfraResourceGroup)
+                resourceGroupName: $(secAppGWResourceGroup)
                 serviceConnectionVariableName: 'secServiceConnection'
                 preDeployScriptsList: 
                   - displayName: Get ContainerApp IngressFqdn to use it in App Gateway backend pool
