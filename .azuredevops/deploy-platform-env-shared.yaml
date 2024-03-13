@@ -51,26 +51,26 @@ extends:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
-      - name: 'ssv3_dev'
+      - name: 'ssv_dev'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - 'refs/heads/main'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
-      - name: 'ssv3_tst'
+      - name: 'ssv_tst'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
-      - name: 'ssv5_pre'
+      - name: 'ssv_pre'
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'    
-      - name: 'ssv5_prd'
+      - name: 'ssv_prd'
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
           - 'refs/heads/main'
