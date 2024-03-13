@@ -38,8 +38,6 @@ var applicationGatewayTags = {
 module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.5.15' = {
   name: 'application-gateway-${deploymentDate}'
   dependsOn: [
-    appGWpublicIpAddress
-    applicationGatewayWAFPolicy
   ]
   params: {
     name: name
