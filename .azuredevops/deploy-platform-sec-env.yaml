@@ -11,7 +11,10 @@ parameters:
     default: "All"
     values:
       - All
-      - Network - Application Gateway Subnet
+      - Sec Network - All
+      - Sec Network - NSGs
+      - Sec Network - Application Gateway Subnet
+      - Application Gateway
 
 pr:
   branches:
@@ -43,30 +46,49 @@ variables:
     value: ${{ eq(parameters.deployResources,'All') }}
   - name: IsApplicationGatewaySubnet
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Network - Application Gateway Subnet')) }}
- 
+  - name: IsSecNetwork
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Sec Network')) }}
+  - name: IsSecNetworkAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Sec Network - All')) }}
+  - name: IsSecNetworkNSG
+    value: ${{ or(eq(variables.IsSecNetworkAll,true), eq(parameters.deployResources,'Sec Network - NSGs')) }}   
+  - name: IsSecNetworkSubnet
+    value: ${{ or(eq(variables.IsSecNetworkAll,true), eq(parameters.deployResources,'Sec Network - Application Gateway Subnet')) }}   
+  - name: IsApplicationGateway
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application Gateway')) }}
+  - name: IsApplicationGatewayAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Application Gateway')) }}
+   
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
-    environments:
-      - name: 'ssv3'
-        serviceConnection: 365-CSC-SEC1
-        deploymentBranches:
-          - 'refs/heads/main'
-        developmentEnvironment: true
-        azureRegions:
-          primary: 'UKSouth'
-      - name: 'ssv5'
-        serviceConnection: AZR-SEC
-        deploymentBranches:
-          - 'refs/heads/main'
-        azureRegions:
-          primary: 'UKSouth'
     groupedDeployments:
-         - name: SecEnvironment
-           deployments:
-            - ${{ if eq(variables.IsApplicationGatewaySubnet, true) }}:                    
-              - name: subnets
-                path: infra/sec/network
-                resourceGroupName: $(secVirtualNetworkResourceGroup)  
+        - ${{ if eq(variables.IsSecNetwork, true) }}:
+          - name: sec_network
+            deployments:
+              - ${{ if eq(variables.IsSecNetworkSubnet, true) }}:
+                - name: subnets
+                  path: infra/sec/network
+                  resourceGroupName: $(secVirtualNetworkResourceGroup) 
+                  serviceConnectionVariableName: 'secServiceConnection'
+
+        - ${{ if eq(variables.IsApplicationGateway, true) }}:
+          - name: application_gateway
+            ${{ if eq(variables.IsAll, true) }}:
+            dependsOnGroupedDeployments:
+              - sec_network
+            deployments:
+              - ${{ if eq(variables.IsApplicationGatewayAll, true) }}: 
+                  - name: application-gateway
+                    path: infra/sec/application-gateway
+                    resourceGroupName: $(secInfraResourceGroup)
+                    serviceConnectionVariableName: 'secServiceConnection'
+                    preDeployScriptsList:
+                      - displayName: Get Azure FrontDoor ID to use it in Custom WAF policy
+                        scriptPath: infra/core/env/scripts/Get-AzureFrontDoorId.ps1
+                        type: AzurePowerShell
+                        scriptArguments: >
+                          -ResourceGroupName $(cdnResourceGroup)
+                          -FrontDoorProfileName $(cdnProfileName)    

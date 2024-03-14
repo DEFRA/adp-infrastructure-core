@@ -1,13 +1,14 @@
 param secVnetName string
-param appGwSubnet3401Name string
-param appGwSubnet3401Range string
+param appGwSubnetName string
+param appGwSubnetRange string
 
 resource externalSubnets 'Microsoft.Network/virtualNetworks/subnets@2020-05-01' = {
-  name: '${secVnetName}/${appGwSubnet3401Name}'
+  name: '${secVnetName}/${appGwSubnetName}'
   properties: {
-    addressPrefix: appGwSubnet3401Range
+    addressPrefix: appGwSubnetRange
     networkSecurityGroup: {}
     serviceEndpoints: []
     routeTable: {}
   }
 }
+
