@@ -1,8 +1,8 @@
 using './storage-account.bicep'
 
 param storageAccount = {
-  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_storageaccount }}#{{ nc_instance_regionid }}01'
-  privateEndpointName: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}01'
+  name: '#{{ portalStorageAccountName }}'
+  privateEndpointName: '#{{ portalAppSAPvtEndpointName }}'
   skuName: 'Standard_ZRS'
   containerName: 'adp-wiki-techdocs'
 }
@@ -10,10 +10,10 @@ param storageAccount = {
 param vnet = {
   name: '#{{ ssvVirtualNetworkName }}'
   resourceGroup: '#{{ ssvVirtualNetworkResourceGroup }}'
-  subnetPrivateEndpoints: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}03'
+  subnetPrivateEndpoints: '#{{ ssvPrivateEndpointSubnet }}'
 }
 
-param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}02'
+param keyvaultName = '#{{ portalAppKeyVaultName }}'
 
 param environment = '#{{ environment }}'
 

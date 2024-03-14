@@ -1,7 +1,7 @@
 using './container-apps-env.bicep'
 
 param containerAppEnv = {
-  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerappsenv }}#{{ nc_shared_instance_regionid }}01'
+  name: '#{{ containerAppEnv }}'
   workloadProfiles: [
     {
       workloadProfileType: 'Consumption'
@@ -9,8 +9,8 @@ param containerAppEnv = {
   ]
 }
 param containerApp = {
-  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_containerapps }}#{{ nc_shared_instance_regionid }}01-portal-web'
-  hostName: '#{{ ssvPortalHostName }}'
+  name: '#{{ portalWebContainerAppName }}'
+  hostName: '#{{ portalWebHostName }}'
 }
 param workspace = {
   name: '#{{ logAnalyticsWorkspace }}'
@@ -19,12 +19,12 @@ param workspace = {
 }
 
 param subnet = {
-  name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01'
+  name: '#{{ containerAppSubnet }}'
   resourceGroup: '#{{ ssvVirtualNetworkResourceGroup }}'
   vnetName: '#{{ ssvVirtualNetworkName }}'
 }
 
-param keyvaultName = '#{{ ssvResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}02'
+param keyvaultName = '#{{ portalAppKeyVaultName }}'
 
 param ssvPlatformKeyVaultName = '#{{ ssvPlatformKeyVaultName }}'
 
@@ -39,6 +39,6 @@ param portalEntraApp = {
   tenantIdSecretValue: '#{{ tenantId }}'
 }
 
-param internal = false 
+param internal = true 
 
-param frontDoorEndpointURL = 'PORTAL-APP-DEFAULT-URL'
+param frontDoorEndpointURL = '#{{ portalWebAppURLKVSecretName }}'

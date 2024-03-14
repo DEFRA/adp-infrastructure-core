@@ -5,6 +5,6 @@ param vnet = {
   resourceGroup: '#{{ ssvVirtualNetworkResourceGroup }}'
 }
 
-param privateDnsZonePrefix = '#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}01'
+param privateDnsZone = '#{{ postgreSqlPvtDnsZone }}'
 
 param environment = '#{{ environment }}'
