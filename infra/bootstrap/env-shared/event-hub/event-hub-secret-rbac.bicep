@@ -1,26 +1,22 @@
-param namespaceName string = 'SSVADPINFEN3401'
-param eventHubName string = 'flux-events'
+
+param eventHubNamespace object = {
+  name: 'SSVADPINFEN3401'
+  eventHubNameEnvironment: 'flux-events-dev'
+  resourceGroup: 'SSVADPINFRG3401'
+}
+
 param keyVaultName string = 'SSVADPINFVT3402'
-param eventHubSendPolicyName string = 'FluxSendAccess'
 param appConfigMiObjectId string = '2eb6fd3a-8dec-4634-8b48-512d268277ae'
 
-var roleDefinitionId = 'db79e9a7-68ee-4b58-9aeb-b90e7c24fcba' // Key Vault Certificate User
-
-// resource namespace 'Microsoft.EventHub/namespaces@2022-10-01-preview' existing = {
-//   name: namespaceName
-// }
-
-// resource eventHub 'Microsoft.EventHub/namespaces/eventhubs@2022-10-01-preview' existing = {
-//   name: eventHubName
-//   parent: namespace
-// }
+var roleDefinitionId = '4633458b-17de-408a-b874-0445c86b69e6' // Key Vault Secrets User
 
 resource keyVault 'Microsoft.KeyVault/vaults@2021-10-01' existing = {
   name: keyVaultName
 }
 
 resource eventHubPolicy 'Microsoft.EventHub/namespaces/eventhubs/authorizationRules@2022-01-01-preview' existing = {
-  name: '${namespaceName}/${eventHubName}/${eventHubSendPolicyName}'
+  name: '${eventHubNamespace.name}/${eventHubNamespace.eventHubNameEnvironment}/FluxSendAccess'
+  scope: resourceGroup(eventHubNamespace.resourceGroup)
 }
 
 resource secretResource 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {

@@ -473,3 +473,6 @@ module defraFwCertSecretUserRoleAssignment '.bicep/keyvault-secret-rbac.bicep' =
 
 @description('The oidcIssuerUrl of the AKS cluster')
 output oidcIssuerUrl string = deployAKS.outputs.oidcIssuerUrl
+
+@description('The principalId of the appconfig managed identity')
+output appConfigMiObjectId string = managedIdentityAppConfig.outputs.principalId
