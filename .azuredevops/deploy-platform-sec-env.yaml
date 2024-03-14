@@ -1,0 +1,72 @@
+name: 1.0.$(BuildID)-${{ parameters.deployResources }}
+
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+  - name: deployResources
+    displayName: "Resources to Deploy"
+    type: string
+    default: "All"
+    values:
+      - All
+      - Network - Application Gateway Subnet
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra/sec/*
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+      - infra/sec/*
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: gg/304334-Sec-AppGW-Variables #main
+
+variables:
+  - name: IsAll
+    value: ${{ eq(parameters.deployResources,'All') }}
+  - name: IsApplicationGatewaySubnet
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Network - Application Gateway Subnet')) }}
+ 
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.deployFromFeature }}
+    environments:
+      - name: 'ssv3'
+        serviceConnection: 365-CSC-SEC1
+        deploymentBranches:
+          - 'refs/heads/main'
+        developmentEnvironment: true
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'ssv5'
+        serviceConnection: AZR-SEC
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'
+    groupedDeployments:
+         - name: SecEnvironment
+           deployments:
+            - ${{ if eq(variables.IsApplicationGatewaySubnet, true) }}:                    
+              - name: subnets
+                path: infra/sec/network
+                resourceGroupName: $(secVirtualNetworkResourceGroup)  
