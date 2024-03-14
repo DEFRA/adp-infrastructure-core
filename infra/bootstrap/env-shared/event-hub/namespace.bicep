@@ -2,7 +2,7 @@
 param vnet object
 
 @description('Required. The parameter object for eventHub. The object must contain the name and privateEndpointName values.')
-param eventHub object
+param eventHubNamespace object
 
 @description('Required. Environment name.')
 param environment string
@@ -21,31 +21,31 @@ var customTags = {
   CreatedDate: createdDate
   Environment: environment
 }
-var tags = union(loadJsonContent('../../common/default-tags.json'), customTags)
+var tags = union(loadJsonContent('../../../common/default-tags.json'), customTags)
 
-var eventHubTags = {
-  Name: eventHub.name
+var eventHubNamespaceTags = {
+  Name: eventHubNamespace.name
   Purpose: 'ADP Core Event Hub'
   Tier: 'Shared'
 }
 
-var appConfigPrivateEndpointTags = {
-  Name: eventHub.privateEndpointName
+var eventHubNamespacePrivateEndpointTags = {
+  Name: eventHubNamespace.privateEndpointName
   Purpose: 'Event Hub private endpoint'
   Tier: 'Shared'
 }
 
 module eventHubNamespaceResource 'br/SharedDefraRegistry:event-hub.namespace:0.5.18' = {
-  name: 'event-hub-${deploymentDate}'
+  name: 'event-hub-namespace-${deploymentDate}'
   params: {
     enableDefaultTelemetry: true
-    name: eventHub.name
+    name: eventHubNamespace.name
     skuName: 'Standard'
     location: location
     lock: {
       kind: 'CanNotDelete'
     }
-    tags: union(tags, eventHubTags)
+    tags: union(tags, eventHubNamespaceTags)
     networkRuleSets: {
       defaultAction: 'Deny'
       trustedServiceAccessEnabled: true
@@ -53,16 +53,33 @@ module eventHubNamespaceResource 'br/SharedDefraRegistry:event-hub.namespace:0.5
     }
     privateEndpoints: [
       {
-        name: eventHub.privateEndpointName
+        name: eventHubNamespace.privateEndpointName
         service: 'namespace'
         subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
-        tags: union(tags, appConfigPrivateEndpointTags)
+        tags: union(tags, eventHubNamespacePrivateEndpointTags)
       }
     ]
     disableLocalAuth: false
     eventhubs: [
       {
-        name: 'flux-events'
+        name: 'flux-events-${eventHubNamespace.eventHub1Name}'
+        authorizationRules: [
+          {
+            name: 'FluxSendAccess'
+            rights: [
+              'Send'
+            ]
+          }
+          {
+            name: 'FunctionListenAccess'
+            rights: [
+              'Listen'
+            ]
+          }
+        ]
+      }
+      {
+        name: 'flux-events-${eventHubNamespace.eventHub2Name}'
         authorizationRules: [
           {
             name: 'FluxSendAccess'
