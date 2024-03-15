@@ -131,74 +131,74 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
         }
       }
     ]
-    backendAddressPools: [for backend in backends: {
-      name: '${backend.name}-Pool'
-      properties: {
-        backendAddresses: [
-          {
-            fqdn: backend.backendAddressPool.fqdn
-          }
-        ]
-      }
-    }]
-    httpListeners: [for backend in backends: {
-        name: '${backend.name}-listener'
-        properties: {
-          frontendIPConfiguration: {
-            id: '${applicationGatewayID}/frontendIPConfigurations/public_frontends'
-          }
-          frontendPort: {
-            id: '${applicationGatewayID}/frontendPorts/http_80'
-          }
-          hostNames: backend.httpListener.hostNames
-          protocol: backend.httpListener.protocol
-          requireServerNameIndication: backend.httpListener.requireServerNameIndication
-        }
-    }]
-    probes: [for backend in backends: {
-        name: '${backend.name}-health-probe'
-        properties: {
-          protocol: backend.backendHttpSetting.protocol
-          path: backend.backendHttpSetting.probe.path
-          interval: 30
-          timeout: 15
-          match: {
-            statusCodes: [ backend.backendHttpSetting.probe.healthProbeStatusCode ]
-          }
-          minServers: 0          
-          pickHostNameFromBackendHttpSettings: backend.backendHttpSetting.pickHostNameFromBackendAddress          
-          unhealthyThreshold: 3
-        }
-    }]      
-    backendHttpSettingsCollection: [for backend in backends: {
-        name: '${backend.name}-backend-setting'
-        properties: {
-          cookieBasedAffinity: backend.backendHttpSetting.cookieBasedAffinity
-          pickHostNameFromBackendAddress: backend.backendHttpSetting.pickHostNameFromBackendAddress
-          port: backend.backendHttpSetting.port
-          protocol: backend.backendHttpSetting.protocol
-          probe: {
-            id: '${applicationGatewayID}/probes/${backend.name}-health-probe'
-          }
-          requestTimeout: backend.backendHttpSetting.requestTimeout
-        }
-    }]
-    requestRoutingRules: [for backend in backends: {
-        name: '${backend.name}-rule'
-        properties: {
-          backendAddressPool: {
-            id: '${applicationGatewayID}/backendAddressPools/${backend.requestRoutingRule.backendAddressPool}-Pool'
-          }
-          backendHttpSettings: {
-            id: '${applicationGatewayID}/backendHttpSettingsCollection/${backend.requestRoutingRule.backendName}-backend-setting'
-          }
-          httpListener: {
-            id: '${applicationGatewayID}/httpListeners/${backend.requestRoutingRule.listenerName}-listener'
-          }
-          priority: 200
-          ruleType: backend.requestRoutingRule.ruleType
-        }
-    }]            
+    // backendAddressPools: [for backend in backends: {
+    //   name: '${backend.name}-Pool'
+    //   properties: {
+    //     backendAddresses: [
+    //       {
+    //         fqdn: backend.backendAddressPool.fqdn
+    //       }
+    //     ]
+    //   }
+    // }]
+    // httpListeners: [for backend in backends: {
+    //     name: '${backend.name}-listener'
+    //     properties: {
+    //       frontendIPConfiguration: {
+    //         id: '${applicationGatewayID}/frontendIPConfigurations/public_frontends'
+    //       }
+    //       frontendPort: {
+    //         id: '${applicationGatewayID}/frontendPorts/http_80'
+    //       }
+    //       hostNames: backend.httpListener.hostNames
+    //       protocol: backend.httpListener.protocol
+    //       requireServerNameIndication: backend.httpListener.requireServerNameIndication
+    //     }
+    // }]
+    // probes: [for backend in backends: {
+    //     name: '${backend.name}-health-probe'
+    //     properties: {
+    //       protocol: backend.backendHttpSetting.protocol
+    //       path: backend.backendHttpSetting.probe.path
+    //       interval: 30
+    //       timeout: 15
+    //       match: {
+    //         statusCodes: [ backend.backendHttpSetting.probe.healthProbeStatusCode ]
+    //       }
+    //       minServers: 0          
+    //       pickHostNameFromBackendHttpSettings: backend.backendHttpSetting.pickHostNameFromBackendAddress          
+    //       unhealthyThreshold: 3
+    //     }
+    // }]      
+    // backendHttpSettingsCollection: [for backend in backends: {
+    //     name: '${backend.name}-backend-setting'
+    //     properties: {
+    //       cookieBasedAffinity: backend.backendHttpSetting.cookieBasedAffinity
+    //       pickHostNameFromBackendAddress: backend.backendHttpSetting.pickHostNameFromBackendAddress
+    //       port: backend.backendHttpSetting.port
+    //       protocol: backend.backendHttpSetting.protocol
+    //       probe: {
+    //         id: '${applicationGatewayID}/probes/${backend.name}-health-probe'
+    //       }
+    //       requestTimeout: backend.backendHttpSetting.requestTimeout
+    //     }
+    // }]
+    // requestRoutingRules: [for backend in backends: {
+    //     name: '${backend.name}-rule'
+    //     properties: {
+    //       backendAddressPool: {
+    //         id: '${applicationGatewayID}/backendAddressPools/${backend.requestRoutingRule.backendAddressPool}-Pool'
+    //       }
+    //       backendHttpSettings: {
+    //         id: '${applicationGatewayID}/backendHttpSettingsCollection/${backend.requestRoutingRule.backendName}-backend-setting'
+    //       }
+    //       httpListener: {
+    //         id: '${applicationGatewayID}/httpListeners/${backend.requestRoutingRule.listenerName}-listener'
+    //       }
+    //       priority: 200
+    //       ruleType: backend.requestRoutingRule.ruleType
+    //     }
+    // }]            
   }
 }
 
