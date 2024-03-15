@@ -57,6 +57,7 @@ var applicationGatewayTags = {
   Tier: 'Shared'
 }
 
+var applicationGatewayID = 'resourceId(\'Microsoft.Network/applicationGateways/\',${name})'
 
 module appGWpublicIpAddress '.bicep/public-ip-address.bicep' = {
   name: 'appGWpublicIpAddress-${deploymentDate}'
@@ -140,6 +141,22 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
         ]
       }
     }]
+    requestRoutingRules: [for backend in backends: {
+        name: '${backend.name}-rule'
+        properties: {
+          backendAddressPool: {
+            id: '${applicationGatewayID}/backendAddressPools/${backend.requestRoutingRule.backendAddressPool}-Pool'
+          }
+          backendHttpSettings: {
+            id: '${applicationGatewayID}/backendHttpSettingsCollection/${backend.requestRoutingRule.backendName}-backend-setting'
+          }
+          httpListener: {
+            id: '${applicationGatewayID}/httpListeners/${backend.requestRoutingRule.listenerName}-listener'
+          }
+          priority: 200
+          ruleType: backend.requestRoutingRule.ruleType
+        }
+    }]
     probes: [for backend in backends: {
         name: '${backend.name}-health-probe'
         properties: {
@@ -155,6 +172,20 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
           unhealthyThreshold: 3
         }
     }]  
+    httpListeners: [for backend in backends: {
+        name: '${backend.name}-listener'
+        properties: {
+          frontendIPConfiguration: {
+            id: '${applicationGatewayID}/frontendIPConfigurations/public_frontends'
+          }
+          frontendPort: {
+            id: '${applicationGatewayID}/frontendPorts/http_80'
+          }
+          hostNames: backend.httpListener.hostNames
+          protocol: backend.httpListener.protocol
+          requireServerNameIndication: backend.httpListener.requireServerNameIndication
+        }
+    }]
     backendHttpSettingsCollection: [for backend in backends: {
         name: '${backend.name}-backend-setting'
         properties: {
@@ -163,41 +194,13 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
           port: backend.backendHttpSetting.port
           protocol: backend.backendHttpSetting.protocol
           probe: {
-            id: resourceId('Microsoft.Network/applicationGateways/probes', name, '${backend.name}-health-probe')
+            id: '${applicationGatewayID}/probes/${backend.name}-health-probe'
           }
           requestTimeout: backend.backendHttpSetting.requestTimeout
         }
     }]
-    httpListeners: [for backend in backends: {
-        name: '${backend.name}-listener'
-        properties: {
-          frontendIPConfiguration: {
-            id: resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', name, 'public_frontends')
-          }
-          frontendPort: {
-            id: resourceId('Microsoft.Network/applicationGateways/frontendPorts', name, 'http_80')
-          }
-          hostNames: backend.httpListener.hostNames
-          protocol: backend.httpListener.protocol
-          requireServerNameIndication: backend.httpListener.requireServerNameIndication
-        }
-    }]
-    requestRoutingRules: [for backend in backends: {
-        name: '${backend.name}-rule'
-        properties: {
-          backendAddressPool: {
-            id: resourceId('Microsoft.Network/applicationGateways/backendAddressPools', name, '${backend.requestRoutingRule.backendAddressPool}-Pool')
-          }
-          backendHttpSettings: {
-            id: resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', name, '${backend.requestRoutingRule.backendName}-backend-setting')
-          }
-          httpListener: {
-            id: resourceId('Microsoft.Network/applicationGateways/httpListeners', name, '${backend.requestRoutingRule.listenerName}-listener')
-          }
-          priority: 200
-          ruleType: backend.requestRoutingRule.ruleType
-        }
-    }]
+    
+    
   }
 }
 

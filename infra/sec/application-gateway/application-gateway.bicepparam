@@ -25,7 +25,18 @@ param managedRuleSets = [
   {
     ruleSetType: 'OWASP'
     ruleSetVersion: '3.0'
-    ruleGroupOverrides: []
+    ruleGroupOverrides: [
+      {
+        ruleGroupName: 'REQUEST-942-APPLICATION-ATTACK-SQLI'
+        rules: [
+          {
+            action: 'AnomalyScoring'
+            ruleId: '942150'
+            state: 'Disabled'
+          }
+        ]
+      }
+    ]
   }
 ]
 
@@ -44,7 +55,7 @@ param backends = [
       pickHostNameFromBackendAddress: true
       requestTimeout: 20
       probe: {
-        path: '/' 
+        path: '/'
         healthProbeStatusCode: '200-404'
       }
     }
@@ -54,7 +65,7 @@ param backends = [
       requireServerNameIndication: false
     }
     requestRoutingRule: {
-      backendAddressPool: 'portal-web' 
+      backendAddressPool: 'portal-web'
       listenerName: 'portal-web'
       backendName: 'portal-web'
       ruleType: 'Basic'
