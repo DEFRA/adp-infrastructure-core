@@ -61,7 +61,7 @@ extends:
       - name: 'ssv_tst'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - 'refs/heads/main'
+          - '*'
         azureRegions:
           primary: 'UKSouth'
       - name: 'ssv_pre'

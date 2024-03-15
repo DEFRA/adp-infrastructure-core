@@ -278,7 +278,7 @@ extends:
                         -ConfigData '[{"key": "CLUSTER_OIDC_ISSUER_URL", "value": "$(clusterOidc)", "label": "adp-platform", "contentType": "text/plain" }]'
                 - name: event-hub-secret-rbac
                   serviceConnectionVariableName: ssvServiceConnection
-                  path: infra/bootstrap/env-shared/event-hub
+                  path: infra/core/env/event-hub
                   resourceGroupName: $(ssvInfraSharedRg)
               - ${{ if eq(variables.IsManagedClusterFluxServicesSSHKeys, true) }}:
                 - name: Flux Services SSH Keys
