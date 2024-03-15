@@ -97,7 +97,7 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
       name: 'myCustomLockName'
     }
     tags: union(tags, applicationGatewayTags)
-    firewallPolicyId: applicationGatewayWAFPolicy.applicationGatewayWAFPolicyResourceId
+    firewallPolicyId: applicationGatewayWAFPolicy.outputs.applicationGatewayWAFPolicyResourceId
     gatewayIPConfigurations: [
       {
         name: 'apw-ip-configuration'
