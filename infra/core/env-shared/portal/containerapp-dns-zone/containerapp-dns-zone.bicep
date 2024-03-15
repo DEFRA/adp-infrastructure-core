@@ -2,7 +2,7 @@
 param vnet object
 
 @description('Required. The private DNS zone.')
-param privateDnsZone string = 'defaultforvalidation'
+param privateDnsZone string
 
 @description('Required. Environment name.')
 param environment string
@@ -13,7 +13,8 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-var privateDnsZoneName = toLower('${privateDnsZone}')
+var privateDnsZoneName = (privateDnsZone == '') ? toLower('${privateDnsZone}') : 'defaultforvalidation'
+
 var commonTags = {
   Location: 'global'
   CreatedDate: createdDate
