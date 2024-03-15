@@ -35,8 +35,8 @@ param policySettings object = {
 @description('Required. The FrontDoor ID.')
 param frontDoorId string
 
-// @description('Required. backends Object(backendAddressPool, backendHttpSetting, httpListener, requestRoutingRule)')
-// param backends array
+@description('Required. backends Object(backendAddressPool, backendHttpSetting, httpListener, requestRoutingRule)')
+param backends array
 
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
@@ -131,16 +131,16 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
         }
       }
     ]
-    // backendAddressPools: [for backend in backends: {
-    //   name: '${backend.name}-Pool'
-    //   properties: {
-    //     backendAddresses: [
-    //       {
-    //         fqdn: backend.backendAddressPool.fqdn
-    //       }
-    //     ]
-    //   }
-    // }]
+    backendAddressPools: [for backend in backends: {
+      name: '${backend.name}-Pool'
+      properties: {
+        backendAddresses: [
+          {
+            fqdn: backend.backendAddressPool.fqdn
+          }
+        ]
+      }
+    }]
     // httpListeners: [for backend in backends: {
     //     name: '${backend.name}-listener'
     //     properties: {
