@@ -47,20 +47,21 @@ try {
         Write-Host "Az.Cdn Installed Successfully."
     
 
-    Write-Host "Getting FrontDoor Profile $FrontDoorProfileName from Resource Group $ResourceGroupName..."
-    [object]$fdProfile = Get-AzFrontDoorCdnProfile -ResourceGroupName $ResourceGroupName -Name $FrontDoorProfileName -ErrorAction SilentlyContinue
+        Write-Host "Getting FrontDoor Profile $FrontDoorProfileName from Resource Group $ResourceGroupName..."
+        [object]$fdProfile = Get-AzFrontDoorCdnProfile -ResourceGroupName $ResourceGroupName -Name $FrontDoorProfileName -ErrorAction SilentlyContinue
 
-    if($fdProfile){
-        Write-host "FrontDoor Profile $FrontDoorProfileName exists in Resource Group $ResourceGroupName"
-        Write-Debug "${functionName}:azureFrontDoorProfileFrontDoorId=$($fdProfile.FrontDoorId)"
-        Write-Host "##vso[task.setvariable variable=azureFrontDoorProfileFrontDoorId]$($fdProfile.FrontDoorId)"
+        if ($fdProfile) {
+            Write-host "FrontDoor Profile $FrontDoorProfileName exists in Resource Group $ResourceGroupName"
+            Write-Debug "${functionName}:azureFrontDoorProfileFrontDoorId=$($fdProfile.FrontDoorId)"
+            Write-Host "##vso[task.setvariable variable=azureFrontDoorProfileFrontDoorId]$($fdProfile.FrontDoorId)"
+        }
+        else {
+            throw "FrontDoor Profile $FrontDoorProfileName does not exists in Resource Group $ResourceGroupNameso, so the FrontDoorId details could not be retrieved."
+        }
+
+        $exitCode = 0
+
     }
-    else{
-        throw "FrontDoor Profile $FrontDoorProfileName does not exists in Resource Group $ResourceGroupNameso, so the FrontDoorId details could not be retrieved."
-    }
-
-    $exitCode = 0
-
 }
 catch {
     $exitCode = -2
