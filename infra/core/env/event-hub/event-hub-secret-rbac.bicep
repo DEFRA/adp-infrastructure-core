@@ -7,7 +7,7 @@ param eventHubNamespace object //= {
 // }
 
 param keyVaultName string //= 'SSVADPINFVT3402'
-param appConfigMiObjectId //string = '2eb6fd3a-8dec-4634-8b48-512d268277ae'
+param appConfigMiObjectId string //= '2eb6fd3a-8dec-4634-8b48-512d268277ae'
 
 var roleDefinitionId = '4633458b-17de-408a-b874-0445c86b69e6' // Key Vault Secrets User
 
