@@ -12,7 +12,7 @@ param vnet = {
   subnetApplicationGateway: '#{{ secAppGatewaySubnetName }}'
 }
 
-param publicIPName = '#{{ SEC$(projectName)$(environment)$(nc_resource_publicip)$(nc_instance_regionid)01 }}'
+param publicIPName = '#{{ secAppGWpublicIPName }}'
 
 param wafPolicyName = '#{{ secApplicationGatewayWAFPolicyName }}'
 

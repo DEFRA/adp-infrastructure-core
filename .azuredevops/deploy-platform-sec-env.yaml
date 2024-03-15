@@ -28,7 +28,7 @@ trigger:
   batch: true
   branches:
     include:
-      - '*'
+      - main
   paths:
     include:
       - infra/sec/*
@@ -87,8 +87,16 @@ extends:
                     serviceConnectionVariableName: 'secServiceConnection'
                     preDeployScriptsList:
                       - displayName: Get Azure FrontDoor ID to use it in Custom WAF policy
-                        scriptPath: infra/core/env/scripts/Get-AzureFrontDoorId.ps1
+                        scriptPath: infra/sec/scripts/Get-AzureFrontDoorId.ps1
                         type: AzurePowerShell
+                        # serviceConnectionVariableName: 'subscriptionName'
                         scriptArguments: >
                           -ResourceGroupName $(cdnResourceGroup)
                           -FrontDoorProfileName $(cdnProfileName)    
+                      - displayName: Get ContainerApp IngressFqdn to use it in App Gateway backend pool
+                        scriptPath: infra/sec/scripts/Get-ContainerAppIngressFqdn.ps1
+                        type: AzurePowerShell
+                        serviceConnectionVariableName: 'secServiceConnection'
+                        scriptArguments: >
+                          -ResourceGroupName $(ssvInfraResourceGroup)
+                          -ContainerAppName $(portalWebContainerAppName)      
