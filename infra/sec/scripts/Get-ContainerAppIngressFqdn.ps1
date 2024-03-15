@@ -41,27 +41,27 @@ Write-Debug "${functionName}:ResourceGroupName=$ResourceGroupName"
 Write-Debug "${functionName}:ContainerAppName=$ContainerAppName"
 
 try {
+
     if (-not (Get-Module -ListAvailable -Name 'Az.App')) {
         Write-Host "Az.App Module does not exists. Installing now.."
         Install-Module Az.App -Force
         Write-Host "Az.App Installed Successfully."
-    
-
-        Write-Host "Getting ContainerApp $ContainerAppName from Resource Group $ResourceGroupName..."
-        [object]$containerapp = Get-AzContainerApp -ResourceGroupName $ResourceGroupName -Name $ContainerAppName -ErrorAction SilentlyContinue
-
-        if ($containerapp) {
-            Write-host "ContainerApp $ContainerAppName exists in Resource Group $ResourceGroupName"
-            Write-Debug "${functionName}:containerAppIngressFqdn=$($containerapp.Configuration.IngressFqdn)"
-            Write-Host "##vso[task.setvariable variable=containerAppIngressFqdn]$($containerapp.Configuration.IngressFqdn)"
-        }
-        else {
-            throw "ContainerApp $ContainerAppName does not exists in Resource Group $ResourceGroupNameso, so the IngressFqdn details could not be retrieved."
-        }
-
-        $exitCode = 0
-
     }
+    
+    Write-Host "Getting ContainerApp $ContainerAppName from Resource Group $ResourceGroupName..."
+    [object]$containerapp = Get-AzContainerApp -ResourceGroupName $ResourceGroupName -Name $ContainerAppName -ErrorAction SilentlyContinue
+
+    if ($containerapp) {
+        Write-host "ContainerApp $ContainerAppName exists in Resource Group $ResourceGroupName"
+        Write-Debug "${functionName}:containerAppIngressFqdn=$($containerapp.Configuration.IngressFqdn)"
+        Write-Host "##vso[task.setvariable variable=containerAppIngressFqdn]$($containerapp.Configuration.IngressFqdn)"
+    }
+    else {
+        throw "ContainerApp $ContainerAppName does not exists in Resource Group $ResourceGroupNameso, so the IngressFqdn details could not be retrieved."
+    }
+
+    $exitCode = 0
+    
 }
 catch {
     $exitCode = -2
