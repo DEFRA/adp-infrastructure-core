@@ -141,20 +141,18 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
         ]
       }
     }]
-    requestRoutingRules: [for backend in backends: {
-        name: '${backend.name}-rule'
+    httpListeners: [for backend in backends: {
+        name: '${backend.name}-listener'
         properties: {
-          backendAddressPool: {
-            id: '${applicationGatewayID}/backendAddressPools/${backend.requestRoutingRule.backendAddressPool}-Pool'
+          frontendIPConfiguration: {
+            id: '${applicationGatewayID}/frontendIPConfigurations/public_frontends'
           }
-          backendHttpSettings: {
-            id: '${applicationGatewayID}/backendHttpSettingsCollection/${backend.requestRoutingRule.backendName}-backend-setting'
+          frontendPort: {
+            id: '${applicationGatewayID}/frontendPorts/http_80'
           }
-          httpListener: {
-            id: '${applicationGatewayID}/httpListeners/${backend.requestRoutingRule.listenerName}-listener'
-          }
-          priority: 200
-          ruleType: backend.requestRoutingRule.ruleType
+          hostNames: backend.httpListener.hostNames
+          protocol: backend.httpListener.protocol
+          requireServerNameIndication: backend.httpListener.requireServerNameIndication
         }
     }]
     probes: [for backend in backends: {
@@ -171,21 +169,7 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
           pickHostNameFromBackendHttpSettings: backend.backendHttpSetting.pickHostNameFromBackendAddress          
           unhealthyThreshold: 3
         }
-    }]  
-    httpListeners: [for backend in backends: {
-        name: '${backend.name}-listener'
-        properties: {
-          frontendIPConfiguration: {
-            id: '${applicationGatewayID}/frontendIPConfigurations/public_frontends'
-          }
-          frontendPort: {
-            id: '${applicationGatewayID}/frontendPorts/http_80'
-          }
-          hostNames: backend.httpListener.hostNames
-          protocol: backend.httpListener.protocol
-          requireServerNameIndication: backend.httpListener.requireServerNameIndication
-        }
-    }]
+    }]      
     backendHttpSettingsCollection: [for backend in backends: {
         name: '${backend.name}-backend-setting'
         properties: {
@@ -199,8 +183,22 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
           requestTimeout: backend.backendHttpSetting.requestTimeout
         }
     }]
-    
-    
+    requestRoutingRules: [for backend in backends: {
+        name: '${backend.name}-rule'
+        properties: {
+          backendAddressPool: {
+            id: '${applicationGatewayID}/backendAddressPools/${backend.requestRoutingRule.backendAddressPool}-Pool'
+          }
+          backendHttpSettings: {
+            id: '${applicationGatewayID}/backendHttpSettingsCollection/${backend.requestRoutingRule.backendName}-backend-setting'
+          }
+          httpListener: {
+            id: '${applicationGatewayID}/httpListeners/${backend.requestRoutingRule.listenerName}-listener'
+          }
+          priority: 200
+          ruleType: backend.requestRoutingRule.ruleType
+        }
+    }]            
   }
 }
 
