@@ -80,9 +80,6 @@ extends:
          - name: SharedEnvironment
            deployments:
             - ${{ if eq(variables.IsApplicationEventHub, true) }}:                    
-              - name: namespace
-                path: infra/env-shared/event-hub
-                resourceGroupName: $(ssvInfraResourceGroup)
-                privateEndpointDnsRecordsForResources:
-                  - resourceName: $(eventHubName)
-                    resourceGroupName: $(ssvInfraResourceGroup)
+              - name: event-hub
+                path: infra/bootstrap/env-shared/event-hub
+                resourceGroupName: $(ssvSharedResourceGroup)
