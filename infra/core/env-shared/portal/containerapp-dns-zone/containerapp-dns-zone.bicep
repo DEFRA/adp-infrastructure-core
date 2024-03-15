@@ -2,7 +2,7 @@
 param vnet object
 
 @description('Required. The private DNS zone.')
-param privateDnsZone string
+param privateDnsZone string = 'defaultforvalidation'
 
 @description('Required. Environment name.')
 param environment string
