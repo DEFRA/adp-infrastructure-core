@@ -163,7 +163,7 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
           port: backend.backendHttpSetting.port
           protocol: backend.backendHttpSetting.protocol
           probe: {
-            id: resourceId('Microsoft.Network/applicationGateways', name , '/probes/${backend.name}-health-probe')
+            id: resourceId('Microsoft.Network/applicationGateways/probes', name, '${backend.name}-health-probe')
           }
           requestTimeout: backend.backendHttpSetting.requestTimeout
         }
@@ -172,10 +172,10 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
         name: '${backend.name}-listener'
         properties: {
           frontendIPConfiguration: {
-            id: resourceId('Microsoft.Network/applicationGateways', name , '/frontendIPConfigurations/public_frontends')
+            id: resourceId('Microsoft.Network/applicationGateways/frontendIPConfigurations', name, 'public_frontends')
           }
           frontendPort: {
-            id: resourceId('Microsoft.Network/applicationGateways', name , '/frontendPorts/http_80')
+            id: resourceId('Microsoft.Network/applicationGateways/frontendPorts', name, 'http_80')
           }
           hostNames: backend.httpListener.hostNames
           protocol: backend.httpListener.protocol
@@ -186,13 +186,13 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
         name: '${backend.name}-rule'
         properties: {
           backendAddressPool: {
-            id: resourceId('Microsoft.Network/applicationGateways', name , '/backendAddressPools/${backend.requestRoutingRule.backendAddressPool}-Pool')
+            id: resourceId('Microsoft.Network/applicationGateways/backendAddressPools', name, '${backend.requestRoutingRule.backendAddressPool}-Pool')
           }
           backendHttpSettings: {
-            id: resourceId('Microsoft.Network/applicationGateways', name , '/backendHttpSettingsCollection/${backend.requestRoutingRule.backendName}-backend-setting')
+            id: resourceId('Microsoft.Network/applicationGateways/backendHttpSettingsCollection', name, '${backend.requestRoutingRule.backendName}-backend-setting')
           }
           httpListener: {
-            id: resourceId('Microsoft.Network/applicationGateways', name , '/httpListeners/${backend.requestRoutingRule.listenerName}-listener')
+            id: resourceId('Microsoft.Network/applicationGateways/httpListeners', name, '${backend.requestRoutingRule.listenerName}-listener')
           }
           priority: 200
           ruleType: backend.requestRoutingRule.ruleType
