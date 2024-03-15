@@ -68,7 +68,7 @@ module appGWpublicIpAddress '.bicep/public-ip-address.bicep' = {
 }
 
 module applicationGatewayWAFPolicy '.bicep/application-gateway-waf-custom.bicep' = {
-name: 'appGWpublicIpAddress-${deploymentDate}'
+name: 'applicationGatewayWAFPolicy-${deploymentDate}'
 params: {
   wafPolicyName: wafPolicyName
   location: location
