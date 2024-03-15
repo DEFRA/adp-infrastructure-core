@@ -77,8 +77,8 @@ extends:
         - ${{ if eq(variables.IsApplicationGateway, true) }}:
           - name: application_gateway
             ${{ if eq(variables.IsAll, true) }}:
-            dependsOnGroupedDeployments:
-              - sec_network
+              dependsOnGroupedDeployments:
+                - sec_network
             deployments:
               - ${{ if eq(variables.IsApplicationGatewayAll, true) }}: 
                   - name: application-gateway
