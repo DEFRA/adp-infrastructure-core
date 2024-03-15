@@ -28,8 +28,6 @@ parameters:
       - Front Door - All
       - Front Door - Core
       - Front Door - WAF Baseline
-      - Application Gateway - All
-      - Application Gateway - Core
       - Application - All
       - Application - App Configuration
       - Application - Apps Container Registry
@@ -105,12 +103,6 @@ variables:
   - name: IsPlatformKeyVault
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Platform - Key Vault')) }}
 
-  - name: IsApplicationGateway
-    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application Gateway')) }}
-  - name: IsApplicationGatewayAll
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Application Gateway - All')) }}
-  - name: IsApplicationGatewayCore
-    value: ${{ or(eq(variables.IsApplicationGatewayAll,true), eq(parameters.deployResources, 'Application Gateway - Core')) }}
   - name: IsFrontDoor
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Front Door')) }}
   - name: IsFrontDoorAll
@@ -294,27 +286,7 @@ extends:
                 - name: azure-waf-baseline
                   path: infra/core/env/front-door
                   resourceGroupName: $(cdnResourceGroup)
-
-        - ${{ if eq(variables.IsApplicationGateway, true) }}:  
-          - name: application_gateway
-            ${{ if eq(variables.IsAll, true) }}:
-            dependsOnGroupedDeployments:
-              - network
-              - front_door
-            deployments:
-              - ${{ if eq(variables.IsApplicationGatewayCore, true) }}: 
-                - name: application-gateway
-                  path: infra/core/env/application-gateway
-                  resourceGroupName: $(secInfraResourceGroup)
-                  serviceConnectionVariableName: 'secServiceConnection'
-                  preDeployScriptsList:
-                    - displayName: Get Azure FrontDoor ID to use it in Custom WAF policy
-                      scriptPath: infra/core/env/scripts/Get-AzureFrontDoorId.ps1
-                      type: AzurePowerShell
-                      scriptArguments: >
-                        -ResourceGroupName $(cdnResourceGroup)
-                        -FrontDoorProfileName $(cdnProfileName)  
-
+ 
         - ${{ if eq(variables.IsApplication, true) }}:  
           - name: application_infra
             ${{ if eq(variables.IsAll, true) }}:
