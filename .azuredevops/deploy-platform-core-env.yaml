@@ -240,6 +240,7 @@ extends:
                       inlineScript: |
                         $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
                         Write-Host "##vso[task.setvariable variable=clusterOidc;]$($output.oidcIssuerUrl.value)"
+                        Write-Host "##vso[task.setvariable variable=appConfigMiObjectId;]$($output.appConfigMiObjectId.value)"
                     - displayName: Add Cluster Details to Config Service
                       scriptPath: templates/powershell/Import-ConfigData.ps1
                       type: AzureCLI
