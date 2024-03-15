@@ -81,5 +81,5 @@ extends:
            deployments:
             - ${{ if eq(variables.IsApplicationEventHub, true) }}:                    
               - name: event-hub
-                path: infra/bootstrap/env-shared/event-hub
+                path: infra/env-shared/event-hub
                 resourceGroupName: $(ssvSharedResourceGroup)
