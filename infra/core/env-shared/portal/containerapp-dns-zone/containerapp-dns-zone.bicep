@@ -13,7 +13,7 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-var privateDnsZoneName = (privateDnsZone == '') ? toLower('${privateDnsZone}') : 'defaultforvalidation'
+var privateDnsZoneName = (privateDnsZone == '') ? 'defaultforvalidation' : toLower('${privateDnsZone}')
 
 var commonTags = {
   Location: 'global'
