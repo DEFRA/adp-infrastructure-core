@@ -6,6 +6,6 @@ param vnet = {
 }
 
 //Value of the privateDnsZone parameter is set to the output of the container-apps-env.bicep file
-param privateDnsZone = '#{{ containerAppEnvPvtDnsZone }}'
+param privateDnsZone = az.getSecret('#{{ ssvSubscriptionId }}', '#{{ ssvSharedResourceGroup }}', '#{{ ssvPlatformKeyVaultName }}', '#{{ containerAppEnvURLKVSecretName }}')
 
 param environment = '#{{ environment }}'
