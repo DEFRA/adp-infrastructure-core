@@ -57,7 +57,7 @@ var applicationGatewayTags = {
   Tier: 'Shared'
 }
 
-var applicationGatewayID = '${subscription().id}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Network/applicationGateways/${name}'
+var applicationGatewayID = '${resourceGroup().id}/providers/Microsoft.Network/applicationGateways/${name}'
 
 module appGWpublicIpAddress '.bicep/public-ip-address.bicep' = {
   name: 'appGWpublicIpAddress-${deploymentDate}'
@@ -95,7 +95,7 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
     enableHttp2: true
     lock: {
       kind: 'CanNotDelete'
-      name: 'myCustomLockName'
+      name: 'CanNotDelete'
     }
     tags: union(tags, applicationGatewayTags)
     firewallPolicyId: applicationGatewayWAFPolicy.outputs.applicationGatewayWAFPolicyResourceId
