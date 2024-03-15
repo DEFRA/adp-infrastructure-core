@@ -158,9 +158,7 @@ extends:
                     type: PowerShell
                     inlineScript: |
                       $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
-                      Write-Host "##vso[task.setvariable variable=containerAppEnvPvtDnsZone;]$($output.defaultDomain.value)"
-                      # $filePath = "$(Pipeline.Workspace)/s/self/infra/core/env-shared/portal/containerapp-dns-zone/containerapp-dns-zone.bicepparam"                                           
-                      # (Get-Content $filePath) -replace "{{containerAppEnvPvtDnsZone}}", "$($output.defaultDomain.value)" | Set-Content $filePath     
+                      Write-Host "##vso[task.setvariable variable=containerAppEnvPvtDnsZone;]$($output.defaultDomain.value)"  
                   - displayName: Register App
                     scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
                     scriptRepo: PipelineCommonScripts

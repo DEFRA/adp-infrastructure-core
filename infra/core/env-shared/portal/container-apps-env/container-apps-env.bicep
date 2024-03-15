@@ -132,3 +132,4 @@ resource tenantId 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
 
 output appUrl string = 'https://${containerApp.name}.${toLower(managedEnvironment.outputs.defaultDomain)}'
 output defaultDomain string = toLower(managedEnvironment.outputs.defaultDomain)
+
