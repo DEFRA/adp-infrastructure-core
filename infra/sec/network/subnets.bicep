@@ -6,9 +6,9 @@ resource externalSubnets 'Microsoft.Network/virtualNetworks/subnets@2020-05-01' 
   name: '${secVnetName}/${appGwSubnetName}'
   properties: {
     addressPrefix: appGwSubnetRange
-    networkSecurityGroup: {}
-    serviceEndpoints: []
-    routeTable: {}
+    // networkSecurityGroup: {}
+    // serviceEndpoints: []
+    // routeTable: {}
   }
 }
 
