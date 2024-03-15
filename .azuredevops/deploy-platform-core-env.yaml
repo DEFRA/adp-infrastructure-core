@@ -286,7 +286,7 @@ extends:
                 - name: azure-waf-baseline
                   path: infra/core/env/front-door
                   resourceGroupName: $(cdnResourceGroup)
-                
+                  
         - ${{ if eq(variables.IsApplication, true) }}:  
           - name: application_infra
             ${{ if eq(variables.IsAll, true) }}:

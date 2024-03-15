@@ -96,7 +96,7 @@ extends:
                       - displayName: Get ContainerApp IngressFqdn to use it in App Gateway backend pool
                         scriptPath: infra/sec/scripts/Get-ContainerAppIngressFqdn.ps1
                         type: AzurePowerShell
-                        serviceConnectionVariableName: 'secServiceConnection'
+                        serviceConnectionVariableName: 'ssvServiceConnection'
                         scriptArguments: >
                           -ResourceGroupName $(ssvInfraResourceGroup)
                           -ContainerAppName $(portalWebContainerAppName)      
