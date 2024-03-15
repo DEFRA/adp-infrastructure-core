@@ -85,6 +85,6 @@ module applicationGatewayWebApplicationFirewallPolicy 'br/SharedDefraRegistry:ne
   }
 }
 
-output appGatewayWAFPolicyName string = applicationGatewayWebApplicationFirewallPolicy.name
+output appGatewayWAFPolicyName string = applicationGatewayWebApplicationFirewallPolicy.outputs.name
 
-output applicationGatewayWAFPolicyResourceId string = applicationGatewayWebApplicationFirewallPolicy.id
+output applicationGatewayWAFPolicyResourceId string = applicationGatewayWebApplicationFirewallPolicy.outputs.resourceId
