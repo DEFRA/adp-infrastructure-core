@@ -117,7 +117,7 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
           //   id: '<id>'
           // }
           publicIPAddress: {
-            id: appGWpublicIpAddress.outputs.ipAddress
+            id: resourceId('Microsoft.Network/publicIPAddresses', publicIPName)
           }
         }
       }
@@ -163,7 +163,7 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
           port: backend.backendHttpSetting.port
           protocol: backend.backendHttpSetting.protocol
           probe: {
-            id: resourceId('Microsoft.Network/applicationGateways', name , '/probes', '${backend.name}-health-probe')
+            id: resourceId('Microsoft.Network/applicationGateways', name , '/probes/${backend.name}-health-probe')
           }
           requestTimeout: backend.backendHttpSetting.requestTimeout
         }
