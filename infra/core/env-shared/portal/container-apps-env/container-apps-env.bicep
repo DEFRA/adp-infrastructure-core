@@ -37,6 +37,9 @@ param internal bool = true
 @description('Required. Keyvault Secret Name for the Front Door Endpoint URL')
 param frontDoorEndpointURL string
 
+@description('Required. Keyvault Secret Name for the containerAppEnvURL')
+param containerAppEnvURL string
+
 var customTags = {
   Location: location
   CreatedDate: createdDate
@@ -100,6 +103,17 @@ module setKeyvaultSecret '.bicep/set-secret.bicep' = {
   }
 }
 
+// Sets the default value in shared keyvault for future use
+module setKeyvaultSecret2 '.bicep/set-secret.bicep' = {
+  name: containerAppEnvURL
+  scope: resourceGroup(ssvPlatformKeyVaultRG)
+  params: {
+    ssvPlatformKeyVaultName: ssvPlatformKeyVaultName
+    secretName: containerAppEnvURL
+    secretValue: toLower(managedEnvironment.outputs.defaultDomain)
+  }
+}
+
 resource secretbaseurl 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'APP-BASE-URL'
   parent: keyVault
@@ -117,3 +131,4 @@ resource tenantId 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
 }
 
 output appUrl string = 'https://${containerApp.name}.${toLower(managedEnvironment.outputs.defaultDomain)}'
+output defaultDomain string = toLower(managedEnvironment.outputs.defaultDomain)

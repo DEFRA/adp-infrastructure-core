@@ -42,3 +42,5 @@ param portalEntraApp = {
 param internal = true 
 
 param frontDoorEndpointURL = '#{{ portalWebAppURLKVSecretName }}'
+
+param containerAppEnvURL = '#{{ containerAppEnvURLKVSecretName }}'
