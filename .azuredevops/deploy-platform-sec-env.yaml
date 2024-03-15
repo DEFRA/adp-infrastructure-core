@@ -82,13 +82,13 @@ extends:
         privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
         azureRegions:
           primary: 'UKSouth'          
-      - name: pre1
-        serviceConnection: AZR-ADP-PRE1
-        deploymentBranches:
-          - 'refs/heads/main'
-        privateAgentName: 'DEFRA-ADP-PRE1-ubuntu2204'
-        azureRegions:
-          primary: 'UKSouth'
+      # - name: pre1
+      #   serviceConnection: AZR-ADP-PRE1
+      #   deploymentBranches:
+      #     - 'refs/heads/main'
+      #   privateAgentName: 'DEFRA-ADP-PRE1-ubuntu2204'
+      #   azureRegions:
+      #     primary: 'UKSouth'
       # - name: prd1
       #   serviceConnection: AZR-ADP-PRE1
       #   deploymentBranches:
