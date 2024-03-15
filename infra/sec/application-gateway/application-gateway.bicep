@@ -57,7 +57,7 @@ var applicationGatewayTags = {
   Tier: 'Shared'
 }
 
-var applicationGatewayID = '${resourceGroup().id}/providers/Microsoft.Network/applicationGateways/${name}'
+//var applicationGatewayID = '${resourceGroup().id}/providers/Microsoft.Network/applicationGateways/${name}'
 
 module appGWpublicIpAddress '.bicep/public-ip-address.bicep' = {
   name: 'appGWpublicIpAddress-${deploymentDate}'
