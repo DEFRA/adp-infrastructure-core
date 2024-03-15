@@ -35,8 +35,8 @@ param policySettings object = {
 @description('Required. The FrontDoor ID.')
 param frontDoorId string
 
-@description('Required. backends Object(backendAddressPool, backendHttpSetting, httpListener, requestRoutingRule)')
-param backends array
+// @description('Required. backends Object(backendAddressPool, backendHttpSetting, httpListener, requestRoutingRule)')
+// param backends array
 
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
