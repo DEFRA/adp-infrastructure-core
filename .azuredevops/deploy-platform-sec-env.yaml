@@ -89,7 +89,7 @@ extends:
                       - displayName: Get Azure FrontDoor ID to use it in Custom WAF policy
                         scriptPath: infra/sec/scripts/Get-AzureFrontDoorId.ps1
                         type: AzurePowerShell
-                        # serviceConnectionVariableName: 'subscriptionName'
+                        serviceConnectionVariableName: 'subscriptionName'
                         scriptArguments: >
                           -ResourceGroupName $(cdnResourceGroup)
                           -FrontDoorProfileName $(cdnProfileName)    

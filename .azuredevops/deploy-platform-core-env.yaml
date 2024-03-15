@@ -62,7 +62,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: gg/304334-Sec-AppGW-Variables #main
+      ref: main
       
 variables:
   - name: IsAll
@@ -286,7 +286,7 @@ extends:
                 - name: azure-waf-baseline
                   path: infra/core/env/front-door
                   resourceGroupName: $(cdnResourceGroup)
- 
+                
         - ${{ if eq(variables.IsApplication, true) }}:  
           - name: application_infra
             ${{ if eq(variables.IsAll, true) }}:
