@@ -23,8 +23,8 @@ param publicIPName string
 @description('Required. The name of the Front Door WAF Policy to create.')
 param wafPolicyName string
 
-// @description('Optional. The list of managed rule sets to configure on the WAF (DRS).')
-// param managedRuleSets array = []
+@description('Optional. The list of managed rule sets to configure on the WAF (DRS).')
+param managedRuleSets array = []
 
 @description('Optional. The PolicySettings object (state,mode) for policy.')
 param policySettings object = {
@@ -76,7 +76,7 @@ params: {
   wafPolicyName: wafPolicyName
   location: location
   frontDoorId: frontDoorId
-  // managedRuleSets: managedRuleSets
+  managedRuleSets: managedRuleSets
   policySettings: policySettings
   environment: environment
   purpose: 'ADP Application Gateway Custom WAF'
