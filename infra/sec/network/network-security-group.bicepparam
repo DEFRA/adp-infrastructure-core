@@ -7,7 +7,7 @@ param location = '#{{ location }}'
 param nsgList = [
   {
     name: 'SEC#{{ projectName }}#{{ environment }}#{{ nc_resource_nsg }}140#{{ environmentId }}'
-    purpose: "ADP Application gateway subnet NSG"
+    purpose: 'ADP Application gateway subnet NSG'
     securityRules: [
         {
             name: 'AllowAzureFrontDoorBackend',
@@ -26,7 +26,7 @@ param nsgList = [
                 ],
                 sourceAddressPrefixes: [],
                 destinationAddressPrefixes: [],
-                description": "Allow Azure FrontDoor Backend"
+                description: 'Allow Azure FrontDoor Backend'
             }
         }
         {
@@ -44,7 +44,7 @@ param nsgList = [
                 destinationPortRanges: [],
                 sourceAddressPrefixes: [],
                 destinationAddressPrefixes: [],
-                description": "Allow all inbound Gateway Management ports"
+                description: 'Allow all inbound Gateway Management ports'
             }
         }  
         {
@@ -62,7 +62,7 @@ param nsgList = [
                 destinationPortRanges: [],
                 sourceAddressPrefixes: [],
                 destinationAddressPrefixes: [],
-                description": "Deny All Other Inbound"
+                description: 'Deny All Other Inbound'
             }
         } 
         {
@@ -80,7 +80,7 @@ param nsgList = [
                 destinationPortRanges: [],
                 sourceAddressPrefixes: [],
                 destinationAddressPrefixes: [],
-                description": "Deny All Other Outbound"
+                description': 'Deny All Other Outbound'
             }
         }       
     ]
