@@ -40,7 +40,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: gg/304334-Sec-AppGW-Variables #main
+      ref: gg/304334-Sec-AppGW-Variables2 #main
 
 variables:
   - name: IsAll
