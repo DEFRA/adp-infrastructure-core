@@ -10,76 +10,76 @@ param nsgList = [
     purpose: 'ADP Application gateway subnet NSG'
     securityRules: [
         {
-            name: 'AllowAzureFrontDoorBackend',
+            name: 'AllowAzureFrontDoorBackend'
             properties: {
-                protocol: 'TCP',
-                sourcePortRange: '*',
+                protocol: 'TCP'
+                sourcePortRange: '*'
                 sourceAddressPrefix: 'AzureFrontDoor.Backend'
-                destinationAddressPrefix: '*',
-                access: 'Allow',
-                priority: 200,
-                direction: 'Inbound',
-                sourcePortRanges: [],
+                destinationAddressPrefix: '*'
+                access: 'Allow'
+                priority: 200
+                direction: 'Inbound'
+                sourcePortRanges: []
                 destinationPortRanges: [
                     80
                     443
-                ],
-                sourceAddressPrefixes: [],
-                destinationAddressPrefixes: [],
+                ]
+                sourceAddressPrefixes: []
+                destinationAddressPrefixes: []
                 description: 'Allow Azure FrontDoor Backend'
             }
         }
         {
-            name: 'AllowGWM',
+            name: 'AllowGWM'
             properties: {
-                protocol: '*',
-                sourcePortRange: '*',
-                destinationPortRange: '65200-65535',
+                protocol: '*'
+                sourcePortRange: '*'
+                destinationPortRange: '65200-65535'
                 sourceAddressPrefix: '*'
-                destinationAddressPrefix: '*',
-                access: 'Allow',
-                priority: 300,
-                direction: 'Inbound',
-                sourcePortRanges: [],
-                destinationPortRanges: [],
-                sourceAddressPrefixes: [],
-                destinationAddressPrefixes: [],
+                destinationAddressPrefix: '*'
+                access: 'Allow'
+                priority: 300
+                direction: 'Inbound'
+                sourcePortRanges: []
+                destinationPortRanges: []
+                sourceAddressPrefixes: []
+                destinationAddressPrefixes: []
                 description: 'Allow all inbound Gateway Management ports'
             }
         }  
         {
-            name: 'DenyAnyOtherInbound',
+            name: 'DenyAnyOtherInbound'
             properties: {
-                protocol: '*',
-                sourcePortRange: '*',
-                destinationPortRange: '*',
+                protocol: '*'
+                sourcePortRange: '*'
+                destinationPortRange: '*'
                 sourceAddressPrefix: '*'
-                destinationAddressPrefix: '*',
-                access: 'Deny',
-                priority: 4000,
-                direction: 'Inbound',
-                sourcePortRanges: [],
-                destinationPortRanges: [],
-                sourceAddressPrefixes: [],
-                destinationAddressPrefixes: [],
+                destinationAddressPrefix: '*'
+                access: 'Deny'
+                priority: 4000
+                direction: 'Inbound'
+                sourcePortRanges: []
+                destinationPortRanges: []
+                sourceAddressPrefixes: []
+                destinationAddressPrefixes: []
                 description: 'Deny All Other Inbound'
             }
         } 
         {
-            name: 'DenyAllOtherOutbound',
+            name: 'DenyAllOtherOutbound'
             properties: {
-                protocol: '*',
-                sourcePortRange: '*',
-                destinationPortRange: '*',
+                protocol: '*'
+                sourcePortRange: '*'
+                destinationPortRange: '*'
                 sourceAddressPrefix: '*'
-                destinationAddressPrefix: '*',
-                access: 'Deny',
-                priority: 4000,
-                direction: 'Outbound',
-                sourcePortRanges: [],
-                destinationPortRanges: [],
-                sourceAddressPrefixes: [],
-                destinationAddressPrefixes: [],
+                destinationAddressPrefix: '*'
+                access: 'Deny'
+                priority: 4000
+                direction: 'Outbound'
+                sourcePortRanges: []
+                destinationPortRanges: []
+                sourceAddressPrefixes: []
+                destinationAddressPrefixes: []
                 description': 'Deny All Other Outbound'
             }
         }       
