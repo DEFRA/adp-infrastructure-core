@@ -12,7 +12,7 @@ param nsgList = [
         {
             name: 'AllowAzureFrontDoorBackend'
             properties: {
-                protocol: 'TCP'
+                protocol: 'Tcp'
                 sourcePortRange: '*'
                 sourceAddressPrefix: 'AzureFrontDoor.Backend'
                 destinationAddressPrefix: '*'
