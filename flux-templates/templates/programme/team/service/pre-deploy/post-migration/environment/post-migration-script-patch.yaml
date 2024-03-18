@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
       - name: __SERVICE_NAME__-post-dbmigration
-        image: ssvadpinfcr3401.azurecr.io/image/powershell-executor:424529 # {"$imagepolicy": "flux-config:powershell-executor-__ENVIRONMENT__-0__ENV_INSTANCE__"}
+        image: ssvadpinfcr__SSV_INSTANCE__401.azurecr.io/image/powershell-executor:__PS_EXEC_VERSION__ # {"$imagepolicy": "flux-config:powershell-executor-__ENVIRONMENT__-0__ENV_INSTANCE__"}
         env:
         - name: GIT_REPO_URL
           value: "https://github.com/DEFRA/adp-flux-services.git"
@@ -22,11 +22,13 @@ spec:
           value: ${POSTGRES_DB}
         - name: SERVICE_MI_NAME
           value: ${TEAM_MI_PREFIX}-${SERVICE_NAME}
-        - name: TEAM_MI_NAME
-          value: ${TEAM_MI_PREFIX}-${TEAM_NAMESPACE}
         - name: TEAM_MI_SUBSCRIPTION_ID
           value: ${SUBSCRIPTION_ID}
         - name: SUBSCRIPTION_NAME
           value: ${SUBSCRIPTION_NAME}
+        - name: PG_WRITER_AD_GROUP
+          value: "AAG-Azure-ADP-__SERVICE_CODE__-__ENVIRONMENT____ENV_INSTANCE__-PostgresDB_Writer"
+        - name: PG_READER_AD_GROUP
+          value: "AAG-Azure-ADP-__SERVICE_CODE__-__ENVIRONMENT____ENV_INSTANCE__-PostgresDB_Reader"
         - name: DB_MIGRATION_VERSION
           value: "__VERSION__" # {"$imagepolicy": "flux-config:__SERVICE_NAME__-dbmigration-__ENVIRONMENT__-0__ENV_INSTANCE__:tag"}

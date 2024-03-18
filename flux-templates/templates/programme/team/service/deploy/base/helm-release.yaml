@@ -21,7 +21,3 @@ spec:
     createNamespace: true
   interval: 5m0s
   targetNamespace: __TEAM_NAME__
-  values:
-    aadWorkloadIdentity: true
-    serviceAccount:
-      name: __TEAM_NAME__
