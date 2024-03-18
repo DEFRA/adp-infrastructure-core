@@ -46,24 +46,6 @@ param nsgList = [
                 destinationAddressPrefixes: []
                 description: 'Allow all inbound Gateway Management ports'
             }
-        }  
-        {
-            name: 'DenyAnyOtherInbound'
-            properties: {
-                protocol: '*'
-                sourcePortRange: '*'
-                destinationPortRange: '*'
-                sourceAddressPrefix: '*'
-                destinationAddressPrefix: '*'
-                access: 'Deny'
-                priority: 4000
-                direction: 'Inbound'
-                sourcePortRanges: []
-                destinationPortRanges: []
-                sourceAddressPrefixes: []
-                destinationAddressPrefixes: []
-                description: 'Deny All Other Inbound'
-            }
         }      
     ]
   }
