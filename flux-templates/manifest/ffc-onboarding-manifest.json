@@ -1,0 +1,195 @@
+{
+    "name": "ffc",
+    "teams": [
+        {
+            "name": "ffc-demo",
+            "servicecode": "FFC-DEMO",
+            "services": [
+                {
+                    "name": "ffc-demo-calculation-service"
+                },
+                {
+                    "name": "ffc-demo-claim-service",
+                    "backend": true,
+                    "dbname": "ffc-demo-claim"
+                },
+                {
+                    "name": "ffc-demo-payment-service",
+                    "backend": true,
+                    "dbname": "ffc-demo-payment"
+                },
+                {
+                    "name": "ffc-demo-payment-web",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-demo-web",
+                    "frontend": true
+                }
+            ],
+            "environments": [
+                {
+                    "name": "snd",
+                    "instances": [
+                        "1",
+                        "2",
+                        "3"
+                    ]
+                },
+                {
+                    "name": "dev",
+                    "instances": [
+                        "1"
+                    ]
+                },
+                {
+                    "name": "tst",
+                    "instances": [
+                        "1",
+                        "2"
+                    ]
+                },
+                {
+                    "name": "pre",
+                    "instances": [
+                        "1"
+                    ]
+                },
+                {
+                    "name": "prd",
+                    "instances": [
+                        "1"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "ffc-ffd",
+            "servicecode": "FFC-FFD",
+            "services": [
+                {
+                    "name": "ffc-ffd-frontend-poc",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-ffd-backend-poc",
+                    "backend": true,
+                    "dbname": "ffc-ffd-backend"
+                }
+            ],
+            "environments": [
+                {
+                    "name": "snd",
+                    "instances": [
+                        "1",
+                        "2",
+                        "3"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "ffc-dal",
+            "servicecode": "FCP-DAL",
+            "services": [
+                {
+                    "name": "fcp-data-access-layer-api",
+                    "frontend": true
+                }
+            ],
+            "environments": [
+                {
+                    "name": "snd",
+                    "instances": [
+                        "3"
+                    ]
+                },
+                {
+                    "name": "dev",
+                    "instances": [
+                        "1"
+                    ]
+                }
+            ]
+        },
+        {
+            "environments": [
+                {
+                    "instances": [
+                        "3"
+                    ],
+                    "name": "snd"
+                },
+                {
+                    "instances": [
+                        "1"
+                    ],
+                    "name": "dev"
+                }
+            ],
+            "name": "ffc-find",
+            "servicecode": "FCP-FIND",
+            "services": [
+                {
+                    "frontend": true,
+                    "name": "fcp-find-ai-frontend"
+                }
+            ]
+        },
+        {
+            "name": "ffc-sfd",
+            "servicecode": "ffc-sfd",
+            "services": [
+                {
+                    "name": "ffc-sfd-permissions",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-sfd-ahwp-stub",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-sfd-auth",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-sfd-messages",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-sfd-messages-processor",
+                    "backend": true,
+                    "dbname": "messages-processor"
+                },
+                {
+                    "name": "ffc-sfd-landing-page",
+                    "frontend": true
+                },
+                {
+                    "name": "ffc-sfd-data",
+                    "backend": true,
+                    "dbname": "backend"
+                },
+                {
+                    "name": "ffc-sfd-permissions-api",
+                    "backend": true,
+                    "dbname": "permissions-api"
+                }
+            ],
+            "environments": [
+                {
+                    "name": "snd",
+                    "instances": [
+                        "3"
+                    ]
+                },
+                {
+                    "name": "dev",
+                    "instances": [
+                        "1"
+                    ]
+                }
+            ]
+        }
+    ]
+}

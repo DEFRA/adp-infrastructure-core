@@ -1,0 +1,25 @@
+{
+    "name": "eutd",
+    "teams": [
+        {
+            "name": "eutd-trade-exports-ai",
+            "servicecode": "EXP",
+            "services": [
+                {
+                    "name": "trade-exports-packinglistai-ui",
+                    "frontend": true
+                }
+            ],
+            "environments": [
+                {
+                    "name": "snd",
+                    "instances": [
+                        "1",
+                        "2",
+                        "3"
+                    ]
+                }
+            ]
+        }
+    ]
+}
