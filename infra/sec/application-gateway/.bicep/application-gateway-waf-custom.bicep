@@ -47,9 +47,9 @@ module applicationGatewayWebApplicationFirewallPolicy 'br/SharedDefraRegistry:ne
     name: wafPolicyName
     location: location
     tags: union(tags, appGatewayWafTags)
-    managedRules: {
-      managedRuleSets: managedRuleSets
-    }
+    // managedRules: {
+    //   managedRuleSets: managedRuleSets
+    // }
     customRules: [
       {
           name: 'blockNonAFDTraffic'
