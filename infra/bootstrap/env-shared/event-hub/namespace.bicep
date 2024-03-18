@@ -60,41 +60,5 @@ module eventHubNamespaceResource 'br/SharedDefraRegistry:event-hub.namespace:0.5
       }
     ]
     disableLocalAuth: false
-    /*eventhubs: [
-      {
-        name: 'flux-events-${eventHubNamespace.eventHub1Name}'
-        authorizationRules: [
-          {
-            name: 'FluxSendAccess'
-            rights: [
-              'Send'
-            ]
-          }
-          {
-            name: 'FunctionListenAccess'
-            rights: [
-              'Listen'
-            ]
-          }
-        ]
-      }
-      {
-        name: 'flux-events-${eventHubNamespace.eventHub2Name}'
-        authorizationRules: [
-          {
-            name: 'FluxSendAccess'
-            rights: [
-              'Send'
-            ]
-          }
-          {
-            name: 'FunctionListenAccess'
-            rights: [
-              'Listen'
-            ]
-          }
-        ]
-      }
-    ]*/
   }
 }
