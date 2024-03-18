@@ -4,8 +4,8 @@ param wafPolicyName string
 @description('Optional. The Azure region where the resources will be deployed.')
 param location string = resourceGroup().location
 
-@description('Optional. The list of managed rule sets to configure on the WAF (DRS).')
-param managedRuleSets array = []
+// @description('Optional. The list of managed rule sets to configure on the WAF (DRS).')
+// param managedRuleSets array = []
 
 @description('Optional. The PolicySettings object (state,mode) for policy.')
 param policySettings object = {

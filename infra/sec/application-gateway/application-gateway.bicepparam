@@ -26,24 +26,6 @@ param diagnosticSettings = {
   resourceGroup: '#{{ servicesResourceGroup }}'
 }
 
-param managedRuleSets = [
-  {
-    ruleSetType: 'OWASP'
-    ruleSetVersion: '3.0'
-    ruleGroupOverrides: [
-      {
-        ruleGroupName: 'REQUEST-942-APPLICATION-ATTACK-SQLI'
-        rules: [
-          {
-            action: 'AnomalyScoring'
-            ruleId: '942150'
-            state: 'Disabled'
-          }
-        ]
-      }
-    ]
-  }
-]
 
 param frontDoorId = '#{{ azureFrontDoorProfileFrontDoorId }}'
 
