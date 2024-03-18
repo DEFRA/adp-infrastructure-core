@@ -100,6 +100,11 @@ extends:
       - ${{ if eq(variables.IsSecNetwork, true) }}:
         - name: sec_network
           deployments:
+            - ${{ if eq(variables.IsSecNetworkNSG, true) }}:
+              - name: network-security-group
+                path: infra/sec/network
+                resourceGroupName: $(secInfraResourceGroup) 
+                serviceConnectionVariableName: 'secServiceConnection'
             - ${{ if eq(variables.IsSecNetworkSubnet, true) }}:
               - name: subnets
                 path: infra/sec/network
