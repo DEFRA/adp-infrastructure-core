@@ -64,25 +64,7 @@ param nsgList = [
                 destinationAddressPrefixes: []
                 description: 'Deny All Other Inbound'
             }
-        } 
-        {
-            name: 'DenyAllOtherOutbound'
-            properties: {
-                protocol: '*'
-                sourcePortRange: '*'
-                destinationPortRange: '*'
-                sourceAddressPrefix: '*'
-                destinationAddressPrefix: '*'
-                access: 'Deny'
-                priority: 4000
-                direction: 'Outbound'
-                sourcePortRanges: []
-                destinationPortRanges: []
-                sourceAddressPrefixes: []
-                destinationAddressPrefixes: []
-                description: 'Deny All Other Outbound'
-            }
-        }       
+        }      
     ]
   }
 ]
