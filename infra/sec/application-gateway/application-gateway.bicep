@@ -32,8 +32,6 @@ param policySettings object = {
   mode: 'Prevention'
 }
 
-// param diagnosticSettings object
-
 @description('Required. The FrontDoor ID.')
 param frontDoorId string
 
@@ -200,18 +198,7 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
           priority: 200
           ruleType: backend.requestRoutingRule.ruleType
         }
-    }]
-    // diagnosticSettings: [
-    //   {
-    //     name: 'customSetting'
-    //     logCategoriesAndGroups: [
-    //       {
-    //         category: 'allLogs'
-    //       }
-    //     ]
-    //     workspaceResourceId: resourceId(diagnosticSettings.resourceGroup, 'Microsoft.OperationalInsights/workspaces', diagnosticSettings.workspacename)
-    //   }
-    // ]            
+    }]           
   }
 }
 

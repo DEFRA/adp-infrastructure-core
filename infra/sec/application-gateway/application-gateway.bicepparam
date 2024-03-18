@@ -21,11 +21,6 @@ param policySettings = {
   mode: 'Prevention'
 }
 
-//param diagnosticSettings = {
-//  workspacename: '#{{ logAnalyticsWorkspace }}'
-//  resourceGroup: '#{{ servicesResourceGroup }}'
-//}
-
 param managedRuleSets = [
   {
     ruleSetType: 'OWASP'
