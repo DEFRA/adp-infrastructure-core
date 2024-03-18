@@ -62,7 +62,6 @@ extends:
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - 'refs/heads/main'          
-        developmentEnvironment: true
         privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
         azureRegions:
           primary: 'UKSouth'
