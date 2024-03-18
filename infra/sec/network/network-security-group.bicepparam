@@ -80,7 +80,7 @@ param nsgList = [
                 destinationPortRanges: []
                 sourceAddressPrefixes: []
                 destinationAddressPrefixes: []
-                description': 'Deny All Other Outbound'
+                description: 'Deny All Other Outbound'
             }
         }       
     ]
