@@ -36,7 +36,6 @@ parameters:
       - Application - Storage Account
       - Application - Service Bus
       - Application - Key Vault
-      - Platform - Event Hub
       - Platform - Key Vault
 
 pr:
@@ -131,8 +130,6 @@ variables:
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Service Bus')) }}
   - name: IsApplicationKeyVault
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
-  - name: IsPlatformEventHub
-    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Platform - Event Hub')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -373,11 +370,4 @@ extends:
                   resourceGroupName: $(servicesResourceGroup)
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
-                      resourceGroupName: $(servicesResourceGroup)
-              - ${{ if eq(variables.IsPlatformEventHub, true) }}:                    
-                - name: namespace
-                  path: infra/core/env/event-hub
-                  resourceGroupName: $(servicesResourceGroup)
-                  privateEndpointDnsRecordsForResources:
-                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_eventhub)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
