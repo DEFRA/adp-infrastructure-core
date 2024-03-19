@@ -1,13 +1,12 @@
 
-param eventHubNamespace object //= {
-//   name: 'SSVADPINFEN3401'
-//   eventHubName: 'flux-events-dev'
-//   resourceGroup: 'SSVADPINFRG3401'
-//   eventHubConnectionSecretName: 'EVENTHUB-CONNECTION-SND1'
-// }
+@description('Required. The parameter object for eventHub. The object must contain the name, eventHubName, eventHubConnectionSecretName and resourceGroup values.')
+param eventHubNamespace object
 
-param keyVaultName string //= 'SSVADPINFVT3402'
-param appConfigMiObjectId string //= '2eb6fd3a-8dec-4634-8b48-512d268277ae'
+@description('Required. KeyVault name.')
+param keyVaultName string
+
+@description('Required. App Configuration Managed Identity Object id.')
+param appConfigMiObjectId string
 
 var roleDefinitionId = '4633458b-17de-408a-b874-0445c86b69e6' // Key Vault Secrets User
 
