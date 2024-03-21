@@ -139,7 +139,6 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
     name: name
     location: location
     sku: sku
-    // enableDefaultTelemetry: '<enableDefaultTelemetry>'
     enableHttp2: true
     lock: {
       kind: 'CanNotDelete'
@@ -162,9 +161,6 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
         name: 'public_frontend'
         properties: {
           privateIPAllocationMethod: 'Dynamic'
-          // privateLinkConfiguration: {
-          //   id: '<id>'
-          // }
           publicIPAddress: {
             id: resourceId('Microsoft.Network/publicIPAddresses', publicIPName)
           }
