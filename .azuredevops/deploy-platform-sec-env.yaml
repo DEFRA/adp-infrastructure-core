@@ -136,4 +136,4 @@ extends:
                       serviceConnectionVariableName: 'ssvServiceConnection'
                       scriptArguments: >
                         -ResourceGroupName $(ssvInfraResourceGroup)
-                        -ContainerAppName $(portalWebContainerAppName)      
+                        -ContainerAppName 'ssvadpinfca3401-portal-web'

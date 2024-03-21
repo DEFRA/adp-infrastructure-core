@@ -13,7 +13,6 @@ param location string = resourceGroup().location
 ])
 param sku string = 'WAF_v2'
 
-
 @description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPrivateEndpoints values.')
 param vnet object
 
@@ -57,36 +56,82 @@ var applicationGatewayTags = {
   Tier: 'Shared'
 }
 
+var publicIpTags = {
+  Name: name
+  Purpose: 'Public IP for ADP Application Gateway'
+  Tier: 'Shared'
+}
+
+var appGatewayWafTags = {
+  Name: wafPolicyName
+  Purpose: 'ADP Application Gateway Custom WAF'
+  Tier: 'Shared'
+}
+
 var applicationGatewayID = '${resourceGroup().id}/providers/Microsoft.Network/applicationGateways/${name}'
 
-module appGWpublicIpAddress '.bicep/public-ip-address.bicep' = {
-  name: 'appGWpublicIpAddress-${deploymentDate}'
-  params: {
-    name: publicIPName
-    location: location
-    tags: tags
+resource publicIpAddress 'Microsoft.Network/publicIPAddresses@2023-09-01' = {
+  name: publicIPName
+  location: location
+  tags: union(tags, publicIpTags)
+  sku: {
+    name: 'Standard'
+    tier: 'Regional'
+  }
+  zones: ['1','2','3']
+  properties: {
+    publicIPAddressVersion: 'IPv4'
+    publicIPAllocationMethod: 'Static'
+    idleTimeoutInMinutes: 4
   }
 }
 
-module applicationGatewayWAFPolicy '.bicep/application-gateway-waf-custom.bicep' = {
-name: 'applicationGatewayWAFPolicy-${deploymentDate}'
-params: {
-  wafPolicyName: wafPolicyName
-  location: location
-  frontDoorId: frontDoorId
-  managedRuleSets: managedRuleSets
-  policySettings: policySettings
-  environment: environment
-  purpose: 'ADP Application Gateway Custom WAF'
-}
+module applicationGatewayWebApplicationFirewallPolicy 'br/SharedDefraRegistry:network.application-gateway-web-application-firewall-policy:0.5.6' = {
+  name: 'agwaf-${deploymentDate}'
+  params: {
+    name: wafPolicyName
+    location: location
+    tags: union(tags, appGatewayWafTags)
+    managedRules: {
+      managedRuleSets: managedRuleSets
+    }
+    customRules: [
+      {
+          name: 'blockNonAFDTraffic'
+          priority: 2
+          ruleType: 'MatchRule'
+          action: 'Block'
+          matchConditions: [
+              {
+                  matchVariables: [
+                      {
+                          variableName: 'RequestHeaders'
+                          selector: 'X-Azure-FDID'
+                      }
+                  ]
+                  operator: 'Equal'
+                  negationConditon: true
+                  matchValues: [
+                    frontDoorId
+                  ]
+                  transforms: [
+                      'Lowercase'
+                  ]
+              }
+          ]
+          state: 'Enabled'
+      }
+  ]
+    policySettings: {
+      fileUploadLimitInMb: 10
+      mode: policySettings.mode
+      state: policySettings.state
+    }
+  }
 }
 
 module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.5.15' = {
   name: 'application-gateway-${deploymentDate}'
-  dependsOn: [
-    appGWpublicIpAddress
-    applicationGatewayWAFPolicy
-  ]
   params: {
     name: name
     location: location
@@ -98,7 +143,7 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
       name: 'CanNotDelete'
     }
     tags: union(tags, applicationGatewayTags)
-    firewallPolicyId: applicationGatewayWAFPolicy.outputs.applicationGatewayWAFPolicyResourceId
+    firewallPolicyId: applicationGatewayWebApplicationFirewallPolicy.outputs.resourceId
     gatewayIPConfigurations: [
       {
         name: 'apw-ip-configuration'

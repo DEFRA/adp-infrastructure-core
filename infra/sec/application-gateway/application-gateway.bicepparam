@@ -1,6 +1,6 @@
 using './application-gateway.bicep'
 
-param name = '#{{ secApplicationGatewayName }}'
+param name = '#{{ secApplicationGatewayName }}debug'
 
 param environment = '#{{ environment }}'
 
@@ -12,9 +12,9 @@ param vnet = {
   subnetApplicationGateway: '#{{ secAppGatewaySubnetName }}'
 }
 
-param publicIPName = '#{{ secAppGWpublicIPName }}'
+param publicIPName = '#{{ secAppGWpublicIPName }}debug'
 
-param wafPolicyName = '#{{ secApplicationGatewayWAFPolicyName }}'
+param wafPolicyName = '#{{ secApplicationGatewayWAFPolicyName }}debug'
 
 param policySettings = {
   state: 'Enabled'
