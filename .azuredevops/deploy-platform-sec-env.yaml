@@ -69,7 +69,7 @@ extends:
       - name: 'snd1'
         serviceConnection: AZD-ADP-SND1
         deploymentBranches:
-          - '*'
+          - 'refs/heads/main'
         developmentEnvironment: true
         privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
         azureRegions:
@@ -78,6 +78,7 @@ extends:
         serviceConnection: AZD-ADP-SND3
         deploymentBranches:
           - 'refs/heads/main'
+          - 'refs/pull/*/merge'
         privateAgentName: 'DEFRA-ADP-SND3-ubuntu2204'
         azureRegions:
           primary: 'UKSouth'          

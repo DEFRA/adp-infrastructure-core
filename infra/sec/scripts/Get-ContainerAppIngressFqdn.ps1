@@ -57,7 +57,7 @@ try {
         Write-Host "##vso[task.setvariable variable=containerAppIngressFqdn]$($containerapp.Configuration.IngressFqdn)"
     }
     else {
-        throw "ContainerApp $ContainerAppName does not exists in Resource Group $ResourceGroupNameso, so the IngressFqdn details could not be retrieved."
+        throw "ContainerApp $ContainerAppName does not exists in Resource Group $ResourceGroupName, so the IngressFqdn details could not be retrieved."
     }
 
     $exitCode = 0
