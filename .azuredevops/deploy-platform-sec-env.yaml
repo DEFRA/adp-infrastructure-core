@@ -1,0 +1,139 @@
+name: 1.0.$(BuildID)-${{ parameters.deployResources }}
+
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+  - name: deployResources
+    displayName: "Resources to Deploy"
+    type: string
+    default: "All"
+    values:
+      - All
+      - Sec Network - All
+      - Sec Network - NSGs
+      - Sec Network - Application Gateway Subnet
+      - Application Gateway
+
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra/sec/*
+  drafts: false
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra/sec/*
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: main
+
+variables:
+  - name: IsAll
+    value: ${{ eq(parameters.deployResources,'All') }}
+  - name: IsApplicationGatewaySubnet
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Network - Application Gateway Subnet')) }}
+  - name: IsSecNetwork
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Sec Network')) }}
+  - name: IsSecNetworkAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Sec Network - All')) }}
+  - name: IsSecNetworkNSG
+    value: ${{ or(eq(variables.IsSecNetworkAll,true), eq(parameters.deployResources,'Sec Network - NSGs')) }}   
+  - name: IsSecNetworkSubnet
+    value: ${{ or(eq(variables.IsSecNetworkAll,true), eq(parameters.deployResources,'Sec Network - Application Gateway Subnet')) }}   
+  - name: IsApplicationGateway
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application Gateway')) }}
+  - name: IsApplicationGatewayAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Application Gateway')) }}
+   
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.deployFromFeature }}
+    environments:
+      - name: 'snd1'
+        serviceConnection: AZD-ADP-SND1
+        deploymentBranches:
+          - 'refs/heads/main'
+        developmentEnvironment: true
+        privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'snd3'
+        serviceConnection: AZD-ADP-SND3
+        deploymentBranches:
+          - 'refs/heads/main'
+          - 'refs/pull/*/merge'
+        privateAgentName: 'DEFRA-ADP-SND3-ubuntu2204'
+        azureRegions:
+          primary: 'UKSouth'          
+      - name: pre1
+        serviceConnection: AZR-ADP-PRE1
+        deploymentBranches:
+          - 'refs/heads/main'
+        privateAgentName: 'DEFRA-ADP-PRE1-ubuntu2204'
+        azureRegions:
+          primary: 'UKSouth'
+      # - name: prd1
+      #   serviceConnection: AZR-ADP-PRD1
+      #   deploymentBranches:
+      #     - 'refs/heads/main'
+      #   privateAgentName: 'DEFRA-ADP-PRD1-ubuntu2204'
+      #   azureRegions:
+      #     primary: 'UKSouth'            
+    groupedDeployments:
+      - ${{ if eq(variables.IsSecNetwork, true) }}:
+        - name: sec_network
+          deployments:
+            - ${{ if eq(variables.IsSecNetworkNSG, true) }}:
+              - name: network-security-group
+                path: infra/sec/network
+                resourceGroupName: $(secInfraResourceGroup) 
+                serviceConnectionVariableName: 'secServiceConnection'
+            - ${{ if eq(variables.IsSecNetworkSubnet, true) }}:
+              - name: subnets
+                path: infra/sec/network
+                resourceGroupName: $(secVirtualNetworkResourceGroup) 
+                serviceConnectionVariableName: 'secServiceConnection'
+
+      - ${{ if eq(variables.IsApplicationGateway, true) }}:
+        - name: application_gateway
+          ${{ if eq(variables.IsAll, true) }}:
+            dependsOnGroupedDeployments:
+              - sec_network
+          deployments:
+            - ${{ if eq(variables.IsApplicationGatewayAll, true) }}: 
+                - name: application-gateway
+                  path: infra/sec/application-gateway
+                  resourceGroupName: $(secInfraResourceGroup)
+                  serviceConnectionVariableName: 'secServiceConnection'
+                  preDeployScriptsList:
+                    - displayName: Get Azure FrontDoor ID to use it in Custom WAF policy
+                      scriptPath: infra/sec/scripts/Get-AzureFrontDoorId.ps1
+                      type: AzurePowerShell
+                      serviceConnectionVariableName: 'subscriptionName'
+                      scriptArguments: >
+                        -ResourceGroupName $(cdnResourceGroup)
+                        -FrontDoorProfileName $(cdnProfileName)    
+                    - displayName: Get ContainerApp IngressFqdn to use it in App Gateway backend pool
+                      scriptPath: infra/sec/scripts/Get-ContainerAppIngressFqdn.ps1
+                      type: AzurePowerShell
+                      serviceConnectionVariableName: 'ssvServiceConnection'
+                      scriptArguments: >
+                        -ResourceGroupName $(ssvInfraResourceGroup)
+                        -ContainerAppName $(portalWebContainerAppName)
