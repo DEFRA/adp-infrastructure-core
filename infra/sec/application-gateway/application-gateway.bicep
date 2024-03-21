@@ -132,6 +132,9 @@ module applicationGatewayWebApplicationFirewallPolicy 'br/SharedDefraRegistry:ne
 
 module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.5.15' = {
   name: 'application-gateway-${deploymentDate}'
+  dependsOn: [
+    publicIpAddress
+  ]
   params: {
     name: name
     location: location
