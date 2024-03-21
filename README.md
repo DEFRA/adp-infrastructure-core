@@ -13,7 +13,7 @@ The Platform uses infrastructure parameter files (.bicepParams) to instantiate p
 * `nginxPlus` - Contains the AKS Cluster NGINX Ingress Controller Scripts.
 * `scripts/modules` - Contains the Powershell scripts, modules and libraries that support the infrastructure deployments and configuration. 
 
-## Service Connection documentation
+## Service Connection documentation..
 
 Azure Resurce Manager(arm) Service Connections can be created or updated by referencing a `json manifest file`.
 
