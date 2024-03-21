@@ -78,7 +78,7 @@ extends:
         serviceConnection: AZD-ADP-SND3
         deploymentBranches:
           - 'refs/heads/main'
-        privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
+        privateAgentName: 'DEFRA-ADP-SND3-ubuntu2204'
         azureRegions:
           primary: 'UKSouth'          
       - name: pre1
