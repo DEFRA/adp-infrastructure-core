@@ -1,8 +1,8 @@
 using './key-vault.bicep'
 
 param keyVault = {
-  name: '#{{ portalAppKeyVaultName }}'
-  privateEndpointName: '#{{ portalAppKVPvtEndpointName }}'
+  name: '#{{ ssvInfraKeyVault }}'
+  privateEndpointName: '#{{ ssvInfraKVPvtEndpointName }}'
   skuName: 'premium'
   enableSoftDelete: '#{{ keyvaultEnableSoftDelete }}'
   enablePurgeProtection: '#{{ keyvaultEnablePurgeProtection }}'

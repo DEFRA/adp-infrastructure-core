@@ -15,7 +15,7 @@ param containerRegistry = {
 }
 
 param keyVault = {
-  name: '#{{ portalAppKeyVaultName }}'
+  name: '#{{ ssvInfraKeyVault }}'
   subscriptionId: '#{{ subscriptionId }}'
-  resourceGroup: '#{{ portalResourceGroup }}'
+  resourceGroup: '#{{ ssvInfraResourceGroup }}'
 }

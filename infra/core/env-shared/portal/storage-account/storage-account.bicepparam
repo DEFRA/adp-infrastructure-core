@@ -13,7 +13,7 @@ param vnet = {
   subnetPrivateEndpoints: '#{{ ssvPrivateEndpointSubnet }}'
 }
 
-param keyvaultName = '#{{ portalAppKeyVaultName }}'
+param keyvaultName = '#{{ ssvInfraKeyVault }}'
 
 param environment = '#{{ environment }}'
 

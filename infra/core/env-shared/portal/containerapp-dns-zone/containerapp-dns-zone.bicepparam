@@ -2,7 +2,7 @@ using './containerapp-dns-zone.bicep'
 
 param containerAppEnv = {
   name: '#{{ containerAppEnv }}'
-  resourceGroup: '#{{ portalResourceGroup }}'
+  resourceGroup: '#{{ ssvInfraResourceGroup }}'
 }
 
 param vnet = {

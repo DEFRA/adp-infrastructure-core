@@ -22,23 +22,11 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Required. The name of the key vault where the secrets will be stored.')
 param keyvaultName string
 
-@description('Required. The name of the shared key vault where the app URL will be stored to be used by Front Door deployment')
-param ssvPlatformKeyVaultName string
-
-@description('Required. The name of the shared key vault Resource Group')
-param ssvPlatformKeyVaultRG string
-
 @description('Required. Object contains the Entra app details')
 param portalEntraApp object
 
 @description('Required. portal app env type internal. Default to true')
 param internal bool = true
-
-@description('Required. Keyvault Secret Name for the Front Door Endpoint URL')
-param frontDoorEndpointURL string
-
-@description('Required. Keyvault Secret Name for the containerAppEnvURL')
-param containerAppEnvURL string
 
 var customTags = {
   Location: location
@@ -90,28 +78,6 @@ module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.10
 
 resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
   name: keyvaultName
-}
-
-// Sets the default value in shared keyvault to be used by Front Door deployment
-module setKeyvaultSecret '.bicep/set-secret.bicep' = {
-  name: frontDoorEndpointURL
-  scope: resourceGroup(ssvPlatformKeyVaultRG)
-  params: {
-    ssvPlatformKeyVaultName: ssvPlatformKeyVaultName
-    secretName: frontDoorEndpointURL
-    secretValue: 'https://${containerApp.name}.${toLower(managedEnvironment.outputs.defaultDomain)}'
-  }
-}
-
-// Sets the default value in shared keyvault for future use
-module setKeyvaultSecret2 '.bicep/set-secret.bicep' = {
-  name: containerAppEnvURL
-  scope: resourceGroup(ssvPlatformKeyVaultRG)
-  params: {
-    ssvPlatformKeyVaultName: ssvPlatformKeyVaultName
-    secretName: containerAppEnvURL
-    secretValue: toLower(managedEnvironment.outputs.defaultDomain)
-  }
 }
 
 resource secretbaseurl 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {

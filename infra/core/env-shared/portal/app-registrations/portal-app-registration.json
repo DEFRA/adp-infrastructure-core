@@ -4,7 +4,7 @@
             "displayName": "#{{ portalAppRegName }}",
             "IdentifierUris": "",
             "keyVault": {
-                "name": "#{{ portalAppKeyVaultName }}",
+                "name": "#{{ ssvInfraKeyVault }}",
                 "secrets": [
                     {
                         "key": "#{{ portalApplicationClientSecretName }}",

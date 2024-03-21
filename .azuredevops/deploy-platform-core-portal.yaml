@@ -42,7 +42,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref:  refs/heads/main
+      ref:  refs/heads/sm/304334-ContainerAppsImprovement 
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -61,7 +61,7 @@ extends:
       - name: 'ssv_tst'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - 'refs/heads/main'          
+          - 'refs/heads/sm/304334-ContainerAppsImprovement '          
         privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
         azureRegions:
           primary: 'UKSouth'
@@ -115,21 +115,21 @@ extends:
               - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-kv')) }}:
                 - name: key-vault
                   path: infra/core/env-shared/portal/key-vault
-                  resourceGroupName: $(portalResourceGroup)
+                  resourceGroupName: $(ssvInfraResourceGroup)
                   privateEndpointDnsRecordsForResources:
-                    - resourceName: $(portalAppKeyVaultName)
-                      resourceGroupName: $(portalResourceGroup)
+                    - resourceName: $(ssvInfraKeyVault)
+                      resourceGroupName: $(ssvInfraResourceGroup)
               - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-sa')) }}:
                 - name: storage-account
                   path: infra/core/env-shared/portal/storage-account
-                  resourceGroupName: $(portalResourceGroup)
+                  resourceGroupName: $(ssvInfraResourceGroup)
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(portalStorageAccountName)
-                      resourceGroupName: $(portalResourceGroup)                      
+                      resourceGroupName: $(ssvInfraResourceGroup)                      
               - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-mi')) }}:
                 - name: managed-identity
                   path: infra/core/env-shared/portal/managed-identity
-                  resourceGroupName: $(portalResourceGroup)
+                  resourceGroupName: $(ssvInfraResourceGroupup)
               - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-db')) }}:
                 - name: flexible-server-zone
                   path: infra/core/env-shared/portal/flexible-server-zone
@@ -146,11 +146,11 @@ extends:
                         -TenantId $(tenantId)
                 - name: flexible-server
                   path: infra/core/env-shared/portal/flexible-server
-                  resourceGroupName: $(portalResourceGroup)               
+                  resourceGroupName: $(ssvInfraResourceGroup)               
               - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-env')) }}:
                 - name: container-apps-env
                   path: infra/core/env-shared/portal/container-apps-env
-                  resourceGroupName: $(portalResourceGroup)
+                  resourceGroupName: $(ssvInfraResourceGroup)
                   postDeployScriptsList:  
                   - displayName: 'Process Output Variable'
                     type: PowerShell
@@ -182,4 +182,4 @@ extends:
               - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-api-mi')) }}:
                 - name: managed-identity
                   path: infra/core/env-shared/portal-api/managed-identity
-                  resourceGroupName: $(portalResourceGroup)                          
+                  resourceGroupName: $(ssvInfraResourceGroup)                          

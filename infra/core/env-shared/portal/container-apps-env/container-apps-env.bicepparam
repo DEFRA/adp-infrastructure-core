@@ -24,11 +24,7 @@ param subnet = {
   vnetName: '#{{ ssvVirtualNetworkName }}'
 }
 
-param keyvaultName = '#{{ portalAppKeyVaultName }}'
-
-param ssvPlatformKeyVaultName = '#{{ ssvPlatformKeyVaultName }}'
-
-param ssvPlatformKeyVaultRG = '#{{ ssvSharedResourceGroup }}'
+param keyvaultName = '#{{ ssvInfraKeyVault }}'
 
 param environment = '#{{ environment }}'
 
@@ -41,6 +37,3 @@ param portalEntraApp = {
 
 param internal = true 
 
-param frontDoorEndpointURL = '#{{ portalWebAppURLKVSecretName }}'
-
-param containerAppEnvURL = '#{{ containerAppEnvURLKVSecretName }}'

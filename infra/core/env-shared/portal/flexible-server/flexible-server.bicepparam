@@ -15,7 +15,7 @@ param vnet = {
   subnetPostgreSql: '#{{ postgreSqlSubnet }}'
 }
 
-param keyvaultName = '#{{ portalAppKeyVaultName }}'
+param keyvaultName = '#{{ ssvInfraKeyVault }}'
 
 param privateDnsZone = {
   name: '#{{ postgreSqlPvtDnsZone }}'
