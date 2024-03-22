@@ -37,7 +37,7 @@ The json manifest file can be parameterised by adding place-holder (e.g. `#{{ ya
 
 It can be used as a `preDeployScriptsList` or `postDeployScriptsList` of the pipeline-template `common-infrastructure-deploy.yaml` or `scriptsList` of the pipeline-template `common-scripts-deploy.yaml`. 
 
-| :Note: The Type of the script must be set to 'AzureCLI' as it internally uses `az devops` commands. `useSystemAccessToken` should set to `true`.|
+| :Note:... The Type of the script must be set to 'AzureCLI' as it internally uses `az devops` commands. `useSystemAccessToken` should set to `true`.|
 |:----------|
 
 ```yaml
