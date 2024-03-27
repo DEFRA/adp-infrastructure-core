@@ -365,7 +365,8 @@
             },
             "Members": {
                 "groups": [
-                    "AG-Azure-CDO-ADP-PlatformEngineers"
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "AAG-Users-ADP-FFC-SFD_TechUser"
                 ],
                 "serviceprincipals": [
                     "sndadpinfmi3401-ffc-sfd"
