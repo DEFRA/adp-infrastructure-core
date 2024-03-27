@@ -368,10 +368,7 @@
                     "AG-Azure-CDO-ADP-PlatformEngineers",
                     "AAG-Users-ADP-FFC-SFD_TechUser"
                 ],
-                "users": #{
-                    { noescape(platformUserAndAccessAADGroupOwners)
-                    }
-                },
+                "users": #{{ noescape(platformUserAndAccessAADGroupOwners)}},
                 "serviceprincipals": [
                     "sndadpinfmi3401-ffc-sfd"
                 ]
