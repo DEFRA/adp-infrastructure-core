@@ -61,7 +61,7 @@ extends:
       - name: 'ssv_tst'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - 'refs/heads/rv/344253'          
+          - 'refs/heads/main'          
         developmentEnvironment: true
         privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
         azureRegions:
