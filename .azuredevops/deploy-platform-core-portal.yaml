@@ -107,6 +107,7 @@ extends:
                       -VirtualNetworkName $(ssvVirtualNetworkName)
                       -SubscriptionName $(subscriptionName)
                       -TenantId $(tenantId)
+                      -PeerToSec $true
       - ${{ if or(eq(parameters.deployResources, 'all'), contains(parameters.deployResources, 'portal-app')) }} :
           - name: Portal
             ${{ if eq(parameters.deployResources, 'all') }}:
