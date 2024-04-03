@@ -14,8 +14,11 @@ Mandatory. Private DNS Zone Subscription Name.
 .PARAMETER TenantId
 Mandatory. Private DNS Zone Tenant Id.
 
+.PARAMETER PeerToSec
+Optional. Peer to sec vnet. Defaults to false
+
 .EXAMPLE
-.\Trigger-VNetPeering.ps1 -VirtualNetworkName <private Dns Zone Name> -SubscriptionName <dns zone subscription name> -TenantId <dns zone tenant id>
+.\Trigger-VNetPeering.ps1 -VirtualNetworkName <private Dns Zone Name> -SubscriptionName <dns zone subscription name> -TenantId <dns zone tenant id> -PeerToSec <Peer to sec vnet    >
 #> 
 
 [CmdletBinding()]
@@ -27,7 +30,9 @@ param(
     [Parameter(Mandatory)] 
     [string]$TenantId,
     [Parameter()]
-    [string]$WorkingDirectory = $PWD
+    [string]$WorkingDirectory = $PWD,
+    [Parameter()]
+    [bool]$PeerToSec = $false
 )
 
 Set-StrictMode -Version 3.0
@@ -52,6 +57,7 @@ Write-Debug "${functionName}:VirtualNetworkName=$VirtualNetworkName"
 Write-Debug "${functionName}:SubscriptionName=$SubscriptionName"
 Write-Debug "${functionName}:TenantId=$TenantId"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
+Write-Debug "${functionName}:PeerToSec=$PeerToSec"
 
 try {
     [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ado"
@@ -62,12 +68,14 @@ try {
         "templateParameters": {
             "VirtualNetworkName": "",
             "Subscription": "",
-            "Tenant": ""
+            "Tenant": "",
+            "PeerToSec": ""
         }
     }' | ConvertFrom-Json
     $runPipelineRequestBodyWithDefaultConfig.templateParameters.VirtualNetworkName = $VirtualNetworkName
     $runPipelineRequestBodyWithDefaultConfig.templateParameters.Subscription = $SubscriptionName
     $runPipelineRequestBodyWithDefaultConfig.templateParameters.Tenant = $TenantId
+    $runPipelineRequestBodyWithDefaultConfig.templateParameters.PeerToSec = $PeerToSec
     [string]$requestBodyJson = $($runPipelineRequestBodyWithDefaultConfig | ConvertTo-Json)
 
     New-BuildRun -organisationUri $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI -projectName "CCoE-Infrastructure" -buildDefinitionId 1851 -requestBody $requestBodyJson
