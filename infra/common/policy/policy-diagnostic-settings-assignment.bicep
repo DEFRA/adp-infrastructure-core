@@ -15,13 +15,15 @@ param subscriptionId string = subscription().subscriptionId
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
+var resourceType = 'Microsoft.Authorization/policyDefinitions'
+
 module policyAssignmentModule '.bicep/policy-assignment.bicep' = [for (policyAssignment, index) in diagnosticPolicies: {
   name: 'policy-definition-${index}-${deploymentDate}'
   params: {
     name: guid(subscriptionId, policyAssignment.assignmentDisplayName)
     subscriptionId: subscriptionId
     displayName: policyAssignment.assignmentDisplayName
-    policyDefinitionId: tenantResourceId('Microsoft.Authorization/policyDefinitions', policyAssignment.policyDefinitionId)
+    policyDefinitionId: policyAssignment.policyDefinitionScope=='managementGroup'? managementGroupResourceId(resourceType, policyAssignment.policyDefinitionId) : tenantResourceId(resourceType, policyAssignment.policyDefinitionId)
     parameters: {
       categoryGroup: {
         value: 'allLogs'
