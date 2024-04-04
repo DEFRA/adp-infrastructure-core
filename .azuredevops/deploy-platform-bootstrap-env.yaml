@@ -41,7 +41,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: rv/policyfix
+      ref: rv/353153
 
 variables:
   - name: IsAll
@@ -82,7 +82,7 @@ extends:
         outputTemplateChange: Skip
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
-          - 'refs/heads/rv/policyfix'
+          - 'refs/heads/rv/353153'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
