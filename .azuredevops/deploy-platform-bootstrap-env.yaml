@@ -65,7 +65,6 @@ extends:
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - 'refs/heads/main'
-        developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd2'
