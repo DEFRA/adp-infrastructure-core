@@ -1,8 +1,8 @@
 @description('Required. The parameter object for the virtual network. The object must contain the name and resourceGroup values.')
 param vnet object
 
-@description('Required. The prefix for the private DNS zone.')
-param privateDnsZonePrefix string
+@description('Required. The private DNS zone.')
+param privateDnsZone string
 
 @description('Required. Environment name.')
 param environment string
@@ -13,7 +13,7 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-var privateDnsZoneName = toLower('${privateDnsZonePrefix}.private.postgres.database.azure.com')
+var privateDnsZoneName = toLower('${privateDnsZone}')
 var commonTags = {
   Location: 'global'
   CreatedDate: createdDate
