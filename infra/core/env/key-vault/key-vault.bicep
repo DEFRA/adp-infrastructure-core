@@ -28,16 +28,16 @@ param createdDate string = utcNow('yyyy-MM-dd')
 param principalId string
 
 @description('Required. The parameter object for keyvault roleassignment. The object must contain the roleDefinitionIdOrName, description and principalType.')
-param roleAssignment object
+param roleAssignment array
 
 var roleAssignments = [
-  {
-    roleDefinitionIdOrName: roleAssignment.roleDefinitionIdOrName
-    description: roleAssignment.description
+  for item in roleAssignment: {
+    roleDefinitionIdOrName: item.roleDefinitionIdOrName
+    description: item.description
     principalIds: [
-      principalId
+      item.principalId ?? principalId
     ]
-    principalType: roleAssignment.principalType
+    principalType: item.principalType
   }
 ]
 
