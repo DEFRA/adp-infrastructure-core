@@ -31,6 +31,7 @@ param roleAssignment = [
     roleDefinitionIdOrName: 'Key Vault Crypto Officer'
     description: 'Key Vault Crypto Officer Role Assignment'
     principalType: 'ServicePrincipal'
+    principalId: ''
   }
   {
     roleDefinitionIdOrName: 'Key Vault Reader'
