@@ -40,7 +40,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: aa/eventHub
+      ref: main
 
 variables:
   - name: IsAll
