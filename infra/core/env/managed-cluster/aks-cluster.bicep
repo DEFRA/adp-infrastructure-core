@@ -471,5 +471,14 @@ module defraFwCertSecretUserRoleAssignment '.bicep/keyvault-secret-rbac.bicep' =
   }
 }
 
+module clusterRoleAssignment '.bicep/cluster-rbac.bicep' = {
+  name: 'cluster-reader-rbac-${deploymentDate}'
+  scope: resourceGroup()
+  params: {
+    clusterName: cluster.name
+    principalId: cluster.adminAadGroupObjectId
+  }
+}
+
 @description('The oidcIssuerUrl of the AKS cluster')
 output oidcIssuerUrl string = deployAKS.outputs.oidcIssuerUrl
