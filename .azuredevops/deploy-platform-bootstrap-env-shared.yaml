@@ -14,6 +14,7 @@ parameters:
       - Platform Key Vault
       - Platform Container Registry
       - Platform Log Analytics Workspace
+      - Platform Event Hub Namespace
 
 pr:
   branches:
@@ -52,6 +53,8 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Container Registry')) }}
   - name: IsLogAnalyticsWorkspace
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Log Analytics Workspace')) }}
+  - name: IsEventHubNamespace
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Event Hub Namespace')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -88,3 +91,10 @@ extends:
                 path: infra/common/operational-insights
                 parameterFilePath: infra/bootstrap/env-shared/log-analytics-workspace
                 resourceGroupName: $(ssvSharedResourceGroup)
+            - ${{ if eq(variables.IsEventHubNamespace, true) }}:                    
+              - name: namespace
+                path: infra/bootstrap/env-shared/event-hub
+                resourceGroupName: $(ssvSharedResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(ssvResourceNamePrefix)$(nc_resource_eventhub)$(nc_shared_instance_regionid)01
+                    resourceGroupName: $(ssvSharedResourceGroup)

@@ -202,5 +202,11 @@
     "value": "ADO-DefraGovUK-AAD-ADP-#{{ ssvEnvironment }}#{{ nc_shared_instance }}",
     "label": "adp-platform",
     "contentType": "text/plain"
+  },
+  {
+    "key": "address",
+    "value": "{\"uri\":\"https://#{{ ssvInfraKeyVault }}.vault.azure.net/secrets/#{{ environment }}#{{ nc_instance_regionid }}0#{{ environmentId }}-ADP-EVENTHUB-CONNECTION\"}",
+    "label": "adp-platform",
+    "contentType": "text/plain"
   }
 ]
