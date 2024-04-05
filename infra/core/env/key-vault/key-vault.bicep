@@ -35,7 +35,7 @@ var roleAssignments = [
     roleDefinitionIdOrName: item.roleDefinitionIdOrName
     description: item.description
     principalIds: [
-      item.principalId ?? principalId
+      item.principalId != '' ? item.principalId : principalId
     ]
     principalType: item.principalType
   }
