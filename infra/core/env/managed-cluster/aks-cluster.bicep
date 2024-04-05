@@ -474,6 +474,9 @@ module defraFwCertSecretUserRoleAssignment '.bicep/keyvault-secret-rbac.bicep' =
 module clusterRoleAssignment '.bicep/cluster-rbac.bicep' = {
   name: 'cluster-reader-rbac-${deploymentDate}'
   scope: resourceGroup()
+  dependsOn: [
+    deployAKS
+  ]
   params: {
     clusterName: cluster.name
     principalId: cluster.adminAadGroupObjectId
