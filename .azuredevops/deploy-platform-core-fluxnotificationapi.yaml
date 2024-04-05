@@ -19,7 +19,7 @@ pr:
       - main
   paths:
     include:
-      - infra/env-shared/*
+      - infra/core/env-shared/flux-notification-apis/*
 
 trigger:
   batch: true
@@ -28,7 +28,7 @@ trigger:
       - '*'
   paths:
     include:
-      - infra/env-shared/*
+      - infra/core/env-shared/flux-notification-apis/*
 
 resources:
   repositories:
@@ -80,5 +80,5 @@ extends:
            deployments:
             - ${{ if eq(variables.IsPlatformEventHub, true) }}:                    
               - name: event-hub
-                path: infra/env-shared/event-hub
+                path: infra/core/env-shared/flux-notification-apis/event-hub
                 resourceGroupName: $(ssvSharedResourceGroup)
