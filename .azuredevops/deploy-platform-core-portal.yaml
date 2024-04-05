@@ -24,7 +24,10 @@ pr:
       - main
   paths:
     include:
-      - infra/core/env-shared/*
+      - infra/core/env-shared/portal/*
+      - infra/core/env-shared/portal-api/*
+      - infra/core/env-shared/network/*
+      - infra/core/env-shared/.bicep/*
   drafts: false
 
 trigger:
@@ -34,7 +37,10 @@ trigger:
       - '*'
   paths:
     include:
-      - infra/core/env-shared/*
+      - infra/core/env-shared/portal/*
+      - infra/core/env-shared/portal-api/*
+      - infra/core/env-shared/network/*
+      - infra/core/env-shared/.bicep/*
 
 resources:
   repositories:
