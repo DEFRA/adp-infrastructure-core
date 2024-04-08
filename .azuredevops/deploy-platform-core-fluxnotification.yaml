@@ -78,7 +78,7 @@ extends:
       - name: 'ssv_tst'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - 'refs/heads/main'
+          - '*'           #change it to main after end to end testing
         azureRegions:
           primary: 'UKSouth'
       - name: 'ssv_pre'
