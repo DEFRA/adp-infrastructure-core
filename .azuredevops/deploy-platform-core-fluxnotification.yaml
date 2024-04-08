@@ -38,7 +38,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: aa/createStorageAccount
+      ref: main
 
 variables:
   - name: IsAll
