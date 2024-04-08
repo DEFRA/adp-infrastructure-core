@@ -41,7 +41,7 @@ resources:
       endpoint: DEFRA
       type: github
       #ref: main
-      ref: sm/249199-DeploySSV5PrdInfra
+      ref: refs/heads/sm/249199-DeploySSV5PrdInfra
 
 variables:
   - name: IsAll
