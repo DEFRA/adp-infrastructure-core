@@ -13,6 +13,7 @@ parameters:
       - All
       - Shared Event Hub
       - FluxNotificationApps - Manage Identites
+      - FluxNotificationApps - Storage Account
 
 pr:
   branches:
@@ -46,7 +47,10 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Shared Event Hub')) }}
 
   - name: IsFluxNotificationAppsMI
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'FluxNotificationApps - Manage Identites')) }}     
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'FluxNotificationApps - Manage Identites')) }}
+
+  - name: IsFluxNotificationStorageAccount
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'FluxNotificationApps - Storage Account')) }}     
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -87,6 +91,16 @@ extends:
               path: infra/core/env-shared/flux-notification-apis/event-hub
               resourceGroupName: $(ssvSharedResourceGroup)
 
+      - ${{ if eq(variables.IsFluxNotificationStorageAccount, true) }}:
+          - name: FluxNotificationStorageAccount
+            deployments:                    
+              - name: storage-account
+                path: infra/core/env-shared/flux-notification-apis/storage-account
+                resourceGroupName: $(ssvInfraResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(fluxNotificationStorageAccountName)
+                    resourceGroupName: $(ssvInfraResourceGroup) 
+              
       - ${{ if eq(variables.IsFluxNotificationAppsMI, true) }}:
           - name: FluxNotificationAppsManageIdentities
             deployments:                    
