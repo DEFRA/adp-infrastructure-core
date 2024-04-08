@@ -10,6 +10,9 @@ param location string = resourceGroup().location
 @description('Required. Environment name.')
 param environment string
 
+@description('Required. Sub Environment name.')
+param subEnvironment string
+
 @allowed([
   'Storage'
   'StorageV2'
@@ -30,6 +33,7 @@ var customTags = {
   Location: location
   CreatedDate: createdDate
   Environment: environment
+  SubEnvironment: subEnvironment
 }
 
 var defaultTags = union(json(loadTextContent('../../../../common/default-tags.json')), customTags)

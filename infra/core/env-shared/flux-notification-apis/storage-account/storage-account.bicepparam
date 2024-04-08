@@ -14,4 +14,6 @@ param vnet = {
 
 param environment = '#{{ environment }}'
 
+param subEnvironment = '#{{ subEnvironment }}'
+
 param location = '#{{ location }}'
