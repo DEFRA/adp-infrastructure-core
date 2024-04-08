@@ -20,6 +20,9 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @secure()
 param principalId string
 
+@description('Required. Platform Users AD group ID')
+param platformUserGroupId string
+
 var roleAssignments = [
   {
     roleDefinitionIdOrName: 'Key Vault Secrets Officer'
@@ -28,6 +31,14 @@ var roleAssignments = [
       principalId
     ]
     principalType: 'ServicePrincipal'
+  }
+  {
+    roleDefinitionIdOrName: 'Key Vault Reader'
+    description: 'Key Vault Reader Role Assignment'
+    principalIds: [
+      platformUserGroupId
+    ]
+    principalType: 'Group'
   }
 ]
 
