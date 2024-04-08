@@ -40,7 +40,8 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      #ref: main
+      ref: sm/249199-DeploySSV5PrdInfra
 
 variables:
   - name: IsAll
