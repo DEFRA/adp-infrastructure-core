@@ -12,6 +12,10 @@ parameters:
     values:
       - All
       - Shared Event Hub
+      - FluxNotificationApi - All
+      - FluxNotificationApi - MI
+      - AdoCallbackApi - All
+      - AdoCallbackApi - MI
 
 pr:
   branches:
@@ -36,13 +40,27 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: gg/flux-notification-api-variables #main
 
 variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'All') }}
   - name: IsPlatformEventHub
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Shared Event Hub')) }}
+
+  - name: IsFluxNotificationApi
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'FluxNotificationApi')) }}  
+  - name: IsFluxNotificationApiAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'FluxNotificationApi - All')) }}  
+  - name: IsFluxNotificationApiMI
+    value: ${{ or(eq(variables.IsFluxNotificationApiAll,true), eq(parameters.deployResources,'FluxNotificationApi - MI')) }}     
+
+  - name: IsAdoCallbackApi
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'AdoCallbackApi')) }}  
+  - name: IsAdoCallbackApiAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'AdoCallbackApi - All')) }}  
+  - name: IsAdoCallbackApiMI
+    value: ${{ or(eq(variables.IsFluxNotificationApiAll,true), eq(parameters.deployResources,'AdoCallbackApi - MI')) }}    
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -76,9 +94,25 @@ extends:
         azureRegions:
           primary: 'UKSouth'  
     groupedDeployments:
-         - name: SharedEnvironment
-           deployments:
-            - ${{ if eq(variables.IsPlatformEventHub, true) }}:                    
-              - name: event-hub
-                path: infra/core/env-shared/flux-notification-apis/event-hub
-                resourceGroupName: $(ssvSharedResourceGroup)
+      - ${{ if eq(variables.IsPlatformEventHub, true) }}:
+        - name: SharedEventHub
+          deployments:                 
+            - name: event-hub
+              path: infra/core/env-shared/flux-notification-apis/event-hub
+              resourceGroupName: $(ssvSharedResourceGroup)
+
+      - ${{ if eq(variables.IsFluxNotificationApi, true) }}:
+          - name: FluxNotificationApi
+            deployments:
+              - ${{ if eq(variables.IsFluxNotificationApiMI, true) }}:                     
+                - name: fluxnotificationapp-managed-identity
+                  path: infra/core/env-shared/flux-notification-apis/managed-identity
+                  resourceGroupName: $(ssvInfraResourceGroup)        
+
+      - ${{ if eq(variables.IsAdoCallbackApi, true) }}:
+          - name: AdoCallbackApi
+            deployments:
+              - ${{ if eq(variables.IsAdoCallbackApiMI, true) }}:                     
+                - name: adocallbackapp-managed-identity
+                  path: infra/core/env-shared/flux-notification-apis/managed-identity
+                  resourceGroupName: $(ssvInfraResourceGroup)                  
