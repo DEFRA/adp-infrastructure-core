@@ -50,7 +50,7 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'FluxNotificationApps - Manage Identites')) }}
 
   - name: IsFluxNotificationStorageAccount
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'FluxNotificationApps - Storage Account')) }}
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'FluxNotificationApps - Storage Account')) }}     
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
