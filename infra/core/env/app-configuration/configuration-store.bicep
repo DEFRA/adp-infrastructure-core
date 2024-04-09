@@ -27,6 +27,10 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @secure()
 param principalId string
 
+@description('Required. Id of the platform team AD Group')
+@secure()
+param platformTeamGroupId string
+
 var roleAssignments = [
   {
     roleDefinitionIdOrName: 'App Configuration Data Owner'
@@ -35,6 +39,14 @@ var roleAssignments = [
       principalId
     ]
     principalType: 'ServicePrincipal'
+  }
+  {
+    roleDefinitionIdOrName: 'App Configuration Data Reader'
+    description: 'App Configuration Data Reader Role Assignment'
+    principalIds: [
+      platformTeamGroupId
+    ]
+    principalType: 'Group'
   }
 ]
 
