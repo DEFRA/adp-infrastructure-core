@@ -104,90 +104,90 @@ extends:
                 path: infra/core/env-shared/network
                 serviceConnectionVariableName: "subscriptionName"
                 resourceGroupName: $(ssvVirtualNetworkResourceGroup)
-      #           postDeployScriptsList:
-      #             - displayName: Link the VNet to Hub
-      #               scriptPath: infra/bootstrap/env/scripts/Trigger-VNetPeering.ps1
-      #               type: PowerShell
-      #               useSystemAccessToken: true
-      #               scriptArguments: >
-      #                 -VirtualNetworkName $(ssvVirtualNetworkName)
-      #                 -SubscriptionName $(subscriptionName)
-      #                 -TenantId $(tenantId)
-      #                 -PeerToSec $true
-      # - ${{ if or(eq(parameters.deployResources, 'all'), contains(parameters.deployResources, 'portal-app')) }} :
-      #     - name: Portal
-      #       ${{ if eq(parameters.deployResources, 'all') }}:
-      #         dependsOnGroupedDeployments:
-      #           - network        
-      #       deployments:
-      #         - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-kv')) }}:
-      #           - name: key-vault
-      #             path: infra/core/env-shared/portal/key-vault
-      #             resourceGroupName: $(ssvInfraResourceGroup)
-      #             privateEndpointDnsRecordsForResources:
-      #               - resourceName: $(ssvInfraKeyVault)
-      #                 resourceGroupName: $(ssvInfraResourceGroup)
-      #         - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-sa')) }}:
-      #           - name: storage-account
-      #             path: infra/core/env-shared/portal/storage-account
-      #             resourceGroupName: $(ssvInfraResourceGroup)
-      #             privateEndpointDnsRecordsForResources:
-      #               - resourceName: $(portalStorageAccountName)
-      #                 resourceGroupName: $(ssvInfraResourceGroup)                      
-      #         - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-mi')) }}:
-      #           - name: managed-identity
-      #             path: infra/core/env-shared/portal/managed-identity
-      #             resourceGroupName: $(ssvInfraResourceGroup)
-      #         - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-db')) }}:
-      #           - name: flexible-server-zone
-      #             path: infra/core/env-shared/portal/flexible-server-zone
-      #             resourceGroupName: $(dnsResourceGroup)
-      #             postDeployScriptsList:
-      #               - displayName: Link the Private DNS Zone to Central networks
-      #                 scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
-      #                 type: PowerShell
-      #                 useSystemAccessToken: true
-      #                 scriptArguments: >
-      #                   -PrivateDnsZoneName "$(postgreSqlPvtDnsZone)"
-      #                   -ResourceGroupName $(dnsResourceGroup)
-      #                   -SubscriptionName $(subscriptionName)
-      #                   -TenantId $(tenantId)
-      #           - name: flexible-server
-      #             path: infra/core/env-shared/portal/flexible-server
-      #             resourceGroupName: $(ssvInfraResourceGroup)               
-      #         - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-env')) }}:
-      #           - name: container-apps-env
-      #             path: infra/core/env-shared/portal/container-apps-env
-      #             resourceGroupName: $(ssvInfraResourceGroup)
-      #             postDeployScriptsList:  
-      #             - displayName: 'Process Output Variable'
-      #               type: PowerShell
-      #               inlineScript: |
-      #                 $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
-      #                 Write-Host "##vso[task.setvariable variable=containerAppEnvPvtDnsZone;]$($output.defaultDomain.value)"  
-      #             - displayName: Register App
-      #               scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
-      #               scriptRepo: PipelineCommonScripts
-      #               ScriptArguments: >
-      #                 -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/portal/app-registrations/portal-app-registration.json'
-      #           - name: containerapp-dns-zone
-      #             path: infra/core/env-shared/portal/containerapp-dns-zone
-      #             resourceGroupName: $(dnsResourceGroup)
-      #             postDeployScriptsList:
-      #               - displayName: Link the Private DNS Zone to Central networks
-      #                 scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
-      #                 type: PowerShell
-      #                 useSystemAccessToken: true
-      #                 scriptArguments: >
-      #                   -PrivateDnsZoneName "$(containerAppEnvPvtDnsZone)"
-      #                   -ResourceGroupName $(dnsResourceGroup)
-      #                   -SubscriptionName $(subscriptionName)
-      #                   -TenantId $(tenantId)                          
+                postDeployScriptsList:
+                  - displayName: Link the VNet to Hub
+                    scriptPath: infra/bootstrap/env/scripts/Trigger-VNetPeering.ps1
+                    type: PowerShell
+                    useSystemAccessToken: true
+                    scriptArguments: >
+                      -VirtualNetworkName $(ssvVirtualNetworkName)
+                      -SubscriptionName $(subscriptionName)
+                      -TenantId $(tenantId)
+                      -PeerToSec $true
+      - ${{ if or(eq(parameters.deployResources, 'all'), contains(parameters.deployResources, 'portal-app')) }} :
+          - name: Portal
+            ${{ if eq(parameters.deployResources, 'all') }}:
+              dependsOnGroupedDeployments:
+                - network        
+            deployments:
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-kv')) }}:
+                - name: key-vault
+                  path: infra/core/env-shared/portal/key-vault
+                  resourceGroupName: $(ssvInfraResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(ssvInfraKeyVault)
+                      resourceGroupName: $(ssvInfraResourceGroup)
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-sa')) }}:
+                - name: storage-account
+                  path: infra/core/env-shared/portal/storage-account
+                  resourceGroupName: $(ssvInfraResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(portalStorageAccountName)
+                      resourceGroupName: $(ssvInfraResourceGroup)                      
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-mi')) }}:
+                - name: managed-identity
+                  path: infra/core/env-shared/portal/managed-identity
+                  resourceGroupName: $(ssvInfraResourceGroup)
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-db')) }}:
+                - name: flexible-server-zone
+                  path: infra/core/env-shared/portal/flexible-server-zone
+                  resourceGroupName: $(dnsResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: Link the Private DNS Zone to Central networks
+                      scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
+                      type: PowerShell
+                      useSystemAccessToken: true
+                      scriptArguments: >
+                        -PrivateDnsZoneName "$(postgreSqlPvtDnsZone)"
+                        -ResourceGroupName $(dnsResourceGroup)
+                        -SubscriptionName $(subscriptionName)
+                        -TenantId $(tenantId)
+                - name: flexible-server
+                  path: infra/core/env-shared/portal/flexible-server
+                  resourceGroupName: $(ssvInfraResourceGroup)               
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-env')) }}:
+                - name: container-apps-env
+                  path: infra/core/env-shared/portal/container-apps-env
+                  resourceGroupName: $(ssvInfraResourceGroup)
+                  postDeployScriptsList:  
+                  - displayName: 'Process Output Variable'
+                    type: PowerShell
+                    inlineScript: |
+                      $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
+                      Write-Host "##vso[task.setvariable variable=containerAppEnvPvtDnsZone;]$($output.defaultDomain.value)"  
+                  - displayName: Register App
+                    scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+                    scriptRepo: PipelineCommonScripts
+                    ScriptArguments: >
+                      -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/portal/app-registrations/portal-app-registration.json'
+                - name: containerapp-dns-zone
+                  path: infra/core/env-shared/portal/containerapp-dns-zone
+                  resourceGroupName: $(dnsResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: Link the Private DNS Zone to Central networks
+                      scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
+                      type: PowerShell
+                      useSystemAccessToken: true
+                      scriptArguments: >
+                        -PrivateDnsZoneName "$(containerAppEnvPvtDnsZone)"
+                        -ResourceGroupName $(dnsResourceGroup)
+                        -SubscriptionName $(subscriptionName)
+                        -TenantId $(tenantId)
                        
-      # - ${{ if or(eq(parameters.deployResources, 'all'), contains(parameters.deployResources, 'portal-api')) }} :
-      #     - name: PortalAPI
-      #       deployments:
-      #         - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-api-mi')) }}:
-      #           - name: managed-identity
-      #             path: infra/core/env-shared/portal-api/managed-identity
-      #             resourceGroupName: $(ssvInfraResourceGroup)                          
+      - ${{ if or(eq(parameters.deployResources, 'all'), contains(parameters.deployResources, 'portal-api')) }} :
+          - name: PortalAPI
+            deployments:
+              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-api-mi')) }}:
+                - name: managed-identity
+                  path: infra/core/env-shared/portal-api/managed-identity
+                  resourceGroupName: $(ssvInfraResourceGroup)
