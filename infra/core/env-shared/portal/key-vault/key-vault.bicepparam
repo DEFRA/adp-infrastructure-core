@@ -21,4 +21,4 @@ param location = '#{{ location }}'
 
 param principalId = '#{{ ssvAppRegServicePrincipalId }}'
 
-param platformUserGroupId = '#{{ aksAADProfileAdminGroupObjectId }}'
+param platformUserGroupId = '#{{ aadPlatformUsersGroupObjectId }}'
