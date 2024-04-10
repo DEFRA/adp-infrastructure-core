@@ -4,7 +4,7 @@
     "parameters": {
         "grafana": {
             "value": {
-                "name": "#{{ ssvInfraResourceNamePrefix }}#{{ nc_resource_grafana }}#{{ nc_shared_instance_regionid }}01",
+                "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_grafana }}#{{ nc_shared_instance_regionid }}01",
                 "publicNetworkAccess": "#{{ grafanaPublicNetworkAccess }}",
                 "resourceSku": "#{{ grafanaResourceSku }}"
             }

@@ -19,7 +19,7 @@
   },
   {
     "key": "SSV_SHARED_ACR_NAME",
-    "value": "#{{ lower(ssvInfraResourceNamePrefix) }}#{{ lower(nc_resource_containerregistry) }}#{{ nc_shared_instance_regionid }}01",
+    "value": "#{{ lower(infraResourceNamePrefix) }}#{{ lower(nc_resource_containerregistry) }}#{{ nc_shared_instance_regionid }}01",
     "label": "adp-platform",
     "contentType": "text/plain"
   },
