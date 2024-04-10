@@ -20,3 +20,5 @@ param environment = '#{{ environment }}'
 param location = '#{{ location }}'
 
 param principalId = '#{{ ssvAppRegServicePrincipalId }}'
+
+param platformUserGroupId = '#{{ aksAADProfileAdminGroupObjectId }}'

@@ -17,6 +17,14 @@
                         "#{{ ssvAppRegServicePrincipalId }}"
                     ],
                     "principalType": "ServicePrincipal"
+                },
+                {
+                    "roleDefinitionIdOrName": "Key Vault Reader",
+                    "description": "Key Vault Reader Role Assignment",
+                    "principalIds": [
+                        "#{{ aksAADProfileAdminGroupObjectId }}"
+                    ],
+                    "principalType": "Group"
                 }
             ]
         },

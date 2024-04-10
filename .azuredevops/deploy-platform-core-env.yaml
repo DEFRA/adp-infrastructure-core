@@ -239,6 +239,7 @@ extends:
                       inlineScript: |
                         $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
                         Write-Host "##vso[task.setvariable variable=clusterOidc;]$($output.oidcIssuerUrl.value)"
+                        Write-Host "##vso[task.setvariable variable=appConfigMiObjectId;]$($output.appConfigMiObjectId.value)"
                     - displayName: Add Cluster Details to Config Service
                       scriptPath: templates/powershell/Import-ConfigData.ps1
                       type: AzureCLI
@@ -248,6 +249,10 @@ extends:
                         -Label "adp-platform"
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                         -ConfigData '[{"key": "CLUSTER_OIDC_ISSUER_URL", "value": "$(clusterOidc)", "label": "adp-platform", "contentType": "text/plain" }]'
+                # - name: event-hub-secret-rbac
+                #   serviceConnectionVariableName: ssvServiceConnection
+                #   path: infra/core/env/event-hub
+                #   resourceGroupName: $(ssvInfraSharedRg)
               - ${{ if eq(variables.IsManagedClusterFluxServicesSSHKeys, true) }}:
                 - name: Flux Services SSH Keys
                   serviceConnectionVariableName: ssvServiceConnection
