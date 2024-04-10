@@ -90,10 +90,10 @@ extends:
                 path: infra/core/env-shared/network
                 serviceConnectionVariableName: "subscriptionName"
                 resourceGroupName: $(ssvVirtualNetworkResourceGroup)
-              # - name: virtual-network
-              #   path: infra/core/env-shared/network
-              #   serviceConnectionVariableName: "subscriptionName"
-              #   resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+              - name: virtual-network
+                path: infra/core/env-shared/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(ssvVirtualNetworkResourceGroup)
             - ${{ if eq(variables.IsKeyVault,true) }}:
               - name: platform-key-vault
                 path: infra/bootstrap/env-shared/key-vault
