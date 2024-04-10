@@ -73,7 +73,7 @@
         },
         {
           "name": "#{{ ssvResourceNamePrefix }}#{{ subEnvironment1 }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01",
-          "addressPrefix": "#{{ subnet1AddressPrefix }}",
+          "addressPrefix": "#{{ subnet5AddressPrefix }}",
           "serviceEndpoints": [],
           "delegations": [
             {
@@ -90,7 +90,7 @@
         },
         {
           "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}05",
-          "addressPrefix": "#{{ subnet2AddressPrefix }}",
+          "addressPrefix": "#{{ subnet6AddressPrefix }}",
           "serviceEndpoints": [],
           "delegations": [
             {
@@ -107,7 +107,7 @@
         },
         {
           "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}06",
-          "addressPrefix": "#{{ subnet3AddressPrefix }}",
+          "addressPrefix": "#{{ subnet7AddressPrefix }}",
           "serviceEndpoints": [],
           "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ ssvVirtualNetworkName }}",          
           "networkSecurityGroupId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ ssvResourceNamePrefix }}#{{ subEnvironment1 }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
@@ -116,7 +116,7 @@
         },
         {
           "name": "#{{ ssvResourceNamePrefix }}#{{ subEnvironment2 }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01",
-          "addressPrefix": "#{{ subnet4AddressPrefix }}",
+          "addressPrefix": "#{{ subnet8AddressPrefix }}",
           "serviceEndpoints": [],
           "delegations": [
             {
