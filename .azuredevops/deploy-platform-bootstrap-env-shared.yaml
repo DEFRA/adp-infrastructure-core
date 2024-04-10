@@ -11,7 +11,10 @@ parameters:
     default: "All"
     values:
       - All
-      - Network
+      - Network - All
+      - Network - VNET
+      - Network - NSGs
+      - Network - Route Tables
       - Platform Key Vault
       - Platform Container Registry
       - Platform Log Analytics Workspace
@@ -47,7 +50,15 @@ variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'All') }}
   - name: IsNetwork
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Network')) }}
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Network')) }}
+  - name: IsNetworkAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Network - All')) }}
+  - name: IsNetworkVnet
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - VNET')) }}
+  - name: IsNetworkNsg
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - NSGs')) }}
+  - name: IsNetworkRouteTable
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - Route Tables')) }}
   - name: IsPolicyAssignments
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Policy Assignments')) }}
   - name: IsKeyVault
@@ -79,21 +90,34 @@ extends:
         azureRegions:
           primary: 'UKSouth'    
     groupedDeployments:
+         - ${{ if eq(variables.IsNetwork, true) }}:
+            - name: network
+              deployments:
+                - ${{ if eq(variables.IsNetworkRouteTable, true) }}:
+                  - name: route-table
+                    path: infra/core/env-shared/network
+                    resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+                - ${{ if eq(variables.IsNetworkNsg, true) }}:
+                  - name: network-security-group
+                    path: infra/core/env-shared/network
+                    resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+                - ${{ if eq(variables.IsNetworkVnet, true) }}:
+                  - name: virtual-network
+                    path: infra/core/env-shared/network
+                    resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+                    postDeployScriptsList:
+                      - displayName: Link the VNet to Hub
+                        scriptPath: infra/bootstrap/env/scripts/Trigger-VNetPeering.ps1
+                        type: PowerShell
+                        useSystemAccessToken: true
+                        scriptArguments: >
+                          -VirtualNetworkName $(ssvVirtualNetworkName)
+                          -SubscriptionName $(subscriptionName)
+                          -TenantId $(tenantId)
+                          -PeerToSec $true
+
          - name: SharedEnvironment
            deployments:
-            - ${{ if eq(variables.IsNetwork,true) }}:
-              # - name: route-table
-              #   path: infra/core/env-shared/network
-              #   serviceConnectionVariableName: "subscriptionName"
-              #   resourceGroupName: $(ssvVirtualNetworkResourceGroup)
-              # - name: network-security-group
-              #   path: infra/core/env-shared/network
-              #   serviceConnectionVariableName: "subscriptionName"
-              #   resourceGroupName: $(ssvVirtualNetworkResourceGroup)
-              - name: virtual-network
-                path: infra/core/env-shared/network
-                serviceConnectionVariableName: "subscriptionName"
-                resourceGroupName: $(ssvVirtualNetworkResourceGroup)
             - ${{ if eq(variables.IsKeyVault,true) }}:
               - name: platform-key-vault
                 path: infra/bootstrap/env-shared/key-vault

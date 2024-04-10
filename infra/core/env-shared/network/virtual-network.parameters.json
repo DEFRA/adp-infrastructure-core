@@ -101,7 +101,7 @@
             }
           ],
           "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ ssvVirtualNetworkName }}",
-          "networkSecurityGroupId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ ssvResourceNamePrefix }}#{{ subEnvironment2 }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
+          "networkSecurityGroupId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
           "privateEndpointNetworkPolicies": "Disabled",
           "privateLinkServiceNetworkPolicies": "Enabled"
         },
@@ -110,7 +110,7 @@
           "addressPrefix": "#{{ subnet7AddressPrefix }}",
           "serviceEndpoints": [],
           "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ ssvVirtualNetworkName }}",          
-          "networkSecurityGroupId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ ssvResourceNamePrefix }}#{{ subEnvironment1 }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
+          "networkSecurityGroupId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
           "privateEndpointNetworkPolicies": "Enabled",
           "privateLinkServiceNetworkPolicies": "Enabled"
         },
