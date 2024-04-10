@@ -81,7 +81,7 @@ extends:
     groupedDeployments:
          - name: SharedEnvironment
            deployments:
-            - ${{ if eq(variables.IsKeyVault,true) }}:
+            - ${{ if eq(variables.IsNetwork,true) }}:
               - name: route-table
                 path: infra/core/env-shared/network
                 serviceConnectionVariableName: "subscriptionName"
