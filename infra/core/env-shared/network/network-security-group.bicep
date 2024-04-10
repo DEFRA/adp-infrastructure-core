@@ -18,10 +18,21 @@ var commonTags = {
 }
 var tags = union(loadJsonContent('../../../common/default-tags.json'), commonTags)
 
-module networksecuritygroup 'br/SharedDefraRegistry:network.network-security-group:0.4.2' = [for nsg in nsgList:  {
-  name: '${nsg.name}-${deploymentDate}'
+module networksecuritygroup1 'br/SharedDefraRegistry:network.network-security-group:0.4.2' = [for nsg in nsgList:  {
+  name: '${nsg.nsg1name}-${deploymentDate}'
   params: {
-    name: nsg.name
+    name: nsg.nsg1name
+    lock: 'CanNotDelete'
+    location: location
+    tags: union(tags, { Purpose: nsg.purpose})
+    securityRules: nsg.securityRules 
+  }
+}]
+
+module networksecuritygroup2 'br/SharedDefraRegistry:network.network-security-group:0.4.2' = [for nsg in nsgList:  {
+  name: '${nsg.nsg2name}-${deploymentDate}'
+  params: {
+    name: nsg.nsg2name
     lock: 'CanNotDelete'
     location: location
     tags: union(tags, { Purpose: nsg.purpose})

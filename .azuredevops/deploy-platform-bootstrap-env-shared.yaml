@@ -11,6 +11,7 @@ parameters:
     default: "All"
     values:
       - All
+      - Network
       - Platform Key Vault
       - Platform Container Registry
       - Platform Log Analytics Workspace
@@ -45,6 +46,8 @@ resources:
 variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'All') }}
+  - name: IsNetwork
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Network')) }}
   - name: IsPolicyAssignments
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Policy Assignments')) }}
   - name: IsKeyVault
@@ -78,6 +81,19 @@ extends:
     groupedDeployments:
          - name: SharedEnvironment
            deployments:
+            - ${{ if eq(variables.IsKeyVault,true) }}:
+              - name: route-table
+                path: infra/core/env-shared/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+              - name: network-security-group
+                path: infra/core/env-shared/network
+                serviceConnectionVariableName: "subscriptionName"
+                resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+              # - name: virtual-network
+              #   path: infra/core/env-shared/network
+              #   serviceConnectionVariableName: "subscriptionName"
+              #   resourceGroupName: $(ssvVirtualNetworkResourceGroup)
             - ${{ if eq(variables.IsKeyVault,true) }}:
               - name: platform-key-vault
                 path: infra/bootstrap/env-shared/key-vault

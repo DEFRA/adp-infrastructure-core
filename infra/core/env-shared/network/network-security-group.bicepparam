@@ -6,7 +6,8 @@ param environment = '#{{ environment }}'
 
 param nsgList = [
   {
-    name: '#{{ ssvSharedEnvironmentResourceNamePrefix }}#{{ subEnvironment }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01'
+    nsg1name: '#{{ ssvSharedEnvironmentResourceNamePrefix }}#{{ subEnvironment1 }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01'
+    nsg2name: '#{{ ssvSharedEnvironmentResourceNamePrefix }}#{{ subEnvironment2 }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01'
     purpose: 'ADP Container Apps NSG'
     securityRules: [
       
