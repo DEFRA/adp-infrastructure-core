@@ -22,7 +22,7 @@
                     "roleDefinitionIdOrName": "Key Vault Reader",
                     "description": "Key Vault Reader Role Assignment",
                     "principalIds": [
-                        "#{{ aksAADProfileAdminGroupObjectId }}"
+                        "#{{ aadPlatformUsersGroupObjectId }}"
                     ],
                     "principalType": "Group"
                 }
