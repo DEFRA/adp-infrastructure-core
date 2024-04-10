@@ -136,5 +136,5 @@ extends:
                 path: infra/bootstrap/env-shared/event-hub
                 resourceGroupName: $(ssvSharedResourceGroup)
                 privateEndpointDnsRecordsForResources:
-                  - resourceName: $(ssvResourceNamePrefix)$(nc_resource_eventhub)$(nc_shared_instance_regionid)01
+                  - resourceName: $(ssvInfraResourceNamePrefix)$(nc_resource_eventhub)$(nc_shared_instance_regionid)01
                     resourceGroupName: $(ssvSharedResourceGroup)

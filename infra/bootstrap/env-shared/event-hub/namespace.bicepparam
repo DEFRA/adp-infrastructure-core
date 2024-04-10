@@ -1,8 +1,8 @@
 using './namespace.bicep'
 
 param eventHubNamespace = {
-  name: '#{{ ssvResourceNamePrefix }}#{{nc_resource_eventhub }}#{{nc_shared_instance_regionid }}01'
-  privateEndpointName: '#{{ ssvResourceNamePrefix }}#{{nc_resource_privateendpoint }}#{{nc_shared_instance_regionid }}05'
+  name: '#{{ ssvInfraResourceNamePrefix }}#{{nc_resource_eventhub }}#{{nc_shared_instance_regionid }}01'
+  privateEndpointName: '#{{ ssvInfraResourceNamePrefix }}#{{nc_resource_privateendpoint }}#{{nc_shared_instance_regionid }}05'
 }
 
 param location = '#{{ location }}'
