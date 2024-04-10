@@ -82,14 +82,14 @@ extends:
          - name: SharedEnvironment
            deployments:
             - ${{ if eq(variables.IsNetwork,true) }}:
-              - name: route-table
-                path: infra/core/env-shared/network
-                serviceConnectionVariableName: "subscriptionName"
-                resourceGroupName: $(ssvVirtualNetworkResourceGroup)
-              - name: network-security-group
-                path: infra/core/env-shared/network
-                serviceConnectionVariableName: "subscriptionName"
-                resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+              # - name: route-table
+              #   path: infra/core/env-shared/network
+              #   serviceConnectionVariableName: "subscriptionName"
+              #   resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+              # - name: network-security-group
+              #   path: infra/core/env-shared/network
+              #   serviceConnectionVariableName: "subscriptionName"
+              #   resourceGroupName: $(ssvVirtualNetworkResourceGroup)
               - name: virtual-network
                 path: infra/core/env-shared/network
                 serviceConnectionVariableName: "subscriptionName"
