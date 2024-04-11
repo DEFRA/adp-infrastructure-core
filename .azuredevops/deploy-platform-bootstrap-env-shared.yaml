@@ -20,6 +20,8 @@ parameters:
       - Platform - Container Registry
       - Platform - Log Analytics Workspace
       - Platform - Event Hub Namespace
+      - Application - All
+      - Application - Key Vault
 
 pr:
   branches:
@@ -72,6 +74,12 @@ variables:
     value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Log Analytics Workspace')) }}
   - name: IsEventHubNamespace
     value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Event Hub Namespace')) }}
+  - name: IsApplication
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Application')) }}
+  - name: IsApplicationAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Application - All')) }}    
+  - name: IsApplicationKeyVault
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Application - Key Vault')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -150,3 +158,22 @@ extends:
                 path: infra/core/env-shared/event-hub
                 parameterFilePath: infra/core/env-shared/event-hub/subenvironment2-event-hub-params
                 resourceGroupName: $(ssvSharedResourceGroup)
+
+      - ${{ if eq(variables.IsApplication, true) }}:
+         - name: SharedApplicationResources
+           deployments:
+            - ${{ if eq(variables.IsApplicationKeyVault,true) }}:
+              - name: key-vault
+                path: infra/core/env-shared/key-vault
+                parameterFilePath: infra/core/env-shared/key-vault/subenvironment1-key-vault-params
+                resourceGroupName: $(subEnvironment1ResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(subEnvironment1KeyVault)
+                    resourceGroupName: $(subEnvironment1ResourceGroup)
+              - name: key-vault
+                path: infra/core/env-shared/key-vault
+                parameterFilePath: infra/core/env-shared/key-vault/subenvironment2-key-vault-params
+                resourceGroupName: $(subEnvironment2ResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(subEnvironment2KeyVault)
+                    resourceGroupName: $(subEnvironment2ResourceGroup)
