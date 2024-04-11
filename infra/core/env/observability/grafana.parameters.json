@@ -19,7 +19,7 @@
             "value": "#{{ azureMonitorWorkspaceResourceIds }}"
         },
         "grafanaAdminsGroupObjectId": {
-            "value": "#{{ grafanaAdminGroupObjectId }}"
+            "value": "#{{ aadPlatformEngineersUserGroupObjectId }}"
         },
         "ssvAppRegServicePrincipalObjectId": {
             "value": "#{{ ssvAppRegServicePrincipalId }}"

@@ -15,7 +15,7 @@ param cluster = {
   skuTier: '#{{ aksClusterSkuTier }}'
   nodeResourceGroup: '#{{ aksResourceGroup }}-Managed'
   miControlPlane: '#{{ aksControlPlaneManagedIdentity }}'
-  adminAadGroupObjectId: '#{{ aksAADProfileAdminGroupObjectId }}'
+  adminAadGroupObjectId: '#{{ aadPlatformEngineersUserGroupObjectId }}'
   podCidr: '#{{ aksClusterPodCidr }}'
   serviceCidr: '#{{ aksClusterServiceCidr }}'
   dnsServiceIp: '#{{ aksClusterDnsServiceIp }}'
