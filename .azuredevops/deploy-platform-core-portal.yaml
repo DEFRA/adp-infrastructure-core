@@ -133,28 +133,28 @@ extends:
                   resourceGroupName: $(ssvInfraResourceGroup)
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(portalStorageAccountName)
-                      resourceGroupName: $(ssvInfraResourceGroup)                      
+                      resourceGroupName: $(ssvInfraResourceGroup)
               - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-mi')) }}:
                 - name: managed-identity
                   path: infra/core/env-shared/portal/managed-identity
                   resourceGroupName: $(ssvInfraResourceGroup)
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-db')) }}:
-                - name: flexible-server-zone
-                  path: infra/core/env-shared/portal/flexible-server-zone
-                  resourceGroupName: $(dnsResourceGroup)
-                  postDeployScriptsList:
-                    - displayName: Link the Private DNS Zone to Central networks
-                      scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
-                      type: PowerShell
-                      useSystemAccessToken: true
-                      scriptArguments: >
-                        -PrivateDnsZoneName "$(postgreSqlPvtDnsZone)"
-                        -ResourceGroupName $(dnsResourceGroup)
-                        -SubscriptionName $(subscriptionName)
-                        -TenantId $(tenantId)
-                - name: flexible-server
-                  path: infra/core/env-shared/portal/flexible-server
-                  resourceGroupName: $(ssvInfraResourceGroup)               
+              # - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-db')) }}:
+              #   - name: flexible-server-zone
+              #     path: infra/core/env-shared/portal/flexible-server-zone
+              #     resourceGroupName: $(dnsResourceGroup)
+              #     postDeployScriptsList:
+              #       - displayName: Link the Private DNS Zone to Central networks
+              #         scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
+              #         type: PowerShell
+              #         useSystemAccessToken: true
+              #         scriptArguments: >
+              #           -PrivateDnsZoneName "$(postgreSqlPvtDnsZone)"
+              #           -ResourceGroupName $(dnsResourceGroup)
+              #           -SubscriptionName $(subscriptionName)
+              #           -TenantId $(tenantId)
+              #   - name: flexible-server
+              #     path: infra/core/env-shared/portal/flexible-server
+              #     resourceGroupName: $(ssvInfraResourceGroup)
               - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-env')) }}:
                 - name: container-apps-env
                   path: infra/core/env-shared/portal/container-apps-env
