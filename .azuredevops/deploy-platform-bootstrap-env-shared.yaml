@@ -101,15 +101,15 @@ extends:
           deployments:
             - ${{ if eq(variables.IsNetworkRouteTable, true) }}:
               - name: route-table
-                path: infra/core/env-shared/network
+                path: infra/bootstrap/env-shared/network
                 resourceGroupName: $(ssvVirtualNetworkResourceGroup)
             - ${{ if eq(variables.IsNetworkNsg, true) }}:
               - name: network-security-group
-                path: infra/core/env-shared/network
+                path: infra/bootstrap/env-shared/network
                 resourceGroupName: $(ssvVirtualNetworkResourceGroup)
             - ${{ if eq(variables.IsNetworkVnet, true) }}:
               - name: virtual-network
-                path: infra/core/env-shared/network
+                path: infra/bootstrap/env-shared/network
                 resourceGroupName: $(ssvVirtualNetworkResourceGroup)
                 postDeployScriptsList:
                   - displayName: Link the VNet to Hub
