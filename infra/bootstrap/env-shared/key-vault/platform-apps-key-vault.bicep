@@ -16,31 +16,31 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
-// @description('Required. principalId of service connection')
-// @secure()
-// param principalId string
+@description('Required. principalId of service connection')
+@secure()
+param principalId string
 
-// @description('Required. Platform Users AD group ID')
-// param platformUserGroupId string
+@description('Required. Platform Users AD group ID')
+param platformUserGroupId string
 
-// var roleAssignments = [
-//   {
-//     roleDefinitionIdOrName: 'Key Vault Secrets Officer'
-//     description: 'Key Vault Secrets Officer Role Assignment'
-//     principalIds: [
-//       principalId
-//     ]
-//     principalType: 'ServicePrincipal'
-//   }
-//   {
-//     roleDefinitionIdOrName: 'Key Vault Reader'
-//     description: 'Key Vault Reader Role Assignment'
-//     principalIds: [
-//       platformUserGroupId
-//     ]
-//     principalType: 'Group'
-//   }
-// ]
+var roleAssignments = [
+  {
+    roleDefinitionIdOrName: 'Key Vault Secrets Officer'
+    description: 'Key Vault Secrets Officer Role Assignment'
+    principalIds: [
+      principalId
+    ]
+    principalType: 'ServicePrincipal'
+  }
+  {
+    roleDefinitionIdOrName: 'Key Vault Reader'
+    description: 'Key Vault Reader Role Assignment'
+    principalIds: [
+      platformUserGroupId
+    ]
+    principalType: 'Group'
+  }
+]
 
 var customTags = {
   Location: location
@@ -86,6 +86,6 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
         tags: union(defaultTags, keyVaultPrivateEndpointTags)
       }
     ]
-    // roleAssignments: roleAssignments
+    roleAssignments: roleAssignments
   }
 }

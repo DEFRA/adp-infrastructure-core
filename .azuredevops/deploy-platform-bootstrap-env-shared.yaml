@@ -20,8 +20,7 @@ parameters:
       - Platform - Container Registry
       - Platform - Log Analytics Workspace
       - Platform - Event Hub Namespace
-      - Application - All
-      - Application - Key Vault
+      - Platform - Apps Key Vaults
 
 pr:
   branches:
@@ -74,12 +73,8 @@ variables:
     value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Log Analytics Workspace')) }}
   - name: IsEventHubNamespace
     value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Event Hub Namespace')) }}
-  - name: IsApplication
-    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Application')) }}
-  - name: IsApplicationAll
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Application - All')) }}    
-  - name: IsApplicationKeyVault
-    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Application - Key Vault')) }}
+  - name: IsPlatformAppsKeyVaults
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Platform - Apps Key Vaults')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -151,28 +146,24 @@ extends:
                   - resourceName: $(infraResourceNamePrefix)$(nc_resource_eventhub)$(nc_shared_instance_regionid)01
                     resourceGroupName: $(ssvSharedResourceGroup)
               - name: event-hub
-                path: infra/core/env-shared/event-hub
-                parameterFilePath: infra/core/env-shared/event-hub/subenvironment1-event-hub-params
+                path: infra/bootstrap/env-shared/event-hub
+                parameterFilePath: infra/bootstrap/env-shared/event-hub/subenv1-params
                 resourceGroupName: $(ssvSharedResourceGroup)
               - name: event-hub
-                path: infra/core/env-shared/event-hub
-                parameterFilePath: infra/core/env-shared/event-hub/subenvironment2-event-hub-params
+                path: infra/bootstrap/env-shared/event-hub
+                parameterFilePath: infra/bootstrap/env-shared/event-hub/subenv2-params
                 resourceGroupName: $(ssvSharedResourceGroup)
-
-      - ${{ if eq(variables.IsApplication, true) }}:
-         - name: SharedApplicationResources
-           deployments:
-            - ${{ if eq(variables.IsApplicationKeyVault,true) }}:
-              - name: key-vault
-                path: infra/core/env-shared/key-vault
-                parameterFilePath: infra/core/env-shared/key-vault/subenvironment1-key-vault-params
+            - ${{ if eq(variables.IsPlatformAppsKeyVaults,true) }}:
+              - name: platform-apps-key-vault
+                path: infra/bootstrap/env-shared/key-vault
+                parameterFilePath: infra/bootstrap/env-shared/key-vault/subenv1-params
                 resourceGroupName: $(subEnvironment1ResourceGroup)
                 privateEndpointDnsRecordsForResources:
                   - resourceName: $(subEnvironment1KeyVault)
                     resourceGroupName: $(subEnvironment1ResourceGroup)
-              - name: key-vault
-                path: infra/core/env-shared/key-vault
-                parameterFilePath: infra/core/env-shared/key-vault/subenvironment2-key-vault-params
+              - name: platform-apps-key-vault
+                path: infra/bootstrap/env-shared/key-vault
+                parameterFilePath: infra/bootstrap/env-shared/key-vault/subenv2-params
                 resourceGroupName: $(subEnvironment2ResourceGroup)
                 privateEndpointDnsRecordsForResources:
                   - resourceName: $(subEnvironment2KeyVault)

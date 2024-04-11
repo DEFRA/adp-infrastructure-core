@@ -1,4 +1,4 @@
-using '../key-vault.bicep'
+using '../platform-apps-key-vault.bicep'
 
 param keyVault = {
   name: '#{{ subEnvironment2KeyVault }}'
@@ -19,6 +19,6 @@ param environment = '#{{ environment }}'
 
 param location = '#{{ location }}'
 
-// param principalId = '#{{ ssvAppRegServicePrincipalId }}'
+param principalId = '#{{ ssvAppRegServicePrincipalId }}'
 
-// param platformUserGroupId = '#{{ aksAADProfileAdminGroupObjectId }}'
+param platformUserGroupId = '#{{ aksAADProfileAdminGroupObjectId }}'
