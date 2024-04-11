@@ -61,29 +61,28 @@ extends:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
-      # - name: 'snd1'
-      #   serviceConnection: AZD-ADP-SSV3
-      #   deploymentBranches:
-      #     - 'refs/heads/main'
-      #   developmentEnvironment: true
-      #   azureRegions:
-      #     primary: 'UKSouth'
-      # - name: 'snd2'
-      #   outputTemplateChange: Skip
-      #   serviceConnection: AZD-ADP-SSV3
-      #   dependsOn: Validate
-      #   deploymentBranches:
-      #     - 'refs/heads/main'
-      #     - 'refs/pull/*/merge'
-      #   azureRegions:
-      #     primary: 'UKSouth'
+      - name: 'snd1'
+        serviceConnection: AZD-ADP-SSV3
+        deploymentBranches:
+          - 'refs/heads/rv/353153'
+        developmentEnvironment: true
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'snd2'
+        outputTemplateChange: Skip
+        serviceConnection: AZD-ADP-SSV3
+        dependsOn: Validate
+        deploymentBranches:
+          - 'refs/heads/main'
+          - 'refs/pull/*/merge'
+        azureRegions:
+          primary: 'UKSouth'
       - name: 'dev1'
         dependsOn: 'Validate'
         outputTemplateChange: Skip
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
-          - 'refs/heads/rv/353153'
-        developmentEnvironment: true
+          - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
       - name: 'tst1'
