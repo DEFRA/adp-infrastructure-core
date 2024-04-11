@@ -144,9 +144,9 @@ extends:
                     resourceGroupName: $(ssvSharedResourceGroup)
               - name: event-hub
                 path: infra/core/env-shared/event-hub
-                parameterFilePath: infra/core/env-shared/event-hub/subenvironment1-event-hub-params/event-hub.bicepparam
+                parameterFilePath: infra/core/env-shared/event-hub/subenvironment1-event-hub-params
                 resourceGroupName: $(ssvSharedResourceGroup)
               - name: event-hub
                 path: infra/core/env-shared/event-hub
-                parameterFilePath: infra/core/env-shared/event-hub/subenvironment2-event-hub-params/event-hub.bicepparam
+                parameterFilePath: infra/core/env-shared/event-hub/subenvironment2-event-hub-params
                 resourceGroupName: $(ssvSharedResourceGroup)
