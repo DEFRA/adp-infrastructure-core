@@ -24,6 +24,7 @@ pr:
     include:
       - infra/bootstrap/env/*
       - infra/common/*
+  drafts: false
 
 trigger:
   batch: true
