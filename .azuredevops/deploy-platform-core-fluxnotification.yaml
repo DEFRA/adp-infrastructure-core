@@ -38,7 +38,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: feature/renameSsvSharedEnvResources
 
 variables:
   - name: IsAll
