@@ -74,7 +74,7 @@ variables:
   - name: IsEventHubNamespace
     value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Event Hub Namespace')) }}
   - name: IsPlatformAppsKeyVaults
-    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources,'Platform - Apps Key Vaults')) }}
+    value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Apps Key Vaults')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
