@@ -6,7 +6,7 @@ parameters:
   - name: deployResources
     displayName: "Resources to Deploy"
     type: string
-    default: all
+    default: All
     values:
       - All
       - Platform Apps - All
