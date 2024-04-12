@@ -81,6 +81,8 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Apps - All')) }}
   - name: IsPlatformAppsKeyVaults
     value: ${{ or(eq(variables.IsPlatformAppsAll,true), eq(parameters.deployResources,'Platform Apps - Key Vaults')) }}
+  - name: IsPlatformAppsFlexibleServerDnsZone
+    value: ${{ or(eq(variables.IsPlatformAppsAll,true), eq(parameters.deployResources,'Platform Apps - Flexible Server DNS Zone')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -177,7 +179,7 @@ extends:
                 privateEndpointDnsRecordsForResources:
                   - resourceName: $(subEnvironment2KeyVault)
                     resourceGroupName: $(subEnvironment2ResourceGroup)
-            - ${{ if eq(variables.IsPlatformAppsFlexibleServer, true) }}:
+            - ${{ if eq(variables.IsPlatformAppsFlexibleServerDnsZone, true) }}:
                 - name: flexible-server-zone
                   path: infra/core/env-shared/portal/flexible-server-zone
                   resourceGroupName: $(dnsResourceGroup)
