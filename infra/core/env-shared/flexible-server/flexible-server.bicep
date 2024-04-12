@@ -33,7 +33,7 @@ var customTags = {
   Purpose: 'ADP POSTGRESQL FLEXIBLE SERVER'
 }
 
-var defaultTags = union(json(loadTextContent('../../../../common/default-tags.json')), customTags)
+var defaultTags = union(json(loadTextContent('../../../common/default-tags.json')), customTags)
 
 @description('Optional. The administrator login name of a server. Can only be specified when the PostgreSQL server is being created.')
 param administratorLogin string = 'solemnapple5'
