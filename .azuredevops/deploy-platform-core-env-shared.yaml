@@ -140,7 +140,7 @@ extends:
       - ${{ if eq(variables.IsAdpPortal, true) }}:
         - name: AdpPortal
           deployments:
-            - ${{ if eq(variables.IsAdpPortalAppRegistrations)}}:
+            - ${{ if eq(variables.IsAdpPortalAppRegistrations, true) }}:
               - name: Register App
                 type: 'script'
                 scriptType: AzurePowerShell
