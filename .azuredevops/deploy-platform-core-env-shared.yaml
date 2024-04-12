@@ -17,6 +17,9 @@ parameters:
       - AdpPortal - Storage Account
       - AdpPortal - Managed Identity
       - AdpPortal - API Managed Identity
+      - FluxNotification - All
+      - FluxNotification - Storage Account
+      - FluxNotification - Managed Identities
 pr:
   branches:
     include:
@@ -66,6 +69,14 @@ variables:
     value: ${{ or(eq(variables.IsAdpPortalAll,true), eq(parameters.deployResources,'AdpPortal - Managed Identity')) }}
   - name: IsAdpPortalApiManagedIdentity
     value: ${{ or(eq(variables.IsAdpPortalAll,true), eq(parameters.deployResources,'AdpPortal - Api Managed Identity')) }}    
+  - name: IsFluxNotification
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'FluxNotification')) }}
+  - name: IsFluxNotificationAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'FluxNotification - All')) }}
+  - name: IsFluxNotificationStorageAccount
+    value: ${{ or(eq(variables.IsFluxNotificationAll,true), eq(parameters.deployResources,'FluxNotification - Storage Account')) }}
+  - name: IsFluxNotificationManagedIdentities
+    value: ${{ or(eq(variables.IsFluxNotificationAll,true), eq(parameters.deployResources,'FluxNotification - Managed Identities')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -165,3 +176,22 @@ extends:
               - name: managed-identity
                 path: infra/core/env-shared/adp-portal-api/managed-identity
                 resourceGroupName: $(ssvInfraResourceGroup)
+
+      - ${{ if eq(variables.IsFluxNotification, true) }}:
+        - name: FluxNotification
+          deployments:                    
+            - ${{ if eq(variables.IsFluxNotificationStorageAccount, true) }}:
+              - name: storage-account
+                path: infra/core/env-shared/flux-notification/storage-account
+                resourceGroupName: $(ssvInfraResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(fluxNotificationStorageAccountName)
+                    resourceGroupName: $(ssvInfraResourceGroup) 
+            
+            - ${{ if eq(variables.IsFluxNotificationManagedIdentities, true) }}:
+              - name: fluxnotificationapp-managed-identity
+                path: infra/core/env-shared/flux-notification/managed-identity
+                resourceGroupName: $(ssvInfraResourceGroup)  
+              - name: adocallbackapp-managed-identity
+                path: infra/core/env-shared/flux-notification/managed-identity
+                resourceGroupName: $(ssvInfraResourceGroup)                           
