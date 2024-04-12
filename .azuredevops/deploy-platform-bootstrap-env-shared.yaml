@@ -20,7 +20,9 @@ parameters:
       - Platform - Container Registry
       - Platform - Log Analytics Workspace
       - Platform - Event Hub Namespace
-      - Platform - Apps Key Vaults
+      - Platform Apps - All
+      - Platform Apps - Key Vaults
+      - Platform Apps - Flexible Server DNS Zone
 
 pr:
   branches:
@@ -73,8 +75,12 @@ variables:
     value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Log Analytics Workspace')) }}
   - name: IsEventHubNamespace
     value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Event Hub Namespace')) }}
+  - name: IsPlatformApps
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Platform Apps')) }}
+  - name: IsPlatformAppsAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Apps - All')) }}
   - name: IsPlatformAppsKeyVaults
-    value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Apps Key Vaults')) }}
+    value: ${{ or(eq(variables.IsPlatformAppsAll,true), eq(parameters.deployResources,'Platform Apps - Key Vaults')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -153,6 +159,9 @@ extends:
                 path: infra/bootstrap/env-shared/event-hub
                 parameterFilePath: infra/bootstrap/env-shared/event-hub/subenv2-params
                 resourceGroupName: $(ssvSharedResourceGroup)
+      - ${{ if eq(variables.IsPlatformApps, true) }}:                    
+        - name: PlatformApps
+          deployments: 
             - ${{ if eq(variables.IsPlatformAppsKeyVaults,true) }}:
               - name: platform-apps-key-vault
                 path: infra/bootstrap/env-shared/key-vault
@@ -168,3 +177,18 @@ extends:
                 privateEndpointDnsRecordsForResources:
                   - resourceName: $(subEnvironment2KeyVault)
                     resourceGroupName: $(subEnvironment2ResourceGroup)
+            - ${{ if eq(variables.IsPlatformAppsFlexibleServer, true) }}:
+                - name: flexible-server-zone
+                  path: infra/core/env-shared/portal/flexible-server-zone
+                  resourceGroupName: $(dnsResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: Link the Private DNS Zone to Central networks
+                      scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
+                      type: PowerShell
+                      useSystemAccessToken: true
+                      scriptArguments: >
+                        -PrivateDnsZoneName "$(postgreSqlPvtDnsZone)"
+                        -ResourceGroupName $(dnsResourceGroup)
+                        -SubscriptionName $(subscriptionName)
+                        -TenantId $(tenantId)
+

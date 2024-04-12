@@ -6,28 +6,24 @@ parameters:
   - name: deployResources
     displayName: "Resources to Deploy"
     type: string
-    default: "all"
+    default: all
     values:
-      - "all"
-      - "network"
-      - "portal-app"
-      - "portal-app-sa"
-      - "portal-app-kv"
-      - "portal-app-mi"
-      - "portal-app-db"
-      - "portal-app-env"
-      - "portal-api-mi"    
-
+      - All
+      - Platform Apps - All
+      - Platform Apps - Container Apps Environment
+      - Platform Apps - Flexible Server
+      - AdpPortal - All
+      - AdpPortal - App Registrations
+      - AdpPortal - Storage Account
+      - AdpPortal - Managed Identity
+      - AdpPortal - API Managed Identity
 pr:
   branches:
     include:
       - main
   paths:
     include:
-      - infra/core/env-shared/portal/*
-      - infra/core/env-shared/portal-api/*
-      - infra/core/env-shared/network/*
-      - infra/core/env-shared/.bicep/*
+      - infra/core/env-shared/*
   drafts: false
 
 trigger:
@@ -37,10 +33,7 @@ trigger:
       - '*'
   paths:
     include:
-      - infra/core/env-shared/portal/*
-      - infra/core/env-shared/portal-api/*
-      - infra/core/env-shared/network/*
-      - infra/core/env-shared/.bicep/*
+      - infra/core/env-shared/*
 
 resources:
   repositories:
@@ -49,6 +42,30 @@ resources:
       endpoint: DEFRA
       type: github
       ref:  feature/renameSsvSharedEnvResources
+
+variables:
+  - name: IsAll
+    value: ${{ eq(parameters.deployResources,'all') }}
+  - name: IsPlatformApps
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Platform Apps')) }}
+  - name: IsPlatformAppsAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Apps - All')) }}
+  - name: IsPlatformAppsContainerAppsEnv
+    value: ${{ or(eq(variables.IsPlatformAppsAll,true), eq(parameters.deployResources,'Platform Apps - Container Apps Environment')) }}
+  - name: IsPlatformAppsFlexibleServer
+    value: ${{ or(eq(variables.IsPlatformAppsAll,true), eq(parameters.deployResources,'Platform Apps - Flexible Server')) }}
+  - name: IsAdpPortal
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'AdpPortal')) }}
+  - name: IsAdpPortalAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'AdpPortal - All')) }}
+  - name: IsAdpPortalAppRegistrations
+    value: ${{ or(eq(variables.IsAdpPortalAll,true), eq(parameters.deployResources,'AdpPortal - App Registrations')) }}
+  - name: IsAdpPortalStorageAccount
+    value: ${{ or(eq(variables.IsAdpPortalAll,true), eq(parameters.deployResources,'AdpPortal - Storage Account')) }}
+  - name: IsAdpPortalManagedIdentity
+    value: ${{ or(eq(variables.IsAdpPortalAll,true), eq(parameters.deployResources,'AdpPortal - Managed Identity')) }}
+  - name: IsAdpPortalApiManagedIdentity
+    value: ${{ or(eq(variables.IsAdpPortalAll,true), eq(parameters.deployResources,'AdpPortal - Api Managed Identity')) }}    
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -87,72 +104,64 @@ extends:
       #   azureRegions:
       #     primary: 'UKSouth'            
     filePathsForTransform: |
-      **/core/env-shared/portal/app-registrations/portal-app-registration.json  
-    groupedDeployments:                
-      - ${{ if or(eq(parameters.deployResources, 'all'), contains(parameters.deployResources, 'portal-app')) }} :
-          - name: Portal
-            deployments:
-              # - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-sa')) }}:
-              #   - name: storage-account
-              #     path: infra/core/env-shared/portal/storage-account
-              #     resourceGroupName: $(ssvInfraResourceGroup)
-              #     privateEndpointDnsRecordsForResources:
-              #       - resourceName: $(portalStorageAccountName)
-              #         resourceGroupName: $(ssvInfraResourceGroup)
-              # - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-mi')) }}:
-              #   - name: managed-identity
-              #     path: infra/core/env-shared/portal/managed-identity
-              #     resourceGroupName: $(ssvInfraResourceGroup)
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-db')) }}:
-                - name: flexible-server-zone
-                  path: infra/core/env-shared/portal/flexible-server-zone
-                  resourceGroupName: $(dnsResourceGroup)
-                  postDeployScriptsList:
-                    - displayName: Link the Private DNS Zone to Central networks
-                      scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
-                      type: PowerShell
-                      useSystemAccessToken: true
-                      scriptArguments: >
-                        -PrivateDnsZoneName "$(postgreSqlPvtDnsZone)"
-                        -ResourceGroupName $(dnsResourceGroup)
-                        -SubscriptionName $(subscriptionName)
-                        -TenantId $(tenantId)
-                - name: flexible-server
-                  path: infra/core/env-shared/portal/flexible-server
-                  resourceGroupName: $(ssvInfraResourceGroup)
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-app'), eq(parameters.deployResources, 'portal-app-env')) }}:
-                - name: container-apps-env
-                  path: infra/core/env-shared/portal/container-apps-env
-                  resourceGroupName: $(ssvInfraResourceGroup)
-                  postDeployScriptsList:  
-                  - displayName: 'Process Output Variable'
+      **/core/env-shared/adp-portal/app-registrations/portal-app-registration.json  
+    groupedDeployments: 
+      - ${{ if eq(variables.IsPlatformApps, true) }}:               
+        - name: PlatformApps
+          deployments: 
+            - ${{ if eq(variables.IsPlatformAppsContainerAppsEnv, true) }}:
+              - name: container-apps-env
+                path: infra/core/env-shared/container-apps-env
+                resourceGroupName: $(ssvInfraResourceGroup)
+                postDeployScriptsList:  
+                - displayName: 'Process Output Variable'
+                  type: PowerShell
+                  inlineScript: |
+                    $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
+                    Write-Host "##vso[task.setvariable variable=containerAppEnvPvtDnsZone;]$($output.defaultDomain.value)"  
+              - name: containerapp-dns-zone
+                path: infra/core/env-shared/containerapp-dns-zone
+                resourceGroupName: $(dnsResourceGroup)
+                postDeployScriptsList:
+                  - displayName: Link the Private DNS Zone to Central networks
+                    scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
                     type: PowerShell
-                    inlineScript: |
-                      $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
-                      Write-Host "##vso[task.setvariable variable=containerAppEnvPvtDnsZone;]$($output.defaultDomain.value)"  
-                  - displayName: Register App
-                    scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
-                    scriptRepo: PipelineCommonScripts
-                    ScriptArguments: >
-                      -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/portal/app-registrations/portal-app-registration.json'
-                - name: containerapp-dns-zone
-                  path: infra/core/env-shared/portal/containerapp-dns-zone
-                  resourceGroupName: $(dnsResourceGroup)
-                  postDeployScriptsList:
-                    - displayName: Link the Private DNS Zone to Central networks
-                      scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
-                      type: PowerShell
-                      useSystemAccessToken: true
-                      scriptArguments: >
-                        -PrivateDnsZoneName "$(containerAppEnvPvtDnsZone)"
-                        -ResourceGroupName $(dnsResourceGroup)
-                        -SubscriptionName $(subscriptionName)
-                        -TenantId $(tenantId)
-                       
-      - ${{ if or(eq(parameters.deployResources, 'all'), contains(parameters.deployResources, 'portal-api')) }} :
-          - name: PortalAPI
-            deployments:
-              - ${{ if or(eq(parameters.deployResources, 'all'), eq(parameters.deployResources, 'portal-api-mi')) }}:
-                - name: managed-identity
-                  path: infra/core/env-shared/portal-api/managed-identity
-                  resourceGroupName: $(ssvInfraResourceGroup)
+                    useSystemAccessToken: true
+                    scriptArguments: >
+                      -PrivateDnsZoneName "$(containerAppEnvPvtDnsZone)"
+                      -ResourceGroupName $(dnsResourceGroup)
+                      -SubscriptionName $(subscriptionName)
+                      -TenantId $(tenantId)
+            - ${{ if eq(variables.IsPlatformAppsFlexibleServer, true) }}:
+              - name: flexible-server
+                path: infra/core/env-shared/flexible-server
+                resourceGroupName: $(ssvInfraResourceGroup)
+
+      - ${{ if eq(variables.IsAdpPortal, true) }}:
+        - name: AdpPortal
+          deployments:
+            - ${{ if eq(variables.IsAdpPortalAppRegistrations)}}:
+              - name: Register App
+                type: 'script'
+                scriptType: AzurePowerShell
+                scriptRepo: PipelineCommonScripts
+                path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+                scriptArguments: >
+                    -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/adp-portal/app-registrations/portal-app-registration.json'
+            - ${{ if eq(variables.IsAdpPortalStorageAccount, true) }}:
+              - name: storage-account
+                path: infra/core/env-shared/adp-portal/storage-account
+                resourceGroupName: $(ssvInfraResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(portalStorageAccountName)
+                    resourceGroupName: $(ssvInfraResourceGroup)
+                    
+            - ${{ if eq(variables.IsAdpPortalManagedIdentity, true) }}:
+              - name: managed-identity
+                path: infra/core/env-shared/adp-portal/managed-identity
+                resourceGroupName: $(ssvInfraResourceGroup)        
+
+            - ${{ if eq(variables.IsAdpPortalApiManagedIdentity, true) }}:
+              - name: managed-identity
+                path: infra/core/env-shared/adp-portal-api/managed-identity
+                resourceGroupName: $(ssvInfraResourceGroup)
