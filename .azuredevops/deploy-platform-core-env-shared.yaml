@@ -92,28 +92,28 @@ extends:
         privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
         azureRegions:
           primary: 'UKSouth'    
-      # - name: 'ssv_tst'
-      #   serviceConnection: AZD-ADP-SSV3
-      #   deploymentBranches:
-      #     - 'refs/heads/main'          
-      #   developmentEnvironment: true
-      #   privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
-      #   azureRegions:
-      #     primary: 'UKSouth'
-      # - name: 'ssv_pre'
-      #   serviceConnection: AZR-ADP-SSV5
-      #   deploymentBranches:
-      #     - 'refs/heads/main'
-      #   privateAgentName: 'DEFRA-COMMON-ubuntu2004-SSV5'
-      #   azureRegions:
-      #     primary: 'UKSouth'  
-      # - name: 'ssv_prd'
-      #   serviceConnection: AZR-ADP-SSV5
-      #   deploymentBranches:
-      #     - 'refs/heads/main'
-      #   privateAgentName: 'DEFRA-COMMON-ubuntu2004-SSV5'
-      #   azureRegions:
-      #     primary: 'UKSouth'            
+      - name: 'ssv_tst'
+        serviceConnection: AZD-ADP-SSV3
+        deploymentBranches:
+          - 'refs/heads/main'          
+        developmentEnvironment: true
+        privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'ssv_pre'
+        serviceConnection: AZR-ADP-SSV5
+        deploymentBranches:
+          - 'refs/heads/main'
+        privateAgentName: 'DEFRA-COMMON-ubuntu2004-SSV5'
+        azureRegions:
+          primary: 'UKSouth'  
+      - name: 'ssv_prd'
+        serviceConnection: AZR-ADP-SSV5
+        deploymentBranches:
+          - 'refs/heads/main'
+        privateAgentName: 'DEFRA-COMMON-ubuntu2004-SSV5'
+        azureRegions:
+          primary: 'UKSouth'            
     filePathsForTransform: |
       **/core/env-shared/adp-portal/app-registrations/portal-app-registration.json  
     groupedDeployments: 
