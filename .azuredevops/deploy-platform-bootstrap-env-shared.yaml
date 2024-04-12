@@ -181,7 +181,7 @@ extends:
                     resourceGroupName: $(subEnvironment2ResourceGroup)
             - ${{ if eq(variables.IsPlatformAppsFlexibleServerDnsZone, true) }}:
                 - name: flexible-server-zone
-                  path: infra/core/env-shared/portal/flexible-server-zone
+                  path: infra/bootstrap/env-shared/flexible-server-zone
                   resourceGroupName: $(dnsResourceGroup)
                   postDeployScriptsList:
                     - displayName: Link the Private DNS Zone to Central networks
