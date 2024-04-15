@@ -89,13 +89,13 @@ extends:
         privateAgentName: 'DEFRA-ADP-PRE1-ubuntu2204'
         azureRegions:
           primary: 'UKSouth'
-      # - name: prd1
-      #   serviceConnection: AZR-ADP-PRD1
-      #   deploymentBranches:
-      #     - 'refs/heads/main'
-      #   privateAgentName: 'DEFRA-ADP-PRD1-ubuntu2204'
-      #   azureRegions:
-      #     primary: 'UKSouth'            
+      - name: prd1
+        serviceConnection: AZR-ADP-PRD1
+        deploymentBranches:
+          - 'refs/heads/main'
+        privateAgentName: 'DEFRA-ADP-PRD1-ubuntu2204'
+        azureRegions:
+          primary: 'UKSouth'            
     groupedDeployments:
       - ${{ if eq(variables.IsSecNetwork, true) }}:
         - name: sec_network
