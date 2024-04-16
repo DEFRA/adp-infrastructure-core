@@ -134,11 +134,11 @@ extends:
           deployments:
             - name: policy-definition-deploy
               path: infra/sec/policy
-              serviceConnectionVariableName: "subscriptionName"
+              serviceConnectionVariableName: "secServiceConnection"
               scope: "Subscription"             
             - name: policy-diagnostic-settings-assignment
               path: infra/sec/policy
-              serviceConnectionVariableName: "subscriptionName"
+              serviceConnectionVariableName: "secServiceConnection"
               scope: "Subscription"
       - ${{ if eq(variables.IsApplicationGateway, true) }}:
         - name: application_gateway
