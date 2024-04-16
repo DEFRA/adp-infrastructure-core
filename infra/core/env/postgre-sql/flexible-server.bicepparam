@@ -22,7 +22,7 @@ param location = '#{{ location }}'
 param environment = '#{{ environment }}'
 
 param platformKeyVault = {
-  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}01'
+  name: '#{{ ssvInfraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}01'
   subscriptionId: '#{{ ssvSubscriptionId }}'
   resourceGroup: '#{{ ssvSharedResourceGroup }}'
 }
