@@ -23,8 +23,11 @@ module policyAssignmentModule '.bicep/policy-assignment.bicep' = [for (policyAss
     name: guid(subscriptionId, policyAssignment.assignmentDisplayName)
     subscriptionId: subscriptionId
     displayName: policyAssignment.assignmentDisplayName
-    policyDefinitionId: ((contains(policyAssignment,'policyDefinitionScope') ? policyAssignment.policyDefinitionScope : 'tenant') == 'managementGroup')?  policyAssignment.policyDefinitionId : tenantResourceId(resourceType, policyAssignment.policyDefinitionId)
+    policyDefinitionId: ((contains(policyAssignment,'policyDefinitionScope') ? policyAssignment.policyDefinitionScope : 'tenant') == 'subscription')?  policyAssignment.policyDefinitionId : subscriptionResourceId(subscriptionId, resourceType, policyAssignment.policyDefinitionId)
     parameters: {
+       categoryGroup: {
+        value: 'allLogs'
+      }
       logAnalytics: {
         value: resourceId(subscriptionId, logAnalyticsWorkspace.resourceGroupName, 'Microsoft.OperationalInsights/workspaces', logAnalyticsWorkspace.name)
       }

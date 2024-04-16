@@ -1,0 +1,157 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "policyDefinitions": {
+      "value": [
+        {
+          "displayName": "appGw-diagnostic-settings-policyDef-sub",
+          "description": "This policy automatically deploys and enable diagnostic settings to Log Analytics",
+          "mode": "All",
+          "policyRule": {
+            "if": {
+              "field": "type",
+              "equals": "Microsoft.Network/applicationGateways"
+            },
+            "then": {
+              "effect": "deployIfNotExists",
+              "details": {
+                "type": "Microsoft.Insights/diagnosticSettings",
+                "roleDefinitionIds": [
+                  "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                ],
+                "existenceCondition": {
+                  "allOf": [
+                    {
+                      "count": {
+                        "field": "Microsoft.Insights/diagnosticSettings/logs[*]",
+                        "where": {
+                          "allOf": [
+                            {
+                              "field": "Microsoft.Insights/diagnosticSettings/logs[*].enabled",
+                              "equals": true
+                            },
+                            {
+                              "field": "microsoft.insights/diagnosticSettings/logs[*].categoryGroup",
+                              "equals": "allLogs"
+                            }
+                          ]
+                        }
+                      },
+                      "equals": 1
+                    },
+                    {
+                      "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                      "equals": "[parameters('enableMetrics')]"
+                    },
+                    {
+                      "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                      "matchInsensitively": "[parameters('logAnalytics')]"
+                    }
+                  ]
+                },
+                "deployment": {
+                  "properties": {
+                    "mode": "incremental",
+                    "template": {
+                      "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                      "contentVersion": "1.0.0.0",
+                      "parameters": {
+                        "resourceName": {
+                          "type": "string"
+                        },
+                        "enableMetrics": {
+                          "type": "string"
+                        },
+                        "logAnalytics": {
+                          "type": "string"
+                        },
+                        "location": {
+                          "type": "string"
+                        }
+                      },
+                      "variables": {},
+                      "resources": [
+                        {
+                          "type": "Microsoft.Network/applicationGateways/providers/diagnosticSettings",
+                          "apiVersion": "2017-05-01-preview",
+                          "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/setBySubLAPolicy')]",
+                          "location": "[parameters('location')]",
+                          "dependsOn": [],
+                          "properties": {
+                            "workspaceId": "[parameters('logAnalytics')]",
+                            "metrics": [
+                              {
+                                "category": "AllMetrics",
+                                "enabled": "[bool(parameters('enableMetrics'))]",
+                                "retentionPolicy": {
+                                  "days": 0,
+                                  "enabled": false
+                                },
+                                "timeGrain": null
+                              }
+                            ],
+                            "logs": [
+                              {
+                                "category": "ApplicationGatewayAccessLog",
+                                "enabled": true
+                              },
+                              {
+                                "category": "ApplicationGatewayPerformanceLog",
+                                "enabled": true
+                              },
+                              {
+                                "category": "ApplicationGatewayFirewallLog",
+                                "enabled": true
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "outputs": {}
+                    },
+                    "parameters": {
+                      "logAnalytics": {
+                        "value": "[parameters('logAnalytics')]"
+                      },
+                      "enableMetrics": {
+                        "value": "[parameters('enableMetrics')]"
+                      },
+                      "location": {
+                        "value": "[field('location')]"
+                      },
+                      "resourceName": {
+                        "value": "[field('name')]"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "parameters": {
+            "enableMetrics": {
+              "type": "String",
+              "metadata": {
+                "displayName": "Optionally enable metrics collection. Defaults to True",
+                "description": "True or False whether to enable metrics"
+              },
+              "defaultValue": "True"
+            },
+            "logAnalytics": {
+              "type": "String",
+              "metadata": {
+                "displayName": "Log Analyitcs workspace",
+                "description": "Select the Log Analytics workspace from dropdown list",
+                "strongType": "omsWorkspace"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "location": {
+      "value": "#{{ location }}"
+    }
+  }
+}

@@ -62,29 +62,28 @@ extends:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     environments:
-      # - name: 'snd1'
-      #   serviceConnection: AZD-ADP-SSV3
-      #   deploymentBranches:
-      #     - 'refs/heads/rv/353153'
-      #   developmentEnvironment: true
-      #   azureRegions:
-      #     primary: 'UKSouth'
-      # - name: 'snd2'
-      #   outputTemplateChange: Skip
-      #   serviceConnection: AZD-ADP-SSV3
-      #   dependsOn: Validate
-      #   deploymentBranches:
-      #     - 'refs/heads/main'
-      #     - 'refs/pull/*/merge'
-      #   azureRegions:
-      #     primary: 'UKSouth'
+      - name: 'snd1'
+        serviceConnection: AZD-ADP-SSV3
+        deploymentBranches:
+          - 'refs/heads/rv/353153'
+        developmentEnvironment: true
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'snd2'
+        outputTemplateChange: Skip
+        serviceConnection: AZD-ADP-SSV3
+        dependsOn: Validate
+        deploymentBranches:
+          - 'refs/heads/main'
+          - 'refs/pull/*/merge'
+        azureRegions:
+          primary: 'UKSouth'
       - name: 'dev1'
-        dependsOn: 'Validate'
+        dependsOn: 'snd1'
         outputTemplateChange: Skip
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
-          - 'refs/heads/rv/353153'
-        developmentEnvironment: true          
+          - 'refs/heads/main'         
         azureRegions:
           primary: 'UKSouth'
       - name: 'tst1'
@@ -159,6 +158,12 @@ extends:
               serviceConnectionVariableName: "subscriptionName"
               resourceGroupName: $(servicesResourceGroup)
       - ${{ if eq(variables.IsPolicyAssignments,true) }}:
+        - name: policyDefinitions
+          deployments:
+            - name: policy-definition-deploy
+              path: infra/common/policy
+              serviceConnectionVariableName: "subscriptionName"
+              scope: "Subscription"      
         - name: policyAssignments
           ${{ if eq(variables.IsAll, true) }}:
             dependsOnGroupedDeployments:
