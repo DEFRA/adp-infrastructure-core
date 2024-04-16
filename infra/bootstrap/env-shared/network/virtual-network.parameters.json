@@ -32,6 +32,15 @@
           "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01",
           "addressPrefix": "#{{ subnet2AddressPrefix }}",
           "serviceEndpoints": [],
+          "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ ssvVirtualNetworkName }}",          
+          "networkSecurityGroupId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
+          "privateEndpointNetworkPolicies": "Enabled",
+          "privateLinkServiceNetworkPolicies": "Enabled"
+        },
+        {
+          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}02",
+          "addressPrefix": "#{{ subnet3AddressPrefix }}",
+          "serviceEndpoints": [],
           "delegations": [
             {
               "name": "Microsoft.DBforPostgreSQL.flexibleServers",
@@ -43,15 +52,6 @@
           "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ ssvVirtualNetworkName }}",
           "networkSecurityGroupId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
           "privateEndpointNetworkPolicies": "Disabled",
-          "privateLinkServiceNetworkPolicies": "Enabled"
-        },
-        {
-          "name": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}02",
-          "addressPrefix": "#{{ subnet3AddressPrefix }}",
-          "serviceEndpoints": [],
-          "routeTableId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/routeTables/UDR-Spoke-Route-From-#{{ ssvVirtualNetworkName }}",          
-          "networkSecurityGroupId": "/subscriptions/#{{ subscriptionId }}/resourceGroups/#{{ ssvVirtualNetworkResourceGroup }}/providers/Microsoft.Network/networkSecurityGroups/#{{ networkResourceNamePrefix }}#{{ nc_resource_nsg }}#{{ nc_instance_regionid }}01",
-          "privateEndpointNetworkPolicies": "Enabled",
           "privateLinkServiceNetworkPolicies": "Enabled"
         },
         {
