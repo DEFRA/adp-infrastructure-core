@@ -21,4 +21,4 @@ param environment = '#{{ environment }}'
 
 param principalId = az.getSecret('#{{ ssvSubscriptionId }}', '#{{ ssvSharedResourceGroup }}', '#{{ ssvPlatformKeyVaultName }}', '#{{ tier2ApplicationSPObjectIdSecretName }}')
 
-param platformTeamGroupId = '#{{ aksAADProfileAdminGroupObjectId }}'
+param platformTeamGroupId = '#{{ aadPlatformEngineersUserGroupObjectId }}'

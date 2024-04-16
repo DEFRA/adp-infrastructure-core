@@ -11,10 +11,18 @@ parameters:
     default: "All"
     values:
       - All
-      - Platform Key Vault
-      - Platform Container Registry
-      - Platform Log Analytics Workspace
-      - Platform Event Hub Namespace
+      - Network - All
+      - Network - VNET
+      - Network - NSGs
+      - Network - Route Tables
+      - Platform - All
+      - Platform - Key Vault
+      - Platform - Container Registry
+      - Platform - Log Analytics Workspace
+      - Platform - Event Hub Namespace
+      - Platform Apps - All
+      - Platform Apps - Key Vaults
+      - Platform Apps - Flexible Server DNS Zone
 
 pr:
   branches:
@@ -45,16 +53,36 @@ resources:
 variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'All') }}
-  - name: IsPolicyAssignments
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Policy Assignments')) }}
+  - name: IsNetwork
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Network')) }}
+  - name: IsNetworkAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Network - All')) }}
+  - name: IsNetworkVnet
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - VNET')) }}
+  - name: IsNetworkNsg
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - NSGs')) }}
+  - name: IsNetworkRouteTable
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - Route Tables')) }}
+  - name: IsPlatform
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Platform')) }}
+  - name: IsPlatformAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform - All')) }}    
   - name: IsKeyVault
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Key Vault')) }}
+    value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Key Vault')) }}
   - name: IsContainerRegistry
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Container Registry')) }}
+    value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Container Registry')) }}
   - name: IsLogAnalyticsWorkspace
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Log Analytics Workspace')) }}
+    value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Log Analytics Workspace')) }}
   - name: IsEventHubNamespace
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Event Hub Namespace')) }}
+    value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Event Hub Namespace')) }}
+  - name: IsPlatformApps
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Platform Apps')) }}
+  - name: IsPlatformAppsAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Apps - All')) }}
+  - name: IsPlatformAppsKeyVaults
+    value: ${{ or(eq(variables.IsPlatformAppsAll,true), eq(parameters.deployResources,'Platform Apps - Key Vaults')) }}
+  - name: IsPlatformAppsFlexibleServerDnsZone
+    value: ${{ or(eq(variables.IsPlatformAppsAll,true), eq(parameters.deployResources,'Platform Apps - Flexible Server DNS Zone')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -76,6 +104,33 @@ extends:
         azureRegions:
           primary: 'UKSouth'    
     groupedDeployments:
+      - ${{ if eq(variables.IsNetwork, true) }}:
+        - name: network
+          deployments:
+            - ${{ if eq(variables.IsNetworkRouteTable, true) }}:
+              - name: route-table
+                path: infra/bootstrap/env-shared/network
+                resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+            - ${{ if eq(variables.IsNetworkNsg, true) }}:
+              - name: network-security-group
+                path: infra/bootstrap/env-shared/network
+                resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+            - ${{ if eq(variables.IsNetworkVnet, true) }}:
+              - name: virtual-network
+                path: infra/bootstrap/env-shared/network
+                resourceGroupName: $(ssvVirtualNetworkResourceGroup)
+                postDeployScriptsList:
+                  - displayName: Link the VNet to Hub
+                    scriptPath: infra/bootstrap/env/scripts/Trigger-VNetPeering.ps1
+                    type: PowerShell
+                    useSystemAccessToken: true
+                    scriptArguments: >
+                      -VirtualNetworkName $(ssvVirtualNetworkName)
+                      -SubscriptionName $(subscriptionName)
+                      -TenantId $(tenantId)
+                      -PeerToSec $true
+                      
+      - ${{ if eq(variables.IsPlatform, true) }}:
          - name: SharedEnvironment
            deployments:
             - ${{ if eq(variables.IsKeyVault,true) }}:
@@ -96,5 +151,46 @@ extends:
                 path: infra/bootstrap/env-shared/event-hub
                 resourceGroupName: $(ssvSharedResourceGroup)
                 privateEndpointDnsRecordsForResources:
-                  - resourceName: $(ssvResourceNamePrefix)$(nc_resource_eventhub)$(nc_shared_instance_regionid)01
+                  - resourceName: $(ssvInfraResourceNamePrefix)$(nc_resource_eventhub)$(nc_shared_instance_regionid)01
                     resourceGroupName: $(ssvSharedResourceGroup)
+              - name: event-hub
+                path: infra/bootstrap/env-shared/event-hub
+                parameterFilePath: infra/bootstrap/env-shared/event-hub/subenv1-params
+                resourceGroupName: $(ssvSharedResourceGroup)
+              - name: event-hub
+                path: infra/bootstrap/env-shared/event-hub
+                parameterFilePath: infra/bootstrap/env-shared/event-hub/subenv2-params
+                resourceGroupName: $(ssvSharedResourceGroup)
+      - ${{ if eq(variables.IsPlatformApps, true) }}:                    
+        - name: PlatformApps
+          deployments: 
+            - ${{ if eq(variables.IsPlatformAppsKeyVaults,true) }}:
+              - name: platform-apps-key-vault
+                path: infra/bootstrap/env-shared/key-vault
+                parameterFilePath: infra/bootstrap/env-shared/key-vault/subenv1-params
+                resourceGroupName: $(subEnvironment1ResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(subEnvironment1KeyVault)
+                    resourceGroupName: $(subEnvironment1ResourceGroup)
+              - name: platform-apps-key-vault
+                path: infra/bootstrap/env-shared/key-vault
+                parameterFilePath: infra/bootstrap/env-shared/key-vault/subenv2-params
+                resourceGroupName: $(subEnvironment2ResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(subEnvironment2KeyVault)
+                    resourceGroupName: $(subEnvironment2ResourceGroup)
+            - ${{ if eq(variables.IsPlatformAppsFlexibleServerDnsZone, true) }}:
+                - name: flexible-server-zone
+                  path: infra/bootstrap/env-shared/flexible-server-zone
+                  resourceGroupName: $(dnsResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: Link the Private DNS Zone to Central networks
+                      scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
+                      type: PowerShell
+                      useSystemAccessToken: true
+                      scriptArguments: >
+                        -PrivateDnsZoneName "$(postgreSqlPvtDnsZone)"
+                        -ResourceGroupName $(dnsResourceGroup)
+                        -SubscriptionName $(subscriptionName)
+                        -TenantId $(tenantId)
+

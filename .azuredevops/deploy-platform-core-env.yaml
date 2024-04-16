@@ -184,7 +184,7 @@ extends:
                       type: AzurePowerShell
                       scriptArguments: >
                         -ResourceGroupName $(ssvSharedResourceGroup)
-                        -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
+                        -GrafanaName $(ssvInfraResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
                         -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(servicesResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
                   postDeployScriptsList:
                     - displayName: Create Flux Dashboards in Grafana
@@ -194,7 +194,7 @@ extends:
                       serviceConnectionVariableName: ssvServiceConnection
                       scriptArguments: >
                         -ResourceGroupName $(ssvSharedResourceGroup)
-                        -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
+                        -GrafanaName $(ssvInfraResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
                         -DashboardsPath 'infra/core/env/observability/dashboards'
 
         - ${{ if eq(variables.IsPlatformKeyVault, true) }}:

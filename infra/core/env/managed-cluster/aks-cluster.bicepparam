@@ -15,7 +15,7 @@ param cluster = {
   skuTier: '#{{ aksClusterSkuTier }}'
   nodeResourceGroup: '#{{ aksResourceGroup }}-Managed'
   miControlPlane: '#{{ aksControlPlaneManagedIdentity }}'
-  adminAadGroupObjectId: '#{{ aksAADProfileAdminGroupObjectId }}'
+  adminAadGroupObjectId: '#{{ aadPlatformEngineersUserGroupObjectId }}'
   podCidr: '#{{ aksClusterPodCidr }}'
   serviceCidr: '#{{ aksClusterServiceCidr }}'
   dnsServiceIp: '#{{ aksClusterDnsServiceIp }}'
@@ -70,7 +70,7 @@ param azureMonitorWorkspace = {
 }
 
 param grafana = {
-  name: '#{{ ssvResourceNamePrefix }}#{{ nc_resource_grafana }}#{{ nc_shared_instance_regionid }}01'
+  name: '#{{ ssvInfraResourceNamePrefix }}#{{ nc_resource_grafana }}#{{ nc_shared_instance_regionid }}01'
   resourceGroup: '#{{ ssvSharedResourceGroup }}'
   subscriptionId: '#{{ ssvSubscriptionId }}'
 }

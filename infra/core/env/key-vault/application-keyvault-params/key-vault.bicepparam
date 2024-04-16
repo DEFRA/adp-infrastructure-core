@@ -37,7 +37,7 @@ param roleAssignment = [
     roleDefinitionIdOrName: 'Key Vault Reader'
     description: 'Key Vault Reader Role Assignment'
     principalType: 'Group'
-    principalId: '#{{ aksAADProfileAdminGroupObjectId }}'
+    principalId: '#{{ aadPlatformEngineersUserGroupObjectId }}'
   }
 ]
 

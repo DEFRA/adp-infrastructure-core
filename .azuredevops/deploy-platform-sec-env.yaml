@@ -11,9 +11,9 @@ parameters:
     default: "All"
     values:
       - All
-      - Sec Network - All
-      - Sec Network - NSGs
-      - Sec Network - Application Gateway Subnet
+      - Network - All
+      - Network - NSGs
+      - Network - Application Gateway Subnet
       - Application Gateway
 
 pr:
@@ -40,7 +40,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref:  main
 
 variables:
   - name: IsAll
@@ -48,13 +48,13 @@ variables:
   - name: IsApplicationGatewaySubnet
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Network - Application Gateway Subnet')) }}
   - name: IsSecNetwork
-    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Sec Network')) }}
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Network')) }}
   - name: IsSecNetworkAll
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Sec Network - All')) }}
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Network - All')) }}
   - name: IsSecNetworkNSG
-    value: ${{ or(eq(variables.IsSecNetworkAll,true), eq(parameters.deployResources,'Sec Network - NSGs')) }}   
+    value: ${{ or(eq(variables.IsSecNetworkAll,true), eq(parameters.deployResources,'Network - NSGs')) }}   
   - name: IsSecNetworkSubnet
-    value: ${{ or(eq(variables.IsSecNetworkAll,true), eq(parameters.deployResources,'Sec Network - Application Gateway Subnet')) }}   
+    value: ${{ or(eq(variables.IsSecNetworkAll,true), eq(parameters.deployResources,'Network - Application Gateway Subnet')) }}   
   - name: IsApplicationGateway
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application Gateway')) }}
   - name: IsApplicationGatewayAll

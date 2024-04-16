@@ -1,0 +1,196 @@
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+  - name: deployResources
+    displayName: "Resources to Deploy"
+    type: string
+    default: All
+    values:
+      - All
+      - Platform Apps - All
+      - Platform Apps - Container Apps Environment
+      - Platform Apps - Flexible Server
+      - AdpPortal - All
+      - AdpPortal - App Registrations
+      - AdpPortal - Storage Account
+      - AdpPortal - Managed Identity
+      - AdpPortal - API Managed Identity
+      - FluxNotification - All
+      - FluxNotification - Storage Account
+      - FluxNotification - Managed Identities
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra/core/env-shared/*
+  drafts: false
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+      - infra/core/env-shared/*
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref:  main
+
+variables:
+  - name: IsAll
+    value: ${{ eq(parameters.deployResources,'all') }}
+  - name: IsPlatformApps
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Platform Apps')) }}
+  - name: IsPlatformAppsAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform Apps - All')) }}
+  - name: IsPlatformAppsContainerAppsEnv
+    value: ${{ or(eq(variables.IsPlatformAppsAll,true), eq(parameters.deployResources,'Platform Apps - Container Apps Environment')) }}
+  - name: IsPlatformAppsFlexibleServer
+    value: ${{ or(eq(variables.IsPlatformAppsAll,true), eq(parameters.deployResources,'Platform Apps - Flexible Server')) }}
+  - name: IsAdpPortal
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'AdpPortal')) }}
+  - name: IsAdpPortalAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'AdpPortal - All')) }}
+  - name: IsAdpPortalAppRegistrations
+    value: ${{ or(eq(variables.IsAdpPortalAll,true), eq(parameters.deployResources,'AdpPortal - App Registrations')) }}
+  - name: IsAdpPortalStorageAccount
+    value: ${{ or(eq(variables.IsAdpPortalAll,true), eq(parameters.deployResources,'AdpPortal - Storage Account')) }}
+  - name: IsAdpPortalManagedIdentity
+    value: ${{ or(eq(variables.IsAdpPortalAll,true), eq(parameters.deployResources,'AdpPortal - Managed Identity')) }}
+  - name: IsAdpPortalApiManagedIdentity
+    value: ${{ or(eq(variables.IsAdpPortalAll,true), eq(parameters.deployResources,'AdpPortal - Api Managed Identity')) }}    
+  - name: IsFluxNotification
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'FluxNotification')) }}
+  - name: IsFluxNotificationAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'FluxNotification - All')) }}
+  - name: IsFluxNotificationStorageAccount
+    value: ${{ or(eq(variables.IsFluxNotificationAll,true), eq(parameters.deployResources,'FluxNotification - Storage Account')) }}
+  - name: IsFluxNotificationManagedIdentities
+    value: ${{ or(eq(variables.IsFluxNotificationAll,true), eq(parameters.deployResources,'FluxNotification - Managed Identities')) }}
+
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.deployFromFeature }}  
+    environments:
+      - name: 'ssv_dev'
+        serviceConnection: AZD-ADP-SSV3
+        deploymentBranches:
+          - 'refs/heads/main'          
+        developmentEnvironment: true
+        privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
+        azureRegions:
+          primary: 'UKSouth'    
+      - name: 'ssv_tst'
+        serviceConnection: AZD-ADP-SSV3
+        deploymentBranches:
+          - 'refs/heads/main'
+        privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
+        azureRegions:
+          primary: 'UKSouth'
+      - name: 'ssv_pre'
+        serviceConnection: AZR-ADP-SSV5
+        deploymentBranches:
+          - 'refs/heads/main'
+        privateAgentName: 'DEFRA-COMMON-ubuntu2004-SSV5'
+        azureRegions:
+          primary: 'UKSouth'  
+      - name: 'ssv_prd'
+        serviceConnection: AZR-ADP-SSV5
+        deploymentBranches:
+          - 'refs/heads/main'
+        privateAgentName: 'DEFRA-COMMON-ubuntu2004-SSV5'
+        azureRegions:
+          primary: 'UKSouth'            
+    filePathsForTransform: |
+      **/core/env-shared/adp-portal/app-registrations/portal-app-registration.json  
+    groupedDeployments: 
+      - ${{ if eq(variables.IsPlatformApps, true) }}:               
+        - name: PlatformApps
+          deployments: 
+            - ${{ if eq(variables.IsPlatformAppsContainerAppsEnv, true) }}:
+              - name: container-apps-env
+                path: infra/core/env-shared/container-apps-env
+                resourceGroupName: $(ssvInfraResourceGroup)
+                postDeployScriptsList:  
+                - displayName: 'Process Output Variable'
+                  type: PowerShell
+                  inlineScript: |
+                    $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
+                    Write-Host "##vso[task.setvariable variable=containerAppEnvPvtDnsZone;]$($output.defaultDomain.value)"  
+              - name: containerapp-dns-zone
+                path: infra/core/env-shared/containerapp-dns-zone
+                resourceGroupName: $(dnsResourceGroup)
+                postDeployScriptsList:
+                  - displayName: Link the Private DNS Zone to Central networks
+                    scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
+                    type: PowerShell
+                    useSystemAccessToken: true
+                    scriptArguments: >
+                      -PrivateDnsZoneName "$(containerAppEnvPvtDnsZone)"
+                      -ResourceGroupName $(dnsResourceGroup)
+                      -SubscriptionName $(subscriptionName)
+                      -TenantId $(tenantId)
+            - ${{ if eq(variables.IsPlatformAppsFlexibleServer, true) }}:
+              - name: flexible-server
+                path: infra/core/env-shared/flexible-server
+                resourceGroupName: $(ssvInfraResourceGroup)
+
+      - ${{ if eq(variables.IsAdpPortal, true) }}:
+        - name: AdpPortal
+          deployments:
+            - ${{ if eq(variables.IsAdpPortalAppRegistrations, true) }}:
+              - name: Register App
+                type: 'script'
+                scriptType: AzurePowerShell
+                scriptRepo: PipelineCommonScripts
+                path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+                scriptArguments: >
+                    -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/adp-portal/app-registrations/portal-app-registration.json'
+            - ${{ if eq(variables.IsAdpPortalStorageAccount, true) }}:
+              - name: storage-account
+                path: infra/core/env-shared/adp-portal/storage-account
+                resourceGroupName: $(ssvInfraResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(portalStorageAccountName)
+                    resourceGroupName: $(ssvInfraResourceGroup)
+                    
+            - ${{ if eq(variables.IsAdpPortalManagedIdentity, true) }}:
+              - name: managed-identity
+                path: infra/core/env-shared/adp-portal/managed-identity
+                resourceGroupName: $(ssvInfraResourceGroup)        
+
+            - ${{ if eq(variables.IsAdpPortalApiManagedIdentity, true) }}:
+              - name: managed-identity
+                path: infra/core/env-shared/adp-portal-api/managed-identity
+                resourceGroupName: $(ssvInfraResourceGroup)
+
+      - ${{ if eq(variables.IsFluxNotification, true) }}:
+        - name: FluxNotification
+          deployments:                    
+            - ${{ if eq(variables.IsFluxNotificationStorageAccount, true) }}:
+              - name: storage-account
+                path: infra/core/env-shared/flux-notification/storage-account
+                resourceGroupName: $(ssvInfraResourceGroup)
+                privateEndpointDnsRecordsForResources:
+                  - resourceName: $(fluxNotificationStorageAccountName)
+                    resourceGroupName: $(ssvInfraResourceGroup) 
+            
+            - ${{ if eq(variables.IsFluxNotificationManagedIdentities, true) }}:
+              - name: fluxnotificationapp-managed-identity
+                path: infra/core/env-shared/flux-notification/managed-identity
+                resourceGroupName: $(ssvInfraResourceGroup)  
+              - name: adocallbackapp-managed-identity
+                path: infra/core/env-shared/flux-notification/managed-identity
+                resourceGroupName: $(ssvInfraResourceGroup)                           
