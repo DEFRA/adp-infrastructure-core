@@ -1,7 +1,7 @@
 using './log-analytics-workspace.bicep'
 
 param logAnalytics = {
-  name: '#{{ logAnalyticsWorkspace }}'
+  name: '#{{ secLogAnalyticsWorkspace }}'
   skuName: '#{{ logAnalyticsWorkspaceSku }}'
 }
 
