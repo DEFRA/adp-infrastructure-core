@@ -109,14 +109,14 @@ extends:
           - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
-      # - name: 'prd1'
-      #   dependsOn: 'pre1'
-      #   outputTemplateChange: Skip
-      #   serviceConnection: AZR-ADP-SSV5
-      #   deploymentBranches:
-      #     - 'refs/heads/main'
-      #   azureRegions:
-      #     primary: 'UKSouth'    
+      - name: 'prd1'
+        dependsOn: 'pre1'
+        outputTemplateChange: Skip
+        serviceConnection: AZR-ADP-SSV5
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'    
     filePathsForTransform: |
       **/bootstrap/env/config/app-registrations/tier2-app-registration.json
       **/bootstrap/env/config/service-connections/tier2-service-connection.json
