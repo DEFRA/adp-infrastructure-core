@@ -125,7 +125,7 @@ extends:
             - name: log-analytics-workspace
               path: infra/sec/operational-insights
               serviceConnectionVariableName: "subscriptionName"
-              resourceGroupName: $(servicesResourceGroup)                
+              resourceGroupName: $(secInfraResourceGroup)                
       - ${{ if eq(variables.IsPolicyAssignments,true) }}:
         - name: policyAssignments
           ${{ if eq(variables.IsAll, true) }}:
