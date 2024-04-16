@@ -65,7 +65,7 @@ extends:
       - name: 'snd1'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - 'refs/heads/rv/353153'
+          - 'refs/heads/main'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
@@ -158,17 +158,11 @@ extends:
               serviceConnectionVariableName: "subscriptionName"
               resourceGroupName: $(servicesResourceGroup)
       - ${{ if eq(variables.IsPolicyAssignments,true) }}:
-        - name: policyDefinitions
-          deployments:
-            - name: policy-definition-deploy
-              path: infra/common/policy
-              serviceConnectionVariableName: "subscriptionName"
-              scope: "Subscription"      
         - name: policyAssignments
           ${{ if eq(variables.IsAll, true) }}:
             dependsOnGroupedDeployments:
               - logAnalyticsWorkspace
-          deployments:
+          deployments:          
             - name: policy-diagnostic-settings-assignment
               path: infra/common/policy
               serviceConnectionVariableName: "subscriptionName"

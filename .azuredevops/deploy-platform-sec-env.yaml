@@ -14,6 +14,8 @@ parameters:
       - Sec Network - All
       - Sec Network - NSGs
       - Sec Network - Application Gateway Subnet
+      - Monitoring - Workspace      
+      - Policy Assignments
       - Application Gateway
 
 pr:
@@ -55,6 +57,10 @@ variables:
     value: ${{ or(eq(variables.IsSecNetworkAll,true), eq(parameters.deployResources,'Sec Network - NSGs')) }}   
   - name: IsSecNetworkSubnet
     value: ${{ or(eq(variables.IsSecNetworkAll,true), eq(parameters.deployResources,'Sec Network - Application Gateway Subnet')) }}   
+  - name: IsLogAnalyticsWorkspace
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Monitoring - Workspace')) }}    
+  - name: IsPolicyAssignments
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Policy Assignments')) }}    
   - name: IsApplicationGateway
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application Gateway')) }}
   - name: IsApplicationGatewayAll
@@ -69,7 +75,7 @@ extends:
       - name: 'snd1'
         serviceConnection: AZD-ADP-SND1
         deploymentBranches:
-          - 'refs/heads/main'
+          - 'refs/heads/rv/353153'
         developmentEnvironment: true
         privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
         azureRegions:
@@ -110,7 +116,30 @@ extends:
                 path: infra/sec/network
                 resourceGroupName: $(secVirtualNetworkResourceGroup) 
                 serviceConnectionVariableName: 'secServiceConnection'
-
+      - ${{ if eq(variables.IsLogAnalyticsWorkspace,true) }}:
+        - name: logAnalyticsWorkspace
+          ${{ if eq(variables.IsAll, true) }}:
+            dependsOnGroupedDeployments:
+              - sec_network
+          deployments:
+            - name: log-analytics-workspace
+              path: infra/sec/operational-insights
+              serviceConnectionVariableName: "subscriptionName"
+              resourceGroupName: $(servicesResourceGroup)                
+      - ${{ if eq(variables.IsPolicyAssignments,true) }}:
+        - name: policyAssignments
+          ${{ if eq(variables.IsAll, true) }}:
+            dependsOnGroupedDeployments:
+              - logAnalyticsWorkspace
+          deployments:
+            - name: policy-definition-deploy
+              path: infra/sec/policy
+              serviceConnectionVariableName: "subscriptionName"
+              scope: "Subscription"             
+            - name: policy-diagnostic-settings-assignment
+              path: infra/sec/policy
+              serviceConnectionVariableName: "subscriptionName"
+              scope: "Subscription"
       - ${{ if eq(variables.IsApplicationGateway, true) }}:
         - name: application_gateway
           ${{ if eq(variables.IsAll, true) }}:
