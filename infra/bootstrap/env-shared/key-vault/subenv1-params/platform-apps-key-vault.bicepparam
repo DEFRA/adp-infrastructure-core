@@ -1,8 +1,8 @@
-using './key-vault.bicep'
+using '../platform-apps-key-vault.bicep'
 
 param keyVault = {
-  name: '#{{ ssvInfraKeyVault }}'
-  privateEndpointName: '#{{ ssvInfraKVPvtEndpointName }}'
+  name: '#{{ subEnvironment1KeyVault }}'
+  privateEndpointName: '#{{ subEnvironment1KVPvtEndpointName }}'
   skuName: 'premium'
   enableSoftDelete: '#{{ keyvaultEnableSoftDelete }}'
   enablePurgeProtection: '#{{ keyvaultEnablePurgeProtection }}'
@@ -20,3 +20,5 @@ param environment = '#{{ environment }}'
 param location = '#{{ location }}'
 
 param principalId = '#{{ ssvAppRegServicePrincipalId }}'
+
+param platformUserGroupId = '#{{ aadPlatformEngineersUserGroupObjectId }}'

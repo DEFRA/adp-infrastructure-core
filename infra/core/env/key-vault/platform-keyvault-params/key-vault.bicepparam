@@ -19,12 +19,26 @@ param environment = '#{{ environment }}'
 
 param location = '#{{ location }}'
 
-param principalId = az.getSecret('#{{ ssvSubscriptionId }}', '#{{ ssvSharedResourceGroup }}', '#{{ ssvPlatformKeyVaultName }}', '#{{ tier2ApplicationSPObjectIdSecretName }}')
+param principalId = az.getSecret(
+  '#{{ ssvSubscriptionId }}',
+  '#{{ ssvSharedResourceGroup }}',
+  '#{{ ssvPlatformKeyVaultName }}',
+  '#{{ tier2ApplicationSPObjectIdSecretName }}'
+)
 
-param roleAssignment = {
-  roleDefinitionIdOrName: 'Key Vault Crypto Officer'
-  description: 'Key Vault Crypto Officer Role Assignment'
-  principalType: 'ServicePrincipal'
-}
+param roleAssignment = [
+  {
+    roleDefinitionIdOrName: 'Key Vault Crypto Officer'
+    description: 'Key Vault Crypto Officer Role Assignment'
+    principalType: 'ServicePrincipal'
+    principalId: ''
+  }
+  {
+    roleDefinitionIdOrName: 'Key Vault Reader'
+    description: 'Key Vault Reader Role Assignment'
+    principalType: 'Group'
+    principalId: '#{{ aadPlatformEngineersUserGroupObjectId }}'
+  }
+]
 
 param keyvaultType = 'Platform'

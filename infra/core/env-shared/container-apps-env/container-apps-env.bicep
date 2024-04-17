@@ -34,7 +34,7 @@ var customTags = {
   Environment: environment
 }
 
-var defaultTags = union(json(loadTextContent('../../../../common/default-tags.json')), customTags)
+var defaultTags = union(json(loadTextContent('../../../common/default-tags.json')), customTags)
 
 var additionalTags = {
   Name: containerAppEnv.name

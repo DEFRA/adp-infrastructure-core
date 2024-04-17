@@ -20,6 +20,9 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @secure()
 param principalId string
 
+@description('Required. Platform Users AD group ID')
+param platformUserGroupId string
+
 var roleAssignments = [
   {
     roleDefinitionIdOrName: 'Key Vault Secrets Officer'
@@ -29,6 +32,14 @@ var roleAssignments = [
     ]
     principalType: 'ServicePrincipal'
   }
+  {
+    roleDefinitionIdOrName: 'Key Vault Reader'
+    description: 'Key Vault Reader Role Assignment'
+    principalIds: [
+      platformUserGroupId
+    ]
+    principalType: 'Group'
+  }
 ]
 
 var customTags = {
@@ -37,7 +48,7 @@ var customTags = {
   Environment: environment
 }
 
-var defaultTags = union(json(loadTextContent('../../../../common/default-tags.json')), customTags)
+var defaultTags = union(json(loadTextContent('../../../common/default-tags.json')), customTags)
 
 var keyVaultTags = {
   Name: keyVault.name

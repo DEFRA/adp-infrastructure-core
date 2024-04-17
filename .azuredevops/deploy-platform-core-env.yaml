@@ -81,6 +81,8 @@ variables:
     value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - Route Tables')) }}
   - name: IsNetworkPublicDNSZone
     value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - Public DNS Zone')) }}
+  - name: IsMonitoring
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Monitoring')) }}
   - name: IsMonitoringAll
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Monitoring - All')) }}
   - name: IsMonitoringInsights
@@ -184,7 +186,7 @@ extends:
                       type: AzurePowerShell
                       scriptArguments: >
                         -ResourceGroupName $(ssvSharedResourceGroup)
-                        -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
+                        -GrafanaName $(ssvInfraResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
                         -WorkspaceResourceId '/subscriptions/$(subscriptionId)/resourceGroups/$(servicesResourceGroup)/providers/Microsoft.Monitor/accounts/$(infraResourceNamePrefix)$(nc_resource_azuremonitorworkspace)$(nc_instance_regionid)01'
                   postDeployScriptsList:
                     - displayName: Create Flux Dashboards in Grafana
@@ -194,7 +196,7 @@ extends:
                       serviceConnectionVariableName: ssvServiceConnection
                       scriptArguments: >
                         -ResourceGroupName $(ssvSharedResourceGroup)
-                        -GrafanaName $(ssvResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
+                        -GrafanaName $(ssvInfraResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
                         -DashboardsPath 'infra/core/env/observability/dashboards'
 
         - ${{ if eq(variables.IsPlatformKeyVault, true) }}:
@@ -239,6 +241,7 @@ extends:
                       inlineScript: |
                         $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
                         Write-Host "##vso[task.setvariable variable=clusterOidc;]$($output.oidcIssuerUrl.value)"
+                        Write-Host "##vso[task.setvariable variable=appConfigMiObjectId;]$($output.appConfigMiObjectId.value)"
                     - displayName: Add Cluster Details to Config Service
                       scriptPath: templates/powershell/Import-ConfigData.ps1
                       type: AzureCLI
@@ -248,6 +251,10 @@ extends:
                         -Label "adp-platform"
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                         -ConfigData '[{"key": "CLUSTER_OIDC_ISSUER_URL", "value": "$(clusterOidc)", "label": "adp-platform", "contentType": "text/plain" }]'
+                # - name: event-hub-secret-rbac
+                #   serviceConnectionVariableName: ssvServiceConnection
+                #   path: infra/core/env/event-hub
+                #   resourceGroupName: $(ssvInfraSharedRg)
               - ${{ if eq(variables.IsManagedClusterFluxServicesSSHKeys, true) }}:
                 - name: Flux Services SSH Keys
                   serviceConnectionVariableName: ssvServiceConnection

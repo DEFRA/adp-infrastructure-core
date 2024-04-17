@@ -7,11 +7,11 @@
                 "name": "#{{ ssvInfraKeyVault }}",
                 "secrets": [
                     {
-                        "key": "#{{ portalApplicationClientSecretName }}",
+                        "key": "#{{ portalAppRegSecretSecretName }}",
                         "type": "ClientSecret"
                     },
                     {
-                        "key": "#{{ portalApplicationClientIdName }}",
+                        "key": "#{{ portalAppRegClientIdSecretName }}",
                         "type": "ClientId"
                     }
                 ]
