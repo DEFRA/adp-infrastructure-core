@@ -81,7 +81,7 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-account:0.5.3' = 
 }
 
 resource storageAccountResource 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
-  name: toLower(storageAccount.name)
+  name: toLower(storageAccounts.outputs.name)
 }
 
 resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
