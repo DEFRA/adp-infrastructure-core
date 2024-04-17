@@ -162,7 +162,11 @@ extends:
           ${{ if eq(variables.IsAll, true) }}:
             dependsOnGroupedDeployments:
               - logAnalyticsWorkspace
-          deployments:          
+          deployments:
+            - name: policy-definition-deploy
+              path: infra/common/policy
+              serviceConnectionVariableName: "subscriptionName"
+              scope: "Subscription"   
             - name: policy-diagnostic-settings-assignment
               path: infra/common/policy
               serviceConnectionVariableName: "subscriptionName"
