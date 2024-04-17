@@ -15,7 +15,6 @@ parameters:
       - Sec Network - NSGs
       - Sec Network - Application Gateway Subnet
       - Monitoring - Workspace      
-      - Policy Assignments
       - Application Gateway
 
 pr:
@@ -58,9 +57,7 @@ variables:
   - name: IsSecNetworkSubnet
     value: ${{ or(eq(variables.IsSecNetworkAll,true), eq(parameters.deployResources,'Sec Network - Application Gateway Subnet')) }}   
   - name: IsLogAnalyticsWorkspace
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Monitoring - Workspace')) }}    
-  - name: IsPolicyAssignments
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Policy Assignments')) }}    
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Monitoring - Workspace')) }}      
   - name: IsApplicationGateway
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application Gateway')) }}
   - name: IsApplicationGatewayAll
@@ -126,20 +123,6 @@ extends:
               path: infra/sec/operational-insights
               serviceConnectionVariableName: "secServiceConnection"
               resourceGroupName: $(secInfraResourceGroup)                
-      - ${{ if eq(variables.IsPolicyAssignments,true) }}:
-        - name: policyAssignments
-          ${{ if eq(variables.IsAll, true) }}:
-            dependsOnGroupedDeployments:
-              - logAnalyticsWorkspace
-          deployments:
-            - name: policy-definition-deploy
-              path: infra/sec/policy
-              serviceConnectionVariableName: "secServiceConnection"
-              scope: "Subscription"             
-            - name: policy-diagnostic-settings-assignment
-              path: infra/sec/policy
-              serviceConnectionVariableName: "secServiceConnection"
-              scope: "Subscription"
       - ${{ if eq(variables.IsApplicationGateway, true) }}:
         - name: application_gateway
           ${{ if eq(variables.IsAll, true) }}:
