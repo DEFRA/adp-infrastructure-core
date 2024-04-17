@@ -33,7 +33,7 @@
                             },
                             {
                               "field": "microsoft.insights/diagnosticSettings/logs[*].categoryGroup",
-                              "equals": "allLogs"
+                              "equals": "[parameters('categoryGroup')]"
                             }
                           ]
                         }
@@ -130,6 +130,14 @@
             }
           },
           "parameters": {
+            "categoryGroup": {
+              "type": "String",
+              "metadata": {
+                "displayName": "Enable All logs",
+                "description": "Select the category group from dropdown list to enable all log"
+              },
+              "defaultValue": "allLogs"
+            },
             "enableMetrics": {
               "type": "String",
               "metadata": {
