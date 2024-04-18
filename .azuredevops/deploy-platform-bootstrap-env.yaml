@@ -66,6 +66,7 @@ extends:
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - 'refs/heads/rv/353153'
+        developmentEnvironment: true          
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd2'
@@ -90,8 +91,7 @@ extends:
         outputTemplateChange: Skip
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
-          - 'refs/heads/rv/353153'         
-        developmentEnvironment: true
+          - 'refs/heads/main'         
         azureRegions:
           primary: 'UKSouth'
       - name: 'tst1'
@@ -163,10 +163,6 @@ extends:
             dependsOnGroupedDeployments:
               - logAnalyticsWorkspace
           deployments:
-            - name: policy-definition-deploy
-              path: infra/common/policy
-              serviceConnectionVariableName: "subscriptionName"
-              scope: "Subscription"   
             - name: policy-diagnostic-settings-assignment
               path: infra/common/policy
               serviceConnectionVariableName: "subscriptionName"
