@@ -79,30 +79,10 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-account:0.5.3' = 
     ]
   }
 }
-
-resource storageAccountResource 'Microsoft.Storage/storageAccounts@2021-09-01' existing = {
-  name: toLower(storageAccounts.outputs.name)
-}
-
-resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
-  name: keyvaultName
-}
-
-resource accountKey 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
-  name: 'TECHDOCS-AZURE-BLOB-STORAGE-ACCOUNT-KEY'
-  parent: keyVault
-  properties: {
-    value: storageAccountResource.listKeys().keys[0].value
-  }
-  dependsOn: [
-    storageAccounts
-  ]
-}
-
-resource accountName 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
-  name: 'TECHDOCS-AZURE-BLOB-STORAGE-ACCOUNT-NAME'
-  parent: keyVault
-  properties: {
-    value: toLower(storageAccount.name)
+module storagesecret './.bicep/storesecret.bicep' = {
+  name: 'storage-secret'  
+  params: {
+    keyvaultName: keyvaultName
+    storageAccountname: storageAccounts.outputs.name
   }
 }
