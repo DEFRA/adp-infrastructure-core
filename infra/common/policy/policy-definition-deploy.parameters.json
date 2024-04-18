@@ -18,7 +18,7 @@
               "details": {
                 "type": "Microsoft.Insights/diagnosticSettings",
                 "roleDefinitionIds": [
-                  "/providers/Microsoft.Authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+                  "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
                 ],
                 "existenceCondition": {
                   "allOf": [
