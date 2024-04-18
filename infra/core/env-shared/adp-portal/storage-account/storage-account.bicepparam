@@ -1,18 +1,18 @@
 using './storage-account.bicep'
 
-// param storageAccount = {
-//   name: '#{{ portalStorageAccountName }}'
-//   privateEndpointName: '#{{ portalAppSAPvtEndpointName }}'
-//   skuName: 'Standard_ZRS'
-//   containerName: 'adp-wiki-techdocs'
-// }
-
 param storageAccount = {
-  name: 'testbhxkxhxksggvwkxswww'
+  name: '#{{ portalStorageAccountName }}'
   privateEndpointName: '#{{ portalAppSAPvtEndpointName }}'
   skuName: 'Standard_ZRS'
   containerName: 'adp-wiki-techdocs'
 }
+
+// param storageAccount = {
+//   name: 'testbhxkxhxksggvwkxswww'
+//   privateEndpointName: '#{{ portalAppSAPvtEndpointName }}'
+//   skuName: 'Standard_ZRS'
+//   containerName: 'adp-wiki-techdocs'
+// }
 
 param vnet = {
   name: '#{{ ssvVirtualNetworkName }}'
