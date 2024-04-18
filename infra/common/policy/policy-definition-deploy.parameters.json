@@ -5,7 +5,7 @@
     "policyDefinitions": {
       "value": [
         {
-          "displayName": "pg-flex-server-dgn-settings-policyDef-sub",
+          "displayName": "pg-flex-server-dgn-settings-policyDef",
           "description": "This policy automatically deploys and enable diagnostic settings to Log Analytics",
           "mode": "All",
           "policyRule": {
