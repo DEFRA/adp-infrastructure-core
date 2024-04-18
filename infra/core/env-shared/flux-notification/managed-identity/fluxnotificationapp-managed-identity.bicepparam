@@ -20,3 +20,7 @@ param keyVault = {
   resourceGroup: '#{{ ssvInfraResourceGroup }}'
 }
 
+param secrets = [
+  'POSTGRES-HOST'
+  'FLUXNOTIFY-MI-CLIENT-ID'
+]

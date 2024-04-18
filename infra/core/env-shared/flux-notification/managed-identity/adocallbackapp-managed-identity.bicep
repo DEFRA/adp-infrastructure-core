@@ -7,6 +7,9 @@ param containerRegistry object
 @description('Required. The name of the Key vault.')
 param keyVault object
 
+@description('Required. List of secrects to be Rbac to the managed identity.')
+param secrets array = []
+
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
@@ -62,8 +65,20 @@ module sharedAcrPullRoleAssignment '../../.bicep/acr-pull.bicep' = {
   }
 }
 
-module appKvSecretsUserRoleAssignment '../../.bicep/kv-role-secrets-user.bicep' = {
-  name: '${keyVault.Name}-secrets-user-role-${deploymentDate}'
+resource sharedKeyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
+  name: keyVault.Name
+}
+
+resource clientIDSecret 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  name: 'CALLBACKAPI-MI-CLIENT-ID'
+  parent: sharedKeyVault
+  properties: {
+    value: managedIdentities.outputs.clientId
+  }
+}
+
+module appKvSecretsSecretsUserRoleAssignment '../../.bicep/kv-secrect-role-secrets-user.bicep' = [for (secret, index) in secrets: {
+  name: '${keyVault.Name}-secrect-user-role-${deploymentDate}-${index}'
   scope: resourceGroup(keyVault.subscriptionId, keyVault.resourceGroup)
   dependsOn: [
     managedIdentities
@@ -71,5 +86,6 @@ module appKvSecretsUserRoleAssignment '../../.bicep/kv-role-secrets-user.bicep' 
   params: {
     principalId: managedIdentities.outputs.principalId 
     keyVaultName: '${keyVault.Name}'
+    secretName: secret
   }
-}
+}]

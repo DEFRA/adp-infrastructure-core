@@ -20,3 +20,9 @@ param keyVault = {
   resourceGroup: '#{{ ssvInfraResourceGroup }}'
 }
 
+param secrets = [
+  'POSTGRES-HOST'
+  'CALLBACKAPI-MI-CLIENT-ID'
+]
+
+
