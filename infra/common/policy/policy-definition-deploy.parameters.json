@@ -150,7 +150,8 @@
               "metadata": {
                 "displayName": "Log Analyitcs workspace",
                 "description": "Select the Log Analytics workspace from dropdown list",
-                "strongType": "omsWorkspace"
+                "strongType": "omsWorkspace",
+                "assignPermissions": true
               }
             }
           }
