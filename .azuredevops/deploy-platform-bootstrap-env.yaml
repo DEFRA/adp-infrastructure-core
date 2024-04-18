@@ -42,7 +42,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: rv/353153
 
 variables:
   - name: IsAll
@@ -65,7 +65,7 @@ extends:
       - name: 'snd1'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - 'refs/heads/main'
+          - 'refs/heads/rv/353153'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'

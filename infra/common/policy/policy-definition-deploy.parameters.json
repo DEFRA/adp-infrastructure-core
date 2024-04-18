@@ -11,14 +11,14 @@
           "policyRule": {
             "if": {
               "field": "type",
-              "equals": "Microsoft.DBforPostgreSQL/servers"
+              "equals": "microsoft.dbforpostgresql/flexibleservers"
             },
             "then": {
-              "effect": "deployIfNotExists",
+              "effect": "DeployIfNotExists",
               "details": {
                 "type": "Microsoft.Insights/diagnosticSettings",
                 "roleDefinitionIds": [
-                  "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                  "/providers/Microsoft.Authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
                 ],
                 "existenceCondition": {
                   "allOf": [
@@ -29,11 +29,11 @@
                           "allOf": [
                             {
                               "field": "Microsoft.Insights/diagnosticSettings/logs[*].enabled",
-                              "equals": true
+                              "equals": "[equals(parameters('categoryGroup'), 'allLogs')]"
                             },
                             {
                               "field": "microsoft.insights/diagnosticSettings/logs[*].categoryGroup",
-                              "equals": "[parameters('categoryGroup')]"
+                              "equals": "allLogs"
                             }
                           ]
                         }
@@ -73,8 +73,8 @@
                       "variables": {},
                       "resources": [
                         {
-                          "type": "Microsoft.DBforPostgreSQL/servers/providers/diagnosticSettings",
-                          "apiVersion": "2017-05-01-preview",
+                          "type": "microsoft.dbforpostgresql/flexibleservers/providers/diagnosticSettings",
+                          "apiVersion": "2021-05-01-preview",
                           "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/setBySubLAPolicy')]",
                           "location": "[parameters('location')]",
                           "dependsOn": [],
@@ -151,7 +151,8 @@
               "metadata": {
                 "displayName": "Log Analyitcs workspace",
                 "description": "Select the Log Analytics workspace from dropdown list",
-                "strongType": "omsWorkspace"
+                "strongType": "omsWorkspace",
+                "assignPermissions": true
               }
             }
           }
