@@ -74,13 +74,13 @@ module appKvSecretsUserRoleAssignment '../../.bicep/kv-role-secrets-user.bicep' 
   }
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
+resource sharedKeyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
   name: keyVault.Name
 }
 
 resource accountName 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
   name: 'FLUXNOTIFY-MI-CLIENT-ID'
-  parent: keyVault
+  parent: sharedKeyVault
   properties: {
     value: managedIdentities.outputs.clientId
   }
