@@ -4,6 +4,9 @@ param managedIdentity object
 @description('Required. The name of the container registry.')
 param containerRegistry object
 
+@description('Required. The name of the Key vault.')
+param keyVault object
+
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
@@ -56,5 +59,17 @@ module sharedAcrPullRoleAssignment '../../.bicep/acr-pull.bicep' = {
   params: {
     principalId: managedIdentities.outputs.principalId 
     containerRegistryName: '${containerRegistry.Name}'
+  }
+}
+
+module appKvSecretsUserRoleAssignment '../../.bicep/kv-role-secrets-user.bicep' = {
+  name: '${keyVault.Name}-secrets-user-role-${deploymentDate}'
+  scope: resourceGroup(keyVault.subscriptionId, keyVault.resourceGroup)
+  dependsOn: [
+    managedIdentities
+  ]
+  params: {
+    principalId: managedIdentities.outputs.principalId 
+    keyVaultName: '${keyVault.Name}'
   }
 }

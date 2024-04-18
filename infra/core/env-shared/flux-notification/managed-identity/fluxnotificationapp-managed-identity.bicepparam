@@ -14,3 +14,9 @@ param containerRegistry = {
   resourceGroup: '#{{ ssvSharedResourceGroup }}'
 }
 
+param keyVault = {
+  name: '#{{ ssvInfraKeyVault }}'
+  subscriptionId: '#{{ subscriptionId }}'
+  resourceGroup: '#{{ ssvInfraResourceGroup }}'
+}
+
