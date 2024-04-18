@@ -93,16 +93,12 @@
                             ],
                             "logs": [
                               {
-                                "category": "PostgreSQLLogs",
-                                "enabled": true
+                                "categoryGroup": "audit",
+                                "enabled": "[equals(parameters('categoryGroup'), 'audit')]"
                               },
                               {
-                                "category": "QueryStoreRuntimeStatistics",
-                                "enabled": true
-                              },
-                              {
-                                "category": "QueryStoreWaitStatistics",
-                                "enabled": true
+                                "categoryGroup": "allLogs",
+                                "enabled": "[equals(parameters('categoryGroup'), 'allLogs')]"
                               }
                             ]
                           }
@@ -113,6 +109,9 @@
                     "parameters": {
                       "logAnalytics": {
                         "value": "[parameters('logAnalytics')]"
+                      },
+                      "categoryGroup": {
+                        "value": "[parameters('categoryGroup')]"
                       },
                       "enableMetrics": {
                         "value": "[parameters('enableMetrics')]"
