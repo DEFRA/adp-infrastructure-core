@@ -66,7 +66,7 @@ extends:
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - 'refs/heads/rv/353153'
-        developmentEnvironment: true          
+        developmentEnvironment: false
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd2'
@@ -91,7 +91,8 @@ extends:
         outputTemplateChange: Skip
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
-          - 'refs/heads/main'         
+          - 'refs/heads/rv/353153'
+        developmentEnvironment: true      
         azureRegions:
           primary: 'UKSouth'
       - name: 'tst1'
