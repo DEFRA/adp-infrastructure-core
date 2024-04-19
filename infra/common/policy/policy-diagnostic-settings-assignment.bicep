@@ -25,7 +25,7 @@ module policyAssignmentModule '.bicep/policy-assignment.bicep' = [for (policyAss
     displayName: policyAssignment.assignmentDisplayName
     policyDefinitionId: ((contains(policyAssignment,'policyDefinitionScope') ? policyAssignment.policyDefinitionScope : 'tenant') == 'subscription')?  subscriptionResourceId(subscriptionId, resourceType, policyAssignment.policyDefinitionId) : tenantResourceId(resourceType, policyAssignment.policyDefinitionId)
     parameters: {
-       categoryGroup: {
+      categoryGroup: {
         value: 'allLogs'
       }
       logAnalytics: {
