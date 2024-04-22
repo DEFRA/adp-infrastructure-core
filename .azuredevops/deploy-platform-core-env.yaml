@@ -62,7 +62,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: gg/353142-rename-eventhub-variables #main
       
 variables:
   - name: IsAll
