@@ -16,6 +16,8 @@ param publicIPName = '#{{ secAppGWpublicIPName }}'
 
 param wafPolicyName = '#{{ secApplicationGatewayWAFPolicyName }}'
 
+param logAnalyticsWorkspaceName = '#{{ secLogAnalyticsWorkspace }}'
+
 param policySettings = {
   state: 'Enabled'
   mode: 'Prevention'
