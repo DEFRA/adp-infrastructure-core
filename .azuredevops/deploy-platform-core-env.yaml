@@ -46,6 +46,8 @@ pr:
     include:
       - infra/core/env/*
       - infra/common/*
+  drafts: false
+        
 trigger:
   batch: true
   branches:

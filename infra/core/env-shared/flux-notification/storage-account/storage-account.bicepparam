@@ -3,6 +3,7 @@ using './storage-account.bicep'
 param storageAccount = {
   name: '#{{ fluxNotificationStorageAccountName }}'
   privateEndpointName: '#{{ fluxNotificationSAPvtEndpointName }}'
+  containerName: '#{{ fluxNotificationContainerAppId }}'
   skuName: 'Standard_ZRS'
 }
 

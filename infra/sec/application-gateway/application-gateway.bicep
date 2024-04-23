@@ -22,6 +22,9 @@ param publicIPName string
 @description('Required. The name of the Front Door WAF Policy to create.')
 param wafPolicyName string
 
+@description('Required. Name of the log analytics workspace.')
+param logAnalyticsWorkspaceName string
+
 @description('Optional. The list of managed rule sets to configure on the WAF (DRS).')
 param managedRuleSets array = []
 
@@ -130,6 +133,11 @@ module applicationGatewayWebApplicationFirewallPolicy 'br/SharedDefraRegistry:ne
   }
 }
 
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = {
+  name: toLower(logAnalyticsWorkspaceName)
+}
+
+
 module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.5.15' = {
   name: 'application-gateway-${deploymentDate}'
   dependsOn: [
@@ -145,6 +153,12 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
       name: 'CanNotDelete'
     }
     tags: union(tags, applicationGatewayTags)
+    diagnosticSettings : [
+      {
+        name: 'customSetting'
+        workspaceResourceId: logAnalyticsWorkspace.id
+      }
+    ]
     firewallPolicyId: applicationGatewayWebApplicationFirewallPolicy.outputs.resourceId
     gatewayIPConfigurations: [
       {

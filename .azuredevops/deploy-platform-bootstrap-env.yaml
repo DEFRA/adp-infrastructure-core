@@ -24,6 +24,7 @@ pr:
     include:
       - infra/bootstrap/env/*
       - infra/common/*
+  drafts: false
 
 trigger:
   batch: true
@@ -77,26 +78,26 @@ extends:
           - 'refs/pull/*/merge'
         azureRegions:
           primary: 'UKSouth'
+      - name: 'snd3'
+        outputTemplateChange: Skip
+        serviceConnection: AZD-ADP-SSV3
+        dependsOn: 'snd2'
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'          
       - name: 'dev1'
         dependsOn: 'snd1'
         outputTemplateChange: Skip
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
-          - 'refs/heads/main'
+          - 'refs/heads/main'             
         azureRegions:
           primary: 'UKSouth'
       - name: 'tst1'
         dependsOn: 'dev1'
         outputTemplateChange: Skip
         serviceConnection: AZR-ADP-SSV5
-        deploymentBranches:
-          - 'refs/heads/main'
-        azureRegions:
-          primary: 'UKSouth'
-      - name: 'snd3'
-        outputTemplateChange: Skip
-        serviceConnection: AZD-ADP-SSV3
-        dependsOn: 'snd1'
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:

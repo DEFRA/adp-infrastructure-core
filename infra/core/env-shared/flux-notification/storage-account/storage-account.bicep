@@ -63,6 +63,13 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-account:0.5.3' = 
       defaultAction: 'Deny'
     }
     publicNetworkAccess: 'Disabled'
+    blobServices: {
+      containers: [
+        {
+          name: '${storageAccount.fluxNotificationContainerName}'
+        }
+      ]
+    }
     privateEndpoints: [
       {
         name: storageAccount.privateEndpointName
@@ -73,3 +80,4 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-account:0.5.3' = 
     ]
   }
 }
+
