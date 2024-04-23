@@ -140,7 +140,7 @@ function Set-NewDeployKey {
             "X-GitHub-Api-Version" = "2022-11-28"
         }
     
-        $keyTitle = "$($Environment)_01"
+        $keyTitle = "$($Environment.ToLower())_01"
         $repoKeysUrl = "https://api.github.com/repos/defra-adp-sandpit/adp-flux-services/keys"
         
         Write-Debug "Reading all the deploy keys..."
