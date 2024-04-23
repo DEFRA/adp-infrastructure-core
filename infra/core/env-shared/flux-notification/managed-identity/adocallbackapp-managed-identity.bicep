@@ -81,7 +81,7 @@ module appKvSecretsSecretsUserRoleAssignment '../../.bicep/kv-secrect-role-secre
   name: '${keyVault.Name}-secrect-user-role-${deploymentDate}-${index}'
   scope: resourceGroup(keyVault.subscriptionId, keyVault.resourceGroup)
   dependsOn: [
-    managedIdentities
+    clientIDSecret
   ]
   params: {
     principalId: managedIdentities.outputs.principalId 
