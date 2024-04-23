@@ -8,12 +8,6 @@ var authorizationRules = [
       'Send'
     ]
   }
-  {
-    name: 'ApiListenAccess'
-    rights: [
-      'Listen'
-    ]
-  }
 ]
 
 resource namespace 'Microsoft.EventHub/namespaces@2022-10-01-preview' existing = {
@@ -22,7 +16,12 @@ resource namespace 'Microsoft.EventHub/namespaces@2022-10-01-preview' existing =
 
 resource eventHubResource 'Microsoft.EventHub/namespaces/eventhubs@2022-10-01-preview' = {
   name: eventHub.eventHubName
-  parent: namespace
+  parent: namespace  
+}
+
+resource consumerGroup 'Microsoft.EventHub/namespaces/eventhubs/consumergroups@2024-01-01' = {
+  name: 'default'
+  parent: eventHubResource
 }
 
 resource authorizationRuleResource 'Microsoft.EventHub/namespaces/eventhubs/authorizationRules@2022-10-01-preview' = [for (authorizationRule, index) in authorizationRules: {
