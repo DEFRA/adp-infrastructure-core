@@ -52,7 +52,8 @@ function Get-GithubJwt {
     }
     process {
         $appId = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppIdSecretName -AsPlainText
-        $appKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppKeySecretName -AsPlainText
+        $secret = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppKeySecretName -AsPlainText
+        $appKey = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($secret))
         
         $header = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes((ConvertTo-Json -InputObject @{
             alg = "RS256"
@@ -66,7 +67,7 @@ function Get-GithubJwt {
             }))).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
         $rsa = [System.Security.Cryptography.RSA]::Create()
-        $rsa.ImportFromPem($appKey)
+        $rsa.ImportFromPem("$appKey")
 
         $signature = [Convert]::ToBase64String($rsa.SignData([System.Text.Encoding]::UTF8.GetBytes("$header.$payload"), [System.Security.Cryptography.HashAlgorithmName]::SHA256, [System.Security.Cryptography.RSASignaturePadding]::Pkcs1)).TrimEnd('=').Replace('+', '-').Replace('/', '_')
         $jwt = "$header.$payload.$signature"
