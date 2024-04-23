@@ -1,4 +1,4 @@
-@description('Required. The parameter object for eventHub. The object must contain the namespaceName and eventHubName values.')
+@description('Required. The parameter object for eventHub. The object must contain the namespaceName, consumerGroupName and name values.')
 param eventHub object
 
 var authorizationRules = [
@@ -15,12 +15,12 @@ resource namespace 'Microsoft.EventHub/namespaces@2022-10-01-preview' existing =
 }
 
 resource eventHubResource 'Microsoft.EventHub/namespaces/eventhubs@2022-10-01-preview' = {
-  name: eventHub.eventHubName
+  name: eventHub.name
   parent: namespace  
 }
 
-resource consumerGroup 'Microsoft.EventHub/namespaces/eventhubs/consumergroups@2024-01-01' = {
-  name: 'default'
+resource consumerGroup 'Microsoft.EventHub/namespaces/eventhubs/consumergroups@2023-01-01-preview' = {
+  name: eventHub.consumerGroupName
   parent: eventHubResource
 }
 

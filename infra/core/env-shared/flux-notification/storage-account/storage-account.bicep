@@ -66,7 +66,7 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-account:0.5.3' = 
     blobServices: {
       containers: [
         {
-          name: '${storageAccount.fluxNotificationContainerName}'
+          name: '${storageAccount.containerName}'
         }
       ]
     }

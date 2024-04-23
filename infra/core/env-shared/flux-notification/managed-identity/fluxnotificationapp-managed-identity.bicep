@@ -5,7 +5,7 @@ param managedIdentity object
 param containerRegistry object
 
 @description('Required. The name of the Key vault.')
-param keyVault object
+param keyVaultName string
 
 @description('Required. List of secrects to be Rbac to the managed identity.')
 param secrets array = []
@@ -61,7 +61,7 @@ module managedIdentities 'br/SharedDefraRegistry:managed-identity.user-assigned-
 
 module sharedAcrPullRoleAssignment '../../.bicep/acr-pull.bicep' = {
   name: '${containerRegistry.Name}-acr-pull-role-${deploymentDate}'
-  scope: resourceGroup(containerRegistry.subscriptionId, containerRegistry.resourceGroup)
+  scope: resourceGroup(containerRegistry.resourceGroup)
   dependsOn: [
     managedIdentities
   ]
@@ -72,7 +72,7 @@ module sharedAcrPullRoleAssignment '../../.bicep/acr-pull.bicep' = {
 }
 
 resource sharedKeyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
-  name: keyVault.Name
+  name: keyVaultName
 }
 
 resource clientIDSecret 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
@@ -84,20 +84,19 @@ resource clientIDSecret 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
 }
 
 module appKvSecretsSecretsUserRoleAssignment '../../.bicep/kv-secrect-role-secrets-user.bicep' = [for (secret, index) in secrets: {
-  name: '${keyVault.Name}-secrect-user-role-${deploymentDate}-${index}'
-  scope: resourceGroup(keyVault.subscriptionId, keyVault.resourceGroup)
+  name: '${keyVaultName}-secrect-user-role-${deploymentDate}-${index}'
   dependsOn: [
     clientIDSecret
   ]
   params: {
     principalId: managedIdentities.outputs.principalId 
-    keyVaultName: '${keyVault.Name}'
+    keyVaultName: keyVaultName
     secretName: secret
   }
 }]
+
 module storageContainerBlobDataContributorRoleAssignment '../../.bicep/storage-container-role-blob-data-contributor.bicep' = {
   name: '${storageAccount.Name}-storage-container-role-${deploymentDate}'
-  scope: resourceGroup(storageAccount.subscriptionId, storageAccount.resourceGroup)
   dependsOn: [
     managedIdentities
   ]
@@ -109,7 +108,7 @@ module storageContainerBlobDataContributorRoleAssignment '../../.bicep/storage-c
 
 module eventHubNamespaceDataReceiverRoleAssignment '../../.bicep/event-hub-role-data-receiver.bicep' = {
   name: '${eventHub.namespaceName}-event-hub-namespace-role-${deploymentDate}'
-  scope: resourceGroup(eventHub.subscriptionId, eventHub.resourceGroup)
+  scope: resourceGroup(eventHub.resourceGroup)
   dependsOn: [
     managedIdentities
   ]
