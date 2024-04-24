@@ -89,7 +89,7 @@ extends:
         deploymentBranches:
           - 'refs/heads/main'          
         developmentEnvironment: true
-        privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
+        privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
         azureRegions:
           primary: 'UKSouth'    
       - name: 'ssv_tst'
