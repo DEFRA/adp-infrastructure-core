@@ -286,7 +286,7 @@ extends:
                     -AppIdSecretName $(ADP-GITHUB-APP-ID)
                     -AppKeySecretName $(ADP-GITHUB-PRIVATE-KEY-BASE64)
                     -Environment "$(environment)$(environmentId)"
-                    -SSHPublicKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Pub'
+                    -SSHPublicKeySecretName $(newSshKey)  #'$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Pub'
                     -KeyVaultName $(ssvPlatformKeyVaultName)
                     -PSHelperDirectory '$(Pipeline.Workspace)/s/self/scripts/modules/ps-helpers'
               - ${{ if eq(variables.IsManagedClusterPlatformVariables, true) }}:

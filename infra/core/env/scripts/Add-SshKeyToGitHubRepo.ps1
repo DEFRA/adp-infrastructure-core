@@ -220,8 +220,9 @@ try {
     $installationToken = Get-InstallationToken -GitHubJwtToken $jwt
 
     # $deployKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $SSHPublicKeySecretName -AsPlainText
-    $deployKey = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $SSHPublicKeySecretName) | ConvertFrom-Json"
-    Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -DeployKey $deployKey.value
+    # $deployKey = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $SSHPublicKeySecretName) | ConvertFrom-Json"
+    # Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -DeployKey $deployKey.value
+    Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -DeployKey $SSHPublicKeySecretName
 
     $exitCode = 0
 }
