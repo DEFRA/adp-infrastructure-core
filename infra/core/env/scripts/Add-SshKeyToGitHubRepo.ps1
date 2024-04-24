@@ -208,13 +208,14 @@ try {
     # Register-SecretVault @parameters
     # $appId = Get-Secret -Name $AppIdSecretName -Vault $KeyVaultName -AsPlainText
 
-    $command = "az keyvault secret show --vault-name {0} --name {1}"
-    $appId = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $AppIdSecretName) | ConvertFrom-Json"
-    $appKey = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $AppKeySecretName) | ConvertFrom-Json"
+    # $command = "az keyvault secret show --vault-name {0} --name {1}"
+    # $appId = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $AppIdSecretName) | ConvertFrom-Json"
+    # $appKey = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $AppKeySecretName) | ConvertFrom-Json"
 
     # $appId = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppIdSecretName -AsPlainText
     # $appKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppKeySecretName -AsPlainText
-    $jwt = Get-GithubJwt -AppId $appId.value -AppKey $appKey.value
+    # $jwt = Get-GithubJwt -AppId $appId.value -AppKey $appKey.value
+    $jwt = Get-GithubJwt -AppId $ENV:ADP-GITHUB-APP-ID -AppKey $env:ADP-GITHUB-PRIVATE-KEY-BASE64
 
     $installationToken = Get-InstallationToken -GitHubJwtToken $jwt
 
