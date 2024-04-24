@@ -33,7 +33,9 @@ param(
     [Parameter()]
     [string]$GitHubOrganisation ='defra',
     [Parameter()]
-    [string]$GitHubRepository = 'adp-flux-services'
+    [string]$GitHubRepository = 'adp-flux-services',
+    [Parameter()]
+    [string]$PSHelperDirectory
 )
 
 function Get-GithubJwt {
@@ -186,16 +188,37 @@ Write-Debug "${functionName}:GitHubOrganisation=$GitHubOrganisation"
 Write-Debug "${functionName}:GitHubRepository=$GitHubRepository"
 
 try {
+    Import-Module $PSHelperDirectory -Force
+
     $appInstallationUrl = "https://api.github.com/app/installations"
     $repoKeysUrl = "https://api.github.com/repos/$GitHubOrganisation/$GitHubRepository/keys"
-    
-    $appId = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppIdSecretName -AsPlainText
-    $appKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppKeySecretName -AsPlainText
+
+    # Install-Module Microsoft.PowerShell.SecretStore
+    # Install-Module Microsoft.PowerShell.SecretManagement
+    # $parameters = @{
+    #     Name = $KeyVaultName
+    #     ModuleName = 'Az.KeyVault'
+    #     VaultParameters = @{
+    #         AZKVaultName = 'AzureKeyVault'
+    #         SubscriptionId = (Get-AzContext).Subscription.Id
+    #     }
+    #     DefaultVault = $true
+    # }
+    # Register-SecretVault @parameters
+    # $appId = Get-Secret -Name $AppIdSecretName -Vault $KeyVaultName -AsPlainText
+
+    $command = "az keyvault secret show --vault-name {0} --name {1}"
+    $appId = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $AppIdSecretName) | ConvertFrom-Json"
+    $appKey = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $AppKeySecretName) | ConvertFrom-Json"
+
+    # $appId = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppIdSecretName -AsPlainText
+    # $appKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppKeySecretName -AsPlainText
     $jwt = Get-GithubJwt -AppId $appId.value -AppKey $appKey.value
 
     $installationToken = Get-InstallationToken -GitHubJwtToken $jwt
 
-    $deployKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $SSHPublicKeySecretName -AsPlainText
+    # $deployKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $SSHPublicKeySecretName -AsPlainText
+    $deployKey = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $SSHPublicKeySecretName) | ConvertFrom-Json"
     Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -DeployKey $deployKey.value
 
     $exitCode = 0
