@@ -64,7 +64,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: features/ssh-keys
+      ref: main
       
 variables:
   - name: IsAll
@@ -140,7 +140,6 @@ extends:
   parameters:
     projectName: $(projectName)
     keyVaultName: $(ssvPlatformKeyVaultName)
-    # kvSecretsRunasPreJob: false
     deployFromFeature: ${{ parameters.deployFromFeature }}
     filePathsForTransform: |
       **/core/env/app-configuration/config-data/config-data.json
@@ -278,11 +277,9 @@ extends:
                 - name: Add SSH Key to Github Repo
                   type: 'script'
                   serviceConnectionVariableName: ssvServiceConnection
-                  scriptType: AzureCLI #AzurePowerShell
+                  scriptType: AzureCLI
                   azureCLIScriptType: pscore
                   path: 'infra/core/env/scripts/Add-SshKeyToGitHubRepo.ps1'
-                  # azurePowerShellVersion: 'LatestVersion'
-                  # azurePowershellUseCore: true
                   scriptArguments: >
                     -AppId $(ADP-GITHUB-APP-ID)
                     -AppKey $(ADP-GITHUB-PRIVATE-KEY-BASE64)
