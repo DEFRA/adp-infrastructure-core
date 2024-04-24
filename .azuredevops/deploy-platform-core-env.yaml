@@ -277,6 +277,7 @@ extends:
                   type: 'script'
                   serviceConnectionVariableName: ssvServiceConnection
                   scriptType: AzureCLI #AzurePowerShell
+                  azureCLIScriptType: pscore
                   path: 'infra/core/env/scripts/Add-SshKeyToGitHubRepo.ps1'
                   # azurePowerShellVersion: 'LatestVersion'
                   # azurePowershellUseCore: true
