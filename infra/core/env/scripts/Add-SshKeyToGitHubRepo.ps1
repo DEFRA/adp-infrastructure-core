@@ -36,24 +36,19 @@ param(
 function Get-GithubJwt {
     param(
         [Parameter(Mandatory)]
-        [string]$AppIdSecretName,
+        [string]$AppId,
         [Parameter(Mandatory)]
-        [string]$AppKeySecretName,
-        [Parameter(Mandatory)]
-        [string]$KeyVaultName
+        [string]$AppKey
     )
 
     begin {
         [string]$functionName = $MyInvocation.MyCommand
         Write-Debug "${functionName}:Entered"
-        Write-Debug "${functionName}:AppIdSecretName=$AppIdSecretName"
-        Write-Debug "${functionName}:AppKeySecretName=$AppKeySecretName"
-        Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
+        Write-Debug "${functionName}:AppId=$AppId"
+        Write-Debug "${functionName}:AppKey=$AppKey"
     }
     process {
-        $appId = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppIdSecretName -AsPlainText
-        $secret = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppKeySecretName -AsPlainText
-        $appKey = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($secret))
+        $appKey = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($AppKey))
         
         $header = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes((ConvertTo-Json -InputObject @{
             alg = "RS256"
@@ -63,7 +58,7 @@ function Get-GithubJwt {
         $payload = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes((ConvertTo-Json -InputObject @{
                 iat = [System.DateTimeOffset]::UtcNow.AddSeconds(-10).ToUnixTimeSeconds()
                 exp = [System.DateTimeOffset]::UtcNow.AddMinutes(10).ToUnixTimeSeconds()
-                iss = $appId
+                iss = $AppId
             }))).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
         $rsa = [System.Security.Cryptography.RSA]::Create()
@@ -120,9 +115,7 @@ function Set-NewDeployKey {
         [Parameter(Mandatory)]
         [string]$Environment,
         [Parameter(Mandatory)]
-        [string]$SSHPublicKeySecretName,
-        [Parameter(Mandatory)]
-        [string]$KeyVaultName
+        [string]$DeployKey
     )
 
     begin {
@@ -130,8 +123,7 @@ function Set-NewDeployKey {
         Write-Debug "${functionName}:Entered"
         Write-Debug "${functionName}:InstallationToken=$InstallationToken"
         Write-Debug "${functionName}:Environment=$Environment"
-        Write-Debug "${functionName}:SSHPublicKeySecretName=$SSHPublicKeySecretName"
-        Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
+        Write-Debug "${functionName}:DeployKey=$DeployKey"
     }
     process {
         $headers = @{
@@ -155,10 +147,9 @@ function Set-NewDeployKey {
             }
         }
 
-        $secret = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $SSHPublicKeySecretName -AsPlainText
         $body = @{
             "title" = $keyTitle
-            "key" = $secret
+            "key" = $DeployKey
             "read_only" = $false
         } | ConvertTo-Json
         Write-Output "Adding new key '$keyTitle'..."
@@ -197,11 +188,14 @@ Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
 try {
     Import-Module $PSHelperDirectory -Force
 
-    $jwt = Get-GithubJwt -AppIdSecretName $AppIdSecretName -AppKeySecretName $AppKeySecretName -KeyVaultName $KeyVaultName
+    $appId = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppIdSecretName -AsPlainText
+    $appKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppKeySecretName -AsPlainText
+    $jwt = Get-GithubJwt -AppId $appId -AppKey $appKey
 
     $installationToken = Get-InstallationToken -GitHubJwtToken $jwt
 
-    Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -SSHPublicKeySecretName $SSHPublicKeySecretName -KeyVaultName $KeyVaultName
+    $deployKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $SSHPublicKeySecretName -AsPlainText
+    Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -DeployKey $deployKey
 
     $exitCode = 0
 }
