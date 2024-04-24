@@ -258,23 +258,23 @@ extends:
                 #   path: infra/core/env/event-hub
                 #   resourceGroupName: $(ssvInfraSharedRg)
               - ${{ if eq(variables.IsManagedClusterFluxServicesSSHKeys, true) }}:
-                - name: Flux Services SSH Keys
-                  serviceConnectionVariableName: ssvServiceConnection
-                  type: 'script'
-                  scriptType: AzureCLI
-                  azureCLIScriptType: pscore
-                  path: 'infra/core/env/scripts/SSH-Generate-Keys.ps1'
-                  scriptArguments: > 
-                    -AzureSubscription $(subscriptionName)
-                    -KeyVaultName $(ssvPlatformKeyVaultName)
-                    -KeyVaultRgName $(ssvSharedResourceGroup)
-                    -KeyVaultSubscriptionId $(ssvSubscriptionId)
-                    -SSHPrivateKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity'
-                    -SSHPublicKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Pub'
-                    -KnownHostsSecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Known-Hosts'
-                    -SSHKeyType 'ecdsa-sha2-nistp384'
-                    -AppConfigMIRgName $(aksResourceGroup)
-                    -AppConfigMIName $(acManagedIdentityName)
+                # - name: Flux Services SSH Keys
+                #   serviceConnectionVariableName: ssvServiceConnection
+                #   type: 'script'
+                #   scriptType: AzureCLI
+                #   azureCLIScriptType: pscore
+                #   path: 'infra/core/env/scripts/SSH-Generate-Keys.ps1'
+                #   scriptArguments: > 
+                #     -AzureSubscription $(subscriptionName)
+                #     -KeyVaultName $(ssvPlatformKeyVaultName)
+                #     -KeyVaultRgName $(ssvSharedResourceGroup)
+                #     -KeyVaultSubscriptionId $(ssvSubscriptionId)
+                #     -SSHPrivateKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity'
+                #     -SSHPublicKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Pub'
+                #     -KnownHostsSecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Known-Hosts'
+                #     -SSHKeyType 'ecdsa-sha2-nistp384'
+                #     -AppConfigMIRgName $(aksResourceGroup)
+                #     -AppConfigMIName $(acManagedIdentityName)
                 - name: Add SSH Key to Github Repo
                   type: 'script'
                   serviceConnectionVariableName: ssvServiceConnection
