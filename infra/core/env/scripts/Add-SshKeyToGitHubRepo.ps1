@@ -208,7 +208,7 @@ try {
     # Register-SecretVault @parameters
     # $appId = Get-Secret -Name $AppIdSecretName -Vault $KeyVaultName -AsPlainText
 
-    # $command = "az keyvault secret show --vault-name {0} --name {1}"
+    $command = "az keyvault secret show --vault-name {0} --name {1}"
     # $appId = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $AppIdSecretName) | ConvertFrom-Json"
     # $appKey = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $AppKeySecretName) | ConvertFrom-Json"
 
@@ -220,9 +220,8 @@ try {
     $installationToken = Get-InstallationToken -GitHubJwtToken $jwt
 
     # $deployKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $SSHPublicKeySecretName -AsPlainText
-    # $deployKey = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $SSHPublicKeySecretName) | ConvertFrom-Json"
-    # Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -DeployKey $deployKey.value
-    Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -DeployKey $SSHPublicKeySecretName
+    $deployKey = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $SSHPublicKeySecretName) | ConvertFrom-Json"
+    Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -DeployKey $deployKey.value
 
     $exitCode = 0
 }

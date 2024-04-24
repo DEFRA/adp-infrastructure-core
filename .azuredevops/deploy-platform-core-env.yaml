@@ -64,7 +64,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: features/ssh-keys
       
 variables:
   - name: IsAll
@@ -140,6 +140,7 @@ extends:
   parameters:
     projectName: $(projectName)
     keyVaultName: $(ssvPlatformKeyVaultName)
+    kvSecretsRunasPreJob: false
     deployFromFeature: ${{ parameters.deployFromFeature }}
     filePathsForTransform: |
       **/core/env/app-configuration/config-data/config-data.json
@@ -286,7 +287,7 @@ extends:
                     -AppIdSecretName $(ADP-GITHUB-APP-ID)
                     -AppKeySecretName $(ADP-GITHUB-PRIVATE-KEY-BASE64)
                     -Environment "$(environment)$(environmentId)"
-                    -SSHPublicKeySecretName $(newSshKey)  #'$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Pub'
+                    -SSHPublicKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Pub'
                     -KeyVaultName $(ssvPlatformKeyVaultName)
                     -PSHelperDirectory '$(Pipeline.Workspace)/s/self/scripts/modules/ps-helpers'
               - ${{ if eq(variables.IsManagedClusterPlatformVariables, true) }}:
