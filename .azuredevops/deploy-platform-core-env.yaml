@@ -139,6 +139,7 @@ extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
     projectName: $(projectName)
+    keyVaultName: $(ssvPlatformKeyVaultName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     filePathsForTransform: |
       **/core/env/app-configuration/config-data/config-data.json

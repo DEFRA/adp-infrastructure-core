@@ -195,6 +195,7 @@ try {
 
     Install-Module Microsoft.PowerShell.SecretStore
     Install-Module Microsoft.PowerShell.SecretManagement
+    
     $parameters = @{
         Name = $KeyVaultName
         ModuleName = 'Az.KeyVault'
