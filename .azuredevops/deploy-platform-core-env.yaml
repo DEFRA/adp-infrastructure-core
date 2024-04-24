@@ -286,7 +286,6 @@ extends:
                     -Environment "$(environment)$(environmentId)"
                     -SSHPublicKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Pub'
                     -KeyVaultName $(ssvPlatformKeyVaultName)
-                    -PSHelperDirectory '$(Pipeline.Workspace)/s/self/scripts/modules/ps-helpers'
               - ${{ if eq(variables.IsManagedClusterPlatformVariables, true) }}:
                 - name: Import Config Values
                   type: 'script'

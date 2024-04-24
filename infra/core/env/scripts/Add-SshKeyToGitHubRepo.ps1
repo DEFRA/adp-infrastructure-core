@@ -14,8 +14,8 @@
 .PARAMETER PSHelperDirectory
     Mandatory. Directory Path of PSHelper module
 .EXAMPLE
-    .\Add-SshKeyToGitHubRepo.ps1 -AppIdSecretName <AppIdSecretName> -AppKeySecretName <AppKeySecretName> -Environment <Environment> -SSHPublicKeySecretName <SSHPublicKeySecretName> `
-        -GitHubOrganisation <GitHubOrganisation> -GitHubRepository <GitHubRepository> -PSHelperDirectory <PSHelperDirectory>
+    .\Add-SshKeyToGitHubRepo.ps1 -AppIdSecretName <AppIdSecretName> -AppKeySecretName <AppKeySecretName> -Environment <Environment> `
+        -SSHPublicKeySecretName <SSHPublicKeySecretName> -GitHubOrganisation <GitHubOrganisation> -GitHubRepository <GitHubRepository>
 #> 
 
 [CmdletBinding()]
@@ -33,9 +33,7 @@ param(
     [Parameter()]
     [string]$GitHubOrganisation ='defra',
     [Parameter()]
-    [string]$GitHubRepository = 'adp-flux-services',
-    [Parameter()]
-    [string]$PSHelperDirectory
+    [string]$GitHubRepository = 'adp-flux-services'
 )
 
 function Get-GithubJwt {
@@ -188,8 +186,6 @@ Write-Debug "${functionName}:GitHubOrganisation=$GitHubOrganisation"
 Write-Debug "${functionName}:GitHubRepository=$GitHubRepository"
 
 try {
-    Import-Module $PSHelperDirectory -Force
-
     $appInstallationUrl = "https://api.github.com/app/installations"
     $repoKeysUrl = "https://api.github.com/repos/$GitHubOrganisation/$GitHubRepository/keys"
     
