@@ -14,7 +14,8 @@
 .PARAMETER PSHelperDirectory
     Mandatory. Directory Path of PSHelper module
 .EXAMPLE
-    .\Add-SshKeyToGitHubRepo.ps1 -AppId <AppId> -AppKey <AppKey> -Environment <Environment> -SSHPublicKeySecretName <SSHPublicKeySecretName> -PSHelperDirectory <PSHelperDirectory>
+    .\Add-SshKeyToGitHubRepo.ps1 -AppIdSecretName <AppIdSecretName> -AppKeySecretName <AppKeySecretName> -Environment <Environment> -SSHPublicKeySecretName <SSHPublicKeySecretName> `
+        -GitHubOrganisation <GitHubOrganisation> -GitHubRepository <GitHubRepository> -PSHelperDirectory <PSHelperDirectory>
 #> 
 
 [CmdletBinding()]
@@ -29,6 +30,10 @@ param(
     [string]$SSHPublicKeySecretName,
     [Parameter(Mandatory)]
     [string]$KeyVaultName,
+    [Parameter()]
+    [string]$GitHubOrganisation ='defra',
+    [Parameter()]
+    [string]$GitHubRepository = 'adp-flux-services',
     [Parameter()]
     [string]$PSHelperDirectory
 )
@@ -92,11 +97,11 @@ function Get-InstallationToken {
         }
     
         Write-Debug "Get App Installation ID..."
-        [Object]$installation = Invoke-RestMethod -Method Get -Uri "https://api.github.com/app/installations" -Headers $headers
+        [Object]$installation = Invoke-RestMethod -Method Get -Uri $appInstallationUrl -Headers $headers
         [string]$installationId = $installation.id
     
         Write-Debug "Get Installation Token..."
-        [object]$instToken = Invoke-RestMethod -Method Post -Uri "https://api.github.com/app/installations/$installationId/access_tokens" -Headers $headers
+        [object]$instToken = Invoke-RestMethod -Method Post -Uri "$appInstallationUrl/$installationId/access_tokens" -Headers $headers
         return $instToken.token
     }
 
@@ -129,7 +134,6 @@ function Set-NewDeployKey {
         }
     
         $keyTitle = "$($Environment.ToLower())_01"
-        $repoKeysUrl = "https://api.github.com/repos/defra/adp-flux-services/keys"
         
         Write-Debug "Reading all the deploy keys..."
         [array]$keys = Invoke-RestMethod -Method Get -Uri $repoKeysUrl -Headers $headers
@@ -180,21 +184,22 @@ Write-Debug "${functionName}:AppKeySecretName=$AppKeySecretName"
 Write-Debug "${functionName}:Environment=$Environment"
 Write-Debug "${functionName}:SSHPublicKeySecretName=$SSHPublicKeySecretName"
 Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
+Write-Debug "${functionName}:GitHubOrganisation=$GitHubOrganisation"
+Write-Debug "${functionName}:GitHubRepository=$GitHubRepository"
 
 try {
     Import-Module $PSHelperDirectory -Force
 
-    $command = "az keyvault secret show --vault-name {0} --name {1}"
-    $appId = Invoke-CommandLine -Command $($command -f $KeyVaultName, $AppIdSecretName) | ConvertFrom-Json
-    $appKey = Invoke-CommandLine -Command $($command -f $KeyVaultName, $AppKeySecretName) | ConvertFrom-Json
-    # $appId = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppIdSecretName -AsPlainText
-    # $appKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppKeySecretName -AsPlainText
+    $appInstallationUrl = "https://api.github.com/app/installations"
+    $repoKeysUrl = "https://api.github.com/repos/$GitHubOrganisation/$GitHubRepository/keys"
+    
+    $appId = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppIdSecretName -AsPlainText
+    $appKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppKeySecretName -AsPlainText
     $jwt = Get-GithubJwt -AppId $appId.value -AppKey $appKey.value
 
     $installationToken = Get-InstallationToken -GitHubJwtToken $jwt
 
-    # $deployKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $SSHPublicKeySecretName -AsPlainText
-    $deployKey = Invoke-CommandLine -Command $($command -f $KeyVaultName, $SSHPublicKeySecretName) | ConvertFrom-Json
+    $deployKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $SSHPublicKeySecretName -AsPlainText
     Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -DeployKey $deployKey.value
 
     $exitCode = 0
