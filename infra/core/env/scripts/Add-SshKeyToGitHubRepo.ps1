@@ -61,7 +61,7 @@ function Get-GithubJwt {
 
         $payload = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes((ConvertTo-Json -InputObject @{
                 iat = [System.DateTimeOffset]::UtcNow.AddSeconds(-10).ToUnixTimeSeconds()
-                exp = [System.DateTimeOffset]::UtcNow.AddMinutes(10).ToUnixTimeSeconds()
+                exp = [System.DateTimeOffset]::UtcNow.AddMinutes(5).ToUnixTimeSeconds()
                 iss = $AppId
             }))).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
@@ -196,8 +196,6 @@ try {
     $jwt = Get-GithubJwt -AppId $AppId -AppKey $AppKey
 
     $installationToken = Get-InstallationToken -GitHubJwtToken $jwt
-
-    az keyvault secret show --vault-name $KeyVaultName --name $SSHPublicKeySecretName
 
     $command = "az keyvault secret show --vault-name {0} --name {1}"
     $deployKey = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $SSHPublicKeySecretName)" | ConvertFrom-Json
