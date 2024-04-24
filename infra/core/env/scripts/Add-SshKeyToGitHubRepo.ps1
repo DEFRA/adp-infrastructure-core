@@ -45,7 +45,6 @@ function Get-GithubJwt {
         [string]$functionName = $MyInvocation.MyCommand
         Write-Debug "${functionName}:Entered"
         Write-Debug "${functionName}:AppId=$AppId"
-        Write-Debug "${functionName}:AppKey=$AppKey"
     }
     process {
         $appKey = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($AppKey))
@@ -66,7 +65,6 @@ function Get-GithubJwt {
 
         $signature = [Convert]::ToBase64String($rsa.SignData([System.Text.Encoding]::UTF8.GetBytes("$header.$payload"), [System.Security.Cryptography.HashAlgorithmName]::SHA256, [System.Security.Cryptography.RSASignaturePadding]::Pkcs1)).TrimEnd('=').Replace('+', '-').Replace('/', '_')
         $jwt = "$header.$payload.$signature"
-        Write-Debug $jwt
         return $jwt
     }
 
@@ -99,7 +97,6 @@ function Get-InstallationToken {
     
         Write-Debug "Get Installation Token..."
         [object]$instToken = Invoke-RestMethod -Method Post -Uri "https://api.github.com/app/installations/$installationId/access_tokens" -Headers $headers
-        Write-Debug $instToken
         return $instToken.token
     }
 
@@ -123,7 +120,6 @@ function Set-NewDeployKey {
         Write-Debug "${functionName}:Entered"
         Write-Debug "${functionName}:InstallationToken=$InstallationToken"
         Write-Debug "${functionName}:Environment=$Environment"
-        Write-Debug "${functionName}:DeployKey=$DeployKey"
     }
     process {
         $headers = @{
