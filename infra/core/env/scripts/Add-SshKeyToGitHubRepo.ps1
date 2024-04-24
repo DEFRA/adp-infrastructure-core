@@ -3,9 +3,9 @@
      Adds the supplied GitHub Repository to an installed App Installation
 .DESCRIPTION
     Adds the supplied GitHub Repository to an installed App Installation. Used for when App Installations are selected repos only.
-.PARAMETER AppIdSecretName
+.PARAMETER AppId
     Mandatory. Github App Id Secret Name
-.PARAMETER AppKeySecretName
+.PARAMETER AppKey
     Mandatory. Github App Private Key Secret Name
 .PARAMETER Environment
     Mandatory. Application Environment for Key Title
@@ -14,16 +14,16 @@
 .PARAMETER PSHelperDirectory
     Mandatory. Directory Path of PSHelper module
 .EXAMPLE
-    .\Add-SshKeyToGitHubRepo.ps1 -AppIdSecretName <AppIdSecretName> -AppKeySecretName <AppKeySecretName> -Environment <Environment> `
+    .\Add-SshKeyToGitHubRepo.ps1 -AppId <AppId> -AppKey <AppKey> -Environment <Environment> `
         -SSHPublicKeySecretName <SSHPublicKeySecretName> -GitHubOrganisation <GitHubOrganisation> -GitHubRepository <GitHubRepository>
 #> 
 
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)]
-    [string]$AppIdSecretName,
+    [string]$AppId,
     [Parameter(Mandatory)]
-    [string]$AppKeySecretName,
+    [string]$AppKey,
     [Parameter(Mandatory)]
     [string]$Environment,
     [Parameter(Mandatory)]
@@ -179,8 +179,8 @@ if ($enableDebug) {
 }
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
-Write-Debug "${functionName}:AppIdSecretName=$AppIdSecretName"
-Write-Debug "${functionName}:AppKeySecretName=$AppKeySecretName"
+Write-Debug "${functionName}:AppId=$AppId"
+Write-Debug "${functionName}:AppKey=$AppKey"
 Write-Debug "${functionName}:Environment=$Environment"
 Write-Debug "${functionName}:SSHPublicKeySecretName=$SSHPublicKeySecretName"
 Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
@@ -193,33 +193,11 @@ try {
     $appInstallationUrl = "https://api.github.com/app/installations"
     $repoKeysUrl = "https://api.github.com/repos/$GitHubOrganisation/$GitHubRepository/keys"
 
-    # Install-Module Microsoft.PowerShell.SecretStore
-    # Install-Module Microsoft.PowerShell.SecretManagement
-
-    # $parameters = @{
-    #     Name = $KeyVaultName
-    #     ModuleName = 'Az.KeyVault'
-    #     VaultParameters = @{
-    #         AZKVaultName = 'AzureKeyVault'
-    #         SubscriptionId = (Get-AzContext).Subscription.Id
-    #     }
-    #     DefaultVault = $true
-    # }
-    # Register-SecretVault @parameters
-    # $appId = Get-Secret -Name $AppIdSecretName -Vault $KeyVaultName -AsPlainText
-
-    $command = "az keyvault secret show --vault-name {0} --name {1}"
-    # $appId = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $AppIdSecretName) | ConvertFrom-Json"
-    # $appKey = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $AppKeySecretName) | ConvertFrom-Json"
-
-    # $appId = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppIdSecretName -AsPlainText
-    # $appKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppKeySecretName -AsPlainText
-    # $jwt = Get-GithubJwt -AppId $appId.value -AppKey $appKey.value
-    $jwt = Get-GithubJwt -AppId $AppIdSecretName -AppKey $AppKeySecretName
+    $jwt = Get-GithubJwt -AppId $AppId -AppKey $AppKey
 
     $installationToken = Get-InstallationToken -GitHubJwtToken $jwt
 
-    # $deployKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $SSHPublicKeySecretName -AsPlainText
+    $command = "az keyvault secret show --vault-name {0} --name {1}"
     $deployKey = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $SSHPublicKeySecretName)" | ConvertFrom-Json
     Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -DeployKey $deployKey.value
 
