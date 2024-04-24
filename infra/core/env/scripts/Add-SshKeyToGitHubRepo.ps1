@@ -138,7 +138,7 @@ function Set-NewDeployKey {
             [object]$existingKey = $keys | Where-Object { $_.title -eq $keyTitle }
 
             if ($existingKey -and $existingKey -ne '') {
-                Write-Output "Deleting existing key '$keyTitle' having id '$($existingKey.id)'."
+                Write-Host "Deleting existing key '$keyTitle' having id '$($existingKey.id)'."
                 Invoke-RestMethod -Method Delete -Uri ("$repoKeysUrl/{0}" -f $existingKey.id) -Headers $headers | Out-Null
             }
         }
@@ -148,7 +148,7 @@ function Set-NewDeployKey {
             "key" = $DeployKey
             "read_only" = $false
         } | ConvertTo-Json
-        Write-Output "Adding new key '$keyTitle'..."
+        Write-Host "Adding new key '$keyTitle'..."
         Invoke-RestMethod -Method Post -Uri $repoKeysUrl -Body $body -Headers $headers | Out-Null
     }
 
@@ -184,14 +184,18 @@ Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
 try {
     Import-Module $PSHelperDirectory -Force
 
-    $appId = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppIdSecretName -AsPlainText
-    $appKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppKeySecretName -AsPlainText
-    $jwt = Get-GithubJwt -AppId $appId -AppKey $appKey
+    $command = "az keyvault secret show --vault-name {0} --name {1}"
+    $appId = Invoke-CommandLine -Command $($command -f $KeyVaultName, $AppIdSecretName) | ConvertFrom-Json
+    $appKey = Invoke-CommandLine -Command $($command -f $KeyVaultName, $AppKeySecretName) | ConvertFrom-Json
+    # $appId = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppIdSecretName -AsPlainText
+    # $appKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppKeySecretName -AsPlainText
+    $jwt = Get-GithubJwt -AppId $appId.value -AppKey $appKey.value
 
     $installationToken = Get-InstallationToken -GitHubJwtToken $jwt
 
-    $deployKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $SSHPublicKeySecretName -AsPlainText
-    Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -DeployKey $deployKey
+    # $deployKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $SSHPublicKeySecretName -AsPlainText
+    $deployKey = Invoke-CommandLine -Command $($command -f $KeyVaultName, $SSHPublicKeySecretName) | ConvertFrom-Json
+    Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -DeployKey $deployKey.value
 
     $exitCode = 0
 }

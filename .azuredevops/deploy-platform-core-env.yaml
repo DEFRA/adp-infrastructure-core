@@ -276,10 +276,10 @@ extends:
                 - name: Add SSH Key to Github Repo
                   type: 'script'
                   serviceConnectionVariableName: ssvServiceConnection
-                  scriptType: AzurePowerShell
+                  scriptType: AzureCLI #AzurePowerShell
                   path: 'infra/core/env/scripts/Add-SshKeyToGitHubRepo.ps1'
-                  azurePowerShellVersion: 'LatestVersion'
-                  azurePowershellUseCore: true
+                  # azurePowerShellVersion: 'LatestVersion'
+                  # azurePowershellUseCore: true
                   scriptArguments: >
                     -AppIdSecretName "ADP-GITHUB-APP-ID"
                     -AppKeySecretName "ADP-GITHUB-PRIVATE-KEY-BASE64"
