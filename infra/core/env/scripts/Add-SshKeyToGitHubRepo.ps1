@@ -67,7 +67,7 @@ function Get-GithubJwt {
             }))).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
         $rsa = [System.Security.Cryptography.RSA]::Create()
-        $rsa.ImportFromPem("$appKey")
+        $rsa.ImportFromPem($appKey)
 
         $signature = [Convert]::ToBase64String($rsa.SignData([System.Text.Encoding]::UTF8.GetBytes("$header.$payload"), [System.Security.Cryptography.HashAlgorithmName]::SHA256, [System.Security.Cryptography.RSASignaturePadding]::Pkcs1)).TrimEnd('=').Replace('+', '-').Replace('/', '_')
         $jwt = "$header.$payload.$signature"
@@ -141,7 +141,7 @@ function Set-NewDeployKey {
         }
     
         $keyTitle = "$($Environment.ToLower())_01"
-        $repoKeysUrl = "https://api.github.com/repos/defra-adp-sandpit/adp-flux-services/keys"
+        $repoKeysUrl = "https://api.github.com/repos/defra/adp-flux-services/keys"
         
         Write-Debug "Reading all the deploy keys..."
         [array]$keys = Invoke-RestMethod -Method Get -Uri $repoKeysUrl -Headers $headers
