@@ -215,7 +215,7 @@ try {
     # $appId = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppIdSecretName -AsPlainText
     # $appKey = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppKeySecretName -AsPlainText
     # $jwt = Get-GithubJwt -AppId $appId.value -AppKey $appKey.value
-    $jwt = Get-GithubJwt -AppId ${Secret:ADP-GITHUB-APP-ID} -AppKey ${Secret:ADP-GITHUB-PRIVATE-KEY-BASE64}
+    $jwt = Get-GithubJwt -AppId $AppIdSecretName -AppKey $AppKeySecretName
 
     $installationToken = Get-InstallationToken -GitHubJwtToken $jwt
 
