@@ -190,18 +190,18 @@ Write-Debug "${functionName}:GitHubRepository=$GitHubRepository"
 try {
     Import-Module $PSHelperDirectory -Force
 
-    # $appInstallationUrl = "https://api.github.com/app/installations"
-    # $repoKeysUrl = "https://api.github.com/repos/$GitHubOrganisation/$GitHubRepository/keys"
+    $appInstallationUrl = "https://api.github.com/app/installations"
+    $repoKeysUrl = "https://api.github.com/repos/$GitHubOrganisation/$GitHubRepository/keys"
 
-    # $jwt = Get-GithubJwt -AppId $AppId -AppKey $AppKey
+    $jwt = Get-GithubJwt -AppId $AppId -AppKey $AppKey
 
-    # $installationToken = Get-InstallationToken -GitHubJwtToken $jwt
+    $installationToken = Get-InstallationToken -GitHubJwtToken $jwt
 
     az keyvault secret show --vault-name $KeyVaultName --name $SSHPublicKeySecretName
 
     $command = "az keyvault secret show --vault-name {0} --name {1}"
     $deployKey = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $SSHPublicKeySecretName)" | ConvertFrom-Json
-    # Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -DeployKey $deployKey.value
+    Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -DeployKey $deployKey.value
 
     $exitCode = 0
 }
