@@ -284,8 +284,8 @@ extends:
                   # azurePowerShellVersion: 'LatestVersion'
                   # azurePowershellUseCore: true
                   scriptArguments: >
-                    -AppId "1222" #$(ADP-GITHUB-APP-ID)
-                    -AppKey "AJjjabsdbab"  #$(ADP-GITHUB-PRIVATE-KEY-BASE64)
+                    -AppId "1222"
+                    -AppKey "AJjjabsdbab"
                     -Environment "$(environment)$(environmentId)"
                     -SSHPublicKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Pub'
                     -KeyVaultName $(ssvPlatformKeyVaultName)
