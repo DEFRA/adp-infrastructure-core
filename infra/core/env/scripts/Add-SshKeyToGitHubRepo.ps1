@@ -201,7 +201,7 @@ try {
     # $deployKey = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $SSHPublicKeySecretName)" | ConvertFrom-Json
     # Set-NewDeployKey -InstallationToken $installationToken -Environment $Environment -DeployKey $deployKey.value
 
-    az keyvault secret show --vault-name $KeyVaultName --name "ADP-GITHUB-APP-ID"
+    az keyvault secret show --vault-name $KeyVaultName --name $SSHPublicKeySecretName
 
     $exitCode = 0
 }
