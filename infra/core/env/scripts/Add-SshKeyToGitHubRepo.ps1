@@ -193,22 +193,22 @@ try {
     $appInstallationUrl = "https://api.github.com/app/installations"
     $repoKeysUrl = "https://api.github.com/repos/$GitHubOrganisation/$GitHubRepository/keys"
 
-    # Install-Module Microsoft.PowerShell.SecretStore
-    # Install-Module Microsoft.PowerShell.SecretManagement
-    # $parameters = @{
-    #     Name = $KeyVaultName
-    #     ModuleName = 'Az.KeyVault'
-    #     VaultParameters = @{
-    #         AZKVaultName = 'AzureKeyVault'
-    #         SubscriptionId = (Get-AzContext).Subscription.Id
-    #     }
-    #     DefaultVault = $true
-    # }
-    # Register-SecretVault @parameters
-    # $appId = Get-Secret -Name $AppIdSecretName -Vault $KeyVaultName -AsPlainText
+    Install-Module Microsoft.PowerShell.SecretStore
+    Install-Module Microsoft.PowerShell.SecretManagement
+    $parameters = @{
+        Name = $KeyVaultName
+        ModuleName = 'Az.KeyVault'
+        VaultParameters = @{
+            AZKVaultName = 'AzureKeyVault'
+            SubscriptionId = (Get-AzContext).Subscription.Id
+        }
+        DefaultVault = $true
+    }
+    Register-SecretVault @parameters
+    $appId = Get-Secret -Name $AppIdSecretName -Vault $KeyVaultName -AsPlainText
 
     $command = "az keyvault secret show --vault-name {0} --name {1}"
-    $appId = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $AppIdSecretName) | ConvertFrom-Json"
+    # $appId = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $AppIdSecretName) | ConvertFrom-Json"
     $appKey = Invoke-CommandLine -Command "$($command -f $KeyVaultName, $AppKeySecretName) | ConvertFrom-Json"
 
     # $appId = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $AppIdSecretName -AsPlainText
