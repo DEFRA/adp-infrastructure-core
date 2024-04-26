@@ -202,5 +202,11 @@
     "value": "ADO-DefraGovUK-AAD-ADP-#{{ ssvEnvironment }}#{{ nc_shared_instance }}",
     "label": "adp-platform",
     "contentType": "text/plain"
+  },
+  {
+    "key": "ENABLE_PRIVATE_ENDPOINT",
+    "value": "#{{ lower(enablePrivateEndpoint) }}",
+    "label": "adp-platform",
+    "contentType": "text/plain"
   }
 ]
