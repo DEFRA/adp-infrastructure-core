@@ -22,6 +22,7 @@ param nsgList = [
                 sourcePortRanges: []
                 destinationPortRanges: [
                     80
+                    81
                     443
                 ]
                 sourceAddressPrefixes: []
