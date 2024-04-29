@@ -39,7 +39,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: rv/369687
       
 variables:
   - name: IsAll
@@ -66,7 +66,7 @@ extends:
       - name: 'defradev'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - 'refs/heads/main'
+          - 'refs/heads/rv/369687'
           - 'refs/pull/*/merge'
         developmentEnvironment: true
         azureRegions:
