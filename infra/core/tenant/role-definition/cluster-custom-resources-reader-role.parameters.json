@@ -6,7 +6,7 @@
       "value": "#{{ customRoleCustomResourcesReader }}"
     },
     "roleScopes": {
-      "value": #{{ noescape(customRoleScopes) }}
+      "value": #{{ noescape(crdReaderCustomRoleScopes) }}
     }
   }
 }
