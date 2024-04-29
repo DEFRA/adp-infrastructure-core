@@ -14,6 +14,7 @@ parameters:
       - ServiceBus Writer Role
       - PostgreSql Database Writer Role
       - Storage Account Writer Role
+      - Custom Resources Reader Role
 pr:
   branches:
     include:
@@ -38,7 +39,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: rv/369687
       
 variables:
   - name: IsAll
@@ -49,6 +50,8 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'PostgreSql Database Writer Role')) }}
   - name: IsStorageAccountWriterRole
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Storage Account Writer Role')) }}
+  - name: IsCustomResourcesReaderRole
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Custom Resources Reader Role')) }}    
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -63,7 +66,7 @@ extends:
       - name: 'defradev'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
-          - 'refs/heads/main'
+          - 'refs/heads/rv/369687'
           - 'refs/pull/*/merge'
         developmentEnvironment: true
         azureRegions:
@@ -97,3 +100,7 @@ extends:
               - name: storageaccount-writer-role
                 path: infra/core/tenant/role-definition
                 scope: "Subscription"
+           - ${{ if eq(variables.IsCustomResourcesReaderRole, true) }}:
+              - name: cluster-custom-resources-reader-role
+                path: infra/core/tenant/role-definition
+                scope: "Subscription"                
