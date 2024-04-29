@@ -23,6 +23,7 @@ resource asbCustomRoleResource 'Microsoft.Authorization/roleDefinitions@2022-04-
           'Microsoft.Resources/subscriptions/read'
           'Microsoft.Resources/subscriptions/resourceGroups/read'
           'Microsoft.ContainerService/managedClusters/listClusterUserCredential/action'
+          'Microsoft.ContainerService/managedClusters/read'
         ]
         dataActions: [
           'Microsoft.ContainerService/managedClusters/apps/controllerrevisions/read'
