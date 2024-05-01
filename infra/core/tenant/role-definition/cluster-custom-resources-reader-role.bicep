@@ -9,7 +9,7 @@ param roleScopes array
 @description('Detailed description of the role definition')
 param roleDescription string = 'Custom Role to read cluster data.'
 
-resource asbCustomRoleResource 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
+resource clusterCustomRoleResource 'Microsoft.Authorization/roleDefinitions@2022-04-01' = {
   name: guid(subscription().id, roleName)
   scope: subscription()
   properties: {
