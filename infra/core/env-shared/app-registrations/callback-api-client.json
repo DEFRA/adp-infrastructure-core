@@ -18,7 +18,7 @@
             },
             "requiredResourceAccess": [
                 {
-                    "resourceAppId": "#{{ API-AUTH-BACKEND-APP-REG-CLIENT-ID }}",
+                    "resourceAppId": "#{{ apiAuthBackendAppRegClientIdSecretValue }}",
                     "resourceAccess": [
                         {
                             "id": "#{{ fluxNotificationsReadAppRoleId }}",
