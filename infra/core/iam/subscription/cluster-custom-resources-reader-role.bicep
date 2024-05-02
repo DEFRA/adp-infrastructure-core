@@ -28,6 +28,6 @@ module clustercustomRoleAssignment '../.bicep/role-assignment.bicep' = {
   name: '${roleName}-${deploymentDate}'
   params: {
     principalId: principalId
-    roleDefinitionId: subscriptionResourceId(subscription().id, 'Microsoft.Authorization/roleDefinitions', roleName)
+    roleDefinitionId: subscriptionResourceId(subscription().subscriptionId, 'Microsoft.Authorization/roleDefinitions', roleName)
   }
 }
