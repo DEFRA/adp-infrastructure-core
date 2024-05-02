@@ -35,7 +35,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: rv/372068
+      ref: main
       
 variables:
   - name: IsAll
@@ -55,7 +55,7 @@ extends:
       - name: 'snd1'
         serviceConnection: AZD-ADP-SND1
         deploymentBranches:
-          - 'refs/heads/rv/372068'
+          - 'refs/heads/main'
         developmentEnvironment: true
         privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
         azureRegions:
