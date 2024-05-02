@@ -1,3 +1,5 @@
+targetScope = 'subscription'
+
 @description('Required. The parameter object for the managed identity. The object must contain the name and principalId values.')
 param principalId string
 

@@ -1,4 +1,4 @@
-
+targetScope = 'subscription'
 
 @description('Name of the Custom Role Definition in Azure.')
 param roleName string
