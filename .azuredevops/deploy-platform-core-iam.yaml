@@ -103,6 +103,7 @@ extends:
            - ${{ if eq(variables.IsClusterCustomResourcesReaderRole, true) }}:
               - name: cluster-custom-resources-reader-role
                 path: infra/core/iam/subscription
+                scope: "Subscription"
                 preDeployScriptsList:  
                 - displayName: 'Get Portal App PrincipalId'
                   type: AzurePowerShell
