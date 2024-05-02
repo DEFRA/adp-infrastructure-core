@@ -110,5 +110,5 @@ extends:
                   inlineScript: |
                     $roleid = (Get-AzRoleDefinition -Name '$(customRoleCustomResourcesReader)').Id
                     Write-Host "##vso[task.setvariable variable=customRoleCustomResourcesReaderRoleId;]$roleid"  
-                    $AppId = (Get-AzADServicePrincipal -DisplayName $(portalAppRegName)).AppId
+                    $AppId = (Get-AzADServicePrincipal -DisplayName '$(portalAppRegName)').AppId
                     Write-Host "##vso[task.setvariable variable=portalAppPrincipalId;]$AppId"  
