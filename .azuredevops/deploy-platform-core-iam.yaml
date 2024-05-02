@@ -108,5 +108,7 @@ extends:
                   type: AzurePowerShell
                   serviceConnectionVariableName: 'subscriptionName'
                   inlineScript: |
-                    $output = (Get-AzADServicePrincipal -DisplayName $(portalAppRegName)).AppId
-                    Write-Host "##vso[task.setvariable variable=portalAppPrincipalId;]$output"  
+                    $roleid = (Get-AzRoleDefinition -Name $(customRoleCustomResourcesReader)).Id
+                    Write-Host "##vso[task.setvariable variable=customRoleCustomResourcesReaderRoleId;]$roleid"  
+                    $AppId = (Get-AzADServicePrincipal -DisplayName $(portalAppRegName)).AppId
+                    Write-Host "##vso[task.setvariable variable=portalAppPrincipalId;]$AppId"  
