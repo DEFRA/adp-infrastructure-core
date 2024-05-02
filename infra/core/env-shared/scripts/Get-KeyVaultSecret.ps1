@@ -56,7 +56,7 @@ try {
     [string]$secretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $SecretName -AsPlainText -ErrorAction Stop
 
     #Write-Host "##vso[task.setvariable variable=API-AUTH-BACKEND-APP-REG-CLIENT-ID]$($secretValue)"
-    Write-Host "##vso[task.setvariable variable=$(TaskVariableName)]$($secretValue)"
+    Write-Host "##vso[task.setvariable variable=$($TaskVariableName)]$($secretValue)"
 
     $exitCode = 0    
 }
