@@ -100,6 +100,7 @@ extends:
         keyVaultList:
         - Name: $(ssvInfraKeyVault)
           SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"  
+          runAsPreJob: true
       - name: 'ssv_tst'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
@@ -109,7 +110,8 @@ extends:
           primary: 'UKSouth'
         keyVaultList:
         - Name: $(ssvInfraKeyVault)
-          SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"    
+          SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"  
+          runAsPreJob: true  
       - name: 'ssv_pre'
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
@@ -119,7 +121,8 @@ extends:
           primary: 'UKSouth'  
         keyVaultList:
         - Name: $(ssvInfraKeyVault)
-          SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"    
+          SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"  
+          runAsPreJob: true  
       - name: 'ssv_prd'
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
@@ -129,7 +132,8 @@ extends:
           primary: 'UKSouth'    
         keyVaultList:
         - Name: $(ssvInfraKeyVault)
-          SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"            
+          SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"  
+          runAsPreJob: true          
     filePathsForTransform: |
       **/core/env-shared/adp-portal/app-registrations/portal-app-registration.json  
       **/core/env-shared/app-registrations/api-auth-backend.json
