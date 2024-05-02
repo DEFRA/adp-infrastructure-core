@@ -97,21 +97,13 @@ extends:
         privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
         azureRegions:
           primary: 'UKSouth'    
-        keyVaultList:
-        - Name: $(ssvInfraKeyVault)
-          SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"  
-          runAsPreJob: true
       - name: 'ssv_tst'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
           - 'refs/heads/main'
         privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
         azureRegions:
-          primary: 'UKSouth'
-        keyVaultList:
-        - Name: $(ssvInfraKeyVault)
-          SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"  
-          runAsPreJob: true  
+          primary: 'UKSouth' 
       - name: 'ssv_pre'
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
@@ -119,21 +111,13 @@ extends:
         privateAgentName: 'DEFRA-COMMON-ubuntu2004-SSV5'
         azureRegions:
           primary: 'UKSouth'  
-        keyVaultList:
-        - Name: $(ssvInfraKeyVault)
-          SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"  
-          runAsPreJob: true  
       - name: 'ssv_prd'
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
           - 'refs/heads/main'
         privateAgentName: 'DEFRA-COMMON-ubuntu2004-SSV5'
         azureRegions:
-          primary: 'UKSouth'    
-        keyVaultList:
-        - Name: $(ssvInfraKeyVault)
-          SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"  
-          runAsPreJob: true          
+          primary: 'UKSouth'         
     filePathsForTransform: |
       **/core/env-shared/adp-portal/app-registrations/portal-app-registration.json  
       **/core/env-shared/app-registrations/api-auth-backend.json
@@ -155,6 +139,14 @@ extends:
           dependsOnGroupedDeployments:
             - BackendAppRegistration
           deployments:
+              - name: Get Backend App ClientID from Keyvault
+                type: 'script'
+                scriptType: AzurePowerShell
+                path: "infra/core/env-shared/scripts/Get-KeyVaultSecret.ps1"
+                scriptArguments: >
+                    -KeyVaultName $(ssvInfraKeyVault)
+                    -SecretName $(apiAuthBackendAppRegClientIdSecretName)
+                    -TaskVariableName $(apiAuthBackendAppRegClientIdSecretName)
               - name: Register ADO Callback Api Client App
                 type: 'script'
                 scriptType: AzurePowerShell
