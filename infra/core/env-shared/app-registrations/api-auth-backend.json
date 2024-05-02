@@ -18,6 +18,7 @@
             },
             "appRoles": [
                 {
+                    "id": "#{{ fluxNotificationsReadAppRoleId }}",
                     "allowedMemberTypes": [
                         "Application"
                     ],
