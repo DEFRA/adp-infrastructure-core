@@ -115,6 +115,7 @@ extends:
           primary: 'UKSouth'            
     filePathsForTransform: |
       **/core/env-shared/adp-portal/app-registrations/portal-app-registration.json  
+      **/core/env-shared/flux-notification/config/aad-groups/*.$(environment)_$(subEnvironment).json  
     groupedDeployments: 
       - ${{ if eq(variables.IsPlatformApps, true) }}:               
         - name: PlatformApps
