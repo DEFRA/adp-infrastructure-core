@@ -97,6 +97,9 @@ extends:
         privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
         azureRegions:
           primary: 'UKSouth'    
+        keyVaultList:
+        - Name: $(ssvInfraKeyVault)
+          SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"  
       - name: 'ssv_tst'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
@@ -104,6 +107,9 @@ extends:
         privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
         azureRegions:
           primary: 'UKSouth'
+        keyVaultList:
+        - Name: $(ssvInfraKeyVault)
+          SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"    
       - name: 'ssv_pre'
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
@@ -111,29 +117,43 @@ extends:
         privateAgentName: 'DEFRA-COMMON-ubuntu2004-SSV5'
         azureRegions:
           primary: 'UKSouth'  
+        keyVaultList:
+        - Name: $(ssvInfraKeyVault)
+          SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"    
       - name: 'ssv_prd'
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
           - 'refs/heads/main'
         privateAgentName: 'DEFRA-COMMON-ubuntu2004-SSV5'
         azureRegions:
-          primary: 'UKSouth'            
+          primary: 'UKSouth'    
+        keyVaultList:
+        - Name: $(ssvInfraKeyVault)
+          SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"            
     filePathsForTransform: |
       **/core/env-shared/adp-portal/app-registrations/portal-app-registration.json  
       **/core/env-shared/app-registrations/api-auth-backend.json
+      **/core/env-shared/app-registrations/callback-api-client.json
       **/core/env-shared/flux-notification/config/aad-groups/*.$(environment)_$(subEnvironment).json  
     groupedDeployments: 
       - ${{ if eq(variables.IsAppRegistrations, true) }}: 
         - name: AppRegistrations
           deployments:
             - ${{ if eq(variables.IsAppRegistrationApiAuthApps, true) }}:
-              - name: Register Api Backend and Client Apps
+              - name: Register Api Backend App
                 type: 'script'
                 scriptType: AzurePowerShell
                 scriptRepo: PipelineCommonScripts
                 path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
                 scriptArguments: >
                     -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/app-registrations/api-auth-backend.json'
+              - name: Register ADO Callback Api Client App
+                type: 'script'
+                scriptType: AzurePowerShell
+                scriptRepo: PipelineCommonScripts
+                path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+                scriptArguments: >
+                    -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/app-registrations/callback-api-client.json'      
 
       - ${{ if eq(variables.IsPlatformApps, true) }}:               
         - name: PlatformApps

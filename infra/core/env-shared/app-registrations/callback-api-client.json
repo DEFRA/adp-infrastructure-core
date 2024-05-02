@@ -1,0 +1,32 @@
+{
+    "applications": [
+        {
+            "displayName": "#{{ adoCallBackApiClientAppRegName }}",
+            "secretAutoRenewalEnabled": true,
+            "keyVault": {
+                "name": "#{{ ssvInfraKeyVault }}",
+                "secrets": [
+                    {
+                        "key": "#{{ adoCallBackApiClientAppRegSecretSecretName }}",
+                        "type": "ClientSecret"
+                    },
+                    {
+                        "key": "#{{ adoCallBackApiClientAppRegClientIdSecretName }}",
+                        "type": "ClientId"
+                    }
+                ]
+            },
+            "requiredResourceAccess": [
+                {
+                    "resourceAppId": "#{{ API-AUTH-BACKEND-APP-REG-CLIENT-ID }}",
+                    "resourceAccess": [
+                        {
+                            "id": "#{{ fluxNotificationsReadAppRoleId }}",
+                            "type": "Role"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
