@@ -16,12 +16,3 @@ module clustercustomRoleAssignment '../.bicep/role-assignment.bicep' = {
     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', roleName)
   }
 }
-
-// resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-//   name: guid(subscription().id, principalId, roleName)
-//   properties: {
-//     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', roleName)
-//     principalId: principalId
-//     principalType: 'ServicePrincipal'
-//   }
-// }
