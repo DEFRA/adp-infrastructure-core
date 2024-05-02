@@ -199,4 +199,4 @@ extends:
                     scriptPath: infra/bootstrap/tenant/scripts/Create-AADGroups.ps1
                     type: AzurePowerShell
                     scriptArguments: >
-                      -AADGroupsJsonManifestPath 'infra/core/env-shared/config/aad-groups/fluxApiAADGroups.$(environment).json'                      
+                      -AADGroupsJsonManifestPath 'infra/core/env-shared/config/aad-groups/fluxApiAADGroups.$(environment)_$(subEnvironment).json'                      
