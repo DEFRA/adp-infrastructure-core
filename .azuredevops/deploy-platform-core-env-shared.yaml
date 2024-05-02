@@ -135,10 +135,6 @@ extends:
                 path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
                 scriptArguments: >
                     -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/app-registrations/api-auth-backend.json'
-        - name: ClientAppRegistrations
-          dependsOnGroupedDeployments:
-            - BackendAppRegistration
-          deployments:
               - name: Get Backend App ClientID from Keyvault
                 type: 'script'
                 scriptType: AzurePowerShell
@@ -147,6 +143,10 @@ extends:
                     -KeyVaultName $(ssvInfraKeyVault)
                     -SecretName $(apiAuthBackendAppRegClientIdSecretName)
                     -TaskVariableName $(apiAuthBackendAppRegClientIdSecretName)
+        - name: ClientAppRegistrations
+          dependsOnGroupedDeployments:
+            - BackendAppRegistration
+          deployments:
               - name: Register ADO Callback Api Client App
                 type: 'script'
                 scriptType: AzurePowerShell
