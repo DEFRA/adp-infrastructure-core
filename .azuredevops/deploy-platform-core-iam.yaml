@@ -51,7 +51,7 @@ extends:
     variableFiles: 
       - /pipelines/vars/common.yaml@_self
       - /pipelines/vars/env/{environment}.yaml@_self
-    regionalVariableFiles: []
+
     environments:
       - name: 'snd1'
         serviceConnection: AZD-ADP-SND1
