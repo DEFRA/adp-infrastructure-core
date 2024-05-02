@@ -50,7 +50,7 @@ extends:
     deployFromFeature: ${{ parameters.deployFromFeature }}
     variableFiles: 
       - /pipelines/vars/common.yaml@_self
-      - /pipelines/vars/tenant/{environment}.yaml@_self
+      - /pipelines/vars/env/{environment}.yaml@_self
     regionalVariableFiles: []
     environments:
       - name: 'snd1'
