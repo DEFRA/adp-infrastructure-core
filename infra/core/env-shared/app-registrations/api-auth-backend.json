@@ -24,7 +24,6 @@
                     "description": "Allow application to Read FluxNotifications",
                     "displayName": "FluxNotifications.Read",
                     "isEnabled": true,
-                    "lang": null,
                     "origin": "Application",
                     "value": "FluxNotifications.Read"
                 }
