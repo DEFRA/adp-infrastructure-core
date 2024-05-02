@@ -100,7 +100,7 @@ extends:
         keyVaultList:
         - Name: $(ssvInfraKeyVault)
           SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"  
-          runAsPreJob: false
+          runAsPreJob: true
       - name: 'ssv_tst'
         serviceConnection: AZD-ADP-SSV3
         deploymentBranches:
@@ -111,7 +111,7 @@ extends:
         keyVaultList:
         - Name: $(ssvInfraKeyVault)
           SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"  
-          runAsPreJob: false  
+          runAsPreJob: true  
       - name: 'ssv_pre'
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
@@ -122,7 +122,7 @@ extends:
         keyVaultList:
         - Name: $(ssvInfraKeyVault)
           SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"  
-          runAsPreJob: false  
+          runAsPreJob: true  
       - name: 'ssv_prd'
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
@@ -133,7 +133,7 @@ extends:
         keyVaultList:
         - Name: $(ssvInfraKeyVault)
           SecretsFilter: "API-AUTH-BACKEND-APP-REG-CLIENT-ID"  
-          runAsPreJob: false          
+          runAsPreJob: true          
     filePathsForTransform: |
       **/core/env-shared/adp-portal/app-registrations/portal-app-registration.json  
       **/core/env-shared/app-registrations/api-auth-backend.json
@@ -141,7 +141,7 @@ extends:
       **/core/env-shared/flux-notification/config/aad-groups/*.$(environment)_$(subEnvironment).json  
     groupedDeployments: 
       - ${{ if eq(variables.IsAppRegistrations, true) }}: 
-        - name: AppRegistrations
+        - name: BackendAppRegistration
           deployments:
             - ${{ if eq(variables.IsAppRegistrationApiAuthApps, true) }}:
               - name: Register Api Backend App
@@ -151,13 +151,17 @@ extends:
                 path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
                 scriptArguments: >
                     -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/app-registrations/api-auth-backend.json'
+        - name: ClientAppRegistrations
+          dependsOnGroupedDeployments:
+            - BackendAppRegistration
+          deployments:
               - name: Register ADO Callback Api Client App
                 type: 'script'
                 scriptType: AzurePowerShell
                 scriptRepo: PipelineCommonScripts
                 path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
                 scriptArguments: >
-                    -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/app-registrations/callback-api-client.json'      
+                    -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/app-registrations/callback-api-client.json'                 
 
       - ${{ if eq(variables.IsPlatformApps, true) }}:               
         - name: PlatformApps
