@@ -51,7 +51,6 @@ extends:
     variableFiles: 
       - /pipelines/vars/common.yaml@_self
       - /pipelines/vars/env/{environment}.yaml@_self
-
     environments:
       - name: 'snd1'
         serviceConnection: AZD-ADP-SND1
@@ -104,3 +103,10 @@ extends:
               - name: cluster-custom-resources-reader-role
                 path: infra/core/iam/subscription
                 scope: "Subscription"
+                preDeployScriptsList:  
+                - displayName: 'Get Portal App PrincipalId'
+                  type: AzurePowerShell
+                  serviceConnectionVariableName: 'subscriptionName'
+                  inlineScript: |
+                    $output = (Get-AzADServicePrincipal -DisplayName $(portalAppRegName)).AppId
+                    Write-Host "##vso[task.setvariable variable=portalAppPrincipalId;]$output"  
