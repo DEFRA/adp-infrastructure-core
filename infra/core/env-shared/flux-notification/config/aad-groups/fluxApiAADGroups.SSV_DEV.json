@@ -16,7 +16,7 @@
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ],
                 "serviceprincipals" : [
-                    #{{ noescape(fluxNotificationApiManagedIdentity) }}
+                    "#{{ fluxNotificationApiManagedIdentity }}"
                 ]
             }
         },
@@ -36,7 +36,7 @@
                     "AG-Azure-CDO-ADP-PlatformEngineers"
                 ],
                 "serviceprincipals" : [
-                    #{{ noescape(adoCallbackApiManagedIdentity) }}
+                    "#{{ adoCallbackApiManagedIdentity }}"
                 ]
             }
         }        
