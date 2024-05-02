@@ -1,0 +1,37 @@
+{
+    "applications": [
+        {
+            "displayName": "#{{ apiAuthBackendAppRegName }}",
+            "secretAutoRenewalEnabled": true,
+            "keyVault": {
+                "name": "#{{ ssvInfraKeyVault }}",
+                "secrets": [
+                    {
+                        "key": "#{{ apiAuthBackendAppRegSecretSecretName }}",
+                        "type": "ClientSecret"
+                    },
+                    {
+                        "key": "#{{ apiAuthBackendAppRegClientIdSecretName }}",
+                        "type": "ClientId"
+                    }
+                ]
+            },
+            "appRoles": [
+                {
+                    "allowedMemberTypes": [
+                        "Application"
+                    ],
+                    "description": "Allow application to Read FluxNotifications",
+                    "displayName": "FluxNotifications.Read",
+                    "isEnabled": true,
+                    "lang": null,
+                    "origin": "Application",
+                    "value": "FluxNotifications.Read"
+                }
+            ],
+            "IdentifierUris": [
+                "api://#{{ tenantId }}/#{{subEnvironment}}-api"
+            ]
+        }
+    ]
+}

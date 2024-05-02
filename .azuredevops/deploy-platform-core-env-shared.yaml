@@ -9,6 +9,7 @@ parameters:
     default: All
     values:
       - All
+      - App Registration - Api Auth Apps
       - Platform Apps - All
       - Platform Apps - Container Apps Environment
       - Platform Apps - Flexible Server
@@ -49,6 +50,10 @@ resources:
 variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'all') }}
+  - name: IsAppRegistrations
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'App Registration')) }}  
+  - name: IsAppRegistrationApiAuthApps
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'App Registration - Api Auth Apps')) }}   
   - name: IsPlatformApps
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Platform Apps')) }}
   - name: IsPlatformAppsAll
@@ -115,8 +120,21 @@ extends:
           primary: 'UKSouth'            
     filePathsForTransform: |
       **/core/env-shared/adp-portal/app-registrations/portal-app-registration.json  
+      **/core/env-shared/app-registrations/api-auth-backend.json
       **/core/env-shared/flux-notification/config/aad-groups/*.$(environment)_$(subEnvironment).json  
     groupedDeployments: 
+      - ${{ if eq(variables.IsAppRegistrations, true) }}: 
+        - name: AppRegistrations
+          deployments:
+            - ${{ if eq(variables.IsAppRegistrationApiAuthApps, true) }}:
+              - name: Register Api Backend and Client Apps
+                type: 'script'
+                scriptType: AzurePowerShell
+                scriptRepo: PipelineCommonScripts
+                path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+                scriptArguments: >
+                    -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/app-registrations/api-auth-backend.json'
+
       - ${{ if eq(variables.IsPlatformApps, true) }}:               
         - name: PlatformApps
           deployments: 
