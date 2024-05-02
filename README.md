@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/defragovuk/DEFRA-FFC/_apis/build/status%2FADP%2FCore%2Fplatform-adp-core?repoName=DEFRA%2Fadp-infrastructure-core&branchName=main)](https://dev.azure.com/defragovuk/DEFRA-FFC/_build/latest?definitionId=4407&repoName=DEFRA%2Fadp-infrastructure-core&branchName=main)
+[![Build Status](https://dev.azure.com/defragovuk/DEFRA-FFC/_apis/build/status%2FADP%2FCore%2Fplatform-adp-core?repoName=DEFRA%2Fadp-infrastructure-core&branchName=main)](https://dev.azure.com/defragovuk/DEFRA-FFC/_build?definitionId=4407&_a=summary)
 
 # ADP Infrastructure - Core
 
