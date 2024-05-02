@@ -124,36 +124,36 @@ extends:
       **/core/env-shared/app-registrations/callback-api-client.json
       **/core/env-shared/flux-notification/config/aad-groups/*.$(environment)_$(subEnvironment).json  
     groupedDeployments: 
-      - ${{ if eq(variables.IsAppRegistrations, true) }}: 
-        - name: BackendAppRegistration
-          deployments:
-            - ${{ if eq(variables.IsAppRegistrationApiAuthApps, true) }}:
-              - name: Register Api Backend App
-                type: 'script'
-                scriptType: AzurePowerShell
-                scriptRepo: PipelineCommonScripts
-                path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
-                scriptArguments: >
-                    -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/app-registrations/api-auth-backend.json'
-              - name: Get Backend App ClientID from Keyvault
-                type: 'script'
-                scriptType: AzurePowerShell
-                path: "infra/core/env-shared/scripts/Get-KeyVaultSecret.ps1"
-                scriptArguments: >
-                    -KeyVaultName $(ssvInfraKeyVault)
-                    -SecretName $(apiAuthBackendAppRegClientIdSecretName)
-                    -TaskVariableName $(apiAuthBackendAppRegClientIdSecretName)
-        - name: ClientAppRegistrations
-          dependsOnGroupedDeployments:
-            - BackendAppRegistration
-          deployments:
-              - name: Register ADO Callback Api Client App
-                type: 'script'
-                scriptType: AzurePowerShell
-                scriptRepo: PipelineCommonScripts
-                path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
-                scriptArguments: >
-                    -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/app-registrations/callback-api-client.json'                 
+      # - ${{ if eq(variables.IsAppRegistrations, true) }}: 
+      #   - name: BackendAppRegistration
+      #     deployments:
+      #       - ${{ if eq(variables.IsAppRegistrationApiAuthApps, true) }}:
+      #         - name: Register Api Backend App
+      #           type: 'script'
+      #           scriptType: AzurePowerShell
+      #           scriptRepo: PipelineCommonScripts
+      #           path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+      #           scriptArguments: >
+      #               -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/app-registrations/api-auth-backend.json'
+      #         - name: Get Backend App ClientID from Keyvault
+      #           type: 'script'
+      #           scriptType: AzurePowerShell
+      #           path: "infra/core/env-shared/scripts/Get-KeyVaultSecret.ps1"
+      #           scriptArguments: >
+      #               -KeyVaultName $(ssvInfraKeyVault)
+      #               -SecretName $(apiAuthBackendAppRegClientIdSecretName)
+      #               -TaskVariableName $(apiAuthBackendAppRegClientIdSecretName)
+      #   - name: ClientAppRegistrations
+      #     dependsOnGroupedDeployments:
+      #       - BackendAppRegistration
+      #     deployments:
+      #         - name: Register ADO Callback Api Client App
+      #           type: 'script'
+      #           scriptType: AzurePowerShell
+      #           scriptRepo: PipelineCommonScripts
+      #           path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+      #           scriptArguments: >
+      #               -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/app-registrations/callback-api-client.json'                 
 
       - ${{ if eq(variables.IsPlatformApps, true) }}:               
         - name: PlatformApps
@@ -224,7 +224,28 @@ extends:
                 resourceGroupName: $(ssvInfraResourceGroup)
                 privateEndpointDnsRecordsForResources:
                   - resourceName: $(fluxNotificationStorageAccountName)
-                    resourceGroupName: $(ssvInfraResourceGroup) 
+                    resourceGroupName: $(ssvInfraResourceGroup)
+                preDeployScriptsList:
+                  - displayName: 'Register Api Backend App'
+                    scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+                    scriptRepo: PipelineCommonScripts
+                    type: AzurePowerShell
+                    scriptArguments: >
+                      -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/app-registrations/api-auth-backend.json'
+                  - displayName: 'Get Backend App ClientID from Keyvault'
+                    type: AzurePowerShell
+                    scriptPath: "infra/core/env-shared/scripts/Get-KeyVaultSecret.ps1"
+                    scriptArguments: >
+                      -KeyVaultName $(ssvInfraKeyVault)
+                      -SecretName $(apiAuthBackendAppRegClientIdSecretName)
+                      -TaskVariableName $(apiAuthBackendAppRegClientIdSecretName)
+                postDeployScriptsList:
+                  - displayName: 'Register ADO Callback Api Client App'
+                    scriptPath: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+                    scriptRepo: PipelineCommonScripts
+                    type: AzurePowerShell
+                    scriptArguments: >
+                      -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/app-registrations/callback-api-client.json'
             
             - ${{ if eq(variables.IsFluxNotificationManagedIdentities, true) }}:
               - name: fluxnotificationapp-managed-identity
