@@ -1,7 +1,7 @@
 {
     "accessADGroups": [
         {
-            "displayName": "AAG-Azure-ADP-FluxApi-SSV3-DEV-PostgresDB_Writer",
+            "displayName": "#{{ fluxNotificationPostgresDbWriterAdGroup }}",
             "description": "Azure AD Access group with Write permissions to the flux_notifications_db database.",
             "Owners": {
                 "serviceprincipals" : [
@@ -21,7 +21,7 @@
             }
         },
         {
-            "displayName": "AAG-Azure-ADP-FluxApi-SSV3-DEV-PostgresDB_Reader",
+            "displayName": "#{{ fluxNotificationPostgresDbReaderAdGroup }}",
             "description": "Azure AD Access group with Reader permissions to the flux_notifications_db database.",
             "Owners": {
                 "serviceprincipals" : [
