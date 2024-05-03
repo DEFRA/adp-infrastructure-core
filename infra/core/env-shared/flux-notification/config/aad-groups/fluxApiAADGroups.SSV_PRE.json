@@ -5,13 +5,10 @@
             "description": "Azure AD Access group with Write permissions to the flux_notifications_db database.",
             "Owners": {
                 "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                    "ADO-DefraGovUK-AAD-ADP-SSV5"
                 ]
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers"
-                ],
                 "serviceprincipals" : [
                     "#{{ fluxNotificationApiManagedIdentity }}"
                 ]
@@ -22,17 +19,14 @@
             "description": "Azure AD Access group with Reader permissions to the flux_notifications_db database.",
             "Owners": {
                 "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                    "ADO-DefraGovUK-AAD-ADP-SSV5"
                 ]
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers"
-                ],
                 "serviceprincipals" : [
                     "#{{ adoCallbackApiManagedIdentity }}"
                 ]
             }
-        }      
+        }        
     ]
 }
