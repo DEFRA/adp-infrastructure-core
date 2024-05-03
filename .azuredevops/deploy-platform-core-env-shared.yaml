@@ -47,7 +47,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref:  aa/353142-additional-flux-notification-vars
+      ref:  main
 
 variables:
   - name: IsAll
@@ -96,7 +96,7 @@ extends:
         deploymentBranches:
           - 'refs/heads/main'          
         developmentEnvironment: true
-        privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
+        privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
         azureRegions:
           primary: 'UKSouth'    
       - name: 'ssv_tst'
@@ -144,7 +144,6 @@ extends:
                 scriptArguments: >
                     -KeyVaultName $(ssvInfraKeyVault)
                     -SecretName $(apiAuthBackendAppRegClientIdSecretName)
-                    -TaskVariableName $(apiAuthBackendAppRegClientIdSecretName)
               - name: Register ADO Callback Api Client App
                 type: 'script'
                 scriptType: AzurePowerShell

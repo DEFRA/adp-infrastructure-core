@@ -11,11 +11,9 @@ Mandatory. KeyVault Name.
 .PARAMETER -SecretName
 Mandatory. Secret Name.
 
-.PARAMETER TaskVariableName
-Mandatory. Task Variable Name.
 
 .EXAMPLE
-.\Set-RoleAssignments KeyVaultName <KeyVaultName> -SecretName <SecretName> -TaskVariableName <TaskVariableName>
+.\Get-KeyVaultSecret KeyVaultName <KeyVaultName> -SecretName <SecretName> 
 #> 
 
 [CmdletBinding()]
@@ -23,9 +21,7 @@ param(
     [Parameter(Mandatory)] 
     [string]$KeyVaultName,
     [Parameter(Mandatory)] 
-    [string]$SecretName,
-    [Parameter(Mandatory)] 
-    [string]$TaskVariableName
+    [string]$SecretName
 )
 
 Set-StrictMode -Version 3.0
@@ -48,7 +44,6 @@ if ($enableDebug) {
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
 Write-Debug "${functionName}:KeyVaultName=$KeyVaultName"
 Write-Debug "${functionName}:SecretName=$SecretName"
-Write-Debug "${functionName}:TaskVariableName=$TaskVariableName"
 
 try {
 
@@ -56,7 +51,6 @@ try {
     [string]$secretValue = Get-AzKeyVaultSecret -VaultName $KeyVaultName -Name $SecretName -AsPlainText -ErrorAction Stop
 
     Write-Host "##vso[task.setvariable variable=apiAuthBackendAppRegClientId]$($secretValue)"
-    # Write-Host "##vso[task.setvariable variable=${TaskVariableName})]$($secretValue)"
 
     $exitCode = 0    
 }

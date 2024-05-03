@@ -48,7 +48,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: aa/353142-additional-flux-notification-vars
+      ref: main
 
 variables:
   - name: IsAll
