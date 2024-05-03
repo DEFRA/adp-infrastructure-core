@@ -44,9 +44,8 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      #ref:  main
-      ref: sm/361587/storageaccountexistingreference
-
+      ref:  main
+      
 variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'all') }}
