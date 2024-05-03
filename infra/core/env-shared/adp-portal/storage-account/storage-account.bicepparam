@@ -8,7 +8,7 @@ using './storage-account.bicep'
 // }
 
 param storageAccount = {
-  name: 'testtestopr654839630mdjde'
+  name: 'tesr6539630mdjde'
   privateEndpointName: '#{{ portalAppSAPvtEndpointName }}'
   skuName: 'Standard_ZRS'
   containerName: 'adp-wiki-techdocs'
