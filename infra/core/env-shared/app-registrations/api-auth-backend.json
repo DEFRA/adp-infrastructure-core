@@ -30,7 +30,7 @@
                 }
             ],
             "IdentifierUris": [
-                "api://#{{ tenantId }}/#{{subEnvironment}}-api"
+                "api://{{appId}}"
             ]
         }
     ]
