@@ -23,6 +23,7 @@ param keyVault = {
 param secrets = [
   'POSTGRES-HOST'
   'CALLBACKAPI-MI-CLIENT-ID'
+  'API-AUTH-BACKEND-APP-REG-CLIENT-ID'
 ]
 
 
