@@ -4,4 +4,3 @@ param roleName = '#{{ customRoleCustomResourcesReaderRoleId }}'
 
 param principalId = '#{{ portalAppPrincipalId }}'
 
-param groupObjectId = '#{{ accessGroupObjectId }}'
