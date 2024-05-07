@@ -67,8 +67,9 @@ extends:
                     if(-Not $group)
                     {                     
                       $group = New-AzADGroup -DisplayName '$(customRoleCustomResourcesReaderGroup)' -SecurityEnabled -MailNickname 'NA'
-                    }                    
-                    Write-Host "##vso[task.setvariable variable=customRoleCustomResourcesReaderGroupId;]$group.id"
+                    }
+                    $groupId=$group.id                 
+                    Write-Host "##vso[task.setvariable variable=customRoleCustomResourcesReaderGroupId;]$groupId"
                 - displayName: 'Get Portal App PrincipalId'
                   type: AzurePowerShell
                   serviceConnectionVariableName: 'subscriptionName'
