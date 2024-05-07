@@ -46,6 +46,8 @@ pr:
     include:
       - infra/core/env/*
       - infra/common/*
+  drafts: false
+        
 trigger:
   batch: true
   branches:
@@ -137,6 +139,7 @@ extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
     projectName: $(projectName)
+    keyVaultName: $(ssvPlatformKeyVaultName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
     filePathsForTransform: |
       **/core/env/app-configuration/config-data/config-data.json
@@ -271,6 +274,19 @@ extends:
                     -SSHKeyType 'ecdsa-sha2-nistp384'
                     -AppConfigMIRgName $(aksResourceGroup)
                     -AppConfigMIName $(acManagedIdentityName)
+                - name: Add SSH Key to Github Repo
+                  type: 'script'
+                  serviceConnectionVariableName: ssvServiceConnection
+                  scriptType: AzureCLI
+                  azureCLIScriptType: pscore
+                  path: 'infra/core/env/scripts/Add-SshKeyToGitHubRepo.ps1'
+                  scriptArguments: >
+                    -AppId $(ADP-GITHUB-APP-ID)
+                    -AppKey $(ADP-GITHUB-PRIVATE-KEY-BASE64)
+                    -Environment "$(environment)$(environmentId)"
+                    -SSHPublicKeySecretName '$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-Flux-Services-SSH-Identity-Pub'
+                    -KeyVaultName $(ssvPlatformKeyVaultName)
+                    -PSHelperDirectory '$(Pipeline.Workspace)/s/self/scripts/modules/ps-helpers'
               - ${{ if eq(variables.IsManagedClusterPlatformVariables, true) }}:
                 - name: Import Config Values
                   type: 'script'

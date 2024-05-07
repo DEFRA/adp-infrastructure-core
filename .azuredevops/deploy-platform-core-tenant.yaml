@@ -14,6 +14,7 @@ parameters:
       - ServiceBus Writer Role
       - PostgreSql Database Writer Role
       - Storage Account Writer Role
+      - Cluster Custom Resources Reader Role
 pr:
   branches:
     include:
@@ -49,6 +50,8 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'PostgreSql Database Writer Role')) }}
   - name: IsStorageAccountWriterRole
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Storage Account Writer Role')) }}
+  - name: IsClusterCustomResourcesReaderRole
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Cluster Custom Resources Reader Role')) }}    
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -95,5 +98,9 @@ extends:
                 scope: "Subscription"
            - ${{ if eq(variables.IsStorageAccountWriterRole, true) }}:
               - name: storageaccount-writer-role
+                path: infra/core/tenant/role-definition
+                scope: "Subscription"
+           - ${{ if eq(variables.IsClusterCustomResourcesReaderRole, true) }}:
+              - name: cluster-custom-resources-reader-role
                 path: infra/core/tenant/role-definition
                 scope: "Subscription"

@@ -11,6 +11,7 @@ parameters:
     default: "All"
     values:
       - All
+      - Monitoring - Workspace      
       - Network - All
       - Network - NSGs
       - Network - Application Gateway Subnet
@@ -55,6 +56,8 @@ variables:
     value: ${{ or(eq(variables.IsSecNetworkAll,true), eq(parameters.deployResources,'Network - NSGs')) }}   
   - name: IsSecNetworkSubnet
     value: ${{ or(eq(variables.IsSecNetworkAll,true), eq(parameters.deployResources,'Network - Application Gateway Subnet')) }}   
+  - name: IsLogAnalyticsWorkspace
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Monitoring - Workspace')) }}             
   - name: IsApplicationGateway
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application Gateway')) }}
   - name: IsApplicationGatewayAll
@@ -89,13 +92,13 @@ extends:
         privateAgentName: 'DEFRA-ADP-PRE1-ubuntu2204'
         azureRegions:
           primary: 'UKSouth'
-      # - name: prd1
-      #   serviceConnection: AZR-ADP-PRD1
-      #   deploymentBranches:
-      #     - 'refs/heads/main'
-      #   privateAgentName: 'DEFRA-ADP-PRD1-ubuntu2204'
-      #   azureRegions:
-      #     primary: 'UKSouth'            
+      - name: prd1
+        serviceConnection: AZR-ADP-PRD1
+        deploymentBranches:
+          - 'refs/heads/main'
+        privateAgentName: 'DEFRA-ADP-PRD1-ubuntu2204'
+        azureRegions:
+          primary: 'UKSouth'            
     groupedDeployments:
       - ${{ if eq(variables.IsSecNetwork, true) }}:
         - name: sec_network
@@ -110,7 +113,16 @@ extends:
                 path: infra/sec/network
                 resourceGroupName: $(secVirtualNetworkResourceGroup) 
                 serviceConnectionVariableName: 'secServiceConnection'
-
+      - ${{ if eq(variables.IsLogAnalyticsWorkspace,true) }}:
+        - name: logAnalyticsWorkspace
+          ${{ if eq(variables.IsAll, true) }}:
+            dependsOnGroupedDeployments:
+              - sec_network
+          deployments:
+            - name: log-analytics-workspace
+              path: infra/sec/operational-insights
+              serviceConnectionVariableName: "secServiceConnection"
+              resourceGroupName: $(secInfraResourceGroup)                
       - ${{ if eq(variables.IsApplicationGateway, true) }}:
         - name: application_gateway
           ${{ if eq(variables.IsAll, true) }}:
