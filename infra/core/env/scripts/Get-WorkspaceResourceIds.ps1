@@ -9,6 +9,9 @@ Mandatory. Resource Group Name.
 Mandatory. Grafana Dashboard name.
 .PARAMETER WorkspaceResourceId
 Mandatory. Azure Monitor Workspace ResourceId.
+.PARAMETER WorkingDirectory
+Optional. Working directory. Default is $PWD.
+
 .EXAMPLE
 .\Get-WorkspaceResourceIds.ps1 -ResourceGroupName <ResourceGroupName> -GrafanaName <GrafanaName> -WorkspaceResourceId <WorkspaceResourceId>
 #> 
@@ -20,7 +23,9 @@ param(
     [Parameter(Mandatory)]
     [string] $GrafanaName,
     [Parameter(Mandatory)]
-    [string] $WorkspaceResourceId
+    [string] $WorkspaceResourceId,
+    [Parameter()]
+    [string]$WorkingDirectory = $PWD
 )
 
 Set-StrictMode -Version 3.0
@@ -44,23 +49,24 @@ Write-Host "${functionName} started at $($startTime.ToString('u'))"
 Write-Debug "${functionName}:ResourceGroupName=$ResourceGroupName"
 Write-Debug "${functionName}:GrafanaName=$GrafanaName"
 Write-Debug "${functionName}:WorkspaceResourceId=$WorkspaceResourceId"
+Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
-    if (-not (Get-Module -ListAvailable -Name 'Az.Dashboard')) {
-        Write-Host "Az.Dashboard Module does not exists. Installing now.."
-        Install-Module Az.Dashboard -Force
-        Write-Host "Az.Dashboard Installed Successfully."
-    }
+    [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ps-helpers"
+    Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
+    Import-Module $moduleDir.FullName -Force
 
     Write-Host "Getting Grafana Dashboard $GrafanaName from Resource Group $ResourceGroupName..."
-    [object]$grafana = Get-AzGrafana -ResourceGroupName $ResourceGroupName -GrafanaName $GrafanaName -ErrorAction SilentlyContinue
-    
+    [string]$command = "az grafana show --name $GrafanaName --resource-group $ResourceGroupName --query 'properties.grafanaIntegrations.azureMonitorWorkspaceIntegrations'"
+    [string]$azureMonitorWorkspaceIntegrationsJson = Invoke-CommandLine -Command $command
+
     [array]$linkedWorkspaces = @()
 
-    if($grafana){
-        Write-host "Grafana Dashboard $GrafanaName exists in Resource Group $ResourceGroupName"
-        if ($grafana.GrafanaIntegrationAzureMonitorWorkspaceIntegration) {
-            $linkedWorkspaces = $grafana.GrafanaIntegrationAzureMonitorWorkspaceIntegration.AzureMonitorWorkspaceResourceId
+    if($azureMonitorWorkspaceIntegrationsJson){
+        Write-host "Grafana Dashboard $GrafanaName exists in Resource Group $ResourceGroupName"   
+        $azureMonitorWorkspaceIntegrations = $azureMonitorWorkspaceIntegrationsJson | ConvertFrom-Json  -Depth 10 
+        if ($azureMonitorWorkspaceIntegrations -and $azureMonitorWorkspaceIntegrations.azureMonitorWorkspaceResourceId) {
+            $linkedWorkspaces = $azureMonitorWorkspaceIntegrations.azureMonitorWorkspaceResourceId
         }
 
         if($linkedWorkspaces -notcontains $WorkspaceResourceId){
