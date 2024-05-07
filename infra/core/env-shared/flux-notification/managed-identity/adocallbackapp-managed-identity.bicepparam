@@ -14,3 +14,16 @@ param containerRegistry = {
   resourceGroup: '#{{ ssvSharedResourceGroup }}'
 }
 
+param keyVault = {
+  name: '#{{ ssvInfraKeyVault }}'
+  subscriptionId: '#{{ subscriptionId }}'
+  resourceGroup: '#{{ ssvInfraResourceGroup }}'
+}
+
+param secrets = [
+  'POSTGRES-HOST'
+  'CALLBACKAPI-MI-CLIENT-ID'
+  'API-AUTH-BACKEND-APP-REG-CLIENT-ID'
+]
+
+

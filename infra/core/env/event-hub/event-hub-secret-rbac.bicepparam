@@ -7,6 +7,6 @@ param eventHubNamespace = {
   resourceGroup: '#{{ ssvSharedResourceGroup}}'
 }
 
-param keyVaultName = '#{{ ssvInfraKeyVault }}'
+param keyVaultName = '#{{ ssvEventHubConnectionStringKeyVault }}'
 
 param appConfigMiObjectId = '#{{ appConfigMiObjectId }}'

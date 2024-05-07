@@ -34,3 +34,5 @@ param diagnostics = {
 param location = '#{{ location }}'
 
 param environment = '#{{ environment }}'
+
+param managedIdentityName = '#{{ fluxNotificationDBAdminManagedIdentity }}'

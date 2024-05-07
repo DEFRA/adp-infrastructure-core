@@ -10,7 +10,23 @@ param location = '#{{ location }}'
 
 param containerRegistry = {
   name: '#{{ ssvSharedAcrName }}'
-  subscriptionId: '#{{ subscriptionId }}'
   resourceGroup: '#{{ ssvSharedResourceGroup }}'
 }
 
+param keyVaultName = '#{{ ssvInfraKeyVault }}'
+
+param secrets = [
+  'POSTGRES-HOST'
+  'FLUXNOTIFY-MI-CLIENT-ID'
+]
+
+param eventHub = {
+  namespaceName: '#{{ ssvInfraResourceNamePrefix }}#{{nc_resource_eventhub }}#{{nc_shared_instance_regionid }}01'
+  eventHubName: 'flux-events-#{{ subEnvironment }}'
+  resourceGroup: '#{{ ssvSharedResourceGroup }}'
+}
+
+param storageAccount = {
+  name: '#{{ fluxNotificationStorageAccountName }}'
+  containerName: '#{{ fluxNotificationContainerAppId }}'
+}
