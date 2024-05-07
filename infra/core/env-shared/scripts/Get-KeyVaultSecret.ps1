@@ -3,7 +3,7 @@
 Get keyvault secret.
 
 .DESCRIPTION
-Get keyvault secret and store it in task variable
+Get keyvault secret and store it in task variable.
 
 .PARAMETER KeyVaultName
 Mandatory. KeyVault Name.
