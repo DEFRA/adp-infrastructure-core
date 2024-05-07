@@ -35,7 +35,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: rv/372068
       
 variables:
   - name: IsAll
@@ -55,7 +55,7 @@ extends:
       - name: 'snd1'
         serviceConnection: AZD-ADP-SND1
         deploymentBranches:
-          - 'refs/heads/main'
+          - 'refs/heads/rv/372068'
         developmentEnvironment: true
         privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
         azureRegions:
@@ -110,5 +110,7 @@ extends:
                   inlineScript: |
                     $roleid = (Get-AzRoleDefinition -Name '$(customRoleCustomResourcesReader)').Id                    
                     $AppId = (Get-AzADServicePrincipal -DisplayName '$(portalAppRegName)').AppId
+                    $objectid = (Get-AzADGroup -DisplayName "$(accessGroupName)").id
                     Write-Host "##vso[task.setvariable variable=customRoleCustomResourcesReaderRoleId;]$roleid"                    
                     Write-Host "##vso[task.setvariable variable=portalAppPrincipalId;]$AppId"
+                    Write-Host "##vso[task.setvariable variable=accessGroupObjectId;]$objectid"
