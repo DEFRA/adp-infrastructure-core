@@ -75,7 +75,7 @@ extends:
                   serviceConnectionVariableName: 'subscriptionName'
                   inlineScript: |
                     $roleid = (Get-AzRoleDefinition -Name '$(customRoleCustomResourcesReader)').Id                    
-                    $AppId = (Get-AzADServicePrincipal -DisplayName '$(portalAppRegName)').AppId
+                    $ObjectId = (Get-AzADServicePrincipal -DisplayName '$(portalAppRegName)').ObjectId
                     Write-Host "##vso[task.setvariable variable=customRoleCustomResourcesReaderRoleId;]$roleid"                    
-                    Write-Host "##vso[task.setvariable variable=portalAppPrincipalId;]$AppId"
+                    Write-Host "##vso[task.setvariable variable=portalAppPrincipalId;]$ObjectId"
                     
