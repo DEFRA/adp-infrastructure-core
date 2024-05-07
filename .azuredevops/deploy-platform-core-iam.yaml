@@ -58,7 +58,21 @@ extends:
               - name: cluster-custom-resources-reader-role
                 path: infra/core/iam/subscription
                 scope: "Subscription"
-                preDeployScriptsList:  
+                preDeployScriptsList:
+                - displayName: 'Get Custom Role Group Id'
+                  type: AzurePowerShell
+                  serviceConnectionVariableName: 'ssvServiceConnection'
+                  inlineScript: |
+                    if(Get-AzureADGroup -filter {Displayname -eq $(customRoleCustomResourcesReaderGroup)} -ErrorAction Continue)
+                    {
+                      Write-Host "Group Exists"
+                    } else 
+                    {
+                      New-AzADGroup -DisplayName $(customRoleCustomResourcesReaderGroup) -MailEnabled $false -SecurityEnabled $true
+                      Write-Host "Group Created"
+                    }
+                    $objectid = (Get-AzADGroup -DisplayName "$(customRoleCustomResourcesReaderGroup)").id
+                    Write-Host "##vso[task.setvariable variable=customRoleCustomResourcesReaderGroupId;]$objectid"               
                 - displayName: 'Get Portal App PrincipalId'
                   type: AzurePowerShell
                   serviceConnectionVariableName: 'subscriptionName'
