@@ -154,18 +154,20 @@ try {
     Invoke-CommandLine -Command "ssh-keygen -t $SSHKeyType -f id_ecdsa -N '' -C ''" -NoOutput
     Write-Host "Generated SSH keys"
 
-    Set-KeyVaultSecret -KeyVaultName $KeyVaultName -SecretName $SSHPrivateKeySecretName -File "id_ecdsa"
-    Set-KeyVaultSecret -KeyVaultName $KeyVaultName -SecretName $SSHPublicKeySecretName -File "id_ecdsa.pub"
+    Set-KeyVaultSecret -KeyVaultName $KeyVaultName -SecretName $SSHPrivateKeySecretName -File "id_ecdsa" | Out-Null
+    Set-KeyVaultSecret -KeyVaultName $KeyVaultName -SecretName $SSHPublicKeySecretName -File "id_ecdsa.pub" | Out-Null
 
     Write-Host "Getting known_hosts for github.com"
     $knownHosts = Invoke-CommandLine -Command "ssh-keyscan -t $SSHKeyType github.com"
     Write-Host "Got known_hosts for github.com"
 
-    Set-KeyVaultSecret -KeyVaultName $KeyVaultName -SecretName $KnownHostsSecretName -Value $knownHosts
+    Set-KeyVaultSecret -KeyVaultName $KeyVaultName -SecretName $KnownHostsSecretName -Value $knownHosts | Out-Null
 
-    Set-KeyVaultSecretsUserRole -SubscriptionId $KeyVaultSubscriptionId -PrincipalId $appConfigMiPrincipalId -KeyVaultName $KeyVaultName -KeyVaultRgName $KeyVaultRgName -SecretName $SSHPrivateKeySecretName 
+    Set-KeyVaultSecretsUserRole -SubscriptionId $KeyVaultSubscriptionId -PrincipalId $appConfigMiPrincipalId -KeyVaultName $KeyVaultName -KeyVaultRgName $KeyVaultRgName -SecretName $SSHPrivateKeySecretName
     Set-KeyVaultSecretsUserRole -SubscriptionId $KeyVaultSubscriptionId -PrincipalId $appConfigMiPrincipalId -KeyVaultName $KeyVaultName -KeyVaultRgName $KeyVaultRgName -SecretName $SSHPublicKeySecretName
     Set-KeyVaultSecretsUserRole -SubscriptionId $KeyVaultSubscriptionId -PrincipalId $appConfigMiPrincipalId -KeyVaultName $KeyVaultName -KeyVaultRgName $KeyVaultRgName -SecretName $KnownHostsSecretName
+
+    Write-Host "##vso[task.setvariable variable=newSshKey;issecret=true]$(Get-Content -Path "id_ecdsa.pub" -Raw)"
 
     $exitCode = 0
 }
