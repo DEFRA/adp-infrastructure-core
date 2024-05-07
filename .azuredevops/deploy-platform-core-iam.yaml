@@ -63,7 +63,7 @@ extends:
                   type: AzurePowerShell
                   serviceConnectionVariableName: 'ssvServiceConnection'
                   inlineScript: |
-                    if(Get-AzADGroup -filter {Displayname -eq $(customRoleCustomResourcesReaderGroup)} -ErrorAction Continue)
+                    if(Get-AzADGroup -Filter  "startsWith(Displayname,'$(customRoleCustomResourcesReaderGroup)')" -ErrorAction Continue)
                     {
                       Write-Host "Group Exists"
                     } else 
