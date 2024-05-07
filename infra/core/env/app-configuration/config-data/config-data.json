@@ -205,7 +205,7 @@
   },
   {
     "key": "ENABLE_PRIVATE_ENDPOINT",
-    "value": "disable",
+    "value": "#{{ lower(enablePrivateEndpoint) }}",
     "label": "adp-platform",
     "contentType": "text/plain"
   }
