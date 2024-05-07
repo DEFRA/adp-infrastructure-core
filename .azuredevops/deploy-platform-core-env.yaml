@@ -64,7 +64,8 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      #ref: main
+      ref: sm/337709/RemovePrivateEndpoints
       
 variables:
   - name: IsAll
