@@ -63,16 +63,12 @@ extends:
                   type: AzurePowerShell
                   serviceConnectionVariableName: 'ssvServiceConnection'
                   inlineScript: |
-                    if(Get-AzADGroup -Filter  "startsWith(Displayname,'$(customRoleCustomResourcesReaderGroup)')" -ErrorAction Continue)
-                    {
-                      Write-Host "Group Exists"
-                    } else 
-                    {
-                      New-AzADGroup -DisplayName $(customRoleCustomResourcesReaderGroup) -MailEnabled $false -SecurityEnabled $true
-                      Write-Host "Group Created"
-                    }
-                    $objectid = (Get-AzADGroup -DisplayName "$(customRoleCustomResourcesReaderGroup)").id
-                    Write-Host "##vso[task.setvariable variable=customRoleCustomResourcesReaderGroupId;]$objectid"               
+                    $group = Get-AzADGroup -DisplayName "$(customRoleCustomResourcesReaderGroup)"
+                    if(-Not $group)
+                    {                     
+                      $group = New-AzADGroup -DisplayName $(customRoleCustomResourcesReaderGroup) -MailEnabled $false -SecurityEnabled $true
+                    }                    
+                    Write-Host "##vso[task.setvariable variable=customRoleCustomResourcesReaderGroupId;]$group.id"
                 - displayName: 'Get Portal App PrincipalId'
                   type: AzurePowerShell
                   serviceConnectionVariableName: 'subscriptionName'
