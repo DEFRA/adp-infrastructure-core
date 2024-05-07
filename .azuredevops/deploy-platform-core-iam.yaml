@@ -59,14 +59,14 @@ extends:
                 path: infra/core/iam/subscription
                 scope: "Subscription"
                 preDeployScriptsList:
-                - displayName: 'Get Custom Role Group Id'
+                - displayName: 'Get Group Id'
                   type: AzurePowerShell
                   serviceConnectionVariableName: 'ssvServiceConnection'
                   inlineScript: |
-                    $group = Get-AzADGroup -DisplayName "$(customRoleCustomResourcesReaderGroup)"
+                    $group = Get-AzADGroup -DisplayName '$(customRoleCustomResourcesReaderGroup)'
                     if(-Not $group)
                     {                     
-                      $group = New-AzADGroup -DisplayName $(customRoleCustomResourcesReaderGroup) -MailEnabled $false -SecurityEnabled $true
+                      $group = New-AzADGroup -DisplayName '$(customRoleCustomResourcesReaderGroup)' -MailEnabled $false -SecurityEnabled $true
                     }                    
                     Write-Host "##vso[task.setvariable variable=customRoleCustomResourcesReaderGroupId;]$group.id"
                 - displayName: 'Get Portal App PrincipalId'
