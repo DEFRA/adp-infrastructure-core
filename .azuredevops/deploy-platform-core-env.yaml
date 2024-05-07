@@ -253,10 +253,10 @@ extends:
                         -Label "adp-platform"
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                         -ConfigData '[{"key": "CLUSTER_OIDC_ISSUER_URL", "value": "$(clusterOidc)", "label": "adp-platform", "contentType": "text/plain" }]'
-                # - name: event-hub-secret-rbac
-                #   serviceConnectionVariableName: ssvServiceConnection
-                #   path: infra/core/env/event-hub
-                #   resourceGroupName: $(ssvInfraSharedRg)
+                - name: event-hub-secret-rbac
+                  serviceConnectionVariableName: ssvServiceConnection
+                  path: infra/core/env/event-hub
+                  resourceGroupName: $(ssvEventHubConnectionStringKeyVaultRg)
               - ${{ if eq(variables.IsManagedClusterFluxServicesSSHKeys, true) }}:
                 - name: Flux Services SSH Keys
                   serviceConnectionVariableName: ssvServiceConnection
