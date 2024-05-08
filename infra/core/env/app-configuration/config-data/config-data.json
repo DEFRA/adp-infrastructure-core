@@ -208,6 +208,11 @@
     "value": "{\"uri\":\"https://#{{ ssvEventHubConnectionStringKeyVault }}.vault.azure.net/secrets/#{{ environment }}#{{ nc_instance_regionid }}0#{{ environmentId }}-ADP-EVENTHUB-CONNECTION\"}",
     "label": "adp-platform",
     "contentType": "text/plain"
+  },
+  {
+    "key": "ENABLE_PRIVATE_ENDPOINT",
+    "value": "#{{ lower(enablePrivateEndpoint) }}",
+    "label": "adp-platform",
+    "contentType": "text/plain"
   }
-
 ]
