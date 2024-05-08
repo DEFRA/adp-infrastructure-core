@@ -4,10 +4,10 @@ targetScope = 'subscription'
 param roleName string
 
 @description('ID of the Azure AD Service Principal.')
-param principalId string = 'defaultforwhatif'
+param principalId string = 'defaultprincipalIdforwhatif'
 
 @description('ID of the Access group.')
-param groupObjectId string = 'defaultforwhatif'
+param groupObjectId string = 'defaultgroupObjectIdforwhatif'
 
 resource roleAssignmentSP 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(subscription().id, principalId, roleName)
