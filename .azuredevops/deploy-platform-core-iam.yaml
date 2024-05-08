@@ -1,0 +1,81 @@
+name: 1.0.$(BuildID)-${{ parameters.deployResources }}
+
+parameters:
+  - name: deployFromFeature
+    displayName: "Deploy from Feature Branch"
+    type: boolean
+    default: false
+  - name: deployResources
+    displayName: "Resources to Deploy"
+    type: string
+    default: "All"
+    values:
+      - All
+      - Cluster Custom Resources Reader Role
+pr:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - infra/core/iam/*
+
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+  paths:
+    include:
+      - infra/core/iam/*
+
+resources:
+  repositories:
+    - repository: ADPPipelineCommon
+      name: DEFRA/adp-pipeline-common
+      endpoint: DEFRA
+      type: github
+      ref: main
+      
+variables:
+  - name: IsAll
+    value: ${{ eq(parameters.deployResources,'All') }}
+  - name: IsClusterCustomResourcesReaderRole
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Cluster Custom Resources Reader Role')) }}    
+
+extends:
+  template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
+  parameters:
+    projectName: $(projectName)
+    deployFromFeature: ${{ parameters.deployFromFeature }}
+    variableFiles: 
+      - /pipelines/vars/common.yaml@_self
+      - /pipelines/vars/env/{environment}.yaml@_self    
+    groupedDeployments:
+        - name: role_assignments
+          deployments:
+           - ${{ if eq(variables.IsClusterCustomResourcesReaderRole, true) }}:
+              - name: cluster-custom-resources-reader-role
+                path: infra/core/iam/subscription
+                scope: "Subscription"
+                preDeployScriptsList:
+                - displayName: 'Get Group Id'
+                  type: AzurePowerShell
+                  serviceConnectionVariableName: 'ssvServiceConnection'
+                  inlineScript: |
+                    $group = Get-AzADGroup -DisplayName '$(customRoleCustomResourcesReaderGroup)'
+                    if(-Not $group)
+                    {                     
+                      $group = New-AzADGroup -DisplayName '$(customRoleCustomResourcesReaderGroup)' -SecurityEnabled -MailNickname 'NA'
+                    }
+                    $groupId=$group.id                 
+                    Write-Host "##vso[task.setvariable variable=customRoleCustomResourcesReaderGroupId;]$groupId"
+                - displayName: 'Get Portal App PrincipalId'
+                  type: AzurePowerShell
+                  serviceConnectionVariableName: 'subscriptionName'
+                  inlineScript: |
+                    $roleid = (Get-AzRoleDefinition -Name '$(customRoleCustomResourcesReader)').Id                    
+                    $ObjectId = (Get-AzADServicePrincipal -DisplayName '$(portalAppRegName)').Id
+                    Write-Host "##vso[task.setvariable variable=customRoleCustomResourcesReaderRoleId;]$roleid"                    
+                    Write-Host "##vso[task.setvariable variable=portalAppPrincipalId;]$ObjectId"
+                    
