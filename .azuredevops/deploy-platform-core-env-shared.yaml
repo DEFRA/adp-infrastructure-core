@@ -1,3 +1,5 @@
+name: 1.0.$(BuildID)-${{ parameters.deployResources }}
+
 parameters:
   - name: deployFromFeature
     displayName: "Deploy from Feature Branch"
@@ -9,6 +11,7 @@ parameters:
     default: All
     values:
       - All
+      - App Registration - Api Auth Apps
       - Platform Apps - All
       - Platform Apps - Container Apps Environment
       - Platform Apps - Flexible Server
@@ -45,10 +48,14 @@ resources:
       endpoint: DEFRA
       type: github
       ref:  main
-
+      
 variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'all') }}
+  - name: IsAppRegistrations
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'App Registration')) }}  
+  - name: IsAppRegistrationApiAuthApps
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'App Registration - Api Auth Apps')) }}   
   - name: IsPlatformApps
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources,'Platform Apps')) }}
   - name: IsPlatformAppsAll
@@ -98,7 +105,7 @@ extends:
           - 'refs/heads/main'
         privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
         azureRegions:
-          primary: 'UKSouth'
+          primary: 'UKSouth' 
       - name: 'ssv_pre'
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
@@ -112,10 +119,39 @@ extends:
           - 'refs/heads/main'
         privateAgentName: 'DEFRA-COMMON-ubuntu2004-SSV5'
         azureRegions:
-          primary: 'UKSouth'            
+          primary: 'UKSouth'         
     filePathsForTransform: |
       **/core/env-shared/adp-portal/app-registrations/portal-app-registration.json  
+      **/core/env-shared/app-registrations/api-auth-backend.json
+      **/core/env-shared/app-registrations/callback-api-client.json
+      **/core/env-shared/flux-notification/config/aad-groups/*.$(environment)_$(subEnvironment).json  
     groupedDeployments: 
+      - ${{ if eq(variables.IsAppRegistrations, true) }}: 
+        - name: AppRegistrations
+          deployments:
+            - ${{ if eq(variables.IsAppRegistrationApiAuthApps, true) }}:
+              - name: Register Api Backend App
+                type: 'script'
+                scriptType: AzurePowerShell
+                scriptRepo: PipelineCommonScripts
+                path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+                scriptArguments: >
+                    -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/app-registrations/api-auth-backend.json'
+              - name: Get Backend App ClientID from Keyvault
+                type: 'script'
+                scriptType: AzurePowerShell
+                path: "infra/core/env-shared/scripts/Get-KeyVaultSecret.ps1"
+                scriptArguments: >
+                    -KeyVaultName $(ssvInfraKeyVault)
+                    -SecretName $(apiAuthBackendAppRegClientIdSecretName)
+              - name: Register ADO Callback Api Client App
+                type: 'script'
+                scriptType: AzurePowerShell
+                scriptRepo: PipelineCommonScripts
+                path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+                scriptArguments: >
+                    -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/app-registrations/callback-api-client.json'               
+
       - ${{ if eq(variables.IsPlatformApps, true) }}:               
         - name: PlatformApps
           deployments: 
@@ -190,7 +226,13 @@ extends:
             - ${{ if eq(variables.IsFluxNotificationManagedIdentities, true) }}:
               - name: fluxnotificationapp-managed-identity
                 path: infra/core/env-shared/flux-notification/managed-identity
-                resourceGroupName: $(ssvInfraResourceGroup)  
+                resourceGroupName: $(ssvInfraResourceGroup)                 
               - name: adocallbackapp-managed-identity
                 path: infra/core/env-shared/flux-notification/managed-identity
-                resourceGroupName: $(ssvInfraResourceGroup)                           
+                resourceGroupName: $(ssvInfraResourceGroup) 
+                postDeployScriptsList:
+                  - displayName: Create or Update Flux Api Database AAD groups
+                    scriptPath: infra/bootstrap/tenant/scripts/Create-AADGroups.ps1
+                    type: AzurePowerShell
+                    scriptArguments: >
+                      -AADGroupsJsonManifestPath 'infra/core/env-shared/flux-notification/config/aad-groups/fluxApiAADGroups.$(environment)_$(subEnvironment).json'                      
