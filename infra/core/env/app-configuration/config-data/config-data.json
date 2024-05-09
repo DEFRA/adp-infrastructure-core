@@ -214,5 +214,11 @@
     "value": "#{{ lower(enablePrivateEndpoint) }}",
     "label": "adp-platform",
     "contentType": "text/plain"
+  },
+  {
+    "key": "STORAGEACCOUNT_SKU",
+    "value": "#{{ storageAccountSku }}",
+    "label": "adp-platform",
+    "contentType": "text/plain"
   }
 ]
