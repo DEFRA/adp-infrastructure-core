@@ -89,7 +89,7 @@ param fluxConfig = {
     gitRepository: {
       syncIntervalInSeconds: 300
       timeoutInSeconds: 180
-      url: 'https://github.com/DEFRA/adp-flux-core'
+      url: 'https://github.com/#{{ githubOrganisation }}/adp-flux-core'
       branch: 'main'
     }
     kustomizations: {
