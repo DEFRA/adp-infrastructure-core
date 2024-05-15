@@ -93,8 +93,8 @@ param fluxConfig = {
       branch: 'sm/337709/RemovePrivateEndpoints'
     }
     kustomizations: {
-      timeoutInSeconds: 600
-      syncIntervalInSeconds: 600
+      timeoutInSeconds: 180
+      syncIntervalInSeconds: 300
       clusterPath: './clusters/#{{ lower(environment) }}/0#{{ environmentId }}'
       infraPath: './infra/#{{ lower(environment) }}/0#{{ environmentId }}'
       servicesPath: './services/#{{ lower(environment) }}/0#{{ environmentId }}'

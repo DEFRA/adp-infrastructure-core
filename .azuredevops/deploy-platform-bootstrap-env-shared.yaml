@@ -19,6 +19,7 @@ parameters:
       - Platform - Key Vault
       - Platform - Container Registry
       - Platform - Log Analytics Workspace
+      - Platform - Monitoring - Insights
       - Platform - Event Hub Namespace
       - Platform Apps - All
       - Platform Apps - Key Vaults
@@ -73,6 +74,8 @@ variables:
     value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Container Registry')) }}
   - name: IsLogAnalyticsWorkspace
     value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Log Analytics Workspace')) }}
+  - name: IsMonitoringInsights
+    value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Monitoring - Insights')) }}    
   - name: IsEventHubNamespace
     value: ${{ or(eq(variables.IsPlatformAll,true), eq(parameters.deployResources,'Platform - Event Hub Namespace')) }}
   - name: IsPlatformApps
@@ -146,6 +149,10 @@ extends:
                 path: infra/common/operational-insights
                 parameterFilePath: infra/bootstrap/env-shared/log-analytics-workspace
                 resourceGroupName: $(ssvSharedResourceGroup)
+            - ${{ if eq(variables.IsMonitoringInsights,true) }}:
+              - name: monitoring-insights
+                path: infra/common/monitoring-insights
+                resourceGroupName: $(ssvSharedResourceGroup)                  
             - ${{ if eq(variables.IsEventHubNamespace, true) }}:                    
               - name: namespace
                 path: infra/bootstrap/env-shared/event-hub
