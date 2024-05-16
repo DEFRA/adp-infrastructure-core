@@ -91,7 +91,7 @@ extends:
         serviceConnection: AZR-ADP-SSV5
         dependsOn: 'snd1'
         deploymentBranches:
-          - '*'
+          - 'refs/heads/main'
         azureRegions:
           primary: 'UKSouth'
       - name: 'dev1'
