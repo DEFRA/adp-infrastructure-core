@@ -64,7 +64,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: aa/addSND4environment
+      ref: main      
       
 variables:
   - name: IsAll
