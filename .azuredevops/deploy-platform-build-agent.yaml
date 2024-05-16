@@ -70,9 +70,16 @@ extends:
           - 'refs/pull/*/merge'
         azureRegions:
           primary: 'UKSouth'
+      - name: 'snd4'
+        serviceConnection: AZD-ADP-SND4-VMSS
+        dependsOn: 'snd3'
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'
       - name: 'dev1'
         serviceConnection: AZR-ADP-DEV1
-        dependsOn: 'snd1'
+        dependsOn: 'snd4'
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
@@ -86,7 +93,7 @@ extends:
           primary: 'UKSouth'
       - name: 'snd3'
         serviceConnection: AZD-ADP-SND3-VMSS
-        dependsOn: 'snd1'
+        dependsOn: 'Validate'
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:

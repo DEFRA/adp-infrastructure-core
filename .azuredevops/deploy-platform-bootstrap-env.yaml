@@ -81,13 +81,21 @@ extends:
       - name: 'snd3'
         outputTemplateChange: Skip
         serviceConnection: AZD-ADP-SSV3
-        dependsOn: 'snd2'
+        dependsOn: Validate
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
-          primary: 'UKSouth'          
+          primary: 'UKSouth'
+      - name: 'snd4'
+        outputTemplateChange: Skip
+        serviceConnection: AZR-ADP-SSV5
+        dependsOn: 'snd3'
+        deploymentBranches:
+          - 'refs/heads/main'
+        azureRegions:
+          primary: 'UKSouth'
       - name: 'dev1'
-        dependsOn: 'snd1'
+        dependsOn: 'snd4'
         outputTemplateChange: Skip
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
