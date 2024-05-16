@@ -27,3 +27,9 @@ param secrets = [
 ]
 
 
+param appInsights = {
+  name: '#{{ applicationInsightsName }}'
+  resourceGroup: '#{{ ssvSharedResourceGroup }}'
+  subscriptionId: '#{{ subscriptionId }}'
+}
+

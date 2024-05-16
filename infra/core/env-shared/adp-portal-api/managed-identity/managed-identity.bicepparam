@@ -30,3 +30,9 @@ param secrets = [
   'ADO-DefraGovUK-AAD-ADP-#{{ssvEnvironment}}#{{environmentId}}-ClientId'
   'ADO-DefraGovUK-AAD-ADP-#{{ssvEnvironment}}#{{environmentId}}-ObjectId'
 ]
+
+param appInsights = {
+  name: '#{{ applicationInsightsName }}'
+  resourceGroup: '#{{ ssvSharedResourceGroup }}'
+  subscriptionId: '#{{ subscriptionId }}'
+}

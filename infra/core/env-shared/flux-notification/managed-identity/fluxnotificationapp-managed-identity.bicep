@@ -34,6 +34,9 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
+@description('Optional. Application Insights object.')
+param appInsights object
+
 var customTags = {
   Location: location
   CreatedDate: createdDate
@@ -115,5 +118,17 @@ module eventHubNamespaceDataReceiverRoleAssignment '../../.bicep/event-hub-role-
   params: {
     principalId: managedIdentities.outputs.principalId
     eventHub: eventHub
+  }
+}
+
+module appInsightsPublisherRoleAssignment '../../.bicep/appinsights-role-publisher.bicep' = {
+  name: '${appInsights.name}-publisher-role-${deploymentDate}'
+  scope: resourceGroup(appInsights.subscriptionId, appInsights.resourceGroup)
+  dependsOn: [
+    managedIdentities
+  ]
+  params: {
+    principalId: managedIdentities.outputs.principalId 
+    appInsightsName: '${appInsights.name}'
   }
 }
