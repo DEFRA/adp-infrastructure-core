@@ -89,7 +89,7 @@ extends:
       - name: 'snd4'
         outputTemplateChange: Skip
         serviceConnection: AZR-ADP-SSV5
-        dependsOn: 'snd1'
+        dependsOn: 'snd3'
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:
