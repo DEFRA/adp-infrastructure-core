@@ -197,7 +197,7 @@ extends:
                       scriptArguments: >
                         -Label "shared"
                         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                        -ConfigData '[{"key": "APPINSIGHTS-CONNECTIONSTRING", "value": "$(appInsightConnectionString)", "label": "shared", "contentType": "text/plain" }]'                      
+                        -ConfigData '[{"key": "APPINSIGHTS_CONNECTIONSTRING", "value": "$(appInsightConnectionString)", "label": "shared", "contentType": "text/plain" }]'                      
               - ${{ if eq(variables.IsMonitoringAzureMonitorWorkspace, true) }}:
                 - name: azure-monitor-workspace
                   path: infra/core/env/observability
