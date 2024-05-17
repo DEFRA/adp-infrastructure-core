@@ -183,6 +183,21 @@ extends:
                       }
                       $groupId=$group.id                 
                       Write-Host "##vso[task.setvariable variable=monitoringPublisherGroup;]$groupId"
+                  postDeployScriptsList:
+                    - displayName: 'GetAppInsightConnectionString'
+                      type: PowerShell
+                      inlineScript: |
+                        $output = (Get-AzApplicationInsights -ResourceGroupName $(servicesResourceGroup) -Name $(applicationInsightsName)).ConnectionString
+                        Write-Host "##vso[task.setvariable variable=appInsightConnectionString;]$output"
+                    - displayName: Add ConnectionString to Config Service
+                      scriptPath: templates/powershell/Import-ConfigData.ps1
+                      type: AzureCLI
+                      AzureCLIScriptType: pscore
+                      scriptRepo: PipelineCommonFiles
+                      scriptArguments: >
+                        -Label "shared"
+                        -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                        -ConfigData '[{"key": "APPINSIGHTS-CONNECTIONSTRING", "value": "$(appInsightConnectionString)", "label": "shared", "contentType": "text/plain" }]'                      
               - ${{ if eq(variables.IsMonitoringAzureMonitorWorkspace, true) }}:
                 - name: azure-monitor-workspace
                   path: infra/core/env/observability
