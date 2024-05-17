@@ -71,7 +71,7 @@ extends:
         azureRegions:
           primary: 'UKSouth'
       - name: 'snd4'
-        serviceConnection: AZD-ADP-SND4-VMSS
+        serviceConnection: AZR-ADP-SND4
         dependsOn: 'snd3'
         deploymentBranches:
           - 'refs/heads/main'
