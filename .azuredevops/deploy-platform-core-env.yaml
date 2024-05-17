@@ -185,7 +185,7 @@ extends:
                       Write-Host "##vso[task.setvariable variable=monitoringPublisherGroup;]$groupId"
                   postDeployScriptsList:
                     - displayName: 'GetAppInsightConnectionString'
-                      type: PowerShell
+                      type: AzurePowerShell
                       inlineScript: |
                         $output = (Get-AzApplicationInsights -ResourceGroupName $(servicesResourceGroup) -Name $(applicationInsightsName)).ConnectionString
                         Write-Host "##vso[task.setvariable variable=appInsightConnectionString;]$output"
