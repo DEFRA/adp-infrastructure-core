@@ -13,6 +13,20 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
+@description('Required. monitoringPublisherGroup id.')
+param monitoringPublisherGroup string
+
+var roleAssignments = [
+  {
+    roleDefinitionIdOrName: 'Monitoring Metrics Publisher'
+    description: 'Monitoring Metrics Publisher Role Assignment'
+    principalIds: [
+      monitoringPublisherGroup
+    ]
+    principalType: 'Group'
+  }
+]
+
 var customTags = {
   Location: location
   CreatedDate: createdDate
@@ -28,7 +42,7 @@ module appInsightsResource 'br/SharedDefraRegistry:insights.component:0.4.2' = {
   params: {
     name: appInsights.name
     workspaceResourceId: resourceId('Microsoft.OperationalInsights/workspaces', appInsights.workspaceName)
-
+    roleAssignments: roleAssignments
     location: location
     tags: tags
   }
