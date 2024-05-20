@@ -18,6 +18,7 @@ param keyVaultName = '#{{ ssvInfraKeyVault }}'
 param secrets = [
   'POSTGRES-HOST'
   'FLUXNOTIFY-MI-CLIENT-ID'
+  'SHARED-APPINSIGHTS-CONNECTIONSTRING'
 ]
 
 param eventHub = {
