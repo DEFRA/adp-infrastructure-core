@@ -64,7 +64,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: rv/371158-ai      
+      ref: main     
       
 variables:
   - name: IsAll
