@@ -18,6 +18,7 @@ param keyVaultName = '#{{ ssvInfraKeyVault }}'
 param secrets = [
   'POSTGRES-HOST'
   'FLUXNOTIFY-MI-CLIENT-ID'
+  'SHARED-APPINSIGHTS-CONNECTIONSTRING'
 ]
 
 param eventHub = {
@@ -29,4 +30,10 @@ param eventHub = {
 param storageAccount = {
   name: '#{{ fluxNotificationStorageAccountName }}'
   containerName: '#{{ fluxNotificationContainerAppId }}'
+}
+
+param appInsights = {
+  name: '#{{ applicationInsightsName }}'
+  resourceGroup: '#{{ ssvSharedResourceGroup }}'
+  subscriptionId: '#{{ subscriptionId }}'
 }
