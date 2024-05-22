@@ -23,6 +23,10 @@ param principalId string
 @description('Required. Platform Users AD group ID')
 param platformUserGroupId string
 
+@description('Required. The parameter object for the application insights.')
+param appInsights object
+
+
 var roleAssignments = [
   {
     roleDefinitionIdOrName: 'Key Vault Secrets Officer'
@@ -89,3 +93,18 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     roleAssignments: roleAssignments
   }
 }
+
+resource appInsightsResource 'Microsoft.Insights/components@2020-02-02' existing = {
+  name: appInsights.name
+  scope: resourceGroup(appInsights.resourceGroup)
+}
+
+module appninsightsecret './.bicep/storesecret.bicep' = {
+  name: 'app-insight-connection'  
+  params: {
+    keyvaultName: vaults.outputs.name
+    appInsightConnectionString: appInsightsResource.properties.ConnectionString
+  }
+}
+
+

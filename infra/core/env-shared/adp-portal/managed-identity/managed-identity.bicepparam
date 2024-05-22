@@ -19,3 +19,9 @@ param keyVault = {
   subscriptionId: '#{{ subscriptionId }}'
   resourceGroup: '#{{ ssvInfraResourceGroup }}'
 }
+
+param appInsights = {
+  name: '#{{ applicationInsightsName }}'
+  resourceGroup: '#{{ ssvSharedResourceGroup }}'
+  subscriptionId: '#{{ subscriptionId }}'
+}

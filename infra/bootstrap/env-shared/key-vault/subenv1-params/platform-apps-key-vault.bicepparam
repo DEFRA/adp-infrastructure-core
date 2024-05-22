@@ -22,3 +22,8 @@ param location = '#{{ location }}'
 param principalId = '#{{ ssvAppRegServicePrincipalId }}'
 
 param platformUserGroupId = '#{{ aadPlatformEngineersUserGroupObjectId }}'
+
+param appInsights = {
+  name: '#{{ applicationInsightsName }}'
+  resourceGroup: '#{{ ssvSharedResourceGroup }}'
+}
