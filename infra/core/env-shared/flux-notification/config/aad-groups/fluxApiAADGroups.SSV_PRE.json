@@ -23,6 +23,9 @@
                 ]
             },
             "Members": {
+                "groups" : [
+                    "AAG-Users-ADP-PlatformEngineers"
+                ],
                 "serviceprincipals" : [
                     "#{{ adoCallbackApiManagedIdentity }}"
                 ]
