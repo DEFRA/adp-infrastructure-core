@@ -65,7 +65,7 @@ resource sharedKeyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
   name: keyVault.Name
 }
 resource clientIDSecret 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
-  name: 'PORTAL-MI-CLIENT-ID'
+  name: 'ADP-PORTAL-MI-CLIENT-ID'
   parent: sharedKeyVault
   properties: {
     value: managedIdentities.outputs.clientId
