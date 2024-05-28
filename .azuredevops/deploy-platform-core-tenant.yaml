@@ -14,6 +14,8 @@ parameters:
       - ServiceBus Writer Role
       - PostgreSql Database Writer Role
       - Storage Account Writer Role
+      - Storage Account Data Writer Role
+      - Storage Account Data Reader Role
       - Cluster Custom Resources Reader Role
 pr:
   branches:
@@ -39,7 +41,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: feature/storage-data-roles
       
 variables:
   - name: IsAll
@@ -50,6 +52,10 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'PostgreSql Database Writer Role')) }}
   - name: IsStorageAccountWriterRole
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Storage Account Writer Role')) }}
+  - name: IsStorageAccountDataWriterRole
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Storage Account Data Writer Role')) }}
+  - name: IsStorageAccountDataReaderRole
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Storage Account Data Reader Role')) }}    
   - name: IsClusterCustomResourcesReaderRole
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Cluster Custom Resources Reader Role')) }}    
 
@@ -100,6 +106,14 @@ extends:
               - name: storageaccount-writer-role
                 path: infra/core/tenant/role-definition
                 scope: "Subscription"
+           - ${{ if eq(variables.IsStorageAccountDataWriterRole, true) }}:
+              - name: storageaccount-data-writer-role
+                path: infra/core/tenant/role-definition
+                scope: "Subscription"
+           - ${{ if eq(variables.IsStorageAccountDataReaderRole, true) }}:
+              - name: storageaccount-data-reader-role
+                path: infra/core/tenant/role-definition
+                scope: "Subscription"                                
            - ${{ if eq(variables.IsClusterCustomResourcesReaderRole, true) }}:
               - name: cluster-custom-resources-reader-role
                 path: infra/core/tenant/role-definition
