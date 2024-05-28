@@ -304,6 +304,7 @@ Function Build-ServicePrincipals() {
             else {
                 # Write-Error "Serviceprincipal $($_) does not exist."
                 Write-Host "##vso[task.logissue type=error]Serviceprincipal $($_) does not exist."
+                exit 1
             }
         }  
         return $servicePrincipalList
