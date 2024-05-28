@@ -126,4 +126,4 @@ param managedRuleSets = [
         }
 ]
 
-param customRules = []
+param customRules = [ ]
