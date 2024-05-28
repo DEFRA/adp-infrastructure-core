@@ -24,7 +24,13 @@ Function New-ADGroup() {
         Write-Debug "${functionName}:Entered"   
     }
 
-    process {    
+    process {  
+        Write-Host "Get-AzContext in List format" 
+        Get-AzContext | Format-List
+
+        Write-Host "Get-AzContext in default format"
+        Get-AzContext
+          
         Write-Debug "${functionName}:AADGroupObject=$($AADGroupObject | ConvertTo-Json -Depth 10)"
         
         Write-Host "Creating new group : $($AADGroupObject.displayName)"
