@@ -270,7 +270,7 @@ Function Build-Users() {
 Builds Array of Serviceprincipals.
 
 .DESCRIPTION
-Builds Array of Users. It uses 'Serviceprincipals Name' to find Serviceprincipal object ID and build "https://graph.microsoft.com/v1.0/servicePrincipals/{servicePrincipalObjectID}" strings.
+Builds Array of Serviceprincipals. It uses 'Serviceprincipals Name' to find Serviceprincipal object ID and build "https://graph.microsoft.com/v1.0/servicePrincipals/{servicePrincipalObjectID}" strings.
 It is internal function used by 'Build-GroupOwners' and 'Build-GroupMembers'.
 
 .PARAMETER AADUsers
@@ -302,7 +302,8 @@ Function Build-ServicePrincipals() {
                 $servicePrincipalList.Add("https://graph.microsoft.com/v1.0/servicePrincipals/$($serviceprincipal.id)")
             }
             else {
-                Write-Error "Serviceprincipal $($_) does not exist."
+                # Write-Error "Serviceprincipal $($_) does not exist."
+                Write-Host "##vso[task.logissue type=error]Serviceprincipal $($_) does not exist."
             }
         }  
         return $servicePrincipalList
@@ -661,7 +662,7 @@ Function Find-NewServicePrincipalsToAdd() {
         
         $spIds = [System.Collections.Generic.List[string]]@()
         $ServicePrincipals | ForEach-Object {
-            Write-Host "Getting ServicePrincipal ID for group name '$_'"
+            Write-Host "Getting ServicePrincipal ID for Serviceprincipal name '$_'"
             $sp = Get-MgServicePrincipal -Filter "DisplayName eq '$_'" -Property "id"
             if ($sp) {
                 if($ExistingGroupMembersOrOwners.Id -notcontains $sp.id){
