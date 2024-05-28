@@ -1,0 +1,23 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Defra WAF error">
+  <main class="govuk-main-wrapper" id="main-content">
+    <div class="govuk-error-summary">
+      <div role="alert"></div>
+      <h1 class="govuk-error-summary__title">
+        Unfortunately, there is a problem with your request
+      </h1>
+      <div class="govuk-error-summary__body">
+        <p class="govuk-body">
+          <b>Your request has been blocked.</b> Please contact the site administrator
+          or the Defra helpdesk with the following information.
+        </p>
+        <p class="govuk-body">
+          <b>Tracking Request ID</b>: {"{{azure-ref}}"}
+        </p>
+      </div>
+    </div>
+  </main>
+</Layout>
