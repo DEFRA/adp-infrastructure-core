@@ -40,6 +40,34 @@ param managedRuleSets = [
                       selectorMatchOperator: 'Contains'
                       selector: 'entity.metadata.annotations.backstage'
                     }
+                    {
+                      matchVariable: 'RequestBodyJsonArgNames'
+                      selectorMatchOperator: 'Contains'
+                      selector: 'https://www.gov.uk/'
+                    }
+                    {
+                      matchVariable: 'RequestBodyJsonArgNames'
+                      selectorMatchOperator: 'Contains'
+                      selector: 'url'
+                    }
+                  ]
+                }
+              ]
+              exclusions: []
+            }
+            {
+              ruleGroupName: 'LFI'
+              rules: [
+                {
+                  ruleId: '930120'
+                  enabledState: 'Enabled'
+                  action: 'AnomalyScoring'
+                  exclusions: [ // Backstage Portal Rules.
+                    {
+                      matchVariable: 'QueryStringArgNames'
+                      selectorMatchOperator: 'Contains'
+                      selector: 'fields'
+                    }
                   ]
                 }
               ]
