@@ -88,9 +88,8 @@ param managedRuleSets = [
 
 param customRules = [
   {
-    name: 'PaloIpWAF'
+    name: 'CustRule01'
     priority: 100
-    enabledState: 'Enabled'
     ruleType: 'MatchRule'
     action: 'Block'
     matchConditions: [
@@ -102,9 +101,10 @@ param customRules = [
         ]
         operator: 'IPMatch'
         negationConditon: true
-        matchValues: [  '52.142.87.204/32' ]
+        matchValues: [
+          '10.10.10.0/24'
+        ]
       }
     ]
   }
 ]
-
