@@ -22,6 +22,9 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
+@description('Optional. Application Insights object.')
+param appInsights object
+
 var customTags = {
   Location: location
   CreatedDate: createdDate
@@ -58,6 +61,17 @@ module sharedAcrPullRoleAssignment '../../.bicep/acr-pull.bicep' = {
   }
 }
 
+resource sharedKeyVault 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
+  name: keyVault.Name
+}
+resource clientIDSecret 'Microsoft.KeyVault/vaults/secrets@2019-09-01' = {
+  name: 'ADP-PORTAL-MI-CLIENT-ID'
+  parent: sharedKeyVault
+  properties: {
+    value: managedIdentities.outputs.clientId
+  }
+}
+
 module appKvSecretsUserRoleAssignment '../../.bicep/kv-role-secrets-user.bicep' = {
   name: '${keyVault.Name}-secrets-user-role-${deploymentDate}'
   scope: resourceGroup(keyVault.subscriptionId, keyVault.resourceGroup)
@@ -67,5 +81,17 @@ module appKvSecretsUserRoleAssignment '../../.bicep/kv-role-secrets-user.bicep' 
   params: {
     principalId: managedIdentities.outputs.principalId 
     keyVaultName: '${keyVault.Name}'
+  }
+}
+
+module appInsightsPublisherRoleAssignment '../../.bicep/appinsights-role-publisher.bicep' = {
+  name: '${appInsights.name}-publisher-role-${deploymentDate}'
+  scope: resourceGroup(appInsights.subscriptionId, appInsights.resourceGroup)
+  dependsOn: [
+    managedIdentities
+  ]
+  params: {
+    principalId: managedIdentities.outputs.principalId 
+    appInsightsName: '${appInsights.name}'
   }
 }

@@ -35,14 +35,16 @@ var serviceBusPrivateEndpointTags = {
   Tier: 'Shared'
 }
 
-module serviceBusResource 'br/SharedDefraRegistry:service-bus.namespace:0.5.3' = {
+module serviceBusResource 'br/SharedDefraRegistry:service-bus.namespace:0.5.16' = {
   name: 'service-bus-${deploymentDate}'
   params: {
     name: serviceBus.namespaceName
     skuName: serviceBus.skuName
     location: location
-    diagnosticWorkspaceId: ''
-    lock: 'CanNotDelete'
+    minimumTlsVersion:'1.2'
+    lock: {
+      kind:'CanNotDelete'
+    }
     networkRuleSets: {
       publicNetworkAccess: 'Disabled'
     }

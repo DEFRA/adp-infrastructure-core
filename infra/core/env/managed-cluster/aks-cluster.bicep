@@ -345,7 +345,8 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.1
     autoScalerProfileScanInterval: '10s'
     autoScalerProfileSkipNodesWithLocalStorage: 'true'
     autoScalerProfileSkipNodesWithSystemPods: 'true'
-
+    enableStorageProfileDiskCSIDriver: true
+    enableStorageProfileFileCSIDriver: true
   }
 }
 
