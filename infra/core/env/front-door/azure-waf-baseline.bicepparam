@@ -92,13 +92,12 @@ param customRules = [
     priority: 100
     enabledState: 'Enabled'
     ruleType: 'MatchRule'
-    matchType: 'IP address'
-    action: 'Deny traffic'
+    action: 'Block'
     matchConditions: [
       {
         matchVariables: [
           {
-            variableName: 'SocketAddr'
+            variableName: 'RemoteAddr'
           }
         ]
         operator: 'IPMatch'
@@ -108,3 +107,4 @@ param customRules = [
     ]
   }
 ]
+
