@@ -346,7 +346,7 @@ extends:
               #     resourceGroupName: $(cdnResourceGroup)
 
               - ${{ if eq(variables.IsFrontDoorWAFAdpPortal, true) }}:
-                - name: azure-waf-baseline
+                - name: azure-waf
                   path: infra/core/env/front-door
                   parameterFilePath: infra/core/env/front-door/adp-portal
                   resourceGroupName: $(cdnResourceGroup)
