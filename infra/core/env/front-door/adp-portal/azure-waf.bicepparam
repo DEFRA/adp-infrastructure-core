@@ -1,4 +1,4 @@
-using 'azure-waf-adp-portal.bicep'
+using 'azure-waf.bicep'
 
 param wafPolicyName = '#{{ adpPortalwafPolicyName }}'
 
