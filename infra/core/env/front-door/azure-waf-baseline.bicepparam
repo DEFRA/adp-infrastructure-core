@@ -1,6 +1,6 @@
 using 'azure-waf-baseline.bicep'
 
-param wafPolicyName = 'adpPortalwafPolicyName'
+param wafPolicyName = '#{{ adpPortalwafPolicyName }}'
 
 param policySettings = {
   enabledState: 'Enabled'
