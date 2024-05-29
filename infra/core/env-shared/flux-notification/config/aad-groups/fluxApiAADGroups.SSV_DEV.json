@@ -21,6 +21,9 @@
             "displayName": "#{{ fluxNotificationPostgresDbReaderAdGroup }}",
             "description": "Azure AD Access group with Reader permissions to the flux_notifications_db database.",
             "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                ]
             },
             "Members": {
                 "groups" : [
