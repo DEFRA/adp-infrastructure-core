@@ -25,12 +25,6 @@ Function New-ADGroup() {
     }
 
     process {  
-        Write-Host "Get-AzContext in List format" 
-        Get-AzContext | Format-List
-
-        Write-Host "Get-AzContext in default format"
-        Get-AzContext
-          
         Write-Debug "${functionName}:AADGroupObject=$($AADGroupObject | ConvertTo-Json -Depth 10)"
         
         Write-Host "Creating new group : $($AADGroupObject.displayName)"
@@ -97,13 +91,7 @@ Function Update-ADGroup() {
         Write-Debug "${functionName}:GroupId=$($GroupId)"  
     }
 
-    process {   
-        Write-Host "Get-AzContext in List format" 
-        Get-AzContext | Format-List
-
-        Write-Host "Get-AzContext in default format"
-        Get-AzContext
-
+    process {
         Write-Debug "${functionName}:AADGroupObject=$($AADGroupObject | ConvertTo-Json -Depth 10)"
 
         Write-Host "Updating group : $($AADGroupObject.displayName)"
@@ -208,6 +196,20 @@ Function Build-GroupOwners() {
         Write-Debug "${functionName}:AADGroupOwners=$($AADGroupOwners | ConvertTo-Json -Depth 10)"
         
         $groupOwners = New-Object Collections.Generic.List[string]
+
+         #Add the account as default owner which creates the group.
+         if ((Get-AzContext).Account.Type -eq "ServicePrincipal") {
+            [string]$currentContextServicePrincipalID = (Get-MgServicePrincipal -Filter "AppId eq '$((Get-AzContext).Account.Id)'").Id
+            if($currentContextServicePrincipalID){
+                $groupOwners.Add("https://graph.microsoft.com/v1.0/servicePrincipals/$($currentContextServicePrincipalID)")
+                Write-Host "Default Owner set to Serviceprincipal ID = '$currentContextServicePrincipalID'"
+            }
+            else {
+                Write-Host "##vso[task.logissue type=error]Default owner does not exit."
+                exit 1
+            }
+        }
+
         if ($AADGroupOwners) {
 
             if ($AADGroupOwners.users) {
@@ -217,7 +219,11 @@ Function Build-GroupOwners() {
 
             if ($AADGroupOwners.serviceprincipals) {
                 $servicePrincipalsResult = Build-ServicePrincipals -Serviceprincipals $AADGroupOwners.serviceprincipals
-                $servicePrincipalsResult.foreach({$groupOwners.Add($_)})
+                $servicePrincipalsResult.ForEach({
+                    if ($groupOwners -notcontains $_) {
+                        $groupOwners.Add($_)
+                    }
+                })    
             }
         }    
         
@@ -266,7 +272,7 @@ Function Build-Users() {
                 $users.Add("https://graph.microsoft.com/v1.0/users/$($user.id)")
             }
             else {
-                Write-Error "User with UserEmail $($_) does not exist."
+                Write-Host "##vso[task.logissue type=error]User with UserEmail $($_) does not exist."
             }
         }
         return $users
@@ -307,6 +313,7 @@ Function Build-ServicePrincipals() {
         Write-Debug "${functionName}:Serviceprincipals=$($Serviceprincipals | ConvertTo-Json -Depth 10)"
         
         $servicePrincipalList = [System.Collections.Generic.List[string]]@()
+
         $Serviceprincipals | ForEach-Object {
             Write-Host "Getting Serviceprincipal ID for Serviceprincipal name '$_'"
             $serviceprincipal = Get-MgServicePrincipal -Filter "DisplayName eq '$_'" -Property "id"
@@ -314,9 +321,7 @@ Function Build-ServicePrincipals() {
                 $servicePrincipalList.Add("https://graph.microsoft.com/v1.0/servicePrincipals/$($serviceprincipal.id)")
             }
             else {
-                # Write-Error "Serviceprincipal $($_) does not exist."
                 Write-Host "##vso[task.logissue type=error]Serviceprincipal $($_) does not exist."
-                exit 1
             }
         }  
         return $servicePrincipalList
@@ -364,7 +369,7 @@ Function Build-Groups() {
                 $groups.Add("https://graph.microsoft.com/v1.0/groups/$($group.id)")
             }
             else {
-                Write-Error "Group $($_) does not exist."
+                Write-Host "##vso[task.logissue type=error]Group $($_) does not exist."
             }
         }  
         return $groups
@@ -431,9 +436,8 @@ Function Update-GroupMembers() {
 
             if ($AADGroupMembers.serviceprincipals) {
                 $spResult = Find-NewServicePrincipalsToAdd -GroupId $GroupId -ExistingGroupMembersOrOwners $existingGroupMembers -ServicePrincipals $AADGroupMembers.serviceprincipals
-                Write-Debug $spResult
                 $spResult | ForEach-Object {
-                    New-MgGroupMember -GroupId $GroupId -DirectoryObjectId $_ -ErrorAction Continue
+                    New-MgGroupMember -GroupId $GroupId -DirectoryObjectId $_ -ErrorAction SilentlyContinue
                     Write-Host "ServicePrincipal '$($_)' Added as a member of the Group."
                 }
             } 
@@ -491,6 +495,14 @@ Function Update-GroupOwners() {
                 $usersResult | ForEach-Object {
                     New-MgGroupOwner -GroupId $GroupId -DirectoryObjectId $_ -ErrorAction Stop
                     Write-Host "User '$($_)' Added as a owner of the Group."
+                }
+            } 
+
+            if ($AADGroupOwners.serviceprincipals) {
+                $spResult = Find-NewServicePrincipalsToAdd -GroupId $GroupId -ExistingGroupMembersOrOwners $existingGroupOwners -ServicePrincipals $AADGroupOwners.serviceprincipals
+                $spResult | ForEach-Object {
+                    New-MgGroupOwner -GroupId $GroupId -DirectoryObjectId $_ -ErrorAction SilentlyContinue
+                    Write-Host "ServicePrincipal '$($_)' Added as a owner of the Group."
                 }
             } 
         }    
@@ -555,7 +567,7 @@ Function Find-NewUsersToAdd() {
                 }
             }
             else {
-                Write-Error "User with UserEmail '$($_)' does not exist."
+                Write-Host "##vso[task.logissue type=error]User with UserEmail '$($_)' does not exist."
             }
         }
         return $users
@@ -621,7 +633,7 @@ Function Find-NewGroupsToAdd() {
                 }
             }
             else {
-                Write-Error "Group '$($_)' does not exist."
+                Write-Host "##vso[task.logissue type=error]Group '$($_)' does not exist."
             }
         }  
         return $groups
@@ -686,7 +698,7 @@ Function Find-NewServicePrincipalsToAdd() {
                 }
             }
             else {
-                Write-Error "ServicePrincipal '$($_)' does not exist."
+                Write-Host "##vso[task.logissue type=error]ServicePrincipal '$($_)' does not exist."
             }
         }  
         return $spIds

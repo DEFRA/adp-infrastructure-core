@@ -1,11 +1,11 @@
 {
     "accessADGroups": [
         {
-            "displayName": "#{{ fluxNotificationPostgresDbWriterAdGroup }}-temp12345",
+            "displayName": "#{{ fluxNotificationPostgresDbWriterAdGroup }}-gg1",
             "description": "Azure AD Access group with Write permissions to the flux_notifications_db database.",
             "Owners": {
                 "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV3-Temp12"
+                    "ADO-DefraGovUK-AAD-ADP-SSV3"
                 ]
             },
             "Members": {
@@ -18,12 +18,9 @@
             }
         },
         {
-            "displayName": "#{{ fluxNotificationPostgresDbReaderAdGroup }}-temp12345",
+            "displayName": "#{{ fluxNotificationPostgresDbReaderAdGroup }}-gg1",
             "description": "Azure AD Access group with Reader permissions to the flux_notifications_db database.",
             "Owners": {
-                "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV3-Temp12"
-                ]
             },
             "Members": {
                 "groups" : [
