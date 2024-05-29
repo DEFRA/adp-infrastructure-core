@@ -86,7 +86,7 @@ param managedRuleSets = [
         }
 ]
 
-param customRules = customRules: [
+param customRules = [
   {
     name: 'PaloIpWAF'
     priority: 100
