@@ -86,25 +86,4 @@ param managedRuleSets = [
         }
 ]
 
-param customRules = [
-  {
-    name: 'CustRule01'
-    priority: 100
-    ruleType: 'MatchRule'
-    action: 'Block'
-    matchConditions: [
-      {
-        matchVariables: [
-          {
-            variableName: 'RemoteAddr'
-          }
-        ]
-        operator: 'IPMatch'
-        negationConditon: true
-        matchValues: [
-          '10.10.10.0/24'
-        ]
-      }
-    ]
-  }
-]
+param customRules = []
