@@ -224,9 +224,9 @@ extends:
                     resourceGroupName: $(ssvInfraResourceGroup) 
             
             - ${{ if eq(variables.IsFluxNotificationManagedIdentities, true) }}:
-              # - name: fluxnotificationapp-managed-identity
-              #   path: infra/core/env-shared/flux-notification/managed-identity
-              #   resourceGroupName: $(ssvInfraResourceGroup)                 
+              - name: fluxnotificationapp-managed-identity
+                path: infra/core/env-shared/flux-notification/managed-identity
+                resourceGroupName: $(ssvInfraResourceGroup)                 
               - name: adocallbackapp-managed-identity
                 path: infra/core/env-shared/flux-notification/managed-identity
                 resourceGroupName: $(ssvInfraResourceGroup) 
@@ -235,5 +235,4 @@ extends:
                     scriptPath: infra/bootstrap/tenant/scripts/Create-AADGroups.ps1
                     type: AzurePowerShell
                     scriptArguments: >
-                      -AADGroupsJsonManifestPath 'infra/core/env-shared/flux-notification/config/aad-groups/fluxApiAADGroups.$(environment)_$(subEnvironment).json'     
-                    failOnStandardError: true                   
+                      -AADGroupsJsonManifestPath 'infra/core/env-shared/flux-notification/config/aad-groups/fluxApiAADGroups.$(environment)_$(subEnvironment).json'                     
