@@ -1,6 +1,6 @@
 using 'azure-waf-baseline.bicep'
 
-param wafPolicyName = 'newwaf1234567'
+param wafPolicyName = '#{{ adpPortalwafPolicyName }}'
 
 param policySettings = {
   enabledState: 'Enabled'
@@ -103,7 +103,7 @@ param customRules = [
         ]
         operator: 'IPMatch'
         negationConditon: true
-        matchValues: [  "52.142.87.204/32" ]
+        matchValues: [  '52.142.87.204/32' ]
       }
     ]
   }
