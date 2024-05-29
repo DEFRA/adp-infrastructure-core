@@ -28,6 +28,7 @@ parameters:
       - Front Door - All
       - Front Door - Core
       - Front Door - WAF Baseline
+      - Front Door - WAF ADP Portal
       - Application - All
       - Application - App Configuration
       - Application - Apps Container Registry
@@ -64,7 +65,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main     
+      ref: sm/374060/AddWAFforDefraNetworksandOpenVPN     
       
 variables:
   - name: IsAll
@@ -115,6 +116,8 @@ variables:
     value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - Core')) }}
   - name: IsFrontDoorWAFBaseline
     value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF Baseline')) }}
+  - name: IsFrontDoorWAFAdpPortal
+    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF ADP Portal')) }}
 
   - name: IsApplication
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application')) }}
@@ -335,7 +338,11 @@ extends:
                   resourceGroupName: $(cdnResourceGroup)
               - ${{ if eq(variables.IsFrontDoorWAFBaseline, true) }}: 
                 - name: azure-waf-baseline
-                  path: infra/core/env/front-door
+                  path: infra/core/env/front-door/baseline
+                  resourceGroupName: $(cdnResourceGroup)
+              - ${{ if and eq(variables.IsFrontDoorWAFAdpPortal, true), eq($(deployAdpPortalWAF), true)}}: 
+                - name: azure-waf-adp-portal
+                  path: infra/core/env/front-door/adp-portal
                   resourceGroupName: $(cdnResourceGroup)
                   
         - ${{ if eq(variables.IsApplication, true) }}:  
