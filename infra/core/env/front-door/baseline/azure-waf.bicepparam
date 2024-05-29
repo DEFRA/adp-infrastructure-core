@@ -1,4 +1,4 @@
-using 'azure-waf-baseline.bicep'
+using 'azure-waf.bicep'
 
 param wafPolicyName = '#{{ wafPolicyName }}'
 

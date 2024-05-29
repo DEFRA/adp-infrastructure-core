@@ -337,14 +337,10 @@ extends:
                   path: infra/core/env/front-door
                   resourceGroupName: $(cdnResourceGroup)
               - ${{ if eq(variables.IsFrontDoorWAFBaseline, true) }}: 
-                - name: azure-waf-baseline
-                  path: infra/core/env/front-door/baseline
+                - name: azure-waf
+                  path: infra/core/env/front-door
+                  parameterFilePath: infra/core/env/front-door/baseline
                   resourceGroupName: $(cdnResourceGroup)
-              # - ${{ if eq(variables.IsFrontDoorWAFAdpPortal, true) }}: 
-              #   - name: azure-waf-adp-portal
-              #     path: infra/core/env/front-door/adp-portal
-              #     resourceGroupName: $(cdnResourceGroup)
-
               - ${{ if eq(variables.IsFrontDoorWAFAdpPortal, true) }}:
                 - name: azure-waf
                   path: infra/core/env/front-door
