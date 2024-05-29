@@ -340,9 +340,9 @@ extends:
                 - name: azure-waf-baseline
                   path: infra/core/env/front-door/baseline
                   resourceGroupName: $(cdnResourceGroup)
-              - ${{ if eq(variables.IsFrontDoorWAFAdpPortal, true) }}: 
-                - name: azure-waf-baseline
-                  path: infra/core/env/front-door
+              - ${{ if and(eq(variables.IsFrontDoorWAFAdpPortal, true), eq('$(deployAdpPortalWAF)', true)) }}: 
+                - name: azure-waf-adp-portal
+                  path: infra/core/env/front-door/adp=portal
                   resourceGroupName: $(cdnResourceGroup)
                   
         - ${{ if eq(variables.IsApplication, true) }}:  

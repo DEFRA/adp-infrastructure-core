@@ -1,4 +1,4 @@
-using 'azure-waf.bicep'
+using 'azure-waf-adp-portal.bicep'
 
 param wafPolicyName = '#{{ adpPortalwafPolicyName }}'
 
@@ -86,25 +86,4 @@ param managedRuleSets = [
         }
 ]
 
-param customRules = customRules: [
-  {
-    name: 'PaloIpWAF'
-    priority: 100
-    enabledState: 'Enabled'
-    ruleType: 'MatchRule'
-    matchType: 'IP address'
-    action: 'Deny traffic'
-    matchConditions: [
-      {
-        matchVariables: [
-          {
-            variableName: 'SocketAddr'
-          }
-        ]
-        operator: 'IPMatch'
-        negationConditon: true
-        matchValues: '#{{ customRule_PaloIpWAF }}'
-      }
-    ]
-  }
-]
+param customRules = []
