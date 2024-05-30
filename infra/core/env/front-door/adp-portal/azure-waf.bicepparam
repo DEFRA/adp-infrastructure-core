@@ -86,7 +86,25 @@ param managedRuleSets = [
         }
 ]
 
-param customRules = []
+//param customRules = []
+
+param customRules =  [
+  {
+    name: 'CustomRule1'
+    priority: 100
+    ruleType: 'MatchRule'
+    action: 'Block'
+    matchConditions: [
+      {
+        matchVariable: 'SocketAddr'
+        operator: 'GeoMatch'
+        matchValues: ['US']
+        transforms: []
+      }
+    ]
+  }
+]
+
 
 // param customRules =  [
 //   {
@@ -103,3 +121,4 @@ param customRules = []
 //     ]
 //   }
 // ]
+
