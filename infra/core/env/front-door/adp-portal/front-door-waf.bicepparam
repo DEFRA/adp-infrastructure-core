@@ -13,8 +13,6 @@ param environment = '#{{ environment }}'
 
 param deployWAF  = '#{{ deployAdpPortalWAF }}'
 
-param paloIpWAF  = '#{{ customRule_PaloIpWAF }}'
-
 param managedRuleSets = [
   {
           ruleSetType: 'Microsoft_DefaultRuleSet'
@@ -103,7 +101,7 @@ param customRules = [
               operator: 'IPMatch'
               negateCondition: true
               matchValue: [
-                paloIpWAF                  
+                '#{{ customRule_PaloIpWAF }}'                  
               ]
               transforms: []
           }
