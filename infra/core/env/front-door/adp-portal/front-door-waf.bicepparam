@@ -13,6 +13,8 @@ param environment = '#{{ environment }}'
 
 param deployWAF  = '#{{ deployAdpPortalWAF }}'
 
+param paloIpWAF  = '#{{ customRule_PaloIpWAF }}'
+
 param managedRuleSets = [
   {
           ruleSetType: 'Microsoft_DefaultRuleSet'
@@ -90,41 +92,18 @@ param managedRuleSets = [
 
 param customRules = [
   {
-      name: 'DenyTrafficToAdpPortal'
+      name: 'PaloIPWAF'
       enabledState: 'Enabled'
       priority: 300
       ruleType: 'MatchRule'
-      matchConditions: [
-          {
-              matchVariable: 'RequestUri'
-              selector: null
-              operator: 'Contains'
-              negateCondition: false
-              matchValue: [
-                  'portal.snd1.adp.defra.gov.uk'
-              ]
-              transforms: [
-                  'Lowercase'
-              ]
-          }
+      matchConditions: [          
           {
               matchVariable: 'RemoteAddr'
               selector: null
               operator: 'IPMatch'
               negateCondition: true
               matchValue: [
-                  '52.142.87.204/32'
-                  '52.142.86.40/32'
-                  '52.158.29.71/32'
-                  '52.142.85.239/32'
-                  '40.74.1.3/32'
-                  '40.74.8.84/32'
-                  '51.104.252.122/32'
-                  '40.81.156.55/32'
-                  '51.11.27.97/32'
-                  '40.81.153.120/32'
-                  '40.81.127.250/32'
-                  '20.40.104.49/32'                  
+                paloIpWAF                  
               ]
               transforms: []
           }
