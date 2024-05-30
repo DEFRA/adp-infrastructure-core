@@ -64,7 +64,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main     
+      ref: rv/337878     
       
 variables:
   - name: IsAll
@@ -143,6 +143,7 @@ extends:
     deployFromFeature: ${{ parameters.deployFromFeature }}
     filePathsForTransform: |
       **/core/env/app-configuration/config-data/config-data.json
+      **/infra/core/env/insights/aad-groups/monitoringpublishergroup.json
     groupedDeployments:
         - ${{ if eq(variables.IsNetwork, true) }}:
           - name: network
@@ -168,6 +169,13 @@ extends:
           - name: monitoring
             deployments:
               - ${{ if eq(variables.IsMonitoringInsights, true) }}:
+                - name: Create or Update AAD groups
+                  type: 'script'
+                  scriptType: AzurePowerShell
+                  serviceConnectionVariableName: ssvServiceConnection
+                  path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+                  scriptArguments: > 
+                    -AADGroupsJsonManifestPath 'infra/core/env/insights/aad-groups/monitoringpublishergroup.json'              
                 - name: component
                   path: infra/core/env/insights
                   resourceGroupName: $(servicesResourceGroup)
@@ -176,12 +184,7 @@ extends:
                     type: AzurePowerShell
                     serviceConnectionVariableName: 'ssvServiceConnection'
                     inlineScript: |
-                      $group = Get-AzADGroup -DisplayName '$(monitoringPublisherGroup)'
-                      if(-Not $group)
-                      {                     
-                        $group = New-AzADGroup -DisplayName '$(monitoringPublisherGroup)' -SecurityEnabled -MailNickname 'NA'
-                      }
-                      $groupId=$group.id                 
+                      $groupId = (Get-AzADGroup -DisplayName '$(monitoringPublisherGroup)').id
                       Write-Host "##vso[task.setvariable variable=monitoringPublisherGroup;]$groupId"
                   postDeployScriptsList:
                     - displayName: 'GetAppInsightConnectionString'
