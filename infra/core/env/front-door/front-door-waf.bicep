@@ -17,7 +17,7 @@ param policySettings object = {
 param environment string
 
 @description('Optional. Deploy the ADP Portal WAF Policy.')
-param deployWAF bool = false
+param deployWAF string = 'false'
 
 @description('Required. Purpose Tag.')
 param purpose string
@@ -45,7 +45,7 @@ var frontDoorWafTags = {
 
 var customBlockResponseBody = '<!DOCTYPE html> <html> <head> <title> Defra - 403 Forbidden</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <style> body {background-color:#ffffff;background-repeat:no-repeat;background-position:top left;background-attachment:fixed;} h1{text-align:center;font-family:Arial, sans-serif;color:#ff0a0a;background-color:#ffffff;} p {text-align:left;font-family:Georgia, serif;font-size:14px;font-style:normal;font-weight:normal;color:#000000;background-color:#ffffff;} </style> </head> <body> <h1>Unfortunately, there is a problem with your request</h1> <br /> <p><b>Your request has been blocked.</b> Please contact the site administrator or the Defra helpdesk with the following information. </p> <p></p> <p><b>Tracking Request ID</b>: {{azure-ref}}</p> </body> </html>'
 
-module frontDoorWafPolicy 'br/SharedDefraRegistry:network.front-door-web-application-firewall-policy:0.4.1' = if(deployWAF) {
+module frontDoorWafPolicy 'br/SharedDefraRegistry:network.front-door-web-application-firewall-policy:0.4.1' = if(deployWAF == 'true') {
   name: 'fdwaf-${deploymentDate}'
   params: {
     name: wafPolicyName
