@@ -88,21 +88,38 @@ param managedRuleSets = [
 
 //param customRules = []
 
-// param customRules =  [
-//   {
-//     name: 'CustomRule1'
-//     priority: 100
-//     ruleType: 'MatchRule'
-//     action: 'Block'
-//     matchConditions: [
-//       {
-//         matchVariable: 'SocketAddr'
-//         operator: 'GeoMatch'
-//         matchValues: ['US']
-//         transforms: []
-//       }
-//     ]
-//   }
-// ]
-
-
+param customRules = [
+  {
+      name: 'DenyTrafficToAdpPortalApi'
+      enabledState: 'Enabled'
+      priority: 300
+      ruleType: 'MatchRule'
+      rateLimitDurationInMinutes: 1
+      rateLimitThreshold: 100
+      matchConditions: [
+          {
+              matchVariable: 'RequestUri'
+              selector: null
+              operator: 'Contains'
+              negateCondition: false
+              matchValue: [
+                  'portal.snd1.adp.defra.gov.uk'
+              ]
+              transforms: [
+                  'Lowercase'
+              ]
+          }
+          {
+              matchVariable: 'RemoteAddr'
+              selector: null
+              operator: 'IPMatch'
+              negateCondition: true
+              matchValue: [
+                  '52.142.87.204/32'                  
+              ]
+              transforms: []
+          }
+      ]
+      action: 'Block'
+  }
+]
