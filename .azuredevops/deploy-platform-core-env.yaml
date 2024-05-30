@@ -341,7 +341,8 @@ extends:
                   path: infra/core/env/front-door
                   parameterFilePath: infra/core/env/front-door/baseline
                   resourceGroupName: $(cdnResourceGroup)
-              - ${{ if and(eq(variables.IsFrontDoorWAFAdpPortal, true), eq('$deployAdpPortalWAF', true)) }}:
+              - ${{ if eq(variables.IsFrontDoorWAFAdpPortal, true) }}:
+              #- ${{ if and(eq(variables.IsFrontDoorWAFAdpPortal, true), eq('$deployAdpPortalWAF', true)) }}:
                 - name: front-door-waf
                   path: infra/core/env/front-door
                   parameterFilePath: infra/core/env/front-door/adp-portal
