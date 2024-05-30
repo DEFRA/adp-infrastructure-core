@@ -1,4 +1,4 @@
-using '../azure-waf.bicep'
+using '../front-door-waf.bicep'
 
 param wafPolicyName = '#{{ wafPolicyName }}'
 
