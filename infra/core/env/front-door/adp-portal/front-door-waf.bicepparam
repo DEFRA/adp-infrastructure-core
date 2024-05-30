@@ -11,6 +11,8 @@ param purpose = 'ADP Core ADP Portal Front Door WAF - All Services Generic'
 
 param environment = '#{{ environment }}'
 
+param deployWAF  = '#{{ deployAdpPortalWAF }}'
+
 param managedRuleSets = [
   {
           ruleSetType: 'Microsoft_DefaultRuleSet'
