@@ -344,7 +344,8 @@ extends:
               - ${{ if eq(variables.IsFrontDoorWAFAdpPortal, true) }}:
               #- ${{ if and(eq(variables.IsFrontDoorWAFAdpPortal, true), eq('$(deployAdpPortalWAF)', false)) }}:
                 - name: Debug
-                  type: PowerShell
+                  type: 'script'
+                  scriptType: PowerShell
                   inlineScript: |
                     $output = $(deployAdpPortalWAF)
                     Write-Host $output                    
