@@ -88,22 +88,22 @@ param managedRuleSets = [
 
 //param customRules = []
 
-param customRules =  [
-  {
-    name: 'CustomRule1'
-    priority: 100
-    ruleType: 'MatchRule'
-    action: 'Block'
-    matchConditions: [
-      {
-        matchVariable: 'SocketAddr'
-        operator: 'GeoMatch'
-        matchValues: ['US']
-        transforms: []
-      }
-    ]
-  }
-]
+// param customRules =  [
+//   {
+//     name: 'CustomRule1'
+//     priority: 100
+//     ruleType: 'MatchRule'
+//     action: 'Block'
+//     matchConditions: [
+//       {
+//         matchVariable: 'SocketAddr'
+//         operator: 'GeoMatch'
+//         matchValues: ['US']
+//         transforms: []
+//       }
+//     ]
+//   }
+// ]
 
 
 // param customRules =  [
@@ -122,3 +122,28 @@ param customRules =  [
 //   }
 // ]
 
+
+param customRules =  [
+  {
+    name: 'BlockSQLInjection'
+    priority: 1
+    ruleType: 'MatchRule'
+    matchConditions: [
+      {
+        matchVariables: [
+          {
+            variableName: 'QueryString'
+          }
+        ]
+        operator: 'Contains'
+        matchValues: [
+          'UNION SELECT'      
+        ]
+        transforms: [
+          'Lowercase'
+        ]
+      }
+    ]
+    action: 'Block'
+  }
+]
