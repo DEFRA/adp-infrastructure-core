@@ -112,9 +112,7 @@ param customRules = [
               selector: null
               operator: 'IPMatch'
               negateCondition: true
-              matchValue: [
-                '#{{ customRule_PaloIpWAF }}'                  
-              ]
+              matchValue: [ #{{ noescape(vnet1AddressPrefixes) }} ]             
               transforms: []
           }
       ]
