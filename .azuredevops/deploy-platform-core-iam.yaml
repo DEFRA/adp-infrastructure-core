@@ -51,25 +51,28 @@ extends:
     variableFiles: 
       - /pipelines/vars/common.yaml@_self
       - /pipelines/vars/env/{environment}.yaml@_self    
+    filePathsForTransform: |
+      **/core/iam/subscription/aad-groups/*.{environment}.json
     groupedDeployments:
         - name: role_assignments
           deployments:
            - ${{ if eq(variables.IsClusterCustomResourcesReaderRole, true) }}:
+              - name: Create or Update AAD groups
+                type: 'script'
+                scriptType: AzurePowerShell
+                serviceConnectionVariableName: ssvServiceConnection
+                path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+                scriptArguments: > 
+                  -AADGroupsJsonManifestPath 'infra/core/iam/subscription/aad-groups/accessgroups.{environment}.json'           
               - name: cluster-custom-resources-reader-role
                 path: infra/core/iam/subscription
                 scope: "Subscription"
                 preDeployScriptsList:
                 - displayName: 'Get Group Id'
                   type: AzurePowerShell
-                  serviceConnectionVariableName: 'ssvServiceConnection'
+                  serviceConnectionVariableName: ssvServiceConnection
                   inlineScript: |
-                    $group = Get-AzADGroup -DisplayName '$(customRoleCustomResourcesReaderGroup)'
-                    if(-Not $group)
-                    {                     
-                      $group = New-AzADGroup -DisplayName '$(customRoleCustomResourcesReaderGroup)' -SecurityEnabled -MailNickname 'NA'
-                    }
-                    $groupId=$group.id
-                    New-AzADGroupOwner -GroupId $groupId -OwnerId '$(aadPlatformEngineersUserGroupObjectId)'
+                    $groupId = (Get-AzADGroup -DisplayName '$(customRoleCustomResourcesReaderGroup)').id
                     Write-Host "##vso[task.setvariable variable=customRoleCustomResourcesReaderGroupId;]$groupId"
                 - displayName: 'Get Portal App PrincipalId'
                   type: AzurePowerShell
