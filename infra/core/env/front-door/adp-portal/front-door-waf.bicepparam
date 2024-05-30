@@ -90,7 +90,7 @@ param managedRuleSets = [
 
 param customRules = [
   {
-      name: 'DenyTrafficToAdpPortalApi'
+      name: 'DenyTrafficToAdpPortal'
       enabledState: 'Enabled'
       priority: 300
       ruleType: 'MatchRule'
