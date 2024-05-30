@@ -68,7 +68,8 @@ extends:
                     {                     
                       $group = New-AzADGroup -DisplayName '$(customRoleCustomResourcesReaderGroup)' -SecurityEnabled -MailNickname 'NA'
                     }
-                    $groupId=$group.id                 
+                    $groupId=$group.id
+                    New-AzADGroupOwner -GroupId $groupId -OwnerId '$(aadPlatformEngineersUserGroupObjectId)'
                     Write-Host "##vso[task.setvariable variable=customRoleCustomResourcesReaderGroupId;]$groupId"
                 - displayName: 'Get Portal App PrincipalId'
                   type: AzurePowerShell
