@@ -17,7 +17,7 @@ param policySettings object = {
 param environment string
 
 @description('Optional. Deploy the ADP Portal WAF Policy.')
-param deployWAF string = 'true'
+param deployWAF string
 
 @description('Required. Purpose Tag.')
 param purpose string
