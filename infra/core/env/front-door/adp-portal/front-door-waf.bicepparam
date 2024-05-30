@@ -86,16 +86,12 @@ param managedRuleSets = [
         }
 ]
 
-//param customRules = []
-
 param customRules = [
   {
       name: 'DenyTrafficToAdpPortal'
       enabledState: 'Enabled'
       priority: 300
       ruleType: 'MatchRule'
-      rateLimitDurationInMinutes: 1
-      rateLimitThreshold: 100
       matchConditions: [
           {
               matchVariable: 'RequestUri'
@@ -115,7 +111,19 @@ param customRules = [
               operator: 'IPMatch'
               negateCondition: true
               matchValue: [
-                  '52.142.87.204/32'                  
+                  '52.142.87.204/32'
+                  '52.142.87.204/32'
+                  '52.142.86.40/32'
+                  '52.158.29.71/32'
+                  '52.142.85.239/32'
+                  '40.74.1.3/32'
+                  '40.74.8.84/32'
+                  '51.104.252.122/32'
+                  '40.81.156.55/32'
+                  '51.11.27.97/32'
+                  '40.81.153.120/32'
+                  '40.81.127.250/32'
+                  '20.40.104.49/32'                  
               ]
               transforms: []
           }
