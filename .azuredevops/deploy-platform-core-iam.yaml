@@ -52,7 +52,7 @@ extends:
       - /pipelines/vars/common.yaml@_self
       - /pipelines/vars/env/{environment}.yaml@_self    
     filePathsForTransform: |
-      **/core/iam/subscription/aad-groups/*.{environment}.json
+      **/infra/core/iam/subscription/aad-groups/accessgroups.$(environment_lower)$(environmentId).json
     groupedDeployments:
         - name: role_assignments
           deployments:
@@ -63,7 +63,7 @@ extends:
                 serviceConnectionVariableName: ssvServiceConnection
                 path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
                 scriptArguments: > 
-                  -AADGroupsJsonManifestPath 'infra/core/iam/subscription/aad-groups/accessgroups.{environment}.json'           
+                  -AADGroupsJsonManifestPath 'infra/core/iam/subscription/aad-groups/accessgroups.$(environment_lower)$(environmentId).json'           
               - name: cluster-custom-resources-reader-role
                 path: infra/core/iam/subscription
                 scope: "Subscription"
