@@ -5,12 +5,9 @@
             "description": "Azure AD Access group with custom read permissions cluster.",
             "Owners": {
                 "serviceprincipals" : [
-                    "ADO-DefraGovUK-AAD-ADP-SSV3"
+                    "#{{ ssvAppRegServicePrincipalName }}"
                 ],
-                "groups" : [
-                    "AG-Azure-CDO-ADP-PlatformEngineers",
-                    "AAG-Users-ADP-PlatformEngineers"
-                ]
+                "users" : #{{ noescape(platformAccessAADGroupOwners) }}
             },
             "Members": {
                 "groups" : [
