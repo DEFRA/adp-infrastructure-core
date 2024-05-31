@@ -62,7 +62,7 @@ module frontDoorWafPolicy 'br/SharedDefraRegistry:network.front-door-web-applica
       requestBodyCheck: 'Enabled'
     }
     customRules: {
-      rules: ((environment == 'SND') ? [] : customRules)
+      rules: (environment == 'SND') ? [] : customRules
     }
     managedRules: {
       managedRuleSets: managedRuleSets
