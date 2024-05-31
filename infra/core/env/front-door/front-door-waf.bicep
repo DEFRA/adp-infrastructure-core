@@ -17,7 +17,7 @@ param policySettings object = {
 param environment string
 
 @description('Optional. Deploy the ADP Portal WAF Policy.')
-param deployWAF string = 'true'
+param deployWAF string = 'false'
 
 @description('Required. Purpose Tag.')
 param purpose string
@@ -62,7 +62,7 @@ module frontDoorWafPolicy 'br/SharedDefraRegistry:network.front-door-web-applica
       requestBodyCheck: 'Enabled'
     }
     customRules: {
-      rules: (environment == 'SND') ? [] : customRules
+      rules: environment == 'SND' ? [] : customRules
     }
     managedRules: {
       managedRuleSets: managedRuleSets
