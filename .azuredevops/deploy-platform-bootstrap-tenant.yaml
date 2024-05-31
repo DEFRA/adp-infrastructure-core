@@ -65,6 +65,7 @@ extends:
     environments:
       - name: 'defradev'
         serviceConnection: AZD-ADP-SSV3
+        privateAgentName: 'DEFRA-COMMON-ubuntu2204-SSV3'
         deploymentBranches:
           - 'refs/heads/main'
         developmentEnvironment: true
@@ -72,6 +73,7 @@ extends:
           primary: 'UKSouth'
       - name: 'defra'
         serviceConnection: AZR-ADP-SSV5
+        privateAgentName: 'DEFRA-COMMON-ubuntu2004-SSV5'
         deploymentBranches:
           - 'refs/heads/main'
         azureRegions:

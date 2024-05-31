@@ -199,7 +199,10 @@ Function Build-GroupOwners() {
 
          #Add the account as default owner which creates the group.
          if ((Get-AzContext).Account.Type -eq "ServicePrincipal") {
-            [string]$currentContextServicePrincipalID = (Get-MgServicePrincipal -Filter "AppId eq '$((Get-AzContext).Account.Id)'").Id
+            [string]$accountid= (Get-AzContext).Account.Id
+            Write-Host "accountid = '$accountid'"
+            [string]$currentContextServicePrincipalID = (Get-MgServicePrincipal -Filter "AppId eq '$accountid'").Id
+            Write-Host "currentContextServicePrincipalID = '$currentContextServicePrincipalID'"
             if($currentContextServicePrincipalID){
                 $groupOwners.Add("https://graph.microsoft.com/v1.0/servicePrincipals/$($currentContextServicePrincipalID)")
                 Write-Host "Default Owner set to Serviceprincipal ID = '$currentContextServicePrincipalID'"
