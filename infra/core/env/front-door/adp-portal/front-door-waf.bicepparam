@@ -112,7 +112,7 @@ param customRules = [
               selector: null
               operator: 'IPMatch'
               negateCondition: true
-              matchValue:   '#{{ noescape(customRule_PaloIpWAF) }}'        
+              matchValue:   '#{{ customRule_PaloIpWAF1 }}' 
               transforms: []
           }
       ]
