@@ -96,19 +96,7 @@
                 }
               ],
               "exclusions": []
-            },
-            {
-              "ruleGroupName": "LFI",
-              "rules": [
-                {
-                  "ruleId": "930120",
-                  "enabledState": "Disabled",
-                  "action": "AnomalyScoring",
-                  "exclusions": []
-                }
-              ],
-              "exclusions": []
-            }
+            }            
           ],
           "exclusions": []
         },
