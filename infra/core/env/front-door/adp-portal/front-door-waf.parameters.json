@@ -96,24 +96,7 @@
                 }
               ],
               "exclusions": []
-            },
-            {
-              "ruleId": "930120",
-              "enabledState": "Enabled",
-              "action": "AnomalyScoring",
-              "exclusions": [
-                  {
-                      "matchVariable": "QueryStringArgNames",
-                      "selectorMatchOperator": "Contains",
-                      "selector": "metadata.name,metadata.annotations.graph.microsoft.com"
-                  },
-                  {
-                      "matchVariable": "QueryStringArgNames",
-                      "selectorMatchOperator": "Contains",
-                      "selector": "fields"
-                  }
-              ]
-          }            
+            }                     
           ],
           "exclusions": []
         },
@@ -125,7 +108,7 @@
         }
       ]
     },
-    "customRules": {
+    "paloIPWAFcustomRule": {
       "value": [
         {
           "name": "PaloIPWAF",
@@ -144,6 +127,10 @@
           ],
           "action": "Block"
         }
+      ]
+    },
+    "customRules": {
+      "value": [       
       ]
     }
   }
