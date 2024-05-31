@@ -45,7 +45,7 @@ Write-Debug "${functionName}:AADGroupsJsonManifestPath=$AADGroupsJsonManifestPat
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
-    
+    update-Module Az.Accounts -Force
     [System.IO.DirectoryInfo]$adGroupsModuleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/aad-groups"
     Write-Debug "${functionName}:moduleDir.FullName=$($adGroupsModuleDir.FullName)"
     Import-Module $adGroupsModuleDir.FullName -Force

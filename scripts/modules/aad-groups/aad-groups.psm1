@@ -198,20 +198,20 @@ Function Build-GroupOwners() {
         $groupOwners = New-Object Collections.Generic.List[string]
 
          #Add the account as default owner which creates the group.
-        #  if ((Get-AzContext).Account.Type -eq "ServicePrincipal") {
-        #     [string]$accountid= (Get-AzContext).Account.Id
-        #     Write-Host "accountid = '$accountid'"
-        #     [string]$currentContextServicePrincipalID = (Get-MgServicePrincipal -Filter "AppId eq '$accountid'").Id
-        #     Write-Host "currentContextServicePrincipalID = '$currentContextServicePrincipalID'"
-        #     if($currentContextServicePrincipalID){
-        #         $groupOwners.Add("https://graph.microsoft.com/v1.0/servicePrincipals/$($currentContextServicePrincipalID)")
-        #         Write-Host "Default Owner set to Serviceprincipal ID = '$currentContextServicePrincipalID'"
-        #     }
-        #     else {
-        #         Write-Host "##vso[task.logissue type=error]Default owner does not exit."
-        #         exit 1
-        #     }
-        # }
+         if ((Get-AzContext).Account.Type -eq "ServicePrincipal") {
+            [string]$accountid= (Get-AzContext).Account.Id
+            Write-Host "accountid = '$accountid'"
+            [string]$currentContextServicePrincipalID = (Get-MgServicePrincipal -Filter "AppId eq '$accountid'").Id
+            Write-Host "currentContextServicePrincipalID = '$currentContextServicePrincipalID'"
+            if($currentContextServicePrincipalID){
+                $groupOwners.Add("https://graph.microsoft.com/v1.0/servicePrincipals/$($currentContextServicePrincipalID)")
+                Write-Host "Default Owner set to Serviceprincipal ID = '$currentContextServicePrincipalID'"
+            }
+            else {
+                Write-Host "##vso[task.logissue type=error]Default owner does not exit."
+                exit 1
+            }
+        }
 
         if ($AADGroupOwners) {
 
