@@ -1,0 +1,15 @@
+{
+    "accessADGroups": [
+        {
+            "displayName": "#{{ monitoringPublisherGroup }}",
+            "description": "Azure AD Access group with Monitoring-Metrics-Publisher role.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "#{{ ssvAppRegServicePrincipalName }}"
+                ],
+                "users" : #{{ noescape(platformAccessAADGroupOwners) }}
+            }
+        }    
+    ]
+}
+
