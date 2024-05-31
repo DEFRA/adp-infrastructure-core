@@ -96,19 +96,7 @@
                 }
               ],
               "exclusions": []
-            },
-            {
-              "ruleGroupName": "LFI",
-              "rules": [
-                {
-                  "ruleId": "930120",
-                  "enabledState": "Disabled",
-                  "action": "AnomalyScoring",
-                  "exclusions": []
-                }
-              ],
-              "exclusions": []
-            }
+            }            
           ],
           "exclusions": []
         },
@@ -133,7 +121,7 @@
               "selector": null,
               "operator": "IPMatch",
               "negateCondition": true,
-              "matchValue": "#{{ noescape(customRule_PaloIpWAF) }}",
+              "matchValue": #{{ noescape(customRule_PaloIpWAF) }},
               "transforms": []
             }
           ],
