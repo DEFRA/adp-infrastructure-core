@@ -45,13 +45,10 @@ Write-Debug "${functionName}:AADGroupsJsonManifestPath=$AADGroupsJsonManifestPat
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
-    update-Module Az.Accounts -Force
+    Update-Module Az -Force
     [System.IO.DirectoryInfo]$adGroupsModuleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/aad-groups"
     Write-Debug "${functionName}:moduleDir.FullName=$($adGroupsModuleDir.FullName)"
     Import-Module $adGroupsModuleDir.FullName -Force
-    Write-Host "Listing Microsoft.Graph Module Started.."
-    Get-Module -ListAvailable -Name 'Microsoft.Graph'
-    Write-Host "Listing Microsoft.Graph Module End.."
     ## Authenticate using Graph Powershell
     if (-not (Get-Module -ListAvailable -Name 'Microsoft.Graph')) {
         Write-Host "Microsoft.Graph Module does not exists. Installing now.."
