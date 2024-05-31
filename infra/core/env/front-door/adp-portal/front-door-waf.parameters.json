@@ -1,0 +1,145 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "wafPolicyName": {
+      "value": "#{{ adpPortalwafPolicyName }}"
+    },
+    "policySettings": {
+      "value": {
+        "enabledState": "Enabled",
+        "mode": "Prevention"
+      }
+    },
+    "purpose": {
+      "value": "ADP Core ADP Portal Front Door WAF - All Services Generic"
+    },
+    "environment": {
+      "value": "#{{ environment }}"
+    },
+    "deployWAF": {
+      "value": "#{{ deployAdpPortalWAF }}"
+    },
+    "managedRuleSets": {
+      "value": [
+        {
+          "ruleSetType": "Microsoft_DefaultRuleSet",
+          "ruleSetVersion": "2.1",
+          "ruleSetAction": "Block",
+          "ruleGroupOverrides": [
+            {
+              "ruleGroupName": "RFI",
+              "rules": [
+                {
+                  "ruleId": "931130",
+                  "enabledState": "Enabled",
+                  "action": "AnomalyScoring",
+                  "exclusions": [
+                    {
+                      "matchVariable": "RequestBodyJsonArgNames",
+                      "selectorMatchOperator": "Contains",
+                      "selector": "entity.metadata.annotations"
+                    },
+                    {
+                      "matchVariable": "RequestBodyJsonArgNames",
+                      "selectorMatchOperator": "Contains",
+                      "selector": "entity.metadata.links.url"
+                    },
+                    {
+                      "matchVariable": "RequestBodyJsonArgNames",
+                      "selectorMatchOperator": "Contains",
+                      "selector": "entity.metadata.annotations.backstage"
+                    }
+                  ]
+                }
+              ],
+              "exclusions": []
+            },
+            {
+              "ruleGroupName": "MS-ThreatIntel-SQLI",
+              "rules": [
+                {
+                  "ruleId": "99031001",
+                  "enabledState": "Enabled",
+                  "action": "AnomalyScoring",
+                  "exclusions": [
+                    {
+                      "matchVariable": "RequestBodyJsonArgNames",
+                      "selectorMatchOperator": "Contains",
+                      "selector": "entity.metadata.annotations"
+                    }
+                  ]
+                }
+              ],
+              "exclusions": []
+            },
+            {
+              "ruleGroupName": "PROTOCOL-ENFORCEMENT",
+              "rules": [
+                {
+                  "ruleId": "920440",
+                  "enabledState": "Disabled",
+                  "action": "AnomalyScoring",
+                  "exclusions": []
+                }
+              ],
+              "exclusions": []
+            },
+            {
+              "ruleGroupName": "LFI",
+              "rules": [
+                {
+                  "ruleId": "930130",
+                  "enabledState": "Disabled",
+                  "action": "AnomalyScoring",
+                  "exclusions": []
+                }
+              ],
+              "exclusions": []
+            },
+            {
+              "ruleGroupName": "LFI",
+              "rules": [
+                {
+                  "ruleId": "930120",
+                  "enabledState": "Disabled",
+                  "action": "AnomalyScoring",
+                  "exclusions": []
+                }
+              ],
+              "exclusions": []
+            }
+          ],
+          "exclusions": []
+        },
+        {
+          "ruleSetType": "Microsoft_BotManagerRuleSet",
+          "ruleSetVersion": "1.0",
+          "ruleGroupOverrides": [],
+          "exclusions": []
+        }
+      ]
+    },
+    "customRules": {
+      "value": [
+        {
+          "name": "PaloIPWAF",
+          "enabledState": "Enabled",
+          "priority": 300,
+          "ruleType": "MatchRule",
+          "matchConditions": [
+            {
+              "matchVariable": "RemoteAddr",
+              "selector": null,
+              "operator": "IPMatch",
+              "negateCondition": true,
+              "matchValue": "#{{ noescape(customRule_PaloIpWAF) }}",
+              "transforms": []
+            }
+          ],
+          "action": "Block"
+        }
+      ]
+    }
+  }
+}
