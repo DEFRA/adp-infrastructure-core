@@ -133,7 +133,7 @@
               "selector": null,
               "operator": "IPMatch",
               "negateCondition": true,
-              "matchValue": "#{{ customRule_PaloIpWAF }}",
+              "matchValue": #{{ noescape(customRule_PaloIpWAF) }},
               "transforms": []
             }
           ],
