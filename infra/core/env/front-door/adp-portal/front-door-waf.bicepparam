@@ -89,6 +89,18 @@ param managedRuleSets = [
             ]
             exclusions: []
           }
+          { //backstage issues
+            ruleGroupName: 'LFI'
+            rules: [
+              {
+                ruleId: '930120'
+                enabledState: 'Disabled'
+                action: 'AnomalyScoring'
+                exclusions: []
+              }
+            ]
+            exclusions: []
+          }
         ]
         exclusions: []
       }
@@ -112,7 +124,7 @@ param customRules = [
               selector: null
               operator: 'IPMatch'
               negateCondition: true
-              matchValue:   [ '#{{ customRule_PaloIpWAF }}' ]
+              matchValue:   [ '#{{ noescape(customRule_PaloIpWAF) }}' ]
               transforms: []
           }
       ]
