@@ -44,8 +44,7 @@ Write-Host "${functionName} started at $($startTime.ToString('u'))"
 Write-Debug "${functionName}:AADGroupsJsonManifestPath=$AADGroupsJsonManifestPath"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
-try {
-    Update-Module Az -Force
+try {    
     [System.IO.DirectoryInfo]$adGroupsModuleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/aad-groups"
     Write-Debug "${functionName}:moduleDir.FullName=$($adGroupsModuleDir.FullName)"
     Import-Module $adGroupsModuleDir.FullName -Force
