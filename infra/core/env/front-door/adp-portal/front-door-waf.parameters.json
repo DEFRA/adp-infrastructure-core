@@ -20,94 +20,97 @@
     "deployWAF": {
       "value": "#{{ deployAdpPortalWAF }}"
     },
-    "managedRuleSets": {
-      "value": [
-        {
-          "ruleSetType": "Microsoft_DefaultRuleSet",
-          "ruleSetVersion": "2.1",
-          "ruleSetAction": "Block",
-          "ruleGroupOverrides": [
-            {
-              "ruleGroupName": "RFI",
-              "rules": [
-                {
-                  "ruleId": "931130",
-                  "enabledState": "Enabled",
-                  "action": "AnomalyScoring",
-                  "exclusions": [
-                    {
-                      "matchVariable": "RequestBodyJsonArgNames",
-                      "selectorMatchOperator": "Contains",
-                      "selector": "entity.metadata.annotations"
-                    },
-                    {
-                      "matchVariable": "RequestBodyJsonArgNames",
-                      "selectorMatchOperator": "Contains",
-                      "selector": "entity.metadata.links.url"
-                    },
-                    {
-                      "matchVariable": "RequestBodyJsonArgNames",
-                      "selectorMatchOperator": "Contains",
-                      "selector": "entity.metadata.annotations.backstage"
-                    }
-                  ]
-                }
-              ],
-              "exclusions": []
-            },
-            {
-              "ruleGroupName": "MS-ThreatIntel-SQLI",
-              "rules": [
-                {
-                  "ruleId": "99031001",
-                  "enabledState": "Enabled",
-                  "action": "AnomalyScoring",
-                  "exclusions": [
-                    {
-                      "matchVariable": "RequestBodyJsonArgNames",
-                      "selectorMatchOperator": "Contains",
-                      "selector": "entity.metadata.annotations"
-                    }
-                  ]
-                }
-              ],
-              "exclusions": []
-            },
-            {
-              "ruleGroupName": "PROTOCOL-ENFORCEMENT",
-              "rules": [
-                {
-                  "ruleId": "920440",
-                  "enabledState": "Disabled",
-                  "action": "AnomalyScoring",
-                  "exclusions": []
-                }
-              ],
-              "exclusions": []
-            },
-            {
-              "ruleGroupName": "LFI",
-              "rules": [
-                {
-                  "ruleId": "930130",
-                  "enabledState": "Disabled",
-                  "action": "AnomalyScoring",
-                  "exclusions": []
-                }
-              ],
-              "exclusions": []
-            }                     
-          ],
-          "exclusions": []
-        },
-        {
-          "ruleSetType": "Microsoft_BotManagerRuleSet",
-          "ruleSetVersion": "1.0",
-          "ruleGroupOverrides": [],
-          "exclusions": []
-        }
-      ]
-    },
+    "managedRules": {
+      "managedRuleSets": [
+          {
+              "ruleSetType": "Microsoft_DefaultRuleSet",
+              "ruleSetVersion": "2.1",
+              "ruleGroupOverrides": [
+                  {
+                      "ruleGroupName": "RFI",
+                      "rules": [
+                          {
+                              "ruleId": "931130",
+                              "enabledState": "Enabled",
+                              "action": "AnomalyScoring",
+                              "exclusions": [
+                                  {
+                                      "matchVariable": "RequestBodyJsonArgNames",
+                                      "selectorMatchOperator": "Contains",
+                                      "selector": "entity.metadata.annotations"
+                                  },
+                                  {
+                                      "matchVariable": "RequestBodyJsonArgNames",
+                                      "selectorMatchOperator": "Contains",
+                                      "selector": "entity.metadata.links.url"
+                                  },
+                                  {
+                                      "matchVariable": "RequestBodyJsonArgNames",
+                                      "selectorMatchOperator": "Contains",
+                                      "selector": "entity.metadata.annotations.backstage"
+                                  },
+                                  {
+                                      "matchVariable": "RequestBodyJsonArgNames",
+                                      "selectorMatchOperator": "Contains",
+                                      "selector": "url"
+                                  }
+                              ]
+                          }
+                      ]
+                  },
+                  {
+                      "ruleGroupName": "MS-ThreatIntel-SQLI",
+                      "rules": [
+                          {
+                              "ruleId": "99031001",
+                              "enabledState": "Enabled",
+                              "action": "AnomalyScoring",
+                              "exclusions": [
+                                  {
+                                      "matchVariable": "RequestBodyJsonArgNames",
+                                      "selectorMatchOperator": "Contains",
+                                      "selector": "entity.metadata.annotations"
+                                  }
+                              ]
+                          }
+                      ]
+                  },
+                  {
+                      "ruleGroupName": "PROTOCOL-ENFORCEMENT",
+                      "rules": [
+                          {
+                              "ruleId": "920440",
+                              "enabledState": "Disabled",
+                              "action": "AnomalyScoring",
+                              "exclusions": []
+                          }
+                      ]
+                  },
+                  {
+                      "ruleGroupName": "LFI",
+                      "rules": [
+                          {
+                              "ruleId": "930130",
+                              "enabledState": "Disabled",
+                              "action": "AnomalyScoring",
+                              "exclusions": []
+                          },
+                          {
+                              "ruleId": "930120",
+                              "enabledState": "Enabled",
+                              "action": "AnomalyScoring",
+                              "exclusions": [
+                                  {
+                                      "matchVariable": "QueryStringArgNames",
+                                      "selectorMatchOperator": "Contains",
+                                      "selector": "fields"
+                                  }
+                              ]
+                          }
+                      ]
+                  }
+              ]
+          },
     "paloIPWAFcustomRule": {
       "value": [
         {
