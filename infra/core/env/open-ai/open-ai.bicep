@@ -1,6 +1,9 @@
 @description('Required. The object of Open AI Resource. The object must contain name, SKU and customSubDomainName  properties.')
 param openAi object
 
+@description('Required. Deployment models of the Open AI resource.')
+param deployments array
+
 @allowed([
   'UKSouth'
 ])
@@ -52,6 +55,8 @@ module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
       name: 'CanNotDelete'
     }
     sku: openAi.skuName
+    customSubDomainName: openAi.customSubDomainName
+    deployments: deployments
     managedIdentities: {      
       userAssignedResourceIds: [
         openAiUserMi.outputs.resourceId
