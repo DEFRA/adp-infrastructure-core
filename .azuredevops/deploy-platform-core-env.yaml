@@ -37,6 +37,7 @@ parameters:
       - Application - Service Bus
       - Application - Key Vault
       - Platform - Key Vault
+      - OpenAI - All
 
 pr:
   branches:
@@ -64,7 +65,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main     
+      ref: rv/382090-openaiinfra
       
 variables:
   - name: IsAll
@@ -134,6 +135,8 @@ variables:
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Service Bus')) }}
   - name: IsApplicationKeyVault
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
+  - name: IsOpenAiAll
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'OpenAI - All')) }}    
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -420,3 +423,13 @@ extends:
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
+        - ${{ if eq(variables.IsOpenAiAll, true) }}:  
+          - name: openai_infra
+            ${{ if eq(variables.IsAll, true) }}:
+              dependsOnGroupedDeployments:
+              - network
+            deployments:
+              - ${{ if eq(variables.IsOpenAiAll, true) }}:  
+                - name: openai
+                  path: infra/core/env/open-ai
+                  resourceGroupName: $(servicesResourceGroup)
