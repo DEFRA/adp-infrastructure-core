@@ -90,7 +90,7 @@ param fluxConfig = {
       syncIntervalInSeconds: 300
       timeoutInSeconds: 180
       url: 'https://github.com/DEFRA/adp-flux-core'
-      branch: 'sm/337709/RemovePrivateEndpoints'
+      branch: 'main'
     }
     kustomizations: {
       timeoutInSeconds: 180
