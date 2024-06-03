@@ -97,7 +97,7 @@ module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
         name: 'OMS'
         logCategoriesAndGroups: [
           {
-            category: 'allLogs'
+            category: 'RequestResponse'
           }
           {
             category: 'Audit'
