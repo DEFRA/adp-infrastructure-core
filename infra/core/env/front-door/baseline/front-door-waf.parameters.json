@@ -18,7 +18,7 @@
       "value": "#{{ environment }}"
     },
     "deployWAF": {
-      "value": "#{{ deployAdpPortalWAF }}"
+      "value": "true"
     },
     "managedRuleSets": {
       "value": [
