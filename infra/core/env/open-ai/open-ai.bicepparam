@@ -14,7 +14,7 @@ param deployments = [
     model: {
       format: 'OpenAI'
       name: 'gpt-4'
-      version: 'turbo-2024-04-09'
+      version: '0125-Preview'
     }
     sku: {
       name: 'Standard'
@@ -26,7 +26,7 @@ param deployments = [
     model: {
       format: 'OpenAI'
       name: 'gpt-35-turbo'
-      version: '0125'
+      version: '1106'
     }
     sku: {
       name: 'Standard'
@@ -38,7 +38,7 @@ param deployments = [
     model: {
       format: 'OpenAI'
       name: 'embedding'
-      version: ''
+      version: '1'
     }
     sku: {
       name: 'Standard'
