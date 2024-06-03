@@ -7,6 +7,9 @@ param deployments array
 @description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPrivateEndpoints values.')
 param vnet object
 
+@description('Required. The parameter object for private dns zone. The object must contain the prefix and resourceGroup values')
+param privateDnsZone object
+
 @allowed([
   'UKSouth'
 ])
@@ -44,7 +47,7 @@ var managedIdentityTags = {
   Tier: 'Shared'
 }
 
-var privateDnsZoneName = toLower('${openAi.privateDnsZonePrefix}.privatelink.openai.azure.com')
+var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.openai.azure.com')
 
 module openAiUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'managed-identity-${deploymentDate}'
@@ -55,8 +58,9 @@ module openAiUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-ident
   }
 }
 
-resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
+resource privateDnsZoneResource 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
   name: privateDnsZoneName
+  scope: resourceGroup(privateDnsZone.resourceGroup)
 }
 
 module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
@@ -80,7 +84,7 @@ module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
     privateEndpoints: [
       {
         name: openAi.privateEndpointName
-        privateDnsZoneResourceIds: [privateDnsZone.id]
+        privateDnsZoneResourceIds: [privateDnsZoneResource.id]
         service: 'account'
         subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
         tags: union(defaultTags, privateEndpointTags)

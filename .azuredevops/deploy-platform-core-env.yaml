@@ -38,6 +38,8 @@ parameters:
       - Application - Key Vault
       - Platform - Key Vault
       - OpenAI - All
+      - OpenAI - Private DNS Zone
+      - OpenAI - Infra
 
 pr:
   branches:
@@ -135,8 +137,15 @@ variables:
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Service Bus')) }}
   - name: IsApplicationKeyVault
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
+
+  - name: IsOpenAi
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'OpenAI -')) }}
   - name: IsOpenAiAll
-    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'OpenAI - All')) }}    
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'OpenAI - All')) }}
+  - name: IsOpenAiPrivateDNSZone
+    value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Private DNS Zone')) }}
+  - name: IsOpenAiInfra
+    value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Infra')) }}            
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -423,13 +432,13 @@ extends:
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
-        - ${{ if eq(variables.IsOpenAiAll, true) }}:  
-          - name: openai_infra
+        - ${{ if eq(variables.IsOpenAi, true) }}:  
+          - name: openai
             ${{ if eq(variables.IsAll, true) }}:
               dependsOnGroupedDeployments:
               - network
             deployments:
-              - ${{ if eq(variables.IsOpenAiAll, true) }}:  
+              - ${{ if eq(variables.IsOpenAiZone, true) }}:
                 - name: open-ai-zone
                   path: infra/core/env/private-dns-zone
                   resourceGroupName: $(dnsResourceGroup)
@@ -442,7 +451,8 @@ extends:
                         -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)03.privatelink.openai.azure.com"
                         -ResourceGroupName $(dnsResourceGroup)
                         -SubscriptionName $(subscriptionName)
-                        -TenantId $(tenantId)              
+                        -TenantId $(tenantId) 
+              - ${{ if eq(variables.IsOpenAiInfra, true) }}:
                 - name: open-ai
                   path: infra/core/env/open-ai
                   resourceGroupName: $(servicesResourceGroup)                
