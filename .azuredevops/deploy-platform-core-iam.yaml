@@ -35,7 +35,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: sm/374060/AddWAFforDefraNetworksandOpenVPN
+      ref: main
       
 variables:
   - name: IsAll

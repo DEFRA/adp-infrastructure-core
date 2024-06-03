@@ -33,7 +33,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: sm/374060/AddWAFforDefraNetworksandOpenVPN
+      ref: refs/heads/main
     - repository: DEFRA-ADPFluxServices
       name: DEFRA/adp-flux-services
       endpoint: DEFRA
