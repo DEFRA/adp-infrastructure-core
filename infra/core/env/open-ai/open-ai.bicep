@@ -23,6 +23,23 @@ var customTags = {
 
 var defaultTags = union(json(loadTextContent('../../../common/default-tags.json')), customTags)
 
+@description('Required. The name of the AAD admin managed identity.')
+param managedIdentityName string
+
+var managedIdentityTags = {
+  Name: managedIdentityName
+  Purpose: 'ADP OPEN AI Managed Identity'
+  Tier: 'Shared'
+}
+
+module openAiUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
+  name: 'managed-identity-${deploymentDate}'
+  params: {
+    name: toLower(managedIdentityName)
+    tags: union(defaultTags, managedIdentityTags)
+    lock: 'CanNotDelete'
+  }
+}
 
 module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
   name: 'opan-ai-${deploymentDate}'
@@ -35,6 +52,11 @@ module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
       name: 'CanNotDelete'
     }
     sku: openAi.skuName
+    managedIdentities: {      
+      userAssignedResourceIds: [
+        openAiUserMi.outputs.resourceId
+      ]
+    }
     tags: union(defaultTags, customTags)
   }  
 }

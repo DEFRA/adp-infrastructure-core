@@ -430,6 +430,6 @@ extends:
               - network
             deployments:
               - ${{ if eq(variables.IsOpenAiAll, true) }}:  
-                - name: openai
+                - name: open-ai
                   path: infra/core/env/open-ai
                   resourceGroupName: $(servicesResourceGroup)
