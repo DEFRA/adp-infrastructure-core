@@ -37,7 +37,7 @@ param deployments = [
     name: 'text-embedding-3-large'
     model: {
       format: 'OpenAI'
-      name: 'embedding'
+      name: 'text-embedding-3-large'
       version: '1'
     }
     sku: {
@@ -49,7 +49,7 @@ param deployments = [
     name: 'text-embedding-ada-002'
     model: {
       format: 'OpenAI'
-      name: 'embedding'
+      name: 'text-embedding-ada-002'
       version: '2'
     }
     sku: {
