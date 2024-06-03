@@ -79,31 +79,39 @@ module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
       kind: 'CanNotDelete'
       name: 'CanNotDelete'
     }
+    networkAcls: {
+      defaultAction: 'Deny'
+      bypass: 'AzureServices'      
+    }
     roleAssignments: [
-        {
-          roleDefinitionIdOrName: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'
-          principalId: openAiUserGroup
-          principalType: 'Group'
-        }        
-      ]
+      {
+        roleDefinitionIdOrName: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'
+        principalId: openAiUserGroup
+        principalType: 'Group'
+      }
+    ]
     sku: openAi.skuName
     customSubDomainName: openAi.customSubDomainName
     diagnosticSettings: [
-        {
-          name: 'OMS'
-          logCategoriesAndGroups: [
-            {
-              category: 'allLogs'
-            }
-            {
-              category: 'Audit'
-            }
-          ]
-          workspaceResourceId: resourceId(monitoringWorkspace.resourceGroup, 'Microsoft.OperationalInsights/workspaces', monitoringWorkspace.name)
-        }
+      {
+        name: 'OMS'
+        logCategoriesAndGroups: [
+          {
+            category: 'allLogs'
+          }
+          {
+            category: 'Audit'
+          }
+        ]
+        workspaceResourceId: resourceId(
+          monitoringWorkspace.resourceGroup,
+          'Microsoft.OperationalInsights/workspaces',
+          monitoringWorkspace.name
+        )
+      }
     ]
     deployments: deployments
-    managedIdentities: {      
+    managedIdentities: {
       userAssignedResourceIds: [
         openAiUserMi.outputs.resourceId
       ]
@@ -113,10 +121,15 @@ module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
         name: openAi.privateEndpointName
         privateDnsZoneResourceIds: [privateDnsZoneResource.id]
         service: 'account'
-        subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
+        subnetResourceId: resourceId(
+          vnet.resourceGroup,
+          'Microsoft.Network/virtualNetworks/subnets',
+          vnet.name,
+          vnet.subnetPrivateEndpoints
+        )
         tags: union(defaultTags, privateEndpointTags)
       }
     ]
     tags: union(defaultTags, customTags)
-  }  
+  }
 }
