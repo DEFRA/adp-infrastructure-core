@@ -155,7 +155,8 @@ extends:
     deployFromFeature: ${{ parameters.deployFromFeature }}
     filePathsForTransform: |
       **/core/env/app-configuration/config-data/config-data.json
-      **/infra/core/env/insights/aad-groups/monitoringpublishergroup.json
+      **/infra/core/env/insights/aad-groups/monitoringpublishergroup.json    
+      **/infra/core/env/open-ai/aad-groups/openaiaccessgroup.json     
     groupedDeployments:
         - ${{ if eq(variables.IsNetwork, true) }}:
           - name: network
@@ -453,6 +454,20 @@ extends:
                         -SubscriptionName $(subscriptionName)
                         -TenantId $(tenantId) 
               - ${{ if eq(variables.IsOpenAiInfra, true) }}:
+                - name: Create Open AI Access group
+                  type: 'script'
+                  scriptType: AzurePowerShell
+                  serviceConnectionVariableName: ssvServiceConnection
+                  path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+                  scriptArguments: > 
+                    -AADGroupsJsonManifestPath 'infra/core/env/open-ai/aad-groups/openaiaccessgroup.json'              
                 - name: open-ai
                   path: infra/core/env/open-ai
-                  resourceGroupName: $(servicesResourceGroup)                
+                  resourceGroupName: $(servicesResourceGroup)
+                  preDeployScriptsList:
+                  - displayName: 'Get Group Id'
+                    type: AzurePowerShell
+                    serviceConnectionVariableName: 'ssvServiceConnection'
+                    inlineScript: |
+                      $groupId = (Get-AzADGroup -DisplayName '$(openAiUserGroup)').id
+                      Write-Host "##vso[task.setvariable variable=openAiUserGroup;]$groupId"              

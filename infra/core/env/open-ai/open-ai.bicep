@@ -52,6 +52,9 @@ var managedIdentityTags = {
 
 var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.openai.azure.com')
 
+@description('Required. openAiUserGroup id.')
+param openAiUserGroup string
+
 module openAiUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'managed-identity-${deploymentDate}'
   params: {
@@ -76,6 +79,13 @@ module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
       kind: 'CanNotDelete'
       name: 'CanNotDelete'
     }
+    roleAssignments: [
+        {
+          roleDefinitionIdOrName: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'
+          principalId: openAiUserGroup
+          principalType: 'Group'
+        }        
+      ]
     sku: openAi.skuName
     customSubDomainName: openAi.customSubDomainName
     diagnosticSettings: [
