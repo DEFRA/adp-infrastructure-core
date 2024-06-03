@@ -10,6 +10,9 @@ param vnet object
 @description('Required. The parameter object for private dns zone. The object must contain the prefix and resourceGroup values')
 param privateDnsZone object
 
+@description('Required. The parameter object for the monitoringWorkspace. The object must contain name of the name and resourceGroup.')
+param monitoringWorkspace object
+
 @allowed([
   'UKSouth'
 ])
@@ -75,6 +78,20 @@ module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
     }
     sku: openAi.skuName
     customSubDomainName: openAi.customSubDomainName
+    diagnosticSettings: [
+        {
+          name: 'OMS'
+          logCategoriesAndGroups: [
+            {
+              category: 'allLogs'
+            }
+            {
+              category: 'Audit'
+            }
+          ]
+          workspaceResourceId: resourceId(monitoringWorkspace.resourceGroup, 'Microsoft.OperationalInsights/workspaces', monitoringWorkspace.name)
+        }
+    ]
     deployments: deployments
     managedIdentities: {      
       userAssignedResourceIds: [

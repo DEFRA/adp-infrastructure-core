@@ -22,6 +22,11 @@ param vnet = {
   subnetPrivateEndpoints: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}98'
 }
 
+param monitoringWorkspace = {
+  name: '#{{ logAnalyticsWorkspace }}'
+  resourceGroup: '#{{ servicesResourceGroup }}'
+}
+
 param deployments = [
   {
     name: 'gpt-4'
