@@ -430,6 +430,19 @@ extends:
               - network
             deployments:
               - ${{ if eq(variables.IsOpenAiAll, true) }}:  
+                - name: open-ai-zone
+                  path: infra/core/env/private-dns-zone
+                  resourceGroupName: $(dnsResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: Link the Private DNS Zone to Central networks
+                      scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
+                      type: PowerShell
+                      useSystemAccessToken: true
+                      scriptArguments: >
+                        -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)03.privatelink.openai.azure.com"
+                        -ResourceGroupName $(dnsResourceGroup)
+                        -SubscriptionName $(subscriptionName)
+                        -TenantId $(tenantId)              
                 - name: open-ai
                   path: infra/core/env/open-ai
                   resourceGroupName: $(servicesResourceGroup)

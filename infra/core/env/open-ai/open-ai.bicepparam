@@ -5,6 +5,7 @@ param openAi = {
   skuName: '#{{ openAiSkuName }}'
   customSubDomainName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_openai }}#{{ nc_instance_regionid }}01'
   privateEndpointName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}10'
+  privateDnsZonePrefix:  '#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}03'
 }
 param location = '#{{ location }}'
 param environment = '#{{ environment }}'

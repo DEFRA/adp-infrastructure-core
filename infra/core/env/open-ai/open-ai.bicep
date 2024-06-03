@@ -44,6 +44,8 @@ var managedIdentityTags = {
   Tier: 'Shared'
 }
 
+var privateDnsZoneName = toLower('${openAi.privateDnsZonePrefix}.privatelink.openai.azure.com')
+
 module openAiUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'managed-identity-${deploymentDate}'
   params: {
@@ -51,6 +53,10 @@ module openAiUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-ident
     tags: union(defaultTags, managedIdentityTags)
     lock: 'CanNotDelete'
   }
+}
+
+resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
+  name: privateDnsZoneName
 }
 
 module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
@@ -74,6 +80,7 @@ module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
     privateEndpoints: [
       {
         name: openAi.privateEndpointName
+        privateDnsZoneResourceIds: [privateDnsZone.id]
         service: 'account'
         subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
         tags: union(defaultTags, privateEndpointTags)
