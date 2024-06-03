@@ -4,10 +4,18 @@ param openAi = {
   name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_openai }}#{{ nc_instance_regionid }}01'
   skuName: '#{{ openAiSkuName }}'
   customSubDomainName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_openai }}#{{ nc_instance_regionid }}01'
+  privateEndpointName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}10'
 }
 param location = '#{{ location }}'
 param environment = '#{{ environment }}'
 param managedIdentityName = '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-open-ai'
+
+param vnet = {
+  name: '#{{ virtualNetworkName }}'
+  resourceGroup: '#{{ virtualNetworkResourceGroup }}'
+  subnetPrivateEndpoints: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}98'
+}
+
 param deployments = [
   {
     name: 'gpt-4'

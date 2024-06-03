@@ -4,6 +4,9 @@ param openAi object
 @description('Required. Deployment models of the Open AI resource.')
 param deployments array
 
+@description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPrivateEndpoints values.')
+param vnet object
+
 @allowed([
   'UKSouth'
 ])
@@ -22,6 +25,12 @@ var customTags = {
   CreatedDate: createdDate
   Environment: environment
   Purpose: 'ADP OPEN AI'
+}
+
+var privateEndpointTags = {
+  Name: openAi.name
+  Purpose: 'Open AI private endpoint'
+  Tier: 'Shared'
 }
 
 var defaultTags = union(json(loadTextContent('../../../common/default-tags.json')), customTags)
@@ -62,6 +71,14 @@ module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
         openAiUserMi.outputs.resourceId
       ]
     }
+    privateEndpoints: [
+      {
+        name: openAi.privateEndpointName
+        service: 'account'
+        subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
+        tags: union(defaultTags, privateEndpointTags)
+      }
+    ]
     tags: union(defaultTags, customTags)
   }  
 }
