@@ -445,7 +445,4 @@ extends:
                         -TenantId $(tenantId)              
                 - name: open-ai
                   path: infra/core/env/open-ai
-                  resourceGroupName: $(servicesResourceGroup)
-                  privateEndpointDnsRecordsForResources:
-                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_openai)$(nc_instance_regionid)01
-                      resourceGroupName: $(servicesResourceGroup)                  
+                  resourceGroupName: $(servicesResourceGroup)                
