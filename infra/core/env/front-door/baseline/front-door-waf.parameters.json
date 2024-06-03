@@ -3,12 +3,12 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "wafPolicyName": {
-      "value": "#{{ adpPortalwafPolicyName }}"
+      "value": "#{{ wafPolicyName }}"
     },
     "policySettings": {
       "value": {
         "enabledState": "Enabled",
-        "mode": "Detection"
+        "mode": "Prevention"
       }
     },
     "purpose": {
