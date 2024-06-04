@@ -500,7 +500,7 @@ extends:
                   path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
                   scriptArguments: > 
                     -AADGroupsJsonManifestPath 'infra/core/env/search-service/aad-groups/searchserviceaccessgroup.json'                
-                - name: Search-Service
+                - name: search-service
                   path: infra/core/env/search-service
                   resourceGroupName: $(servicesResourceGroup)
                   preDeployScriptsList:
