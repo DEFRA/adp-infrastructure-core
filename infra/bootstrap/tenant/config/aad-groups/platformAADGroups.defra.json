@@ -28,6 +28,34 @@
             }
         },
         {
+            "displayName": "AAG-Azure-AZR-ADP-SND4-Cont",
+            "description": "Azure AD Access group with contributor permissions to the AZR-ADP-SND4 subscription.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-CDO-SSV5"
+                ]
+            },
+            "Members": {
+                "groups" : [
+                    "AAG-Users-ADP-PlatformEngineers"
+                ]
+            }
+        },
+        {
+            "displayName": "AAG-Azure-AZR-ADP-SND4-UAA",
+            "description": "Azure AD Access group with User Access administrator permissions to the AZR-ADP-SND4 subscription.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "ADO-DefraGovUK-AAD-CDO-SSV5"
+                ]
+            },
+            "Members": {
+                "groups" : [
+                    "AAG-Users-ADP-PlatformEngineers"
+                ]
+            }
+        },
+        {
             "displayName": "AAG-Azure-AZR-ADP-DEV1-Cont",
             "description": "Azure AD Access group with contributor permissions to the AZR-ADP-DEV1 subscription.",
             "Owners": {
