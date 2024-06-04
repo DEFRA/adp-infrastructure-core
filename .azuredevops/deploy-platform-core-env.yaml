@@ -151,7 +151,7 @@ variables:
   - name: IsOpenAiSearchServicePrivateDNSZone
     value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Search Service Private DNS Zone')) }}    
   - name: IsOpenAiSearchService
-    value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, OpenAI - Search Service')) }}
+    value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Search Service')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
