@@ -72,11 +72,6 @@ module searchServiceDeployment 'br/avm:search/search-service:0.4.2' = {
     diagnosticSettings: [
       {
         name: 'OMS'
-        logCategoriesAndGroups: [
-          {
-            category: 'allLogs'
-          }
-        ]
         workspaceResourceId: resourceId(
           monitoringWorkspace.resourceGroup,
           'Microsoft.OperationalInsights/workspaces',
