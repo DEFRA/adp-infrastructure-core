@@ -35,7 +35,7 @@ param createdDate string = utcNow('yyyy-MM-dd')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 @description('Optional. The administrator login name of a server. Can only be specified when the PostgreSQL server is being created.')
-param administratorLogin string = 'adpAdminUser'
+param administratorLogin string = 'adpAdminUser1'
 
 param guidValue string = guid(deploymentDate)
 var administratorLoginPassword  = substring(replace(replace(guidValue, '.', '-'), '-', ''), 0, 20)
