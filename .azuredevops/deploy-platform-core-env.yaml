@@ -509,4 +509,4 @@ extends:
                     serviceConnectionVariableName: 'ssvServiceConnection'
                     inlineScript: |
                       $groupId = (Get-AzADGroup -DisplayName '$(searchServiceUserGroup)').id
-                      Write-Host "##vso[task.setvariable variable=searchServiceUserGroupId;]$groupId"                    
+                      Write-Host "##vso[task.setvariable variable=searchServiceUserGroupId;]$groupId"

@@ -38,28 +38,10 @@ var privateEndpointTags = {
 
 var defaultTags = union(json(loadTextContent('../../../common/default-tags.json')), customTags)
 
-@description('Required. The name of the AAD admin managed identity.')
-param managedIdentityName string
-
-var managedIdentityTags = {
-  Name: managedIdentityName
-  Purpose: 'ADP Search Service Managed Identity'
-  Tier: 'Shared'
-}
-
 var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.search.windows.net')
 
 @description('Required. Search Service UserGroup id.')
 param searchServiceUserGroupId string
-
-module searchServiceUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
-  name: 'managed-identity-${deploymentDate}'
-  params: {
-    name: toLower(managedIdentityName)
-    tags: union(defaultTags, managedIdentityTags)
-    lock: 'CanNotDelete'
-  }
-}
 
 resource privateDnsZoneResource 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
   name: privateDnsZoneName
@@ -88,6 +70,11 @@ module searchServiceDeployment 'br/avm:search/search-service:0.4.2' = {
     diagnosticSettings: [
       {
         name: 'OMS'
+        logCategoriesAndGroups: [
+          {
+            category: 'Audit'
+          }
+        ]
         workspaceResourceId: resourceId(
           monitoringWorkspace.resourceGroup,
           'Microsoft.OperationalInsights/workspaces',
@@ -111,6 +98,23 @@ module searchServiceDeployment 'br/avm:search/search-service:0.4.2' = {
         tags: union(defaultTags, privateEndpointTags)
       }
     ]
+    sharedPrivateLinkResources: [
+      {
+        privateLinkResourceId: resourceId('Microsoft.CognitiveServices/accounts', searchService.openAiName)
+        groupId: 'account'
+        requestMessage: 'Please approve this request'
+      }
+    ]
     tags: union(defaultTags, customTags)
   }
 }
+
+
+module openAiRbac '.bicep/open-ai-rbac.bicep' = {
+  name: 'open-ai-rbac-${deploymentDate}'
+  params: {
+    principalId: searchServiceDeployment.outputs.systemAssignedMIPrincipalId
+    openAiName: searchService.openAiName
+  }
+}
+
