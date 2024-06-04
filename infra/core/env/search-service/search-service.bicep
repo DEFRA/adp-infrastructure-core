@@ -22,8 +22,10 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
+var searchServiceName = toLower(searchService.name)
+
 var customTags = {
-  Name: toLower(searchService.name)
+  Name: searchServiceName
   Location: location
   CreatedDate: createdDate
   Environment: environment
@@ -31,7 +33,7 @@ var customTags = {
 }
 
 var privateEndpointTags = {
-  Name: toLower(searchService.name)
+  Name: searchServiceName
   Purpose: 'Search Service private endpoint'
   Tier: 'Shared'
 }
@@ -51,7 +53,7 @@ resource privateDnsZoneResource 'Microsoft.Network/privateDnsZones@2020-06-01' e
 module searchServiceDeployment 'br/avm:search/search-service:0.4.2' = {
   name: 'search-service-${deploymentDate}'
   params: {
-    name: toLower(searchService.name)
+    name: searchServiceName
     location: location
     lock: {
       kind: 'CanNotDelete'
@@ -72,7 +74,7 @@ module searchServiceDeployment 'br/avm:search/search-service:0.4.2' = {
         name: 'OMS'
         logCategoriesAndGroups: [
           {
-            category: 'Audit'
+            category: 'allLogs'
           }
         ]
         workspaceResourceId: resourceId(
@@ -98,17 +100,17 @@ module searchServiceDeployment 'br/avm:search/search-service:0.4.2' = {
         tags: union(defaultTags, privateEndpointTags)
       }
     ]
-    sharedPrivateLinkResources: [
-      {
-        privateLinkResourceId: resourceId('Microsoft.CognitiveServices/accounts', searchService.openAiName)
-        groupId: 'account'
-        requestMessage: 'Please approve this request'
-      }
-    ]
     tags: union(defaultTags, customTags)
   }
 }
 
+module sharedPrivateLink '.bicep/shared-private-link.bicep' = {
+  name: 'shared-private-link-${deploymentDate}'
+  params: {
+    searchServiceName: searchServiceName
+    openAiName: searchService.openAiName
+  }
+}
 
 module openAiRbac '.bicep/open-ai-rbac.bicep' = {
   name: 'open-ai-rbac-${deploymentDate}'
