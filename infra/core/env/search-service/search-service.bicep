@@ -23,7 +23,7 @@ param createdDate string = utcNow('yyyy-MM-dd')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 var customTags = {
-  Name: searchService.name
+  Name: toLower(searchService.name)
   Location: location
   CreatedDate: createdDate
   Environment: environment
@@ -31,7 +31,7 @@ var customTags = {
 }
 
 var privateEndpointTags = {
-  Name: searchService.name
+  Name: toLower(searchService.name)
   Purpose: 'Search Service private endpoint'
   Tier: 'Shared'
 }
@@ -69,7 +69,7 @@ resource privateDnsZoneResource 'Microsoft.Network/privateDnsZones@2020-06-01' e
 module searchServiceDeployment 'br/avm:search/search-service:0.4.2' = {
   name: 'search-service-${deploymentDate}'
   params: {
-    name: searchService.name
+    name: toLower(searchService.name)
     location: location
     lock: {
       kind: 'CanNotDelete'
