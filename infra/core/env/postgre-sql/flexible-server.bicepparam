@@ -27,6 +27,11 @@ param platformKeyVault = {
   resourceGroup: '#{{ ssvSharedResourceGroup }}'
 }
 
+param applicationKeyVault = {
+  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}01'
+  resourceGroup: '#{{ servicesResourceGroup }}'
+}
+
 param secrets = [
   'ADO-DefraGovUK-AAD-ADP-#{{ssvEnvironment}}#{{nc_shared_instance}}'
   'ADO-DefraGovUK-AAD-ADP-#{{ssvEnvironment}}#{{nc_shared_instance}}-ClientId'
