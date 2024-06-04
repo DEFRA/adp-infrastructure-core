@@ -162,7 +162,8 @@ extends:
     filePathsForTransform: |
       **/core/env/app-configuration/config-data/config-data.json
       **/infra/core/env/insights/aad-groups/monitoringpublishergroup.json    
-      **/infra/core/env/open-ai/aad-groups/openaiaccessgroup.json     
+      **/infra/core/env/open-ai/aad-groups/openaiaccessgroup.json
+      **/infra/core/env/search-service/aad-groups/searchserviceaccessgroup.json
     groupedDeployments:
         - ${{ if eq(variables.IsNetwork, true) }}:
           - name: network
