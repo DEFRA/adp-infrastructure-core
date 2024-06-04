@@ -1,8 +1,5 @@
 @description('Required. The object of Open AI Resource. The object must contain name, SKU and customSubDomainName  properties.')
-param openAi object
-
-@description('Required. Deployment models of the Open AI resource.')
-param deployments array
+param searchService object
 
 @description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPrivateEndpoints values.')
 param vnet object
@@ -26,16 +23,16 @@ param createdDate string = utcNow('yyyy-MM-dd')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 var customTags = {
-  Name: openAi.name
+  Name: searchService.name
   Location: location
   CreatedDate: createdDate
   Environment: environment
-  Purpose: 'ADP OPEN AI'
+  Purpose: 'ADP Search Service'
 }
 
 var privateEndpointTags = {
-  Name: openAi.name
-  Purpose: 'Open AI private endpoint'
+  Name: searchService.name
+  Purpose: 'Search Service private endpoint'
   Tier: 'Shared'
 }
 
@@ -46,16 +43,16 @@ param managedIdentityName string
 
 var managedIdentityTags = {
   Name: managedIdentityName
-  Purpose: 'ADP OPEN AI Managed Identity'
+  Purpose: 'ADP Search Service Managed Identity'
   Tier: 'Shared'
 }
 
-var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.openai.azure.com')
+var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.search.windows.net')
 
-@description('Required. openAiUserGroup id.')
-param openAiUserGroupId string
+@description('Required. Search Service UserGroup id.')
+param searchServiceUserGroupId string
 
-module openAiUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
+module searchServiceUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'managed-identity-${deploymentDate}'
   params: {
     name: toLower(managedIdentityName)
@@ -69,58 +66,42 @@ resource privateDnsZoneResource 'Microsoft.Network/privateDnsZones@2020-06-01' e
   scope: resourceGroup(privateDnsZone.resourceGroup)
 }
 
-module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
-  name: 'opan-ai-${deploymentDate}'
+module searchServiceDeployment 'br/avm:search/search-service:0.4.2' = {
+  name: 'search-service-${deploymentDate}'
   params: {
-    kind: 'OpenAI'
-    name: openAi.name
+    name: searchService.name
     location: location
     lock: {
       kind: 'CanNotDelete'
       name: 'CanNotDelete'
     }
-    networkAcls: {
-      defaultAction: 'Deny'
-      bypass: 'AzureServices'      
-    }
+    publicNetworkAccess: 'disabled'
     roleAssignments: [
       {
-        roleDefinitionIdOrName: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'
-        principalId: openAiUserGroupId
+        roleDefinitionIdOrName: '8ebe5a00-799e-43f5-93ac-243d3dce84a7'
+        principalId: searchServiceUserGroupId
         principalType: 'Group'
       }
     ]
-    sku: openAi.skuName
-    customSubDomainName: openAi.customSubDomainName
+    sku: searchService.skuName
+    replicaCount: searchService.replicaCount
     diagnosticSettings: [
       {
         name: 'OMS'
-        logCategoriesAndGroups: [
-          {
-            category: 'RequestResponse'
-          }
-          {
-            category: 'Audit'
-          }
-        ]
         workspaceResourceId: resourceId(
           monitoringWorkspace.resourceGroup,
           'Microsoft.OperationalInsights/workspaces',
           monitoringWorkspace.name
         )
       }
-    ]
-    deployments: deployments
+    ]    
     managedIdentities: {
-      userAssignedResourceIds: [
-        openAiUserMi.outputs.resourceId
-      ]
+      systemAssigned: true
     }
     privateEndpoints: [
       {
-        name: openAi.privateEndpointName
+        name: searchService.privateEndpointName
         privateDnsZoneResourceIds: [privateDnsZoneResource.id]
-        service: 'account'
         subnetResourceId: resourceId(
           vnet.resourceGroup,
           'Microsoft.Network/virtualNetworks/subnets',

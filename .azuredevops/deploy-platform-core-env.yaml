@@ -40,6 +40,8 @@ parameters:
       - OpenAI - All
       - OpenAI - Private DNS Zone
       - OpenAI - Infra
+      - OpenAI - Search Service Private DNS Zone      
+      - OpenAI - Search Service
 
 pr:
   branches:
@@ -145,7 +147,11 @@ variables:
   - name: IsOpenAiPrivateDNSZone
     value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Private DNS Zone')) }}
   - name: IsOpenAiInfra
-    value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Infra')) }}            
+    value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Infra')) }}
+  - name: IsOpenAiSearchServicePrivateDNSZone
+    value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Search Service Private DNS Zone')) }}    
+  - name: IsOpenAiSearchService
+    value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, OpenAI - Search Service')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -470,4 +476,36 @@ extends:
                     serviceConnectionVariableName: 'ssvServiceConnection'
                     inlineScript: |
                       $groupId = (Get-AzADGroup -DisplayName '$(openAiUserGroup)').id
-                      Write-Host "##vso[task.setvariable variable=openAiUserGroup;]$groupId"              
+                      Write-Host "##vso[task.setvariable variable=openAiUserGroupId;]$groupId"      
+              - ${{ if eq(variables.IsOpenAiSearchServicePrivateDNSZone, true) }}:
+                - name: search-service-zone
+                  path: infra/core/env/private-dns-zone
+                  resourceGroupName: $(dnsResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: Link the Private DNS Zone to Central networks
+                      scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
+                      type: PowerShell
+                      useSystemAccessToken: true
+                      scriptArguments: >
+                        -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)04.privatelink.search.windows.net"
+                        -ResourceGroupName $(dnsResourceGroup)
+                        -SubscriptionName $(subscriptionName)
+                        -TenantId $(tenantId)
+              - ${{ if eq(variables.IsOpenAiSearchService, true) }}:
+                - name: Create Search Service Access group
+                  type: 'script'
+                  scriptType: AzurePowerShell
+                  serviceConnectionVariableName: ssvServiceConnection
+                  path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+                  scriptArguments: > 
+                    -AADGroupsJsonManifestPath 'infra/core/env/search-service/aad-groups/searchserviceaccessgroup.json'                
+                - name: Search-Service
+                  path: infra/core/env/search-service
+                  resourceGroupName: $(servicesResourceGroup)
+                  preDeployScriptsList:
+                  - displayName: 'Get Group Id'
+                    type: AzurePowerShell
+                    serviceConnectionVariableName: 'ssvServiceConnection'
+                    inlineScript: |
+                      $groupId = (Get-AzADGroup -DisplayName '$(searchServiceUserGroup)').id
+                      Write-Host "##vso[task.setvariable variable=searchServiceUserGroupId;]$groupId"                    
