@@ -17,7 +17,7 @@ resource sharedPrivateLinkResource 'Microsoft.Search/searchServices/sharedPrivat
   name: '${uniqueString(deployment().name)}-searchService-SharedPrivateLink'
   properties: {
     privateLinkResourceId: openAi.id
-    groupId: 'account'
+    groupId: 'openai_account'
     requestMessage: 'Please approve this request'
   }
 }
