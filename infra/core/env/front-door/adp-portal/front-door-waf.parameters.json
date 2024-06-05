@@ -116,6 +116,24 @@
                 }
               ],
               "exclusions": []
+            },
+            {
+              "ruleGroupName": "PHP",
+              "rules": [
+                {
+                  "ruleId": "933210",
+                  "enabledState": "Disabled",
+                  "action": "AnomalyScoring",
+                  "exclusions": [
+                    {
+                      "matchVariable": "RequestBodyJsonArgNames",
+                      "selectorMatchOperator": "Contains",
+                      "selector": "entity.metadata.annotations"
+                    }
+                  ]
+                }
+              ],
+              "exclusions": []
             }                     
           ],
           "exclusions": []
