@@ -104,7 +104,7 @@
                 },
                 {
                   "ruleId": "930120",
-                  "enabledState": "Disabled",
+                  "enabledState": "Enabled",
                   "action": "AnomalyScoring",
                   "exclusions": [
                       {
@@ -122,7 +122,7 @@
               "rules": [
                 {
                   "ruleId": "933210",
-                  "enabledState": "Enabled",
+                  "enabledState": "Disabled",
                   "action": "AnomalyScoring",
                   "exclusions": [
                     {
