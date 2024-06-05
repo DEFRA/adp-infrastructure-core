@@ -451,6 +451,9 @@ extends:
                 - name: open-ai
                   path: infra/core/env/open-ai
                   resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_openai)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)                   
                   preDeployScriptsList:
                   - displayName: 'Get Group Id'
                     type: AzurePowerShell
@@ -469,6 +472,9 @@ extends:
                 - name: search-service
                   path: infra/core/env/search-service
                   resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)                  
                   preDeployScriptsList:
                   - displayName: 'Get Group Id'
                     type: AzurePowerShell
