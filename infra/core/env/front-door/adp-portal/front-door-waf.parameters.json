@@ -126,7 +126,7 @@
                   "action": "AnomalyScoring",
                   "exclusions": [
                     {
-                      "matchVariable": "RequestBodyJsonArgNames",
+                      "matchVariable": "QueryStringArgNames",
                       "selectorMatchOperator": "Contains",
                       "selector": "fields"
                     }
