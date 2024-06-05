@@ -108,9 +108,9 @@
                   "action": "AnomalyScoring",
                   "exclusions": [
                       {
-                          "matchVariable": "RequestBodyJsonArgNames",
+                          "matchVariable": "QueryStringArgNames",
                           "selectorMatchOperator": "Contains",
-                          "selector": "fields"
+                          "selector": "entity.metadata.annotations"
                       }
                   ]
                 }
@@ -126,7 +126,7 @@
                   "action": "AnomalyScoring",
                   "exclusions": [
                     {
-                      "matchVariable": "QueryStringArgNames",
+                      "matchVariable": "RequestBodyJsonArgNames",
                       "selectorMatchOperator": "Contains",
                       "selector": "fields"
                     }
