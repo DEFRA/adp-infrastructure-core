@@ -65,7 +65,9 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: 'sm/392325/UnabletoAdduserstoPortal'     
+      ref: sm/392325/UnabletoAdduserstoPortal
+      
+           
       
 variables:
   - name: IsAll
