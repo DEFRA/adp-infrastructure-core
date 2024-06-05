@@ -1,4 +1,4 @@
-@description('Required. The object of the PostgreSQL Flexible Server. The object must contain name,storageSizeGB and highAvailability properties.')
+@description('Required. The object of the PostgreSQL Flexible Server. The object must contain name,storageSizeGB,highAvailability and administratorLogin properties.')
 param server object
 
 @description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPostgreSql values.')
@@ -33,9 +33,6 @@ param createdDate string = utcNow('yyyy-MM-dd')
 
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
-
-@description('Optional. The administrator login name of a server. Can only be specified when the PostgreSQL server is being created.')
-param administratorLogin string = 'adpAdminUser1'
 
 param guidValue string = guid(deploymentDate)
 var administratorLoginPassword  = substring(replace(replace(guidValue, '.', '-'), '-', ''), 0, 20)
@@ -95,7 +92,7 @@ module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
     name: toLower(server.name)
-    administratorLogin: administratorLogin
+    administratorLogin: server.administratorLogin
     administratorLoginPassword : administratorLoginPassword
     storageSizeGB: server.storageSizeGB
     highAvailability: server.highAvailability
@@ -146,7 +143,7 @@ module keyVaultSecrets '.bicep/kv-secrets.bicep' = {
   params: {
     keyVaultName: applicationKeyVault.name
     flexibleServerName: flexibleServerDeployment.outputs.name
-    administratorLogin: administratorLogin
+    administratorLogin: server.administratorLogin
     administratorLoginPassword: administratorLoginPassword
   }
 }

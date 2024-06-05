@@ -7,6 +7,7 @@ param server = {
   skuName: '#{{ postgreSqlSkuName }}'
   highAvailability: '#{{ postgreSqlHighAvailability }}'
   availabilityZone: '#{{ postgreSqlAvailabilityZone }}'
+  administratorLogin: '#{{ postgreSqlAdministratorLogin }}'
 }
 param vnet = {
   name: '#{{ virtualNetworkName }}'
