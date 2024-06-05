@@ -128,7 +128,7 @@
                     {
                       "matchVariable": "RequestBodyJsonArgNames",
                       "selectorMatchOperator": "Contains",
-                      "selector": "entity.metadata.annotations"
+                      "selector": "fields"
                     }
                   ]
                 }
