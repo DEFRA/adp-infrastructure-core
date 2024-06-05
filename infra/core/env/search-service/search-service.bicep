@@ -4,9 +4,6 @@ param searchService object
 @description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPrivateEndpoints values.')
 param vnet object
 
-@description('Required. The parameter object for private dns zone. The object must contain the prefix and resourceGroup values')
-param privateDnsZone object
-
 @description('Required. The parameter object for the monitoringWorkspace. The object must contain name of the name and resourceGroup.')
 param monitoringWorkspace object
 
