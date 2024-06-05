@@ -48,7 +48,7 @@ var frontDoorWafTags = {
   Purpose: purpose
   Tier: 'Shared'
 }
-var customRule = (environment == 'PRD')? customRules : union(customRules,paloIPWAFcustomRule)
+var customRule = union(customRules,paloIPWAFcustomRule)
 
 module frontDoorWafPolicy 'br/SharedDefraRegistry:network.front-door-web-application-firewall-policy:0.4.1' = if(deployWAF == 'true') {
   name: 'fdwaf-${deploymentDate}'
