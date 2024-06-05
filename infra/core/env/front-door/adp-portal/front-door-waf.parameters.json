@@ -110,7 +110,7 @@
                       {
                           "matchVariable": "QueryStringArgNames",
                           "selectorMatchOperator": "Contains",
-                          "selector": "entity.metadata.annotations"
+                          "selector": "fields"
                       }
                   ]
                 }
@@ -128,7 +128,7 @@
                     {
                       "matchVariable": "RequestBodyJsonArgNames",
                       "selectorMatchOperator": "Contains",
-                      "selector": "fields"
+                      "selector": "entity.metadata.annotations"
                     }
                   ]
                 }
