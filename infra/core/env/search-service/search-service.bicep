@@ -47,8 +47,6 @@ var privateEndpointTags = {
 
 var defaultTags = union(json(loadTextContent('../../../common/default-tags.json')), customTags)
 
-var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.search.windows.net')
-
 @description('Required. Search Service UserGroup id.')
 param searchServiceUserGroupId string
 
@@ -60,11 +58,6 @@ module openAiUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-ident
     tags: union(defaultTags, managedIdentityTags)
     lock: 'CanNotDelete'
   }
-}
-
-resource privateDnsZoneResource 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
-  name: privateDnsZoneName
-  scope: resourceGroup(privateDnsZone.resourceGroup)
 }
 
 module searchServiceDeployment './module/main.bicep' = {
@@ -104,7 +97,6 @@ module searchServiceDeployment './module/main.bicep' = {
     privateEndpoints: [
       {
         name: searchService.privateEndpointName
-        privateDnsZoneResourceIds: [privateDnsZoneResource.id]
         subnetResourceId: resourceId(
           vnet.resourceGroup,
           'Microsoft.Network/virtualNetworks/subnets',

@@ -14,7 +14,7 @@ resource searchService 'Microsoft.Search/searchServices@2023-11-01' existing = {
 
 resource sharedPrivateLinkResource 'Microsoft.Search/searchServices/sharedPrivateLinkResources@2024-03-01-preview' = {
   parent: searchService
-  name: '${uniqueString(deployment().name)}-searchService-SharedPrivateLink'
+  name: '${searchServiceName}-${openAiName}-spl'
   properties: {
     privateLinkResourceId: openAi.id
     groupId: 'openai_account'

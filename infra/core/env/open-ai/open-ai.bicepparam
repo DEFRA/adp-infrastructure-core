@@ -7,11 +7,6 @@ param openAi = {
   privateEndpointName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}10'  
 }
 
-param privateDnsZone = {
-  prefix: '#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}03'
-  resourceGroup: '#{{ dnsResourceGroup }}'
-}
-
 param location = '#{{ location }}'
 param environment = '#{{ environment }}'
 param managedIdentityName = '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-open-ai'

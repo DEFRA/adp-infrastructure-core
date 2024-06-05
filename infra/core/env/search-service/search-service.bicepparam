@@ -10,12 +10,8 @@ param searchService = {
 
 param managedIdentityName = '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-search-service'
 
-param privateDnsZone = {
-  prefix: '#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}04'
-  resourceGroup: '#{{ dnsResourceGroup }}'
-}
-
 param location = '#{{ location }}'
+
 param environment = '#{{ environment }}'
 
 param searchServiceUserGroupId = '#{{ searchServiceUserGroupId }}'
