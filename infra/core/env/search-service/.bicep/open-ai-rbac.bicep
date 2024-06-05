@@ -11,7 +11,7 @@ resource openAiRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-0
   name: guid(resourceGroup().id, principalId, openAiName)
   scope: openAi
   properties: {
-    roleDefinitionId: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'
+    roleDefinitionId:  resourceId('Microsoft.Authorization/roleDefinitions', '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd')
     principalId: principalId
     principalType: 'ServicePrincipal'
   }
