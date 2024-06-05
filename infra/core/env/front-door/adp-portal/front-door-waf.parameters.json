@@ -104,11 +104,11 @@
                 },
                 {
                   "ruleId": "930120",
-                  "enabledState": "Enabled",
+                  "enabledState": "Disabled",
                   "action": "AnomalyScoring",
                   "exclusions": [
                       {
-                          "matchVariable": "QueryStringArgNames",
+                          "matchVariable": "RequestBodyJsonArgNames",
                           "selectorMatchOperator": "Contains",
                           "selector": "fields"
                       }
