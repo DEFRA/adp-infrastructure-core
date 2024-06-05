@@ -23,7 +23,14 @@ param createdDate string = utcNow('yyyy-MM-dd')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
 var searchServiceName = toLower(searchService.name)
+@description('Required. The name of the AAD admin managed identity.')
+param managedIdentityName string
 
+var managedIdentityTags = {
+  Name: managedIdentityName
+  Purpose: 'ADP OPEN AI Managed Identity'
+  Tier: 'Shared'
+}
 var customTags = {
   Name: searchServiceName
   Location: location
@@ -45,12 +52,22 @@ var privateDnsZoneName = toLower('${privateDnsZone.prefix}.privatelink.search.wi
 @description('Required. Search Service UserGroup id.')
 param searchServiceUserGroupId string
 
+
+module openAiUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
+  name: 'managed-identity-${deploymentDate}'
+  params: {
+    name: toLower(managedIdentityName)
+    tags: union(defaultTags, managedIdentityTags)
+    lock: 'CanNotDelete'
+  }
+}
+
 resource privateDnsZoneResource 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
   name: privateDnsZoneName
   scope: resourceGroup(privateDnsZone.resourceGroup)
 }
 
-module searchServiceDeployment 'br/avm:search/search-service:0.4.2' = {
+module searchServiceDeployment './module/main.bicep' = {
   name: 'search-service-${deploymentDate}'
   params: {
     name: searchServiceName
@@ -80,7 +97,9 @@ module searchServiceDeployment 'br/avm:search/search-service:0.4.2' = {
       }
     ]    
     managedIdentities: {
-      systemAssigned: true
+      userAssignedResourceIds: [
+        openAiUserMi.outputs.resourceId
+      ]
     }
     privateEndpoints: [
       {
@@ -110,7 +129,7 @@ module sharedPrivateLink '.bicep/shared-private-link.bicep' = {
 module openAiRbac '.bicep/open-ai-rbac.bicep' = {
   name: 'open-ai-rbac-${deploymentDate}'
   params: {
-    principalId: searchServiceDeployment.outputs.systemAssignedMIPrincipalId
+    principalId: openAiUserMi.outputs.principalId
     openAiName: searchService.openAiName
   }
 }

@@ -8,6 +8,8 @@ param searchService = {
   openAiName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_openai }}#{{ nc_instance_regionid }}01'
 }
 
+param managedIdentityName = '#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01-search-service'
+
 param privateDnsZone = {
   prefix: '#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}04'
   resourceGroup: '#{{ dnsResourceGroup }}'
