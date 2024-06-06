@@ -340,7 +340,7 @@ extends:
                   azureCLIScriptType: pscore
                   path: 'infra/core/env/scripts/Set-SecondaryEventHubConfig.ps1'
                   scriptArguments: >
-                    -ImportConfigDataScript '$(Pipeline.Workspace)/s/PipelineCommonFiles/templates/powershell/Import-ConfigData.ps1'
+                    -ImportConfigDataScript '$(Pipeline.Workspace)/s/PipelineCommonFiles/templates/powershell/'
                     -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                     -Environment $(environment)
         - ${{ if eq(variables.IsFrontDoor, true) }}:  

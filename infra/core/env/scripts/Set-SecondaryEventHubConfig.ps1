@@ -51,6 +51,7 @@ try {
         "contentType": "text/plain"
     }
     #>
+    Set-Location $ImportConfigDataScript
     
     Write-Host "Setting Secondary Event Hub Address in App Configuration..."
 
@@ -60,7 +61,9 @@ try {
         "-ConfigData", '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
     )
 
-    Invoke-Expression $ImportConfigDataScript $argumentList
+    Import-ConfigData.ps1 $argumentList
+
+    # Invoke-Expression $ImportConfigDataScript $argumentList
 
     $exitCode = 0
 }
