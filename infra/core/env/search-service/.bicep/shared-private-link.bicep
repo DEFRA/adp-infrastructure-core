@@ -11,6 +11,8 @@ resource openAi 'Microsoft.CognitiveServices/accounts@2023-10-01-preview' existi
 resource searchService 'Microsoft.Search/searchServices@2023-11-01' existing = {
   name: searchServiceName
 }
+param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
+var message= guid(deploymentDate)
 
 resource sharedPrivateLinkResource 'Microsoft.Search/searchServices/sharedPrivateLinkResources@2024-03-01-preview' = {
   parent: searchService
@@ -18,6 +20,6 @@ resource sharedPrivateLinkResource 'Microsoft.Search/searchServices/sharedPrivat
   properties: {
     privateLinkResourceId: openAi.id
     groupId: 'openai_account'
-    requestMessage: 'Please approve this request'
+    requestMessage: 'Please approve request id ${message}'
   }
 }

@@ -107,13 +107,13 @@ module searchServiceDeployment './module/main.bicep' = {
   }
 }
 
-// module sharedPrivateLink '.bicep/shared-private-link.bicep' = {
-//   name: 'shared-private-link-${deploymentDate}'
-//   params: {
-//     searchServiceName: searchServiceName
-//     openAiName: searchService.openAiName
-//   }
-// }
+module sharedPrivateLink '.bicep/shared-private-link.bicep' = {
+  name: 'shared-private-link-${deploymentDate}'
+  params: {
+    searchServiceName: searchServiceName
+    openAiName: searchService.openAiName
+  }
+}
 
 module openAiRbac '.bicep/open-ai-rbac.bicep' = {
   name: 'open-ai-rbac-${deploymentDate}'
