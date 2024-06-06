@@ -51,7 +51,7 @@
     "defraApprovedIPcustomRule": {
       "value": [
         {
-          "name": "Defra Approved IP",
+          "name": "DefraApprovedIP",
           "enabledState": "Enabled",
           "priority": 200,
           "ruleType": "MatchRule",
