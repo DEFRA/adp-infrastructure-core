@@ -334,6 +334,16 @@ extends:
                     -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                     -ConfigDataFilePath "$(Build.SourcesDirectory)/self/infra/core/env/app-configuration/config-data/config-data.json"
                     -Label "adp-platform"
+                - name: Add Secondary Event Hub App Configuration Key Value
+                  type: 'script'
+                  scriptType: AzureCLI
+                  azureCLIScriptType: pscore
+                  path: 'infra/core/env/scripts/Set-SecondaryEventHubConfig.ps1'
+                  scriptArguments: >
+                    -ResourceGroupName $(ResourceGroupName)
+                    -ImportConfigDataScript '$(Pipeline.Workspace)/s/PipelineCommonFiles/templates/powershell/Import-ConfigData.ps1'
+                    -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                    -Environment $(environment)
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
             deployments:
