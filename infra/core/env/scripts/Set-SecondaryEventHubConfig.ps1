@@ -16,7 +16,11 @@ param(
     [Parameter(Mandatory)]
     [string] $AppConfigName,
     [Parameter(Mandatory)]
-    [string] $Environment
+    [string] $SendFluxNotificationsToSecondEventHub,
+    [Parameter(Mandatory)]
+    [string] $Label,
+    [Parameter(Mandatory)]
+    [string] $ConfigData
 )
 
 Set-StrictMode -Version 3.0
@@ -39,7 +43,7 @@ if ($enableDebug) {
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
 Write-Debug "${functionName}:ImportConfigDataScript=$ImportConfigDataScript"
 Write-Debug "${functionName}:AppConfigName=$AppConfigName"
-Write-Debug "${functionName}:Environment=$Environment"
+Write-Debug "${functionName}:SendFluxNotificationsToSecondEventHub=$SendFluxNotificationsToSecondEventHub"
 
 try {
 
@@ -51,22 +55,13 @@ try {
         "contentType": "text/plain"
     }
     #>
-    if ($Environment -eq "dev") {
+    if ($SendFluxNotificationsToSecondEventHub -eq "true") {
         Set-Location $ImportConfigDataScript
     
         Write-Host "Setting Secondary Event Hub Address in App Configuration..."
 
-        # $argumentList = @(
-        #     "-Label", "testaa",
-        #     "-AppConfigName", "$AppConfigName",
-        #     "-ConfigData", '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
-        # )
-
-        ./templates/powershell/Import-ConfigData.ps1 -Label "testaa" -AppConfigName $AppConfigName -ConfigData '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
-
-        # ./Import-ConfigData.ps1 $argumentList
-
-        # Invoke-Expression $ImportConfigDataScript $argumentList
+        ./templates/powershell/Import-ConfigData.ps1 -Label $Label -AppConfigName $AppConfigName -ConfigData $ConfigData
+        # ./templates/powershell/Import-ConfigData.ps1 -Label "testaa" -AppConfigName $AppConfigName -ConfigData '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
     } else {
         Write-Host "Secondary Event Hub Address is not set in App Configuration for $Environment environment"
     }
