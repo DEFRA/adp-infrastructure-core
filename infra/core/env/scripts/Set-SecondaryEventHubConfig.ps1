@@ -59,7 +59,7 @@ try {
 
     $argumentList = @(
         "-Label", "testaa",
-        "-AppConfigName", $AppConfigName,
+        "-AppConfigName", "$AppConfigName",
         "-ConfigData", '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
     )
 
