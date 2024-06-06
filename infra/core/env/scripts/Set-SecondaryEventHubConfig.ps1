@@ -52,6 +52,8 @@ try {
     }
     #>
     Set-Location $ImportConfigDataScript
+
+    Get-ChildItem
     
     Write-Host "Setting Secondary Event Hub Address in App Configuration..."
 
