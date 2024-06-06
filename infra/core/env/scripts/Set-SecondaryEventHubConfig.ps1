@@ -2,17 +2,25 @@
 .SYNOPSIS
 Sets the secondary event hub address key value pair in app configuration
 .DESCRIPTION
-Sets the secondary event hub address key value pair in app configuration 
-.PARAMETER ResourceGroupName
-Mandatory. Resource Group Name.
+Sets the secondary event hub address key value pair in app configuration if SendFluxNotificationsToSecondEventHub is true.
+.PARAMETER ImportConfigDataScriptPath
+Mandatory. Import Config Data Script Path.
+.PARAMETER AppConfigName
+Mandatory. App Configuration Name.
+.PARAMETER SendFluxNotificationsToSecondEventHub
+Mandatory. Send Flux Notifications To Second Event Hub.
+.PARAMETER Label
+Mandatory. Label.
+.PARAMETER ConfigData
+Mandatory. Config Data.
 .EXAMPLE
-.\Set-SecondaryEventHubConfig.ps1 -ResourceGroupName <ResourceGroupName>
+.\Set-SecondaryEventHubConfig.ps1 -ImportConfigDataScriptPath <ImportConfigDataScriptPath> -AppConfigName <AppConfigName> -SendFluxNotificationsToSecondEventHub <SendFluxNotificationsToSecondEventHub> -Label <Label> -ConfigData <ConfigData>
 #> 
 
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)]
-    [string] $ImportConfigDataScript,
+    [string] $ImportConfigDataScriptPath,
     [Parameter(Mandatory)]
     [string] $AppConfigName,
     [Parameter(Mandatory)]
@@ -41,29 +49,20 @@ if ($enableDebug) {
 }
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
-Write-Debug "${functionName}:ImportConfigDataScript=$ImportConfigDataScript"
+Write-Debug "${functionName}:ImportConfigDataScriptPath=$ImportConfigDataScriptPath"
 Write-Debug "${functionName}:AppConfigName=$AppConfigName"
 Write-Debug "${functionName}:SendFluxNotificationsToSecondEventHub=$SendFluxNotificationsToSecondEventHub"
 
 try {
 
-    <#
-    {
-        "key": "address",
-        "value": "{\"uri\":\"https://#{{ ssvEventHub2ConnectionStringKeyVault }}.vault.azure.net/secrets/#{{ environment }}#{{ nc_instance_regionid }}0#{{ environmentId }}-ADP-EVENTHUB-CONNECTION\"}",
-        "label": "adp-platform-secondary-eventhub",
-        "contentType": "text/plain"
-    }
-    #>
     if ($SendFluxNotificationsToSecondEventHub -eq "true") {
-        Set-Location $ImportConfigDataScript
+        Write-Host "Set location to Import Config Data Script Path..."
+        Set-Location $ImportConfigDataScriptPath
     
         Write-Host "Setting Secondary Event Hub Address in App Configuration..."
-
         ./templates/powershell/Import-ConfigData.ps1 -Label $Label -AppConfigName $AppConfigName -ConfigData $ConfigData
-        # ./templates/powershell/Import-ConfigData.ps1 -Label "testaa" -AppConfigName $AppConfigName -ConfigData '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
     } else {
-        Write-Host "Secondary Event Hub Address is not set in App Configuration for $Environment environment"
+        Write-Host "Secondary Event Hub Address is not set required in App Configuration."
     }
 
     $exitCode = 0

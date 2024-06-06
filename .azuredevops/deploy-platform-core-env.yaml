@@ -65,7 +65,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: aa/sendFluxNotificationsTo2EventHubs
       
            
       
@@ -340,11 +340,11 @@ extends:
                   azureCLIScriptType: pscore
                   path: 'infra/core/env/scripts/Set-SecondaryEventHubConfig.ps1'
                   scriptArguments: >
-                    -ImportConfigDataScript '$(Pipeline.Workspace)/s/PipelineCommonFiles/'
+                    -ImportConfigDataScriptPath '$(Pipeline.Workspace)/s/PipelineCommonFiles/'
                     -Label "adp-platform-secondary-eventhub"
                     -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                     -ConfigData '[{"key": "address", "value": "{\"uri\":\"https://$(ssvEventHubConnectionStringKeyVault).vault.azure.net/secrets/$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-EVENTHUB-CONNECTION\"}", "label": "adp-platform-secondary-eventhub", "contentType": "text/plain" }]'
-                    -SendFluxNotificationsToSecondEventHub "true"
+                    -SendFluxNotificationsToSecondEventHub "$(sendFluxNotificationsToSecondEventHub)"
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
             deployments:
