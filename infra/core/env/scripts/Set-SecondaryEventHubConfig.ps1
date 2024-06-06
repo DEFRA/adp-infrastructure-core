@@ -63,7 +63,7 @@ try {
     #     "-ConfigData", '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
     # )
 
-    ./Import-ConfigData.ps1 -Label "testaa" -AppConfigName $AppConfigName -ConfigData '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
+    ./templates/powershell/Import-ConfigData.ps1 -Label "testaa" -AppConfigName $AppConfigName -ConfigData '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
 
     # ./Import-ConfigData.ps1 $argumentList
 
