@@ -51,23 +51,25 @@ try {
         "contentType": "text/plain"
     }
     #>
-    Set-Location $ImportConfigDataScript
-
-    Get-ChildItem
+    if ($Environment -eq "dev") {
+        Set-Location $ImportConfigDataScript
     
-    Write-Host "Setting Secondary Event Hub Address in App Configuration..."
+        Write-Host "Setting Secondary Event Hub Address in App Configuration..."
 
-    # $argumentList = @(
-    #     "-Label", "testaa",
-    #     "-AppConfigName", "$AppConfigName",
-    #     "-ConfigData", '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
-    # )
+        # $argumentList = @(
+        #     "-Label", "testaa",
+        #     "-AppConfigName", "$AppConfigName",
+        #     "-ConfigData", '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
+        # )
 
-    ./templates/powershell/Import-ConfigData.ps1 -Label "testaa" -AppConfigName $AppConfigName -ConfigData '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
+        ./templates/powershell/Import-ConfigData.ps1 -Label "testaa" -AppConfigName $AppConfigName -ConfigData '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
 
-    # ./Import-ConfigData.ps1 $argumentList
+        # ./Import-ConfigData.ps1 $argumentList
 
-    # Invoke-Expression $ImportConfigDataScript $argumentList
+        # Invoke-Expression $ImportConfigDataScript $argumentList
+    } else {
+        Write-Host "Secondary Event Hub Address is not set in App Configuration for $Environment environment"
+    }
 
     $exitCode = 0
 }
