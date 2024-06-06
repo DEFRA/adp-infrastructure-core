@@ -10,9 +10,7 @@
                 "users" : #{{ noescape(platformAccessAADGroupOwners) }}
             },
             "Members": {
-                "groups" : [
-                    "AG-Azure-CDO-SND1-Contributors"
-                ]
+                "groups" : #{{ noescape(searchServiceUserGroupMembers) }}
             }
         }
     ]
