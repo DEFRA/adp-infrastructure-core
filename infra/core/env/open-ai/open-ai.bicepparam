@@ -30,7 +30,7 @@ param deployments = [
     model: {
       format: 'OpenAI'
       name: 'gpt-4'
-      version: '0125-Preview'
+      version: '#{{ openAiGpt4Version }}'
     }
     sku: {
       name: 'Standard'
@@ -42,7 +42,7 @@ param deployments = [
     model: {
       format: 'OpenAI'
       name: 'gpt-35-turbo'
-      version: '1106'
+      version: '#{{ openAiGpt35TurboVersion }}'
     }
     sku: {
       name: 'Standard'
@@ -54,7 +54,7 @@ param deployments = [
     model: {
       format: 'OpenAI'
       name: 'text-embedding-3-large'
-      version: '1'
+      version: '#{{ openAiTextEmbedding3LargeVersion }}'
     }
     sku: {
       name: 'Standard'
@@ -66,7 +66,7 @@ param deployments = [
     model: {
       format: 'OpenAI'
       name: 'text-embedding-ada-002'
-      version: '2'
+      version: '#{{ openAiTextEmbeddingAda002Version }}'
     }
     sku: {
       name: 'Standard'
