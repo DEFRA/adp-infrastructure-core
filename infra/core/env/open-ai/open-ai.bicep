@@ -69,6 +69,7 @@ module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
       kind: 'CanNotDelete'
       name: 'CanNotDelete'
     }
+    publicNetworkAccess: 'Disabled'
     networkAcls: {
       defaultAction: 'Deny'
       bypass: 'AzureServices'      
