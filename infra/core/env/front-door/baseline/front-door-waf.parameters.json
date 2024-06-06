@@ -60,12 +60,12 @@
               "matchVariable": "RemoteAddr",
               "selector": null,
               "operator": "IPMatch",
-              "negateCondition": true,
+              "negateCondition": false,
               "matchValue": #{{ noescape(customRule_DefraApprovedIP) }},
               "transforms": []
             }
           ],
-          "action": "Block"
+          "action": "Allow"
         }
       ]
     },
