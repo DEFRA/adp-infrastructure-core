@@ -23,8 +23,8 @@ param(
     [string] $ImportConfigDataScriptPath,
     [Parameter(Mandatory)]
     [string] $AppConfigName,
-    [Parameter(Mandatory)]
-    [string] $SendFluxNotificationsToSecondEventHub,
+    [Parameter(Optional)]
+    [string] $SendFluxNotificationsToSecondEventHub = "false",
     [Parameter(Mandatory)]
     [string] $Label,
     [Parameter(Mandatory)]
