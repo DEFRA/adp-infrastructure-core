@@ -482,22 +482,20 @@ extends:
                     inlineScript: |
                       $groupId = (Get-AzADGroup -DisplayName '$(searchServiceUserGroup)').id
                       Write-Host "##vso[task.setvariable variable=searchServiceUserGroupId;]$groupId"
-                  - name: 'Check Private Endpoint Connection'
-                    type: 'script'
-                    scriptType: AzurePowerShell
+                  - displayName: 'Check Private Endpoint Connection'
+                    type: AzurePowerShell
                     serviceConnectionVariableName: "subscriptionName"
-                    path: 'infra/core/env/scripts/PrivateEndpointConnection.ps1'
+                    scriptPath: 'infra/core/env/scripts/PrivateEndpointConnection.ps1'
                     scriptArguments: > 
                       -OpenAiName '$(infraResourceNamePrefix)$(nc_resource_openai)$(nc_instance_regionid)01'
                       -ResourceGroupName '$(servicesResourceGroup)'
                       -SearchServiceName '$(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01'
                       -Command 'Check'
                   postDeployScriptsList:
-                  - name: 'Approve Private Endpoint Connection'
-                    type: 'script'
-                    scriptType: AzurePowerShell
+                  - displayName: 'Approve Private Endpoint Connection'
+                    type: AzurePowerShell
                     serviceConnectionVariableName: "subscriptionName"
-                    path: 'infra/core/env/scripts/PrivateEndpointConnection.ps1'
+                    scriptPath: 'infra/core/env/scripts/PrivateEndpointConnection.ps1'
                     scriptArguments: > 
                       -OpenAiName '$(infraResourceNamePrefix)$(nc_resource_openai)$(nc_instance_regionid)01'
                       -ResourceGroupName '$(servicesResourceGroup)'
