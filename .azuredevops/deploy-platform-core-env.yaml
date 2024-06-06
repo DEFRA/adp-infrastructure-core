@@ -482,3 +482,14 @@ extends:
                     inlineScript: |
                       $groupId = (Get-AzADGroup -DisplayName '$(searchServiceUserGroup)').id
                       Write-Host "##vso[task.setvariable variable=searchServiceUserGroupId;]$groupId"
+                  postDeployScriptsList:
+                  - displayName: 'Approve Private link'
+                    type: AzurePowerShell
+                    inlineScript: |
+                      $openAiName = "$(infraResourceNamePrefix)$(nc_resource_openai)$(nc_instance_regionid)01"
+                      $rg = "$(servicesResourceGroup)"
+                      $searchServiceName = "$(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01"
+                      $resourceProperties = Get-AzResource -ResourceGroupName $rg -Name $openAiName  -ExpandProperties
+                      $privateEndpointConnections = $resourceProperties.properties.privateEndpointConnections
+                      $objList = $privateEndpointConnections | Where-Object -Property name -match $searchServiceName | Where-Object { $_.properties.privateLinkServiceConnectionState.status -eq 'Pending' }
+                      $objList | ForEach-Object { Approve-AzPrivateEndpointConnection -ResourceId $_.id}
