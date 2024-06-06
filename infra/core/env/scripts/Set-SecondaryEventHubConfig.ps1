@@ -11,8 +11,6 @@ Mandatory. Resource Group Name.
 
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory)] 
-    [string] $ResourceGroupName,
     [Parameter(Mandatory)]
     [string] $ImportConfigDataScript,
     [Parameter(Mandatory)]
@@ -39,7 +37,6 @@ if ($enableDebug) {
 }
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
-Write-Debug "${functionName}:ResourceGroupName=$ResourceGroupName"
 Write-Debug "${functionName}:ImportConfigDataScript=$ImportConfigDataScript"
 Write-Debug "${functionName}:AppConfigName=$AppConfigName"
 Write-Debug "${functionName}:Environment=$Environment"
