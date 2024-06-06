@@ -74,6 +74,12 @@ module searchServiceDeployment './module/main.bicep' = {
         principalType: 'Group'
       }
     ]
+    disableLocalAuth: false
+    authOptions: {
+      aadOrApiKey: {
+        aadAuthFailureMode: 'http401WithBearerChallenge'
+      }
+    }
     sku: searchService.skuName
     replicaCount: searchService.replicaCount
     diagnosticSettings: [
