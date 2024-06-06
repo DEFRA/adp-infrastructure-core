@@ -63,7 +63,7 @@ try {
         "-ConfigData", '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
     )
 
-    Import-ConfigData.ps1 $argumentList
+    ./Import-ConfigData.ps1 $argumentList
 
     # Invoke-Expression $ImportConfigDataScript $argumentList
 
