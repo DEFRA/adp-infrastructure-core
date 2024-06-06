@@ -26,3 +26,5 @@ param monitoringWorkspace = {
   name: '#{{ logAnalyticsWorkspace }}'
   resourceGroup: '#{{ servicesResourceGroup }}'
 }
+
+param privateLinkServiceConnectionExists = '#{{ privateLinkServiceConnectionExists }}'
