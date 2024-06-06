@@ -57,13 +57,15 @@ try {
     
     Write-Host "Setting Secondary Event Hub Address in App Configuration..."
 
-    $argumentList = @(
-        "-Label", "testaa",
-        "-AppConfigName", "$AppConfigName",
-        "-ConfigData", '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
-    )
+    # $argumentList = @(
+    #     "-Label", "testaa",
+    #     "-AppConfigName", "$AppConfigName",
+    #     "-ConfigData", '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
+    # )
 
-    ./Import-ConfigData.ps1 $argumentList
+    ./Import-ConfigData.ps1 -Label "testaa" -AppConfigName $AppConfigName -ConfigData '[{"key": "TESTAA", "value": "TESTVALUE", "label": "testaa", "contentType": "text/plain" }]'
+
+    # ./Import-ConfigData.ps1 $argumentList
 
     # Invoke-Expression $ImportConfigDataScript $argumentList
 
