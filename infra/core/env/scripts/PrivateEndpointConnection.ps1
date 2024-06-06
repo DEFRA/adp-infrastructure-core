@@ -64,10 +64,10 @@ try {
         $objList = $privateEndpointConnections | Where-Object -Property name -match $SearchServiceName 
         if ($objList) {
             Write-Host "Private Endpoint Connection exists"
-            Write-Host "##vso[task.setvariable variable=privateLinkServiceConnectionExists;]$true"
+            Write-Host "##vso[task.setvariable variable=privateLinkServiceConnectionExists;]true"
         }
         else {
-            Write-Host "##vso[task.setvariable variable=privateLinkServiceConnectionExists;]$false"
+            Write-Host "##vso[task.setvariable variable=privateLinkServiceConnectionExists;]false"
             Write-Host "Private Endpoint Connection does not exist"
         }
     }

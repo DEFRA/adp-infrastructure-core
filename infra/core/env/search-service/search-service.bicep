@@ -23,7 +23,7 @@ var searchServiceName = toLower(searchService.name)
 @description('Required. The name of the AAD admin managed identity.')
 param managedIdentityName string
 
-param privateLinkServiceConnectionExists bool = false
+param privateLinkServiceConnectionExists string = 'false'
 
 var managedIdentityTags = {
   Name: managedIdentityName
@@ -115,7 +115,7 @@ module searchServiceDeployment './module/main.bicep' = {
   }
 }
 
-module sharedPrivateLink '.bicep/shared-private-link.bicep' = if(!privateLinkServiceConnectionExists) {
+module sharedPrivateLink '.bicep/shared-private-link.bicep' = if(privateLinkServiceConnectionExists == 'false') {
   name: 'shared-private-link-${deploymentDate}'
   params: {
     searchServiceName: searchServiceName
