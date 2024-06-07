@@ -28,6 +28,7 @@ parameters:
       - Front Door - All
       - Front Door - Core
       - Front Door - WAF Baseline
+      - Front Door - WAF ADP Portal
       - Application - All
       - Application - App Configuration
       - Application - Apps Container Registry
@@ -118,6 +119,8 @@ variables:
     value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - Core')) }}
   - name: IsFrontDoorWAFBaseline
     value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF Baseline')) }}
+  - name: IsFrontDoorWAFAdpPortal
+    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF ADP Portal')) }}
 
   - name: IsApplication
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application')) }}
@@ -351,8 +354,14 @@ extends:
                   path: infra/core/env/front-door
                   resourceGroupName: $(cdnResourceGroup)
               - ${{ if eq(variables.IsFrontDoorWAFBaseline, true) }}: 
-                - name: azure-waf-baseline
+                - name: front-door-waf
                   path: infra/core/env/front-door
+                  parameterFilePath: infra/core/env/front-door/baseline
+                  resourceGroupName: $(cdnResourceGroup)
+              - ${{ if eq(variables.IsFrontDoorWAFAdpPortal, true) }}:               
+                - name: front-door-waf
+                  path: infra/core/env/front-door
+                  parameterFilePath: infra/core/env/front-door/adp-portal
                   resourceGroupName: $(cdnResourceGroup)
                   
         - ${{ if eq(variables.IsApplication, true) }}:  

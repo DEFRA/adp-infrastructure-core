@@ -7,6 +7,7 @@ param server = {
   skuName: '#{{ postgreSqlSkuName }}'
   highAvailability: '#{{ postgreSqlHighAvailability }}'
   availabilityZone: '#{{ postgreSqlAvailabilityZone }}'
+  administratorLogin: '#{{ postgreSqlAdministratorUserName }}'
 }
 param vnet = {
   name: '#{{ virtualNetworkName }}'
@@ -25,6 +26,11 @@ param platformKeyVault = {
   name: '#{{ ssvInfraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_shared_instance_regionid }}01'
   subscriptionId: '#{{ ssvSubscriptionId }}'
   resourceGroup: '#{{ ssvSharedResourceGroup }}'
+}
+
+param applicationKeyVault = {
+  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}01'
+  resourceGroup: '#{{ servicesResourceGroup }}'
 }
 
 param secrets = [

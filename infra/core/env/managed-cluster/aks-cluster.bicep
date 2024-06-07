@@ -118,6 +118,8 @@ var systemNodePool = {
   ]
 }
 
+var contributorRoleId = 'b24988ac-6180-42a0-ab88-20f7382dd24c'
+
 module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'aks-cluster-mi-${deploymentDate}'
   params: {
@@ -481,6 +483,30 @@ module clusterRoleAssignment '.bicep/cluster-rbac.bicep' = {
   params: {
     clusterName: cluster.name
     principalId: cluster.adminAadGroupObjectId
+  }
+}
+
+module kubeletMIContributorRoleAssignment '.bicep/subscription-rbac.bicep' = {
+  name: 'kubeletmi-subscription-contributor-${deploymentDate}'
+  scope: subscription()
+  dependsOn: [
+    deployAKS
+  ]
+  params: {
+    principalId: deployAKS.outputs.kubeletidentityObjectId
+    roleDefinitionId: contributorRoleId
+  }
+}
+
+module controlPlaneMIContributorRoleAssignment '.bicep/subscription-rbac.bicep' = {
+  name: 'aks-cluster-subscription-contributor-${deploymentDate}'
+  scope: subscription()
+  dependsOn: [
+    managedIdentity
+  ]
+  params: {
+    principalId: managedIdentity.outputs.principalId
+    roleDefinitionId: contributorRoleId
   }
 }
 
