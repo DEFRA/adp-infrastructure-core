@@ -3,7 +3,7 @@
 Sets the secondary event hub address key value pair in app configuration
 .DESCRIPTION
 Sets the secondary event hub address key value pair in app configuration if SendFluxNotificationsToSecondEventHub is true.
-.PARAMETER ImportConfigDataScriptPath
+.PARAMETER CommonFilesDownloadPath
 Mandatory. Import Config Data Script Path.
 .PARAMETER AppConfigName
 Mandatory. App Configuration Name.
@@ -14,13 +14,13 @@ Mandatory. Label.
 .PARAMETER ConfigData
 Mandatory. Config Data.
 .EXAMPLE
-.\Set-SecondaryEventHubConfig.ps1 -ImportConfigDataScriptPath <ImportConfigDataScriptPath> -AppConfigName <AppConfigName> -SendFluxNotificationsToSecondEventHub <SendFluxNotificationsToSecondEventHub> -Label <Label> -ConfigData <ConfigData>
+.\Set-SecondaryEventHubConfig.ps1 -CommonFilesDownloadPath <CommonFilesDownloadPath> -AppConfigName <AppConfigName> -SendFluxNotificationsToSecondEventHub <SendFluxNotificationsToSecondEventHub> -Label <Label> -ConfigData <ConfigData>
 #> 
 
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)]
-    [string] $ImportConfigDataScriptPath,
+    [string] $CommonFilesDownloadPath,
     [Parameter(Mandatory)]
     [string] $AppConfigName,
     [Parameter(Mandatory)]
@@ -49,20 +49,20 @@ if ($enableDebug) {
 }
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
-Write-Debug "${functionName}:ImportConfigDataScriptPath=$ImportConfigDataScriptPath"
+Write-Debug "${functionName}:CommonFilesDownloadPath=$CommonFilesDownloadPath"
 Write-Debug "${functionName}:AppConfigName=$AppConfigName"
 Write-Debug "${functionName}:SendFluxNotificationsToSecondEventHub=$SendFluxNotificationsToSecondEventHub"
 
 try {
 
     if ($SendFluxNotificationsToSecondEventHub -eq "true") {
-        Write-Host "Set location to Import Config Data Script Path..."
-        Set-Location $ImportConfigDataScriptPath
+        Write-Host "Set location to Common Files Download Path..."
+        Set-Location $CommonFilesDownloadPath
     
         Write-Host "Setting Secondary Event Hub Address in App Configuration..."
         ./templates/powershell/Import-ConfigData.ps1 -Label $Label -AppConfigName $AppConfigName -ConfigData $ConfigData
     } else {
-        Write-Host "Secondary Event Hub Address is not set required in App Configuration."
+        Write-Host "Secondary Event Hub Address is not set required."
     }
 
     $exitCode = 0
