@@ -27,7 +27,7 @@
       "value": [        
       ]
     },
-    "paloIPWAFcustomRule": {
+    "defraApprovedIPcustomRule": {
       "value": [
         {
           "name": "PaloIPWAF",
@@ -40,7 +40,7 @@
               "selector": null,
               "operator": "IPMatch",
               "negateCondition": true,
-              "matchValue": #{{ noescape(customRule_PaloIpWAF) }},
+              "matchValue": #{{ noescape(customRule_DefraApprovedIp) }},
               "transforms": []
             }
           ],
@@ -48,7 +48,7 @@
         }
       ]
     },
-    "defraApprovedIPcustomRule": {
+    "fcpDALcustomRule": {
       "value": [
         {
           "name": "DefraApprovedIP",
@@ -61,9 +61,21 @@
               "selector": null,
               "operator": "IPMatch",
               "negateCondition": false,
-              "matchValue": #{{ noescape(customRule_DefraApprovedIP) }},
+              "matchValue": #{{ noescape(customRule_LogicappServiceIpfcpDAL) }},
               "transforms": []
-            }
+            },
+            {
+              "matchVariable": "RequestUri",
+              "selector": null,
+              "operator": "Contains",
+              "negateCondition": false,
+              "matchValue": [
+                  "fcp-data-access-layer-api"
+              ],
+              "transforms": [
+                  "Lowercase"
+              ]
+          }
           ],
           "action": "Allow"
         }
