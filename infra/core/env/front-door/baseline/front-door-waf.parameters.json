@@ -30,7 +30,7 @@
     "defraApprovedIPcustomRule": {
       "value": [
         {
-          "name": "PaloIPWAF",
+          "name": "DefraApprovedIPRule",
           "enabledState": "Enabled",
           "priority": 300,
           "ruleType": "MatchRule",
@@ -51,7 +51,7 @@
     "fcpDALcustomRule": {
       "value": [
         {
-          "name": "DefraApprovedIP",
+          "name": "fcpDALcustomRule",
           "enabledState": "Enabled",
           "priority": 200,
           "ruleType": "MatchRule",
