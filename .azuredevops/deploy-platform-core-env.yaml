@@ -269,25 +269,25 @@ extends:
                         -SubscriptionName $(subscriptionName)
                         -TenantId $(tenantId)
               - ${{ if eq(variables.IsManagedClusterCluster, true) }}:      
-                # - name: aks-cluster
-                #   path: infra/core/env/managed-cluster
-                #   resourceGroupName: $(aksResourceGroup)
-                #   postDeployScriptsList:
-                #     - displayName: 'Process Output Variable'
-                #       type: PowerShell
-                #       inlineScript: |
-                #         $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
-                #         Write-Host "##vso[task.setvariable variable=clusterOidc;]$($output.oidcIssuerUrl.value)"
-                #         Write-Host "##vso[task.setvariable variable=appConfigMiObjectId;]$($output.appConfigMiObjectId.value)"
-                #     - displayName: Add Cluster Details to Config Service
-                #       scriptPath: templates/powershell/Import-ConfigData.ps1
-                #       type: AzureCLI
-                #       AzureCLIScriptType: pscore
-                #       scriptRepo: PipelineCommonFiles
-                #       scriptArguments: >
-                #         -Label "adp-platform"
-                #         -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
-                #         -ConfigData '[{"key": "CLUSTER_OIDC_ISSUER_URL", "value": "$(clusterOidc)", "label": "adp-platform", "contentType": "text/plain" }]'
+                - name: aks-cluster
+                  path: infra/core/env/managed-cluster
+                  resourceGroupName: $(aksResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: 'Process Output Variable'
+                      type: PowerShell
+                      inlineScript: |
+                        $output = '$(azureDeploymentOutputs)' | ConvertFrom-Json
+                        Write-Host "##vso[task.setvariable variable=clusterOidc;]$($output.oidcIssuerUrl.value)"
+                        Write-Host "##vso[task.setvariable variable=appConfigMiObjectId;]$($output.appConfigMiObjectId.value)"
+                    - displayName: Add Cluster Details to Config Service
+                      scriptPath: templates/powershell/Import-ConfigData.ps1
+                      type: AzureCLI
+                      AzureCLIScriptType: pscore
+                      scriptRepo: PipelineCommonFiles
+                      scriptArguments: >
+                        -Label "adp-platform"
+                        -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                        -ConfigData '[{"key": "CLUSTER_OIDC_ISSUER_URL", "value": "$(clusterOidc)", "label": "adp-platform", "contentType": "text/plain" }]'
                 - name: event-hub-secret-rbac
                   serviceConnectionVariableName: ssvServiceConnection
                   path: infra/core/env/event-hub
