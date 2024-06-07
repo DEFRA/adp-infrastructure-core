@@ -21,7 +21,7 @@ param monitoringPublisherGroup string
 
 var roleAssignments = [
   {
-    roleDefinitionIdOrName: 'Monitoring Metrics Publisher'
+    roleDefinitionIdOrName: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '3913510d-42f4-4e42-8a64-420c390055eb') // Monitoring Metrics Publisher
     description: 'Monitoring Metrics Publisher Role Assignment'
     principalId: monitoringPublisherGroup
     principalType: 'Group'
