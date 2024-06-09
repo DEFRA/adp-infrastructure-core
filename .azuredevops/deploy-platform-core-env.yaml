@@ -344,7 +344,7 @@ extends:
               - ${{ if eq(variables.IsFrontDoorWAFBaseline, true) }}: 
                 - name: front-door-waf
                   path: infra/core/env/front-door
-                  parameterFilePath: infra/core/env/front-door/baseline
+                  parameterFilePath: infra/core/env/front-door/baseline/internal
                   resourceGroupName: $(cdnResourceGroup)
               - ${{ if eq(variables.IsFrontDoorWAFAdpPortal, true) }}:               
                 - name: front-door-waf
