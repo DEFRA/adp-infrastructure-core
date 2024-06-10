@@ -62,7 +62,7 @@ try {
         Write-Host "Setting Secondary Event Hub Address in App Configuration..."
         ./templates/powershell/Import-ConfigData.ps1 -Label $Label -AppConfigName $AppConfigName -ConfigData $ConfigData
     } else {
-        Write-Host "Secondary Event Hub Address is not set required."
+        Write-Host "Secondary Event Hub Address is not required."
     }
 
     $exitCode = 0
