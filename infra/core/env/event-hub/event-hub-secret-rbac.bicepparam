@@ -6,8 +6,7 @@ param eventHubNamespace = {
   connectionSecretName: '#{{ environment }}#{{ nc_instance_regionid }}0#{{ environmentId }}-ADP-EVENTHUB-CONNECTION'
 }
 
-// param appConfigMiObjectId = '#{{ appConfigMiObjectId }}'
-param appConfigMiObjectId = '2eb6fd3a-8dec-4634-8b48-512d268277ae'
+param appConfigMiObjectId = '#{{ appConfigMiObjectId }}'
 
 param eventHub = {
   name: 'flux-events-#{{ eventHubEnvironment }}'
@@ -20,10 +19,3 @@ param secondEventHub = {
   keyVaultName: '#{{ ssvSecondEventHubConnectionStringKeyVault }}'
   resourceGroup: '#{{ ssvSecondEventHubConnectionStringKeyVaultRg }}'
 }
-
-// param secondEventHub = {
-//   sendFluxNotificationsToSecondEventHub: true
-//   name: 'flux-events-TST'
-//   keyVaultName: 'SSVADPTSTVT3401'
-//   resourceGroup: 'SSVADPTSTRG3401'
-// }
