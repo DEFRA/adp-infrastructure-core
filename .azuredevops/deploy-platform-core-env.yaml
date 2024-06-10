@@ -65,7 +65,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: aa/sendFluxNotificationsTo2EventHubs
+      ref: main
       
            
       
