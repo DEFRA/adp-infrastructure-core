@@ -4,6 +4,9 @@ param wafPolicyName string
 @description('Optional. The list of custom rule sets to configure on the WAF.')
 param customRules array = []
 
+@description('Optional. The list of custom rule sets to configure on the WAF.')
+param paloIPWAFcustomRule array = []
+
 @description('Optional. The list of managed rule sets to configure on the WAF (DRS).')
 param managedRuleSets array = []
 
@@ -15,6 +18,12 @@ param policySettings object = {
 
 @description('Required. Environment name.')
 param environment string
+
+@description('Optional. Deploy the ADP Portal WAF Policy.')
+param deployWAF string = 'true'
+
+@description('Required. Custom Block Response Body')
+param customBlockResponseBody string 
 
 @description('Required. Purpose Tag.')
 param purpose string
@@ -39,10 +48,9 @@ var frontDoorWafTags = {
   Purpose: purpose
   Tier: 'Shared'
 }
+var customRule = union(customRules,paloIPWAFcustomRule)
 
-var customBlockResponseBody = '<!DOCTYPE html> <html> <head> <title> Defra - 403 Forbidden</title> <meta name="viewport" content="width=device-width, initial-scale=1"> <style> body {background-color:#ffffff;background-repeat:no-repeat;background-position:top left;background-attachment:fixed;} h1{text-align:center;font-family:Arial, sans-serif;color:#ff0a0a;background-color:#ffffff;} p {text-align:left;font-family:Georgia, serif;font-size:14px;font-style:normal;font-weight:normal;color:#000000;background-color:#ffffff;} </style> </head> <body> <h1>Unfortunately, there is a problem with your request</h1> <br /> <p><b>Your request has been blocked.</b> Please contact the site administrator or the Defra helpdesk with the following information. </p> <p></p> <p><b>Tracking Request ID</b>: {{azure-ref}}</p> </body> </html>'
-
-module frontDoorWafPolicy 'br/SharedDefraRegistry:network.front-door-web-application-firewall-policy:0.4.1' = {
+module frontDoorWafPolicy 'br/SharedDefraRegistry:network.front-door-web-application-firewall-policy:0.4.1' = if(deployWAF == 'true') {
   name: 'fdwaf-${deploymentDate}'
   params: {
     name: wafPolicyName
@@ -59,7 +67,7 @@ module frontDoorWafPolicy 'br/SharedDefraRegistry:network.front-door-web-applica
       requestBodyCheck: 'Enabled'
     }
     customRules: {
-      rules: customRules
+      rules: customRule
     }
     managedRules: {
       managedRuleSets: managedRuleSets
