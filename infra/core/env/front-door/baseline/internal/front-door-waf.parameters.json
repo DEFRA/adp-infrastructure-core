@@ -30,9 +30,9 @@
     "defraApprovedIPcustomRule": {
       "value": [
         {
-          "name": "DefraApprovedIPRule",
+          "name": "AllowDefraApprovedIPRule",
           "enabledState": "Enabled",
-          "priority": 300,
+          "priority": 1000,
           "ruleType": "MatchRule",
           "matchConditions": [
             {
@@ -51,19 +51,11 @@
     "fcpDALcustomRule": {
       "value": [
         {
-          "name": "fcpDALcustomRule",
+          "name": "AllowfcpDALcustomRule",
           "enabledState": "Enabled",
-          "priority": 200,
+          "priority": 100,
           "ruleType": "MatchRule",
           "matchConditions": [
-            {
-              "matchVariable": "RemoteAddr",
-              "selector": null,
-              "operator": "IPMatch",
-              "negateCondition": false,
-              "matchValue": #{{ noescape(customRule_LogicappServiceIpfcpDAL) }},
-              "transforms": []
-            },
             {
               "matchVariable": "RequestUri",
               "selector": null,
@@ -75,7 +67,15 @@
               "transforms": [
                   "Lowercase"
               ]
-          }
+            },            
+            {
+              "matchVariable": "RemoteAddr",
+              "selector": null,
+              "operator": "IPMatch",
+              "negateCondition": false,
+              "matchValue": #{{ noescape(customRule_LogicappServiceIpfcpDAL) }},
+              "transforms": []
+            }            
           ],
           "action": "Allow"
         }
