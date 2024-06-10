@@ -1,4 +1,4 @@
-@description('Required. The object of the PostgreSQL Flexible Server. The object must contain name,storageSizeGB and highAvailability properties.')
+@description('Required. The object of the PostgreSQL Flexible Server. The object must contain name,storageSizeGB,highAvailability and administratorLogin properties.')
 param server object
 
 @description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPostgreSql values.')
@@ -10,8 +10,11 @@ param privateDnsZone object
 @description('Required. The name of the AAD admin managed identity.')
 param managedIdentityName string
 
-@description('Required. The name of the Key vault.')
+@description('Required. The name of the Platform Key vault.')
 param platformKeyVault object
+
+@description('Required. The name of the Applications Key vault.')
+param applicationKeyVault object
 
 @description('Required. List of secrects to be Rbac to the managed identity.')
 param secrets array = []
@@ -21,12 +24,18 @@ param secrets array = []
 ])
 @description('Required. The Azure region where the resources will be deployed.')
 param location string
+
 @description('Required. Environment name.')
 param environment string
+
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
+
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
+
+param guidValue string = guid(deploymentDate)
+var administratorLoginPassword  = substring(replace(replace(guidValue, '.', '-'), '-', ''), 0, 20)
 
 var customTags = {
   Name: server.name
@@ -83,6 +92,8 @@ module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
     name: toLower(server.name)
+    administratorLogin: server.administratorLogin
+    administratorLoginPassword : administratorLoginPassword
     storageSizeGB: server.storageSizeGB
     highAvailability: server.highAvailability
     availabilityZone: server.availabilityZone
@@ -92,7 +103,7 @@ module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1
     tier: server.tier
     skuName: server.skuName
     activeDirectoryAuth:'Enabled'
-    passwordAuth: 'Disabled'
+    passwordAuth: 'Enabled'
     lock: {
       kind: 'CanNotDelete'
     }
@@ -123,6 +134,17 @@ resource dbRsgGrpRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleDefinitionId) 
     principalId: aadAdminUserMi.outputs.principalId
     principalType: 'ServicePrincipal'
+  }
+}
+
+module keyVaultSecrets '.bicep/kv-secrets.bicep' = {
+  scope: resourceGroup(applicationKeyVault.resourceGroup)
+  name: 'keyVaultSecrets'
+  params: {
+    keyVaultName: applicationKeyVault.name
+    flexibleServerName: flexibleServerDeployment.outputs.name
+    administratorLogin: server.administratorLogin
+    administratorLoginPassword: administratorLoginPassword
   }
 }
 

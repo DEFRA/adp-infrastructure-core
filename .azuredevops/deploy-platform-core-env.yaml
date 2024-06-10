@@ -28,6 +28,7 @@ parameters:
       - Front Door - All
       - Front Door - Core
       - Front Door - WAF Baseline
+      - Front Door - WAF ADP Portal
       - Application - All
       - Application - App Configuration
       - Application - Apps Container Registry
@@ -64,7 +65,9 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main     
+      ref: main
+      
+           
       
 variables:
   - name: IsAll
@@ -115,6 +118,8 @@ variables:
     value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - Core')) }}
   - name: IsFrontDoorWAFBaseline
     value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF Baseline')) }}
+  - name: IsFrontDoorWAFAdpPortal
+    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF ADP Portal')) }}
 
   - name: IsApplication
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application')) }}
@@ -143,6 +148,7 @@ extends:
     deployFromFeature: ${{ parameters.deployFromFeature }}
     filePathsForTransform: |
       **/core/env/app-configuration/config-data/config-data.json
+      **/infra/core/env/insights/aad-groups/monitoringpublishergroup.json
     groupedDeployments:
         - ${{ if eq(variables.IsNetwork, true) }}:
           - name: network
@@ -168,6 +174,13 @@ extends:
           - name: monitoring
             deployments:
               - ${{ if eq(variables.IsMonitoringInsights, true) }}:
+                - name: Create or Update AAD groups
+                  type: 'script'
+                  scriptType: AzurePowerShell
+                  serviceConnectionVariableName: ssvServiceConnection
+                  path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+                  scriptArguments: > 
+                    -AADGroupsJsonManifestPath 'infra/core/env/insights/aad-groups/monitoringpublishergroup.json'              
                 - name: component
                   path: infra/core/env/insights
                   resourceGroupName: $(servicesResourceGroup)
@@ -176,12 +189,7 @@ extends:
                     type: AzurePowerShell
                     serviceConnectionVariableName: 'ssvServiceConnection'
                     inlineScript: |
-                      $group = Get-AzADGroup -DisplayName '$(monitoringPublisherGroup)'
-                      if(-Not $group)
-                      {                     
-                        $group = New-AzADGroup -DisplayName '$(monitoringPublisherGroup)' -SecurityEnabled -MailNickname 'NA'
-                      }
-                      $groupId=$group.id                 
+                      $groupId = (Get-AzADGroup -DisplayName '$(monitoringPublisherGroup)').id
                       Write-Host "##vso[task.setvariable variable=monitoringPublisherGroup;]$groupId"
                   postDeployScriptsList:
                     - displayName: 'GetAppInsightConnectionString'
@@ -334,8 +342,14 @@ extends:
                   path: infra/core/env/front-door
                   resourceGroupName: $(cdnResourceGroup)
               - ${{ if eq(variables.IsFrontDoorWAFBaseline, true) }}: 
-                - name: azure-waf-baseline
+                - name: front-door-waf
                   path: infra/core/env/front-door
+                  parameterFilePath: infra/core/env/front-door/baseline
+                  resourceGroupName: $(cdnResourceGroup)
+              - ${{ if eq(variables.IsFrontDoorWAFAdpPortal, true) }}:               
+                - name: front-door-waf
+                  path: infra/core/env/front-door
+                  parameterFilePath: infra/core/env/front-door/adp-portal
                   resourceGroupName: $(cdnResourceGroup)
                   
         - ${{ if eq(variables.IsApplication, true) }}:  

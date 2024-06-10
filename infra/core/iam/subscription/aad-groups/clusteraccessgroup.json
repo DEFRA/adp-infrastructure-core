@@ -1,0 +1,21 @@
+{
+    "accessADGroups": [
+        {
+            "displayName": "#{{ customRoleCustomResourcesReaderGroup }}",
+            "description": "Azure AD Access group with custom read permissions cluster.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "#{{ ssvAppRegServicePrincipalName }}"
+                ],
+                "users" : #{{ noescape(platformAccessAADGroupOwners) }}
+            },
+            "Members": {
+                "groups" : [
+                    "AG-Azure-CDO-ADP-PlatformEngineers",
+                    "AAG-Users-ADP-PlatformEngineers"
+                ]
+            }
+        }    
+    ]
+}
+
