@@ -149,7 +149,7 @@
     "defraApprovedIPcustomRule": {
       "value": [
         {
-          "name": "PaloIPWAF",
+          "name": "AllowDefraApprovedIPRule",
           "enabledState": "Enabled",
           "priority": 300,
           "ruleType": "MatchRule",
