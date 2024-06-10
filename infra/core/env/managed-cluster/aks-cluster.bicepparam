@@ -89,8 +89,8 @@ param fluxConfig = {
     gitRepository: {
       syncIntervalInSeconds: 300
       timeoutInSeconds: 180
-      url: 'https://github.com/DEFRA/adp-flux-core'
-      branch: 'aa/sendFluxNotificationsTo2EventHubs'
+      url: 'https://github.com/#{{ githubOrganisation }}/adp-flux-core'
+      branch: 'main'
     }
     kustomizations: {
       timeoutInSeconds: 180
