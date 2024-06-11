@@ -220,5 +220,11 @@
     "value": "#{{ storageAccountSku }}",
     "label": "adp-platform",
     "contentType": "text/plain"
+  },
+  {
+    "key": "POWERSHELL_EXECUTER_VERSION",
+    "value": "#{{ powershellExecuterVersion }}",
+    "label": "adp-platform",
+    "contentType": "text/plain"
   }
 ]
