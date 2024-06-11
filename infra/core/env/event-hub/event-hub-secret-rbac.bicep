@@ -23,7 +23,7 @@ module eventHubSecretRbac '.bicep/keyvault-secret-rbac.bicep' = {
   }
 }
 
-module secondEventHubSecretRbac '.bicep/keyvault-secret-rbac.bicep' = if (bool(secondEventHub.sendFluxNotificationsToSecondEventHub)) {
+module secondEventHubSecretRbac '.bicep/keyvault-secret-rbac.bicep' = if (secondEventHub.sendFluxNotificationsToSecondEventHub) {
   scope: resourceGroup(secondEventHub.resourceGroup)
   name: 'secondeventhub-secret-rbac-${deploymentDate}'
   params: {
