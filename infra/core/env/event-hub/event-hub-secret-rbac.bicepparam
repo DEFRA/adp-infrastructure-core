@@ -14,7 +14,7 @@ param eventHub = {
 }
 
 param secondEventHub = {
-  sendFluxNotificationsToSecondEventHub: #{{ sendFluxNotificationsToSecondEventHub }}
+  sendFluxNotificationsToSecondEventHub: '#{{ sendFluxNotificationsToSecondEventHub }}'
   name: 'flux-events-#{{ secondEventHubEnvironment }}'
   keyVaultName: '#{{ ssvSecondEventHubConnectionStringKeyVault }}'
   resourceGroup: '#{{ ssvSecondEventHubConnectionStringKeyVaultRg }}'
