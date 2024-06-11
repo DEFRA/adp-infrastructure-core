@@ -1,7 +1,7 @@
-@description('Required. The parameter object for eventHub. The object must contain the name, eventHubName, connectionSecretName and resourceGroup values.')
+@description('Required. The parameter object for eventHub. The object must contain the name, eventHubName, eventHubConnectionSecretName and resourceGroup values.')
 param eventHubNamespace object
 
-@description('Required. The parameter object for eventHub. The object must contain the name, eventHubName, connectionSecretName and resourceGroup values.')
+@description('Required. The parameter object for eventHub. The object must contain the name and keyVaultName.')
 param eventHub object
 
 @description('Required. App Configuration Managed Identity Object id.')
@@ -20,7 +20,7 @@ resource eventHubPolicy 'Microsoft.EventHub/namespaces/eventhubs/authorizationRu
 
 resource secretResource 'Microsoft.KeyVault/vaults/secrets@2022-07-01' = {
   parent: keyVault
-  name: eventHubNamespace.connectionSecretName
+  name: eventHubNamespace.eventHubConnectionSecretName
   properties: {
     value: eventHubPolicy.listkeys().primaryConnectionString
   }
