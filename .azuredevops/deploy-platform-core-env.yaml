@@ -67,8 +67,6 @@ resources:
       type: github
       ref: sm/393370/WhitelistingofLogicAppsIP
       
-           
-      
 variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'All') }}
