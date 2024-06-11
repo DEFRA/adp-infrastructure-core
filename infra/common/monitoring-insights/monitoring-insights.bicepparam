@@ -9,6 +9,4 @@ param location = '#{{ location }}'
 
 param environment = '#{{ environment }}'
 
-
-
-
+param disableLocalAuth = #{{ applicationInsightsDisableLocalAuth }}

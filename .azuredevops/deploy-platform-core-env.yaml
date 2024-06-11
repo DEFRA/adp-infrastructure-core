@@ -67,8 +67,6 @@ resources:
       type: github
       ref: main
       
-           
-      
 variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'All') }}
