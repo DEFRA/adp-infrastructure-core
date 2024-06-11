@@ -151,7 +151,7 @@
         {
           "name": "AllowDefraApprovedIPRule",
           "enabledState": "Enabled",
-          "priority": 300,
+          "priority": 1000,
           "ruleType": "MatchRule",
           "matchConditions": [
             {
