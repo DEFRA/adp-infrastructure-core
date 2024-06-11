@@ -99,7 +99,7 @@
               "selector": null,
               "operator": "IPMatch",
               "negateCondition": false,
-              "matchValue": #{{ noescape(customRule_LogicappServiceIpfcpDAL) }},
+              "matchValue": #{{ noescape(logicappServiceIpUkEurope) }},
               "transforms": []
             }            
           ],
