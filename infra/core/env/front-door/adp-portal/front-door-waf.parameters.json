@@ -145,9 +145,9 @@
           "exclusions": []
         }
       ]
-    },
-    "defraApprovedIPcustomRule": {
-      "value": [
+    },    
+    "customRules": {
+      "value": [ 
         {
           "name": "AllowDefraApprovedIPRule",
           "enabledState": "Enabled",
@@ -164,11 +164,7 @@
             }
           ],
           "action": "Block"
-        }
-      ]
-    },
-    "customRules": {
-      "value": [       
+        }      
       ]
     }
   }

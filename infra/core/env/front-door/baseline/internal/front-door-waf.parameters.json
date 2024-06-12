@@ -65,7 +65,7 @@
         }
       ]
     },
-    "defraApprovedIPcustomRule": {
+    "customRules": {
       "value": [
         {
           "name": "AllowDefraApprovedIPRule",
@@ -83,11 +83,7 @@
             }
           ],
           "action": "Block"
-        }
-      ]
-    },
-    "customRules": {
-      "value": [  
+        },  
         {
           "name": "AllowcallbackAccessRule",
           "enabledState": "Enabled",
