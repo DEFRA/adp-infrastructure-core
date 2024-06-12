@@ -29,35 +29,7 @@
           "ruleSetType": "Microsoft_DefaultRuleSet",
           "ruleSetVersion": "2.1",
           "ruleSetAction": "Block",
-          "ruleGroupOverrides": [
-            {
-              "ruleGroupName": "RFI",
-              "rules": [
-                {
-                  "ruleId": "931130",
-                  "enabledState": "Enabled",
-                  "action": "AnomalyScoring",
-                  "exclusions": [
-                    {
-                      "matchVariable": "RequestBodyJsonArgNames",
-                      "selectorMatchOperator": "Contains",
-                      "selector": "entity.metadata.annotations"
-                    },
-                    {
-                      "matchVariable": "RequestBodyJsonArgNames",
-                      "selectorMatchOperator": "Contains",
-                      "selector": "entity.metadata.links.url"
-                    },
-                    {
-                      "matchVariable": "RequestBodyJsonArgNames",
-                      "selectorMatchOperator": "Contains",
-                      "selector": "entity.metadata.annotations.backstage"
-                    }
-                  ]
-                }
-              ],
-              "exclusions": []
-            },
+          "ruleGroupOverrides": [            
             {
               "ruleGroupName": "MS-ThreatIntel-SQLI",
               "rules": [
@@ -75,65 +47,18 @@
                 }
               ],
               "exclusions": []
-            },
-            {
-              "ruleGroupName": "PROTOCOL-ENFORCEMENT",
-              "rules": [
-                {
-                  "ruleId": "920440",
-                  "enabledState": "Disabled",
-                  "action": "AnomalyScoring",
-                  "exclusions": []
-                }
-              ],
-              "exclusions": []
-            },
-            {
-              "ruleGroupName": "LFI",
-              "rules": [
-                {
-                  "ruleId": "930130",
-                  "enabledState": "Disabled",
-                  "action": "AnomalyScoring",
-                  "exclusions": []
-                },
-                {
-                  "ruleId": "930120",
-                  "enabledState": "Enabled",
-                  "action": "AnomalyScoring",
-                  "exclusions": [
-                      {
-                          "matchVariable": "QueryStringArgNames",
-                          "selectorMatchOperator": "Contains",
-                          "selector": "metadata.name,metadata.annotations.graph.microsoft.com"
-                      },
-                      {
-                          "matchVariable": "QueryStringArgNames",
-                          "selectorMatchOperator": "Contains",
-                          "selector": "fields"
-                      }
-                  ]
-                }
-              ],
-              "exclusions": []
             }                     
           ],
-          "exclusions": []
-        },
-        {
-          "ruleSetType": "Microsoft_BotManagerRuleSet",
-          "ruleSetVersion": "1.0",
-          "ruleGroupOverrides": [],
           "exclusions": []
         }
       ]
     },
-    "paloIPWAFcustomRule": {
+    "defraApprovedIPcustomRule": {
       "value": [
         {
-          "name": "PaloIPWAF",
+          "name": "AllowDefraApprovedIPRule",
           "enabledState": "Enabled",
-          "priority": 300,
+          "priority": 1000,
           "ruleType": "MatchRule",
           "matchConditions": [
             {
@@ -141,11 +66,44 @@
               "selector": null,
               "operator": "IPMatch",
               "negateCondition": true,
-              "matchValue": #{{ noescape(customRule_PaloIpWAF) }},
+              "matchValue": #{{ noescape(customRule_DefraApprovedIp) }},
               "transforms": []
             }
           ],
           "action": "Block"
+        }
+      ]
+    },
+    "fcpDALcustomRule": {
+      "value": [
+        {
+          "name": "AllowfcpDALcustomRule",
+          "enabledState": "Enabled",
+          "priority": 100,
+          "ruleType": "MatchRule",
+          "matchConditions": [
+            {
+              "matchVariable": "RequestUri",
+              "selector": null,
+              "operator": "Contains",
+              "negateCondition": false,
+              "matchValue": [
+                  "fcp-data-access-layer-api"
+              ],
+              "transforms": [
+                  "Lowercase"
+              ]
+            },            
+            {
+              "matchVariable": "RemoteAddr",
+              "selector": null,
+              "operator": "IPMatch",
+              "negateCondition": false,
+              "matchValue": #{{ noescape(logicappServiceIpUkEurope) }},
+              "transforms": []
+            }            
+          ],
+          "action": "Allow"
         }
       ]
     },

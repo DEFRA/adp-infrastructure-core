@@ -68,7 +68,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: refs/tags/1.0.0-latest
       
 variables:
   - name: IsAll
@@ -346,6 +346,17 @@ extends:
                     -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
                     -ConfigDataFilePath "$(Build.SourcesDirectory)/self/infra/core/env/app-configuration/config-data/config-data.json"
                     -Label "adp-platform"
+                - name: Add Secondary Event Hub App Configuration Key Value
+                  type: 'script'
+                  scriptType: AzureCLI
+                  azureCLIScriptType: pscore
+                  path: 'infra/core/env/scripts/Set-SecondaryEventHubConfig.ps1'
+                  scriptArguments: >
+                    -CommonFilesDownloadPath '$(Pipeline.Workspace)/s/PipelineCommonFiles/'
+                    -Label "adp-platform-secondary-eventhub"
+                    -AppConfigName $(infraResourceNamePrefix)$(nc_resource_appconfiguration)$(nc_instance_regionid)01
+                    -ConfigData '[{"key": "address", "value": "{\"uri\":\"https://$(ssvSecondEventHubConnectionStringKeyVault).vault.azure.net/secrets/$(environment)$(nc_instance_regionid)0$(environmentId)-ADP-EVENTHUB-CONNECTION\"}", "label": "adp-platform-secondary-eventhub", "contentType": "text/plain" }]'
+                    -SendFluxNotificationsToSecondEventHub "$(sendFluxNotificationsToSecondEventHub)"
         - ${{ if eq(variables.IsFrontDoor, true) }}:  
           - name: front_door
             deployments:
@@ -356,7 +367,7 @@ extends:
               - ${{ if eq(variables.IsFrontDoorWAFBaseline, true) }}: 
                 - name: front-door-waf
                   path: infra/core/env/front-door
-                  parameterFilePath: infra/core/env/front-door/baseline
+                  parameterFilePath: infra/core/env/front-door/baseline/internal
                   resourceGroupName: $(cdnResourceGroup)
               - ${{ if eq(variables.IsFrontDoorWAFAdpPortal, true) }}:               
                 - name: front-door-waf
