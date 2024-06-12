@@ -1,7 +1,7 @@
 using './search-service.bicep'
 
 param searchService = {
-  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_search }}#{{ nc_instance_regionid }}01'
+  name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_search }}#{{ nc_instance_regionid }}02'
   skuName: '#{{ searchServiceSkuName }}'
   replicaCount: #{{ searchServiceReplicaCount }}
   privateEndpointName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}11'  

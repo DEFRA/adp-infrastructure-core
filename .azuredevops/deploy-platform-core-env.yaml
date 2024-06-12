@@ -494,7 +494,7 @@ extends:
                   path: infra/core/env/search-service
                   resourceGroupName: $(servicesResourceGroup)
                   privateEndpointDnsRecordsForResources:
-                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)02
                       resourceGroupName: $(servicesResourceGroup)                  
                   preDeployScriptsList:
                   - displayName: 'Get Group Id'
@@ -510,7 +510,7 @@ extends:
                     scriptArguments: > 
                       -OpenAiName '$(infraResourceNamePrefix)$(nc_resource_openai)$(nc_instance_regionid)01'
                       -ResourceGroupName '$(servicesResourceGroup)'
-                      -SearchServiceName '$(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01'
+                      -SearchServiceName '$(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)02'
                       -Command 'Check'
                   postDeployScriptsList:
                   - displayName: 'Approve Private Endpoint Connection'
@@ -520,5 +520,5 @@ extends:
                     scriptArguments: > 
                       -OpenAiName '$(infraResourceNamePrefix)$(nc_resource_openai)$(nc_instance_regionid)01'
                       -ResourceGroupName '$(servicesResourceGroup)'
-                      -SearchServiceName '$(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01'
+                      -SearchServiceName '$(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)02'
                       -Command 'Approve'
