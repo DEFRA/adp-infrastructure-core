@@ -86,41 +86,8 @@
         }
       ]
     },
-    "fcpDALcustomRule": {
-      "value": [
-        {
-          "name": "AllowfcpDALcustomRule",
-          "enabledState": "Enabled",
-          "priority": 100,
-          "ruleType": "MatchRule",
-          "matchConditions": [
-            {
-              "matchVariable": "RequestUri",
-              "selector": null,
-              "operator": "Contains",
-              "negateCondition": false,
-              "matchValue": [
-                  "fcp-data-access-layer-api"
-              ],
-              "transforms": [
-                  "Lowercase"
-              ]
-            },            
-            {
-              "matchVariable": "RemoteAddr",
-              "selector": null,
-              "operator": "IPMatch",
-              "negateCondition": false,
-              "matchValue": #{{ noescape(logicappServiceIpUkEurope) }},
-              "transforms": []
-            }            
-          ],
-          "action": "Allow"
-        }
-      ]
-    },
-    "adoCallbackAccessRule": {
-      "value": [
+    "customRules": {
+      "value": [  
         {
           "name": "AllowcallbackAccessRule",
           "enabledState": "Enabled",
@@ -149,11 +116,36 @@
             }            
           ],
           "action": "Allow"
-        }
-      ]
-    },
-    "customRules": {
-      "value": [       
+        },
+        {
+          "name": "AllowfcpDALcustomRule",
+          "enabledState": "Enabled",
+          "priority": 100,
+          "ruleType": "MatchRule",
+          "matchConditions": [
+            {
+              "matchVariable": "RequestUri",
+              "selector": null,
+              "operator": "Contains",
+              "negateCondition": false,
+              "matchValue": [
+                  "fcp-data-access-layer-api"
+              ],
+              "transforms": [
+                  "Lowercase"
+              ]
+            },            
+            {
+              "matchVariable": "RemoteAddr",
+              "selector": null,
+              "operator": "IPMatch",
+              "negateCondition": false,
+              "matchValue": #{{ noescape(logicappServiceIpUkEurope) }},
+              "transforms": []
+            }            
+          ],
+          "action": "Allow"
+        }     
       ]
     }
   }
