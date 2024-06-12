@@ -85,7 +85,7 @@
           "action": "Block"
         },  
         {
-          "name": "AllowFluxNotificationsCallBackAPI",
+          "name": "AllowcallbackAccessRule",
           "enabledState": "Enabled",
           "priority": 200,
           "ruleType": "MatchRule",
