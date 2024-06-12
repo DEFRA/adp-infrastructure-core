@@ -5,7 +5,10 @@ param wafPolicyName string
 param customRules array = []
 
 @description('Optional. The list of custom rule sets to configure on the WAF.')
-param paloIPWAFcustomRule array = []
+param defraApprovedIPcustomRule array = []
+
+@description('Optional. The list of custom rule sets to configure on the WAF.')
+param fcpDALcustomRule array = []
 
 @description('Optional. The list of managed rule sets to configure on the WAF (DRS).')
 param managedRuleSets array = []
@@ -48,7 +51,7 @@ var frontDoorWafTags = {
   Purpose: purpose
   Tier: 'Shared'
 }
-var customRule = union(customRules,paloIPWAFcustomRule)
+var customRule = union(customRules,defraApprovedIPcustomRule,fcpDALcustomRule)
 
 module frontDoorWafPolicy 'br/SharedDefraRegistry:network.front-door-web-application-firewall-policy:0.4.1' = if(deployWAF == 'true') {
   name: 'fdwaf-${deploymentDate}'

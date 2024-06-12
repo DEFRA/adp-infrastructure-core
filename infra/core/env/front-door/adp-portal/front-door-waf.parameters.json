@@ -146,12 +146,12 @@
         }
       ]
     },
-    "paloIPWAFcustomRule": {
+    "defraApprovedIPcustomRule": {
       "value": [
         {
-          "name": "PaloIPWAF",
+          "name": "AllowDefraApprovedIPRule",
           "enabledState": "Enabled",
-          "priority": 300,
+          "priority": 1000,
           "ruleType": "MatchRule",
           "matchConditions": [
             {
@@ -159,7 +159,7 @@
               "selector": null,
               "operator": "IPMatch",
               "negateCondition": true,
-              "matchValue": #{{ noescape(customRule_PaloIpWAF) }},
+              "matchValue": #{{ noescape(customRule_DefraApprovedIp) }},
               "transforms": []
             }
           ],
