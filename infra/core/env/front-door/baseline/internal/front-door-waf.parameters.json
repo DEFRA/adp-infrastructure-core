@@ -44,6 +44,18 @@
                       "selector": "entity.metadata.annotations"
                     }
                   ]
+                },
+                {
+                  "ruleId": "99031002",
+                  "enabledState": "Enabled",
+                  "action": "AnomalyScoring",
+                  "exclusions": [
+                      {
+                          "matchVariable": "RequestCookieNames",
+                          "selectorMatchOperator": "StartsWith",
+                          "selector": "session-auth"
+                      }
+                  ]
                 }
               ],
               "exclusions": []
@@ -100,6 +112,39 @@
               "operator": "IPMatch",
               "negateCondition": false,
               "matchValue": #{{ noescape(logicappServiceIpUkEurope) }},
+              "transforms": []
+            }            
+          ],
+          "action": "Allow"
+        }
+      ]
+    },
+    "adoCallbackAccessRule": {
+      "value": [
+        {
+          "name": "AllowcallbackAccessRule",
+          "enabledState": "Enabled",
+          "priority": 200,
+          "ruleType": "MatchRule",
+          "matchConditions": [
+            {
+              "matchVariable": "RequestUri",
+              "selector": null,
+              "operator": "Contains",
+              "negateCondition": false,
+              "matchValue": [
+                  "#{{ adoCallbacRequestUri }}"
+              ],
+              "transforms": [
+                  "Lowercase"
+              ]
+            },            
+            {
+              "matchVariable": "RemoteAddr",
+              "selector": null,
+              "operator": "IPMatch",
+              "negateCondition": false,
+              "matchValue": #{{ noescape(azureDevOpsIpUKSouth) }},
               "transforms": []
             }            
           ],
