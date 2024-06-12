@@ -133,7 +133,7 @@
               "operator": "Contains",
               "negateCondition": false,
               "matchValue": [
-                  "#{{ adoCallbacRequestUri }}"
+                  "#{{ adoCallbackRequestUri }}"
               ],
               "transforms": [
                   "Lowercase"
