@@ -66,7 +66,7 @@ resources:
       endpoint: DEFRA
       type: github
       #ref: refs/tags/1.0.0-latest
-      ref: sm/395100/CustomRuleforAllowcallbackAccessRule
+      ref: sm/395100/CustomRuleforAllowcallbackAccessRule2
       
 variables:
   - name: IsAll
