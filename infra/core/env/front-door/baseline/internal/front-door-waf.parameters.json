@@ -85,7 +85,7 @@
           "action": "Block"
         },  
         {
-          "name": "AllowcallbackAccessRule",
+          "name": "AllowFluxNotificationsCallBackAPI",
           "enabledState": "Enabled",
           "priority": 200,
           "ruleType": "MatchRule",
@@ -93,7 +93,7 @@
             {
               "matchVariable": "RequestUri",
               "selector": null,
-              "operator": "Contains",
+              "operator": "BeginsWith",
               "negateCondition": false,
               "matchValue": [
                   "#{{ adoCallbackRequestUri }}"
