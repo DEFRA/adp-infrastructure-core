@@ -44,6 +44,18 @@
                       "selector": "entity.metadata.annotations"
                     }
                   ]
+                },
+                {
+                  "ruleId": "99031002",
+                  "enabledState": "Enabled",
+                  "action": "AnomalyScoring",
+                  "exclusions": [
+                      {
+                          "matchVariable": "RequestCookieNames",
+                          "selectorMatchOperator": "StartsWith",
+                          "selector": "session-auth"
+                      }
+                  ]
                 }
               ],
               "exclusions": []
@@ -53,7 +65,7 @@
         }
       ]
     },
-    "defraApprovedIPcustomRule": {
+    "customRules": {
       "value": [
         {
           "name": "AllowDefraApprovedIPRule",
@@ -71,11 +83,36 @@
             }
           ],
           "action": "Block"
-        }
-      ]
-    },
-    "fcpDALcustomRule": {
-      "value": [
+        },  
+        {
+          "name": "AllowFluxNotificationsCallBackAPI",
+          "enabledState": "Enabled",
+          "priority": 200,
+          "ruleType": "MatchRule",
+          "matchConditions": [
+            {
+              "matchVariable": "RequestUri",
+              "selector": null,
+              "operator": "BeginsWith",
+              "negateCondition": false,
+              "matchValue": [
+                  "#{{ adoCallbackRequestUri }}"
+              ],
+              "transforms": [
+                  "Lowercase"
+              ]
+            },            
+            {
+              "matchVariable": "RemoteAddr",
+              "selector": null,
+              "operator": "IPMatch",
+              "negateCondition": false,
+              "matchValue": #{{ noescape(azureDevOpsIpUKSouth) }},
+              "transforms": []
+            }            
+          ],
+          "action": "Allow"
+        },
         {
           "name": "AllowfcpDALcustomRule",
           "enabledState": "Enabled",
@@ -104,11 +141,7 @@
             }            
           ],
           "action": "Allow"
-        }
-      ]
-    },
-    "customRules": {
-      "value": [       
+        }     
       ]
     }
   }
