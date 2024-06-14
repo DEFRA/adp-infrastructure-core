@@ -45,30 +45,26 @@
             }
           ],
           "action": "Block"
-        }     
-      ]
-    },
-    "BlockCountriesCustomRules":{
-      "value": [
+        },
         {
-        "name": "BlockCountriesCustomRules",
-        "enabledState": "Enabled",
-        "priority": 100,
-        "ruleType": "MatchRule",
-        "rateLimitDurationInMinutes": 1,
-        "rateLimitThreshold": 100,
-        "matchConditions": [
-            {
-                "matchVariable": "SocketAddr",
-                "selector": null,
-                "operator": "GeoMatch",
-                "negateCondition": false,
-                "matchValue": #{{ noescape(block_Countries) }},
-                "transforms": []
-            }
-          ],
-          "action": "Block"
-        }
+          "name": "BlockCountriesCustomRules",
+          "enabledState": "Enabled",
+          "priority": 100,
+          "ruleType": "MatchRule",
+          "rateLimitDurationInMinutes": 1,
+          "rateLimitThreshold": 100,
+          "matchConditions": [
+              {
+                  "matchVariable": "SocketAddr",
+                  "selector": null,
+                  "operator": "GeoMatch",
+                  "negateCondition": false,
+                  "matchValue": #{{ noescape(block_Countries) }},
+                  "transforms": []
+              }
+            ],
+            "action": "Block"
+          }     
       ]
     }
   }
