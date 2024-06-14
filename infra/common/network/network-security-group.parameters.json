@@ -392,13 +392,14 @@
                             "name": "AllowOutboundtoDaisy",
                             "properties": {
                                 "protocol": "*",
+                                "sourcePortRange": "*",                                
                                 "sourceAddressPrefix": "VirtualNetwork",
                                 "destinationAddressPrefix": "#{{ nsgDaisyIP }}",
                                 "access": "Allow",
                                 "priority": 3000,
                                 "direction": "Outbound",
                                 "sourcePortRanges": [],
-                                "destinationPortRanges": ["1433"],
+                                "destinationPortRange": ["1433"],
                                 "sourceAddressPrefixes": [],
                                 "destinationAddressPrefixes": [],
                                 "description": "Allow Outbound to Daisy"
