@@ -401,9 +401,9 @@
                                 "priority": 3000,
                                 "direction": "Outbound",
                                 "sourcePortRanges": [],
-                                "destinationPortRanges": [],
+                                "destinationPortRanges": ["1433"],
                                 "sourceAddressPrefixes": [],
-                                "destinationAddressPrefixes": ["1433"],
+                                "destinationAddressPrefixes": [],
                                 "description": "Allow Outbound to Daisy"
                             }
                         }
