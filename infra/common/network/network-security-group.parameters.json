@@ -199,8 +199,7 @@
                                 "access": "Allow",
                                 "priority": 3000,
                                 "direction": "Inbound",
-                                "sourcePortRanges": [],
-                                "destinationPortRanges": [],
+                                "sourcePortRanges": [],                         
                                 "sourceAddressPrefixes": [],
                                 "destinationAddressPrefixes": [],
                                 "description": "Allow Daisy Response Inbound"
@@ -393,15 +392,13 @@
                             "name": "AllowOutboundtoDaisy",
                             "properties": {
                                 "protocol": "*",
-                                "sourcePortRange": "*",
-                                "destinationPortRange": "*",
                                 "sourceAddressPrefix": "VirtualNetwork",
                                 "destinationAddressPrefix": "#{{ nsgDaisyIP }}",
                                 "access": "Allow",
                                 "priority": 3000,
                                 "direction": "Outbound",
-                                "sourcePortRanges": ["1433"],
-                                "destinationPortRanges": [],
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": ["1433"],
                                 "sourceAddressPrefixes": [],
                                 "destinationAddressPrefixes": [],
                                 "description": "Allow Outbound to Daisy"
