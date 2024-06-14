@@ -55,7 +55,7 @@
           "rateLimitThreshold": 100,
           "matchConditions": [
               {
-                  "matchVariable": "SocketAddr",
+                  "matchVariable": "RemoteAddr",
                   "selector": null,
                   "operator": "GeoMatch",
                   "negateCondition": false,
