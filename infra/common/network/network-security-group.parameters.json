@@ -189,6 +189,24 @@
                             }
                         },
                         {
+                            "name": "AllowDaisyResponse",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "*",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "#{{ nsgDaisyIP }}",
+                                "destinationAddressPrefix": "VirtualNetwork",
+                                "access": "Allow",
+                                "priority": 3000,
+                                "direction": "Inbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Daisy Response Inbound"
+                            }
+                        },
+                        {
                             "name": "AllowVNetAnyOutbound",
                             "properties": {
                                 "protocol": "*",
@@ -343,7 +361,7 @@
                                 "destinationPortRange": "443",
                                 "sourceAddressPrefix": "VirtualNetwork",
                                 "destinationAddressPrefix": "Internet",
-                                "access": "Allow",
+                                "access": "Allow", 
                                 "priority": 3900,
                                 "direction": "Outbound",
                                 "sourcePortRanges": [],
@@ -369,6 +387,24 @@
                                 "sourceAddressPrefixes": [],
                                 "destinationAddressPrefixes": [],
                                 "description": "Deny All Other Outbound"
+                            }
+                        },
+                        {
+                            "name": "AllowOutboundtoDaisy",
+                            "properties": {
+                                "protocol": "*",
+                                "sourcePortRange": "1433",
+                                "destinationPortRange": "*",
+                                "sourceAddressPrefix": "VirtualNetwork",
+                                "destinationAddressPrefix": "#{{ nsgDaisyIP }}",
+                                "access": "Allow",
+                                "priority": 3000,
+                                "direction": "Outbound",
+                                "sourcePortRanges": [],
+                                "destinationPortRanges": [],
+                                "sourceAddressPrefixes": [],
+                                "destinationAddressPrefixes": [],
+                                "description": "Allow Outbound to Daisy"
                             }
                         }
                     ]

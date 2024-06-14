@@ -65,7 +65,8 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: refs/tags/1.0.0-latest
+      #ref: refs/tags/1.0.0-latest
+      ref: sm/daisyNSG
       
 variables:
   - name: IsAll
