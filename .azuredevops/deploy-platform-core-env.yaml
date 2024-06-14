@@ -27,7 +27,8 @@ parameters:
       - Managed Cluster - Platform Variables
       - Front Door - All
       - Front Door - Core
-      - Front Door - WAF Baseline
+      - Front Door - WAF Baseline Internal
+      - Front Door - WAF Baseline External
       - Front Door - WAF ADP Portal
       - Application - All
       - Application - App Configuration
@@ -65,7 +66,8 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: refs/tags/1.0.0-latest
+      #ref: refs/tags/1.0.0-latest
+      ref: sm/392627/ImplementGeographicalRestrictionsonAFDWAF
       
 variables:
   - name: IsAll
@@ -114,8 +116,10 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Front Door - All')) }}
   - name: IsFrontDoorCore
     value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - Core')) }}
-  - name: IsFrontDoorWAFBaseline
-    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF Baseline')) }}
+  - name: IsFrontDoorWAFBaselineInternal
+    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF Baseline Internal')) }}
+  - name: IsFrontDoorWAFBaselineExternal
+    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF Baseline External')) }}
   - name: IsFrontDoorWAFAdpPortal
     value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF ADP Portal')) }}
 
@@ -350,10 +354,15 @@ extends:
                 - name: front-door
                   path: infra/core/env/front-door
                   resourceGroupName: $(cdnResourceGroup)
-              - ${{ if eq(variables.IsFrontDoorWAFBaseline, true) }}: 
+              - ${{ if eq(variables.IsFrontDoorWAFBaselineInternal, true) }}: 
                 - name: front-door-waf
                   path: infra/core/env/front-door
                   parameterFilePath: infra/core/env/front-door/baseline/internal
+                  resourceGroupName: $(cdnResourceGroup)
+              - ${{ if eq(variables.IsFrontDoorWAFBaselineExternal, true) }}: 
+                - name: front-door-waf
+                  path: infra/core/env/front-door
+                  parameterFilePath: infra/core/env/front-door/baseline/external
                   resourceGroupName: $(cdnResourceGroup)
               - ${{ if eq(variables.IsFrontDoorWAFAdpPortal, true) }}:               
                 - name: front-door-waf
