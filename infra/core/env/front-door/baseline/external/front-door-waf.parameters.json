@@ -47,7 +47,7 @@
           "action": "Block"
         },
         {
-          "name": "BlockCountriesCustomRules",
+          "name": "BlockCountriesCustomRules01",
           "enabledState": "Enabled",
           "priority": 100,
           "ruleType": "MatchRule",
@@ -59,12 +59,50 @@
                   "selector": null,
                   "operator": "GeoMatch",
                   "negateCondition": false,
-                  "matchValue": #{{ noescape(block_Countries) }},
+                  "matchValue": #{{ noescape(block_Countries_01) }},
                   "transforms": []
               }
             ],
             "action": "Block"
-          }     
+          },
+          {
+            "name": "BlockCountriesCustomRules02",
+            "enabledState": "Enabled",
+            "priority": 101,
+            "ruleType": "MatchRule",
+            "rateLimitDurationInMinutes": 1,
+            "rateLimitThreshold": 100,
+            "matchConditions": [
+                {
+                    "matchVariable": "RemoteAddr",
+                    "selector": null,
+                    "operator": "GeoMatch",
+                    "negateCondition": false,
+                    "matchValue": #{{ noescape(block_Countries_02) }},
+                    "transforms": []
+                }
+              ],
+              "action": "Block"
+            },
+            {
+              "name": "BlockCountriesCustomRules03",
+              "enabledState": "Enabled",
+              "priority": 101,
+              "ruleType": "MatchRule",
+              "rateLimitDurationInMinutes": 1,
+              "rateLimitThreshold": 100,
+              "matchConditions": [
+                  {
+                      "matchVariable": "RemoteAddr",
+                      "selector": null,
+                      "operator": "GeoMatch",
+                      "negateCondition": false,
+                      "matchValue": #{{ noescape(block_Countries_03) }},
+                      "transforms": []
+                  }
+                ],
+                "action": "Block"
+            }     
       ]
     }
   }
