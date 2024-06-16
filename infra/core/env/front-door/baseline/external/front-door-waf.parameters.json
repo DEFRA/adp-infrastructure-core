@@ -87,7 +87,7 @@
             {
               "name": "BlockCountriesCustomRules03",
               "enabledState": "Enabled",
-              "priority": 101,
+              "priority": 102,
               "ruleType": "MatchRule",
               "rateLimitDurationInMinutes": 1,
               "rateLimitThreshold": 100,
