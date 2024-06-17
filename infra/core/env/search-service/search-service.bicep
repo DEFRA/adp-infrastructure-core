@@ -19,11 +19,15 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
-var searchServiceName = toLower(searchService.name)
 @description('Required. The name of the AAD admin managed identity.')
 param managedIdentityName string
 
 param privateLinkServiceConnectionExists string = 'false'
+
+@description('Required. Search Service UserGroup id.')
+param searchServiceUserGroupId string
+
+var searchServiceName = toLower(searchService.name)
 
 var managedIdentityTags = {
   Name: managedIdentityName
@@ -45,10 +49,6 @@ var privateEndpointTags = {
 }
 
 var defaultTags = union(json(loadTextContent('../../../common/default-tags.json')), customTags)
-
-@description('Required. Search Service UserGroup id.')
-param searchServiceUserGroupId string
-
 
 module openAiUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'managed-identity-${deploymentDate}'
@@ -83,7 +83,7 @@ module searchServiceDeployment './module/main.bicep' = {
       }
     }
     sku: searchService.skuName
-    replicaCount: searchService.replicaCount
+    replicaCount: any(searchService.replicaCount)
     diagnosticSettings: [
       {
         name: 'OMS'

@@ -3,7 +3,7 @@ using './search-service.bicep'
 param searchService = {
   name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_search }}#{{ nc_instance_regionid }}01'
   skuName: '#{{ searchServiceSkuName }}'
-  replicaCount: #{{ searchServiceReplicaCount }}
+  replicaCount: '#{{ searchServiceReplicaCount }}'
   privateEndpointName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}11'  
   openAiName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_openai }}#{{ nc_instance_regionid }}01'
 }
