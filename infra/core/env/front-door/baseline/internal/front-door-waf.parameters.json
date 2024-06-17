@@ -141,7 +141,7 @@
             }            
           ],
           "action": "Allow"
-        },     
+        }     
       ]
     },
     "nonProductionCustomRule": {
