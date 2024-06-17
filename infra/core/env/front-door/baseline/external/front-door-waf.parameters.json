@@ -28,24 +28,7 @@
       ]
     },
     "customRules": {
-      "value": [
-        {
-          "name": "AllowDefraApprovedIPRule",
-          "enabledState": "Enabled",
-          "priority": 1000,
-          "ruleType": "MatchRule",
-          "matchConditions": [
-            {
-              "matchVariable": "RemoteAddr",
-              "selector": null,
-              "operator": "IPMatch",
-              "negateCondition": true,
-              "matchValue": #{{ noescape(customRule_DefraApprovedIp) }},
-              "transforms": []
-            }
-          ],
-          "action": "Block"
-        },
+      "value": [        
         {
           "name": "BlockCountriesCustomRules01",
           "enabledState": "Enabled",
@@ -103,6 +86,27 @@
                 ],
                 "action": "Block"
             }     
+      ]
+    },
+    "nonProductionCustomRule": {
+      "value": [
+        {
+          "name": "AllowDefraApprovedIPRule",
+          "enabledState": "Enabled",
+          "priority": 1000,
+          "ruleType": "MatchRule",
+          "matchConditions": [
+            {
+              "matchVariable": "RemoteAddr",
+              "selector": null,
+              "operator": "IPMatch",
+              "negateCondition": true,
+              "matchValue": #{{ noescape(customRule_DefraApprovedIp) }},
+              "transforms": []
+            }
+          ],
+          "action": "Block"
+        }
       ]
     }
   }

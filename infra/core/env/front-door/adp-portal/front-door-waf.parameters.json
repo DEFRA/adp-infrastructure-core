@@ -166,6 +166,9 @@
           "action": "Block"
         }      
       ]
+    },
+    "nonProductionCustomRule": {
+      "value": []
     }
   }
 }
