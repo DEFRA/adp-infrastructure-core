@@ -38,6 +38,9 @@ parameters:
       - Application - Service Bus
       - Application - Key Vault
       - Platform - Key Vault
+      - OpenAI - All
+      - OpenAI - Infra  
+      - OpenAI - Search Service
 
 pr:
   branches:
@@ -138,6 +141,15 @@ variables:
   - name: IsApplicationKeyVault
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
 
+  - name: IsOpenAi
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'OpenAI -')) }}
+  - name: IsOpenAiAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'OpenAI - All')) }}
+  - name: IsOpenAiInfra
+    value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Infra')) }}
+  - name: IsOpenAiSearchService
+    value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Search Service')) }}
+
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
@@ -146,7 +158,9 @@ extends:
     deployFromFeature: ${{ parameters.deployFromFeature }}
     filePathsForTransform: |
       **/core/env/app-configuration/config-data/config-data.json
-      **/infra/core/env/insights/aad-groups/monitoringpublishergroup.json
+      **/infra/core/env/insights/aad-groups/monitoringpublishergroup.json    
+      **/infra/core/env/open-ai/aad-groups/openaiaccessgroup.json
+      **/infra/core/env/search-service/aad-groups/searchserviceaccessgroup.json
     groupedDeployments:
         - ${{ if eq(variables.IsNetwork, true) }}:
           - name: network
@@ -440,3 +454,70 @@ extends:
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
+        - ${{ if eq(variables.IsOpenAi, true) }}:  
+          - name: openai
+            ${{ if eq(variables.IsAll, true) }}:
+              dependsOnGroupedDeployments:
+              - network
+            deployments:
+              - ${{ if eq(variables.IsOpenAiInfra, true) }}:
+                - name: Create Open AI Access group
+                  type: 'script'
+                  scriptType: AzurePowerShell
+                  serviceConnectionVariableName: ssvServiceConnection
+                  path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+                  scriptArguments: > 
+                    -AADGroupsJsonManifestPath 'infra/core/env/open-ai/aad-groups/openaiaccessgroup.json'              
+                - name: open-ai
+                  path: infra/core/env/open-ai
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_openai)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)                   
+                  preDeployScriptsList:
+                  - displayName: 'Get Group Id'
+                    type: AzurePowerShell
+                    serviceConnectionVariableName: 'ssvServiceConnection'
+                    inlineScript: |
+                      $groupId = (Get-AzADGroup -DisplayName '$(openAiUserGroup)').id
+                      Write-Host "##vso[task.setvariable variable=openAiUserGroupId;]$groupId"      
+              - ${{ if eq(variables.IsOpenAiSearchService, true) }}:
+                - name: Create Search Service Access group
+                  type: 'script'
+                  scriptType: AzurePowerShell
+                  serviceConnectionVariableName: ssvServiceConnection
+                  path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+                  scriptArguments: > 
+                    -AADGroupsJsonManifestPath 'infra/core/env/search-service/aad-groups/searchserviceaccessgroup.json'                
+                - name: search-service
+                  path: infra/core/env/search-service
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)                  
+                  preDeployScriptsList:
+                  - displayName: 'Get Group Id'
+                    type: AzurePowerShell
+                    serviceConnectionVariableName: 'ssvServiceConnection'
+                    inlineScript: |
+                      $groupId = (Get-AzADGroup -DisplayName '$(searchServiceUserGroup)').id
+                      Write-Host "##vso[task.setvariable variable=searchServiceUserGroupId;]$groupId"
+                  - displayName: 'Check Private Endpoint Connection'
+                    type: AzurePowerShell
+                    serviceConnectionVariableName: "subscriptionName"
+                    scriptPath: 'infra/core/env/scripts/PrivateEndpointConnection.ps1'
+                    scriptArguments: > 
+                      -OpenAiName '$(infraResourceNamePrefix)$(nc_resource_openai)$(nc_instance_regionid)01'
+                      -ResourceGroupName '$(servicesResourceGroup)'
+                      -SearchServiceName '$(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01'
+                      -Command 'Check'
+                  postDeployScriptsList:
+                  - displayName: 'Approve Private Endpoint Connection'
+                    type: AzurePowerShell
+                    serviceConnectionVariableName: "subscriptionName"
+                    scriptPath: 'infra/core/env/scripts/PrivateEndpointConnection.ps1'
+                    scriptArguments: > 
+                      -OpenAiName '$(infraResourceNamePrefix)$(nc_resource_openai)$(nc_instance_regionid)01'
+                      -ResourceGroupName '$(servicesResourceGroup)'
+                      -SearchServiceName '$(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01'
+                      -Command 'Approve'
