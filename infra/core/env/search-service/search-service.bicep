@@ -83,7 +83,7 @@ module searchServiceDeployment './module/main.bicep' = {
       }
     }
     sku: searchService.skuName
-    replicaCount: any(searchService.replicaCount)
+    replicaCount: int(searchService.replicaCount)
     diagnosticSettings: [
       {
         name: 'OMS'
