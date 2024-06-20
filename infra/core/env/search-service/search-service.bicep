@@ -69,6 +69,10 @@ module searchServiceDeployment './module/main.bicep' = {
       name: 'CanNotDelete'
     }
     publicNetworkAccess: 'disabled'
+    networkRuleSet:{
+      defaultAction: 'Deny'
+      bypass: 'AzureServices'
+    }
     roleAssignments: [
       {
         roleDefinitionIdOrName: '8ebe5a00-799e-43f5-93ac-243d3dce84a7'
@@ -83,7 +87,7 @@ module searchServiceDeployment './module/main.bicep' = {
       }
     }
     sku: searchService.skuName
-    replicaCount: any(searchService.replicaCount)
+    replicaCount: int(searchService.replicaCount)
     diagnosticSettings: [
       {
         name: 'OMS'
