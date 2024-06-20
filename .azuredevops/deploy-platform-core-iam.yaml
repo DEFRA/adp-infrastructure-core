@@ -87,7 +87,7 @@ extends:
                     Write-Host "##vso[task.setvariable variable=portalAppPrincipalId;]$ObjectId"
            - ${{ if eq(variables.IsClusterPortForwardUserRole, true) }}:
               - name: cluster-port-forward-user-role
-                path: infra/core/iam/subscription
+                path: infra/core/iam/subscription/port-forward
                 scope: "Subscription"
                 preDeployScriptsList:
                 - displayName: 'Get Group Id'
@@ -95,10 +95,10 @@ extends:
                   serviceConnectionVariableName: ssvServiceConnection
                   inlineScript: |
                     $groupId = (Get-AzADGroup -DisplayName '$(customRoleCustomResourcesReaderGroup)').id
-                    Write-Host "##vso[task.setvariable variable=customRolePortForwardUserRoleId;]$groupId"
+                    Write-Host "##vso[task.setvariable variable=customRolePortForwardUserGroupId;]$groupId"
                 - displayName: 'Get Role ID'
                   type: AzurePowerShell
                   serviceConnectionVariableName: 'subscriptionName'
                   inlineScript: |
                     $roleid = (Get-AzRoleDefinition -Name '$(customRolePortForwardUser)').Id
-                    Write-Host "##vso[task.setvariable variable=customRolePortForwardUserGroupId;]$roleid"
+                    Write-Host "##vso[task.setvariable variable=customRolePortForwardUserRoleId;]$roleid"
