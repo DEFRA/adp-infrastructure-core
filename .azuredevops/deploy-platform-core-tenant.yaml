@@ -42,7 +42,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: rv/395487
+      ref: main
       
 variables:
   - name: IsAll
@@ -77,7 +77,6 @@ extends:
         deploymentBranches:
           - 'refs/heads/main'
           - 'refs/pull/*/merge'
-          - 'refs/heads/rv/395487'
         developmentEnvironment: true
         azureRegions:
           primary: 'UKSouth'
