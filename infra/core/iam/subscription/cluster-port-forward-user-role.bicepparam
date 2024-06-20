@@ -1,4 +1,4 @@
-using './cluster-port-forward-role.bicep'
+using './cluster-port-forward-user-role.bicep'
 
 param roleName = '#{{ customRolePortForwardUserRoleId }}'
 
