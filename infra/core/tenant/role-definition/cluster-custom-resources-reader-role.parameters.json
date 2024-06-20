@@ -7,9 +7,6 @@
     },
     "roleScopes": {
       "value": #{{ noescape(crdReaderCustomRoleScopes) }}
-    },
-    "environment": {
-      "value": "#{{ environment }}"
-    },
+    }
   }
 }
