@@ -53,7 +53,7 @@ resource systemAlertsRuleGroup 'Microsoft.AlertsManagement/prometheusRuleGroups@
       for alert in alerts: {
         alert: alert.name
         expression: alert.expression
-        for: alert.timePeriod
+        for: alert.firedTimePeriod
         labels: {
           severity: 'warning'
         }
