@@ -20,6 +20,7 @@ parameters:
       - Monitoring - Insights
       - Monitoring - Azure Monitor Workspace
       - Monitoring - Grafana
+      - Monitoring - Prometheus Alerts
       - Managed Cluster - All
       - Managed Cluster - Private DNS Zone
       - Managed Cluster - Cluster
@@ -65,7 +66,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: refs/tags/1.0.0-latest
+      ref: aa/clusterMonitoringAlerts
       
 variables:
   - name: IsAll
@@ -92,6 +93,8 @@ variables:
     value: ${{ or(eq(variables.IsMonitoringAll,true), eq(parameters.deployResources,'Monitoring - Azure Monitor Workspace')) }}
   - name: IsMonitoringGrafana
     value: ${{ or(eq(variables.IsMonitoringAll,true), eq(parameters.deployResources,'Monitoring - Grafana')) }}
+  - name: IsMonitoringPrometheusAlerts
+    value: ${{ or(eq(variables.IsMonitoringAll,true), eq(parameters.deployResources,'Monitoring - Prometheus Alerts')) }}
   - name: IsManagedCluster
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Managed Cluster')) }}
   - name: IsManagedClusterAll
@@ -233,6 +236,10 @@ extends:
                         -ResourceGroupName $(ssvSharedResourceGroup)
                         -GrafanaName $(ssvInfraResourceNamePrefix)$(nc_resource_grafana)$(nc_shared_instance_regionid)01
                         -DashboardsPath 'infra/core/env/observability/dashboards'
+              - ${{ if eq(variables.IsMonitoringPrometheusAlerts, true) }}:
+                - name: prometheus-alerts
+                  path: infra/core/env/observability
+                  resourceGroupName: $(servicesResourceGroup)
 
         - ${{ if eq(variables.IsPlatformKeyVault, true) }}:
           - name: platform
