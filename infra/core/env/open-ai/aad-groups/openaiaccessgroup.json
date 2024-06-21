@@ -1,0 +1,18 @@
+{
+    "accessADGroups": [
+        {
+            "displayName": "#{{ openAiUserGroup }}",
+            "description": "Azure AD Access group with Open AI User permission.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "#{{ ssvAppRegServicePrincipalName }}"
+                ],
+                "users" : #{{ noescape(platformAccessAADGroupOwners) }}
+            },
+            "Members": {
+                "groups" : #{{ noescape(openAiUserGroupMembers) }}
+            }
+        }    
+    ]
+}
+
