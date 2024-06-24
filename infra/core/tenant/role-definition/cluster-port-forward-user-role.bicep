@@ -9,10 +9,9 @@ param roleScopes array
 @description('Detailed description of the role definition')
 param roleDescription string = 'Custom Role to enable port forwarding.'
 
-@description('Required. Environment name.')
-param environment string
+param deployClusterPortForwardRole bool = false
 
-resource clusterPortForwardRoleResource 'Microsoft.Authorization/roleDefinitions@2022-04-01' = if (environment == 'defradev' || environment == 'defra_non_prd') {
+resource clusterPortForwardRoleResource 'Microsoft.Authorization/roleDefinitions@2022-04-01' = if (deployClusterPortForwardRole) {
   name: guid(subscription().id, roleName)
   scope: subscription()
   properties: {
