@@ -4,6 +4,9 @@ param wafPolicyName string
 @description('Optional. The list of custom rule sets to configure on the WAF.')
 param customRules array = []
 
+@description('Optional. The list of custom rule sets to configure on the WAF.')
+param nonProductionCustomRule array = []
+
 @description('Optional. The list of managed rule sets to configure on the WAF (DRS).')
 param managedRuleSets array = []
 
@@ -46,6 +49,8 @@ var frontDoorWafTags = {
   Tier: 'Shared'
 }
 
+var applyCustomRules = (environment == 'PRD')? customRules : union(customRules,nonProductionCustomRule)
+
 module frontDoorWafPolicy 'br/SharedDefraRegistry:network.front-door-web-application-firewall-policy:0.4.1' = if(deployWAF == 'true') {
   name: 'fdwaf-${deploymentDate}'
   params: {
@@ -63,7 +68,7 @@ module frontDoorWafPolicy 'br/SharedDefraRegistry:network.front-door-web-applica
       requestBodyCheck: 'Enabled'
     }
     customRules: {
-      rules: customRules
+      rules: applyCustomRules
     }
     managedRules: {
       managedRuleSets: managedRuleSets
