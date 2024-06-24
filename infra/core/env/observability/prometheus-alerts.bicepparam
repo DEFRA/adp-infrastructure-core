@@ -51,7 +51,7 @@ param alerts = [
   }
   {
     name: 'KubePodContainerRestart'
-    expression: 'sum by (namespace, controller, container, cluster)(increase(kube_pod_container_status_restarts_total{job="kube-state-metrics", namespace=~"#{{ clusterNamespacesToMonitor }}"}[1h])* on(namespace, pod, cluster) group_left(controller) label_replace(kube_pod_owner, "controller", "$1", "owner_name", "(.*)")) > 0'
+    expression: 'sum by (namespace, controller, container, cluster)(increase(kube_pod_container_status_restarts_total{job="kube-state-metrics", namespace=~"#{{ clusterNamespacesToMonitor }}", pod!~"fluxconfig-.*"}[1h])* on(namespace, pod, cluster) group_left(controller) label_replace(kube_pod_owner, "controller", "$1", "owner_name", "(.*)")) > 0'
     description: 'Pod container restarted in the last 1 hour.'
     firedTimePeriod: 'PT15M'
     timeToResolve: 'PT10M'
