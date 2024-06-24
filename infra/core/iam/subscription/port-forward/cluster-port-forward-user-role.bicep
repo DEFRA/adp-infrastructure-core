@@ -6,12 +6,12 @@ param roleName string
 @description('ID of the Access group.')
 param groupObjectId string
 
-param deployClusterPortForwardRole bool = false
+param deployClusterPortForwardRole string = 'false'
 
 var groupObjectIdvar = empty(groupObjectId) ? 'defaultgroupObjectIdforwhatif' : groupObjectId
 
 
-resource roleAssignmentAG 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (deployClusterPortForwardRole) {
+resource roleAssignmentAG 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (deployClusterPortForwardRole == 'true') {
   name: guid(subscription().id, groupObjectIdvar, roleName)
   properties: {
     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', roleName)

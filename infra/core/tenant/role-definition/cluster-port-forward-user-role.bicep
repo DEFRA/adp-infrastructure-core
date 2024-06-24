@@ -9,9 +9,9 @@ param roleScopes array
 @description('Detailed description of the role definition')
 param roleDescription string = 'Custom Role to enable port forwarding.'
 
-param deployClusterPortForwardRole bool = false
+param deployClusterPortForwardRole string = 'false'
 
-resource clusterPortForwardRoleResource 'Microsoft.Authorization/roleDefinitions@2022-04-01' = if (deployClusterPortForwardRole) {
+resource clusterPortForwardRoleResource 'Microsoft.Authorization/roleDefinitions@2022-04-01' = if (deployClusterPortForwardRole == 'true') {
   name: guid(subscription().id, roleName)
   scope: subscription()
   properties: {

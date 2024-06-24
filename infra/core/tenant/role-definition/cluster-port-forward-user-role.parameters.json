@@ -9,7 +9,7 @@
       "value": #{{ noescape(crdReaderCustomRoleScopes) }}
     },
     "deployClusterPortForwardRole": {
-      "value": #{{ deployClusterPortForwardRole }}
+      "value": '#{{ deployClusterPortForwardRole }}'
     }
   }
 }

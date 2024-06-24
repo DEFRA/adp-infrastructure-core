@@ -4,4 +4,4 @@ param roleName = '#{{ customRolePortForwardUserRoleId }}'
 
 param groupObjectId = '#{{ customRolePortForwardUserGroupId }}'
 
-param deployClusterPortForwardRole = #{{ deployClusterPortForwardRole }}
+param deployClusterPortForwardRole = '#{{ deployClusterPortForwardRole }}'
