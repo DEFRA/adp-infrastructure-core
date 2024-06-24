@@ -28,7 +28,8 @@ parameters:
       - Managed Cluster - Platform Variables
       - Front Door - All
       - Front Door - Core
-      - Front Door - WAF Baseline
+      - Front Door - WAF Baseline Internal
+      - Front Door - WAF Baseline External
       - Front Door - WAF ADP Portal
       - Application - All
       - Application - App Configuration
@@ -39,6 +40,9 @@ parameters:
       - Application - Service Bus
       - Application - Key Vault
       - Platform - Key Vault
+      - OpenAI - All
+      - OpenAI - Infra  
+      - OpenAI - Search Service
 
 pr:
   branches:
@@ -117,8 +121,10 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Front Door - All')) }}
   - name: IsFrontDoorCore
     value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - Core')) }}
-  - name: IsFrontDoorWAFBaseline
-    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF Baseline')) }}
+  - name: IsFrontDoorWAFBaselineInternal
+    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF Baseline Internal')) }}
+  - name: IsFrontDoorWAFBaselineExternal
+    value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF Baseline External')) }}
   - name: IsFrontDoorWAFAdpPortal
     value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF ADP Portal')) }}
 
@@ -141,6 +147,15 @@ variables:
   - name: IsApplicationKeyVault
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
 
+  - name: IsOpenAi
+    value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'OpenAI -')) }}
+  - name: IsOpenAiAll
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'OpenAI - All')) }}
+  - name: IsOpenAiInfra
+    value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Infra')) }}
+  - name: IsOpenAiSearchService
+    value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Search Service')) }}
+
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
@@ -149,7 +164,9 @@ extends:
     deployFromFeature: ${{ parameters.deployFromFeature }}
     filePathsForTransform: |
       **/core/env/app-configuration/config-data/config-data.json
-      **/infra/core/env/insights/aad-groups/monitoringpublishergroup.json
+      **/infra/core/env/insights/aad-groups/monitoringpublishergroup.json    
+      **/infra/core/env/open-ai/aad-groups/openaiaccessgroup.json
+      **/infra/core/env/search-service/aad-groups/searchserviceaccessgroup.json
     groupedDeployments:
         - ${{ if eq(variables.IsNetwork, true) }}:
           - name: network
@@ -357,15 +374,20 @@ extends:
                 - name: front-door
                   path: infra/core/env/front-door
                   resourceGroupName: $(cdnResourceGroup)
-              - ${{ if eq(variables.IsFrontDoorWAFBaseline, true) }}: 
+              - ${{ if eq(variables.IsFrontDoorWAFBaselineInternal, true) }}: 
                 - name: front-door-waf
                   path: infra/core/env/front-door
                   parameterFilePath: infra/core/env/front-door/baseline/internal
                   resourceGroupName: $(cdnResourceGroup)
+              - ${{ if eq(variables.IsFrontDoorWAFBaselineExternal, true) }}: 
+                - name: front-door-waf
+                  path: infra/core/env/front-door
+                  parameterFilePath: infra/core/env/front-door/baseline/external
+                  resourceGroupName: $(cdnResourceGroup)
               - ${{ if eq(variables.IsFrontDoorWAFAdpPortal, true) }}:               
                 - name: front-door-waf
                   path: infra/core/env/front-door
-                  parameterFilePath: infra/core/env/front-door/adp-portal
+                  parameterFilePath: infra/core/env/front-door/adp-portal/internal
                   resourceGroupName: $(cdnResourceGroup)
                   
         - ${{ if eq(variables.IsApplication, true) }}:  
@@ -447,3 +469,70 @@ extends:
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
+        - ${{ if eq(variables.IsOpenAi, true) }}:  
+          - name: openai
+            ${{ if eq(variables.IsAll, true) }}:
+              dependsOnGroupedDeployments:
+              - network
+            deployments:
+              - ${{ if eq(variables.IsOpenAiInfra, true) }}:
+                - name: Create Open AI Access group
+                  type: 'script'
+                  scriptType: AzurePowerShell
+                  serviceConnectionVariableName: ssvServiceConnection
+                  path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+                  scriptArguments: > 
+                    -AADGroupsJsonManifestPath 'infra/core/env/open-ai/aad-groups/openaiaccessgroup.json'              
+                - name: open-ai
+                  path: infra/core/env/open-ai
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_openai)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)                   
+                  preDeployScriptsList:
+                  - displayName: 'Get Group Id'
+                    type: AzurePowerShell
+                    serviceConnectionVariableName: 'ssvServiceConnection'
+                    inlineScript: |
+                      $groupId = (Get-AzADGroup -DisplayName '$(openAiUserGroup)').id
+                      Write-Host "##vso[task.setvariable variable=openAiUserGroupId;]$groupId"      
+              - ${{ if eq(variables.IsOpenAiSearchService, true) }}:
+                - name: Create Search Service Access group
+                  type: 'script'
+                  scriptType: AzurePowerShell
+                  serviceConnectionVariableName: ssvServiceConnection
+                  path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+                  scriptArguments: > 
+                    -AADGroupsJsonManifestPath 'infra/core/env/search-service/aad-groups/searchserviceaccessgroup.json'                
+                - name: search-service
+                  path: infra/core/env/search-service
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01
+                      resourceGroupName: $(servicesResourceGroup)                  
+                  preDeployScriptsList:
+                  - displayName: 'Get Group Id'
+                    type: AzurePowerShell
+                    serviceConnectionVariableName: 'ssvServiceConnection'
+                    inlineScript: |
+                      $groupId = (Get-AzADGroup -DisplayName '$(searchServiceUserGroup)').id
+                      Write-Host "##vso[task.setvariable variable=searchServiceUserGroupId;]$groupId"
+                  - displayName: 'Check Private Endpoint Connection'
+                    type: AzurePowerShell
+                    serviceConnectionVariableName: "subscriptionName"
+                    scriptPath: 'infra/core/env/scripts/PrivateEndpointConnection.ps1'
+                    scriptArguments: > 
+                      -OpenAiName '$(infraResourceNamePrefix)$(nc_resource_openai)$(nc_instance_regionid)01'
+                      -ResourceGroupName '$(servicesResourceGroup)'
+                      -SearchServiceName '$(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01'
+                      -Command 'Check'
+                  postDeployScriptsList:
+                  - displayName: 'Approve Private Endpoint Connection'
+                    type: AzurePowerShell
+                    serviceConnectionVariableName: "subscriptionName"
+                    scriptPath: 'infra/core/env/scripts/PrivateEndpointConnection.ps1'
+                    scriptArguments: > 
+                      -OpenAiName '$(infraResourceNamePrefix)$(nc_resource_openai)$(nc_instance_regionid)01'
+                      -ResourceGroupName '$(servicesResourceGroup)'
+                      -SearchServiceName '$(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01'
+                      -Command 'Approve'

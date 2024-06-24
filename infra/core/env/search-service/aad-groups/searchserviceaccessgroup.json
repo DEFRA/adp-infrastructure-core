@@ -1,0 +1,18 @@
+{
+    "accessADGroups": [
+        {
+            "displayName": "#{{ searchServiceUserGroup }}",
+            "description": "Azure AD Access group with Search Index Data Contributor permission.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "#{{ ssvAppRegServicePrincipalName }}"
+                ],
+                "users" : #{{ noescape(platformAccessAADGroupOwners) }}
+            },
+            "Members": {
+                "groups" : #{{ noescape(searchServiceUserGroupMembers) }}
+            }
+        }
+    ]
+}
+
