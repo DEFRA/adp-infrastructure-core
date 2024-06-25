@@ -17,6 +17,7 @@ parameters:
       - Storage Account Data Writer Role
       - Storage Account Data Reader Role
       - Cluster Custom Resources Reader Role
+      - Cluster Port Forward User Role
 pr:
   branches:
     include:
@@ -58,6 +59,8 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Storage Account Data Reader Role')) }}    
   - name: IsClusterCustomResourcesReaderRole
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Cluster Custom Resources Reader Role')) }}    
+  - name: IsClusterPortForwardUserRole
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Cluster Port Forward User Role')) }}       
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -83,14 +86,14 @@ extends:
         deploymentBranches:
            - 'refs/heads/main'
         azureRegions:
-          primary: 'UKSouth'    
+          primary: 'UKSouth'
       - name: 'defra'
         outputTemplateChange: Skip
         serviceConnection: AZR-ADP-SSV5
         deploymentBranches:
            - 'refs/heads/main'
         azureRegions:
-          primary: 'UKSouth'    
+          primary: 'UKSouth'
     groupedDeployments:
         - name: role_definitions
           deployments:
@@ -113,8 +116,12 @@ extends:
            - ${{ if eq(variables.IsStorageAccountDataReaderRole, true) }}:
               - name: storageaccount-data-reader-role
                 path: infra/core/tenant/role-definition
-                scope: "Subscription"                                
+                scope: "Subscription"
            - ${{ if eq(variables.IsClusterCustomResourcesReaderRole, true) }}:
               - name: cluster-custom-resources-reader-role
+                path: infra/core/tenant/role-definition
+                scope: "Subscription"
+           - ${{ if eq(variables.IsClusterPortForwardUserRole, true) }}:
+              - name: cluster-port-forward-user-role
                 path: infra/core/tenant/role-definition
                 scope: "Subscription"
