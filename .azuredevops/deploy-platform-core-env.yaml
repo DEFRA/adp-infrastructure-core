@@ -43,6 +43,7 @@ parameters:
       - OpenAI - All
       - OpenAI - Infra  
       - OpenAI - Search Service
+      - Rbac - Global Read Permissions
 
 pr:
   branches:
@@ -156,6 +157,9 @@ variables:
   - name: IsOpenAiSearchService
     value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Search Service')) }}
 
+  - name: IsGlobalReadPermissions
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Rbac - Global Read Permissions')) }}
+    
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
@@ -536,3 +540,15 @@ extends:
                       -ResourceGroupName '$(servicesResourceGroup)'
                       -SearchServiceName '$(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01'
                       -Command 'Approve'
+        - ${{ if eq(variables.IsGlobalReadPermissions, true) }}:
+          - name: global-read-permissions
+            deployments:
+              - name: global-read-permissions
+                path: infra/core/env/global-read-permissions
+                resourceGroupName: $(servicesResourceGroup)
+            preDeployScriptsList:
+              - displayName: 'Get Group Id'
+                type: AzurePowerShell
+                scriptPath: 'infra/core/tenant/scripts/Get-EntraGroupObjectId.ps1'
+                scriptArguments: > 
+                  -GroupName 'AAG-Azure-ADP-GlobalRead'
