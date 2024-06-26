@@ -1,5 +1,6 @@
 using './global-read-permissions.bicep'
 
 param appInsightsName = '#{{ applicationInsightsName }}'
-param principalId = '#{{ globalReadGroupObjectId }}'
+param principalId = '1035b387-fc03-403d-a992-dbb84603455c'
+// param principalId = '#{{ globalReadGroupObjectId }}'
 
