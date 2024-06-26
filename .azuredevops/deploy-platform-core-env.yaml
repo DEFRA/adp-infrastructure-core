@@ -159,7 +159,7 @@ variables:
 
   - name: IsGlobalReadPermissions
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Rbac - Global Read Permissions')) }}
-    
+
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
   parameters:
@@ -541,7 +541,7 @@ extends:
                       -SearchServiceName '$(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01'
                       -Command 'Approve'
         - ${{ if eq(variables.IsGlobalReadPermissions, true) }}:
-          - name: global-read-permissions
+          - name: global_read_permissions
             deployments:
               - name: global-read-permissions
                 path: infra/core/env/global-read-permissions
