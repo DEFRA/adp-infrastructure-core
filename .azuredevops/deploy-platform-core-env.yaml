@@ -159,6 +159,8 @@ variables:
 
   - name: IsGlobalReadPermissions
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Rbac - Global Read Permissions')) }}
+  - name: globalReadGroupObjectId
+    value: 'dummyValueToPreventWarningInAzureDevOps'
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -546,9 +548,9 @@ extends:
               - name: global-read-permissions
                 path: infra/core/env/global-read-permissions
                 resourceGroupName: $(servicesResourceGroup)
-            preDeployScriptsList:
-              - displayName: 'Get Group Id'
-                type: AzurePowerShell
-                scriptPath: 'infra/core/tenant/scripts/Get-EntraGroupObjectId.ps1'
-                scriptArguments: > 
-                  -GroupName 'AAG-Azure-ADP-GlobalRead'
+                preDeployScriptsList:
+                - displayName: 'Get Group Id'
+                  type: AzurePowerShell
+                  scriptPath: 'infra/core/tenant/scripts/Get-EntraGroupObjectId.ps1'
+                  scriptArguments: > 
+                    -GroupName 'AAG-Azure-ADP-GlobalRead'
