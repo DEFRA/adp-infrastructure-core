@@ -205,7 +205,7 @@ extends:
                         -TenantId $(tenantId)
 
       - ${{ if eq(variables.IsRbacGlobalReadPermissions, true) }}:
-        - name: rbac-global-read-permissions
+        - name: global_read_permissions
           deployments:
             - name: rbac-global-read-permissions
               path: infra/bootstrap/env-shared/rbac
