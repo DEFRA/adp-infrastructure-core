@@ -24,6 +24,7 @@ parameters:
       - Platform Apps - All
       - Platform Apps - Key Vaults
       - Platform Apps - Flexible Server DNS Zone
+      - Rbac - Global Read Permissions
 
 pr:
   branches:
@@ -86,6 +87,8 @@ variables:
     value: ${{ or(eq(variables.IsPlatformAppsAll,true), eq(parameters.deployResources,'Platform Apps - Key Vaults')) }}
   - name: IsPlatformAppsFlexibleServerDnsZone
     value: ${{ or(eq(variables.IsPlatformAppsAll,true), eq(parameters.deployResources,'Platform Apps - Flexible Server DNS Zone')) }}
+  - name: IsRbacGlobalReadPermissions
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Rbac - Global Read Permissions')) }}
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -201,3 +204,9 @@ extends:
                         -SubscriptionName $(subscriptionName)
                         -TenantId $(tenantId)
 
+      - ${{ if eq(variables.IsRbacGlobalReadPermissions, true) }}:
+        - name: rbac-global-read-permissions
+          deployments:
+            - name: rbac-global-read-permissions
+              path: infra/bootstrap/env-shared/rbac
+              scope: "Subscription"
