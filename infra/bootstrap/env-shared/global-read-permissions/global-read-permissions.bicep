@@ -1,3 +1,5 @@
+targetScope = 'subscription'
+
 @description('Required. The principal ID of the group to assign the role to.')
 param principalId string
 
