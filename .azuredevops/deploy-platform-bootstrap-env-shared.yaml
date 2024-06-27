@@ -50,7 +50,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      ref: aa/addGlobalPermissionsForTeams
 
 variables:
   - name: IsAll
@@ -89,6 +89,8 @@ variables:
     value: ${{ or(eq(variables.IsPlatformAppsAll,true), eq(parameters.deployResources,'Platform Apps - Flexible Server DNS Zone')) }}
   - name: IsRbacGlobalReadPermissions
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Rbac - Global Read Permissions')) }}
+  - name: globalReadGroupObjectId
+    value: 'dummyValueToPreventWarningInAzureDevOps'
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -215,4 +217,4 @@ extends:
                 type: AzurePowerShell
                 scriptPath: 'infra/core/tenant/scripts/Get-EntraGroupObjectId.ps1'
                 scriptArguments: > 
-                  -EntraGroupName 'AAG-Azure-ADP-GlobalRead'
+                  -EntraGroupName '$(globalReadGroupName)'

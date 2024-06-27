@@ -71,7 +71,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: refs/tags/1.0.0-latest
+      ref: aa/addGlobalPermissionsForTeams
       
 variables:
   - name: IsAll
@@ -554,4 +554,4 @@ extends:
                   serviceConnectionVariableName: ssvServiceConnection
                   scriptPath: 'infra/core/tenant/scripts/Get-EntraGroupObjectId.ps1'
                   scriptArguments: > 
-                    -EntraGroupName 'AAG-Azure-ADP-GlobalRead'
+                    -EntraGroupName '$(globalReadGroupName)'
