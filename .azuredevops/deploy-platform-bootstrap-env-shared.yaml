@@ -207,6 +207,6 @@ extends:
       - ${{ if eq(variables.IsRbacGlobalReadPermissions, true) }}:
         - name: global_read_permissions
           deployments:
-            - name: rbac-global-read-permissions
-              path: infra/bootstrap/env-shared/rbac-global-read-permissions
+            - name: global-read-permissions
+              path: infra/bootstrap/env-shared/global-read-permissions
               scope: "Subscription"
