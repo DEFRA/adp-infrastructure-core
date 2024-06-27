@@ -24,7 +24,7 @@ parameters:
       - Platform Apps - All
       - Platform Apps - Key Vaults
       - Platform Apps - Flexible Server DNS Zone
-      - Rbac - Global Read Permissions
+      - Rbac - Global Team Permissions
 
 pr:
   branches:
@@ -87,8 +87,8 @@ variables:
     value: ${{ or(eq(variables.IsPlatformAppsAll,true), eq(parameters.deployResources,'Platform Apps - Key Vaults')) }}
   - name: IsPlatformAppsFlexibleServerDnsZone
     value: ${{ or(eq(variables.IsPlatformAppsAll,true), eq(parameters.deployResources,'Platform Apps - Flexible Server DNS Zone')) }}
-  - name: IsRbacGlobalReadPermissions
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Rbac - Global Read Permissions')) }}
+  - name: IsRbacGlobalTeamPermissions
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Rbac - Global Team Permissions')) }}
   - name: globalReadGroupObjectId
     value: 'dummyValueToPreventWarningInAzureDevOps'
 
@@ -206,11 +206,11 @@ extends:
                         -SubscriptionName $(subscriptionName)
                         -TenantId $(tenantId)
 
-      - ${{ if eq(variables.IsRbacGlobalReadPermissions, true) }}:
-        - name: global_read_permissions
+      - ${{ if eq(variables.IsRbacGlobalTeamPermissions, true) }}:
+        - name: global_team_permissions
           deployments:
-            - name: global-read-permissions
-              path: infra/bootstrap/env-shared/global-read-permissions
+            - name: global-team-permissions
+              path: infra/bootstrap/env-shared/global-team-permissions
               scope: "Subscription"
               preDeployScriptsList:
               - displayName: 'Get Entra Global Read Group Id'
