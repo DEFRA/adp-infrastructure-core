@@ -40,8 +40,7 @@ try {
     $groupObjectId = Get-AzADGroup -Filter "DisplayName eq '$EntraGroupName'" | Select-Object -ExpandProperty Id
 
     if ($groupObjectId) {
-        $groupId = $group.ObjectId
-        Write-Host "##vso[task.setvariable variable=globalReadGroupObjectId]$groupId"
+        Write-Host "##vso[task.setvariable variable=globalReadGroupObjectId]$groupObjectId"
     }
     else {
         Write-Host "Object ID not found."
