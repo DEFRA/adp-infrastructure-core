@@ -210,3 +210,9 @@ extends:
             - name: global-read-permissions
               path: infra/bootstrap/env-shared/global-read-permissions
               scope: "Subscription"
+              preDeployScriptsList:
+              - displayName: 'Get Entra Global Read Group Id'
+                type: AzurePowerShell
+                scriptPath: 'infra/core/tenant/scripts/Get-EntraGroupObjectId.ps1'
+                scriptArguments: > 
+                  -EntraGroupName 'AAG-Azure-ADP-GlobalRead'
