@@ -164,7 +164,7 @@ extends:
     deployFromFeature: ${{ parameters.deployFromFeature }}
     filePathsForTransform: |
       **/core/env/app-configuration/config-data/config-data.json
-      **/infra/core/env/insights/aad-groups/monitoringpublishergroup.json    
+      **/infra/core/env/insights/aad-groups/monitoringGroups.json    
       **/infra/core/env/open-ai/aad-groups/openaiaccessgroup.json
       **/infra/core/env/search-service/aad-groups/searchserviceaccessgroup.json
     groupedDeployments:
@@ -198,7 +198,7 @@ extends:
                   serviceConnectionVariableName: ssvServiceConnection
                   path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
                   scriptArguments: > 
-                    -AADGroupsJsonManifestPath 'infra/core/env/insights/aad-groups/monitoringpublishergroup.json'              
+                    -AADGroupsJsonManifestPath 'infra/core/env/insights/aad-groups/monitoringGroups.json'              
                 - name: component
                   path: infra/core/env/insights
                   resourceGroupName: $(servicesResourceGroup)
@@ -207,8 +207,10 @@ extends:
                     type: AzurePowerShell
                     serviceConnectionVariableName: 'ssvServiceConnection'
                     inlineScript: |
-                      $groupId = (Get-AzADGroup -DisplayName '$(monitoringPublisherGroup)').id
-                      Write-Host "##vso[task.setvariable variable=monitoringPublisherGroup;]$groupId"
+                      $publisherGroupId = (Get-AzADGroup -DisplayName '$(monitoringPublisherGroup)').id
+                      Write-Host "##vso[task.setvariable variable=monitoringPublisherGroup;]$publisherGroupId"
+                      $readerGroupId = (Get-AzADGroup -DisplayName '$(monitoringReaderGroup)').id
+                      Write-Host "##vso[task.setvariable variable=monitoringReaderGroup;]$readerGroupId"
                   postDeployScriptsList:
                     - displayName: 'GetAppInsightConnectionString'
                       type: AzurePowerShell
