@@ -11,6 +11,8 @@ param subnets array
 param location string
 @description('Required. Environment name.')
 param environment string
+@description('Required. Boolean value to enable resource lock.')
+param resourceLockEnabled bool
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
@@ -29,7 +31,7 @@ module virtualNetwork 'br/SharedDefraRegistry:network.virtual-network:0.4.2' = {
   params: {
     name: vnet.name
     location: location
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     tags: tags
     enableDefaultTelemetry: true
     addressPrefixes: vnet.addressPrefixes
