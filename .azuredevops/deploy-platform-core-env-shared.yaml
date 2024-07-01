@@ -47,7 +47,8 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref:  main
+      #ref:  main
+      ref: rv/405056
       
 variables:
   - name: IsAll
@@ -232,7 +233,8 @@ extends:
                 resourceGroupName: $(ssvInfraResourceGroup) 
                 postDeployScriptsList:
                   - displayName: Create or Update Flux Api Database AAD groups
-                    scriptPath: infra/bootstrap/tenant/scripts/Create-AADGroups.ps1
+                    scriptPath: 'PowerShellLibrary/Create-AADGroups.ps1'
+                    scriptRepo: 'PipelineCommonScripts'
                     type: AzurePowerShell
                     scriptArguments: >
                       -AADGroupsJsonManifestPath 'infra/core/env-shared/flux-notification/config/aad-groups/fluxApiAADGroups.$(environment)_$(subEnvironment).json'                      

@@ -21,8 +21,6 @@ pr:
   paths:
     include:
       - infra/bootstrap/tenant/config/aad-groups/*
-      - infra/scripts/ado/Create-AADGroups.ps1
-      - scripts/modules/aad-groups/*
 
 trigger:
   batch: true
@@ -32,8 +30,6 @@ trigger:
   paths:
     include:
       - infra/bootstrap/tenant/config/aad-groups/*
-      - infra/scripts/ado/Create-AADGroups.ps1
-      - scripts/modules/aad-groups/*
 
 resources:
   repositories:
@@ -41,7 +37,8 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: refs/heads/main
+      #ref: refs/heads/main
+      ref: rv/405056
       
 variables:
   - name: IsAll
@@ -89,7 +86,8 @@ extends:
             - name: Create or Update Platform AAD groups
               type: 'script'
               scriptType: AzurePowerShell
-              path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+              scriptRepo: 'PipelineCommonScripts'
+              path: 'PowerShellLibrary/Create-AADGroups.ps1'
               scriptArguments: > 
                 -AADGroupsJsonManifestPath 'infra/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json'
 
@@ -99,6 +97,7 @@ extends:
             - name: Create or Update portal AAD groups
               type: 'script'
               scriptType: AzurePowerShell
-              path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+              scriptRepo: 'PipelineCommonScripts'
+              path: 'PowerShellLibrary/Create-AADGroups.ps1'
               scriptArguments: > 
                 -AADGroupsJsonManifestPath 'infra/bootstrap/tenant/config/aad-groups/portalAADGroups.$(environment).json'

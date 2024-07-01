@@ -36,7 +36,8 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: main
+      #ref: main
+      ref: rv/405056
       
 variables:
   - name: IsAll
@@ -64,7 +65,8 @@ extends:
                 type: 'script'
                 scriptType: AzurePowerShell
                 serviceConnectionVariableName: ssvServiceConnection
-                path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+                scriptRepo: 'PipelineCommonScripts'
+                path: 'PowerShellLibrary/Create-AADGroups.ps1'
                 scriptArguments: > 
                   -AADGroupsJsonManifestPath 'infra/core/iam/subscription/aad-groups/clusteraccessgroup.json'
               - name: cluster-custom-resources-reader-role

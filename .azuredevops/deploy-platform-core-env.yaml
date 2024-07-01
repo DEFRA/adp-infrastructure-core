@@ -70,7 +70,8 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: refs/tags/1.0.0-latest
+      #ref: refs/tags/1.0.0-latest
+      ref: rv/405056
       
 variables:
   - name: IsAll
@@ -196,7 +197,8 @@ extends:
                   type: 'script'
                   scriptType: AzurePowerShell
                   serviceConnectionVariableName: ssvServiceConnection
-                  path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+                  scriptRepo: 'PipelineCommonScripts'
+                  path: 'PowerShellLibrary/Create-AADGroups.ps1'
                   scriptArguments: > 
                     -AADGroupsJsonManifestPath 'infra/core/env/insights/aad-groups/monitoringpublishergroup.json'              
                 - name: component
@@ -480,7 +482,8 @@ extends:
                   type: 'script'
                   scriptType: AzurePowerShell
                   serviceConnectionVariableName: ssvServiceConnection
-                  path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+                  scriptRepo: 'PipelineCommonScripts'
+                  path: 'PowerShellLibrary/Create-AADGroups.ps1'
                   scriptArguments: > 
                     -AADGroupsJsonManifestPath 'infra/core/env/open-ai/aad-groups/openaiaccessgroup.json'              
                 - name: open-ai
@@ -501,7 +504,8 @@ extends:
                   type: 'script'
                   scriptType: AzurePowerShell
                   serviceConnectionVariableName: ssvServiceConnection
-                  path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+                  scriptRepo: 'PipelineCommonScripts'
+                  path: 'PowerShellLibrary/Create-AADGroups.ps1'
                   scriptArguments: > 
                     -AADGroupsJsonManifestPath 'infra/core/env/search-service/aad-groups/searchserviceaccessgroup.json'                
                 - name: search-service
