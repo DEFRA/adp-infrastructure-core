@@ -59,7 +59,7 @@ module openAiUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-ident
   }
 }
 
-module searchServiceDeployment 'br/avm:search/search-service:0.4.3' = {
+module searchServiceDeployment 'br/avm:search/search-service:0.4.4' = {
   name: 'search-service-${deploymentDate}'
   params: {
     name: searchServiceName
