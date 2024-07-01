@@ -16,7 +16,6 @@ param dataEndpointEnabled bool = false
 @description('Required. Boolean value to enable resource lock.')
 param resourceLockEnabled bool
 
-
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
