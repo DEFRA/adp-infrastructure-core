@@ -16,6 +16,9 @@ param endpoints array
 @description('Optional. Array of rule set objects.')
 param ruleSets array
 
+@description('Required. Boolean value to enable resource lock.')
+param resourceLockEnabled bool
+
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
@@ -47,7 +50,7 @@ module frontDoor 'br/SharedDefraRegistry:cdn.profile:0.4.4-prerelease' = {
     afdEndpoints: map(endpoints, endpoint => {
         name: endpoint
       })
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     tags: union(tags, frontDoorTags)
     sku: sku
     ruleSets: ruleSets

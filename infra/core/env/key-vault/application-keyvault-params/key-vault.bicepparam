@@ -42,3 +42,5 @@ param roleAssignment = [
 ]
 
 param keyvaultType = 'Application'
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}

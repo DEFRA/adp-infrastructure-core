@@ -10,6 +10,9 @@ param vnet object
 @description('Required. The parameter object for the monitoringWorkspace. The object must contain name of the name and resourceGroup.')
 param monitoringWorkspace object
 
+@description('Required. Boolean value to enable resource lock.')
+param resourceLockEnabled bool
+
 @allowed([
   'UKSouth'
 ])
@@ -55,7 +58,7 @@ module openAiUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-ident
   params: {
     name: toLower(managedIdentityName)
     tags: union(defaultTags, managedIdentityTags)
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
   }
 }
 

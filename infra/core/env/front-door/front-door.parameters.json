@@ -17,6 +17,9 @@
     "endpoints":{
       "value": #{{ noescape(afdEndpoints) }}
     },
+    "resourceLockEnabled": {
+      "value": #{{ resourceLockEnabled }}
+    },
     "ruleSets": {
       "value": [
         {

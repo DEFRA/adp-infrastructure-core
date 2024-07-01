@@ -29,6 +29,9 @@
           "addressprefix": "#{{ subnet3AddressPrefix }}"
         }
       ]
+    },
+    "resourceLockEnabled": {
+      "value": #{{ resourceLockEnabled }}
     }
   }
 }

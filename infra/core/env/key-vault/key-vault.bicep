@@ -17,6 +17,9 @@ param environment string
 ])
 param keyvaultType string
 
+@description('Required. Boolean value to enable resource lock.')
+param resourceLockEnabled bool
+
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
@@ -67,7 +70,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     name: keyVault.name
     tags: union(defaultTags, keyVaultTags)
     vaultSku: keyVault.skuName
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     enableRbacAuthorization: true
     enableSoftDelete: bool(keyVault.enableSoftDelete)
     enablePurgeProtection: bool(keyVault.enablePurgeProtection)

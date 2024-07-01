@@ -86,6 +86,9 @@
           "action": "Block"
         }
       ]
+    },
+    "resourceLockEnabled": {
+      "value": #{{ resourceLockEnabled }}
     }
   }
 }

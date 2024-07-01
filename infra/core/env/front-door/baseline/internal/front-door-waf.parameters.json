@@ -147,6 +147,9 @@
     "nonProductionCustomRule": {
       "value": [        
       ]
+    },
+    "resourceLockEnabled": {
+      "value": #{{ resourceLockEnabled }}
     }
   }
 }

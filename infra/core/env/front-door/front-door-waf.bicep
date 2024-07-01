@@ -28,6 +28,9 @@ param customBlockResponseBody string
 @description('Required. Purpose Tag.')
 param purpose string
 
+@description('Required. Boolean value to enable resource lock.')
+param resourceLockEnabled bool
+
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
@@ -56,7 +59,7 @@ module frontDoorWafPolicy 'br/SharedDefraRegistry:network.front-door-web-applica
   params: {
     name: wafPolicyName
     location: location
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     tags: union(tags, frontDoorWafTags)
     sku: 'Premium_AzureFrontDoor' // The Microsoft-managed WAF rule sets require the premium SKU of Front Door.
     policySettings: {

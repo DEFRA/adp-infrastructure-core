@@ -20,6 +20,9 @@ param environment string
 @description('Optional. Type of Storage Account to create for the storage account.')
 param kind string = 'StorageV2'
 
+@description('Required. Boolean value to enable resource lock.')
+param resourceLockEnabled bool
+
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
@@ -52,7 +55,7 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-account:0.5.3' = 
     name: toLower(storageAccount.name)
     tags: union(defaultTags, storageAccountTags)
     skuName: storageAccount.skuName
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     kind: kind
     networkAcls: {
       bypass: 'AzureServices'

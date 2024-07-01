@@ -27,6 +27,9 @@ param privateLinkServiceConnectionExists string = 'false'
 @description('Required. Search Service UserGroup id.')
 param searchServiceUserGroupId string
 
+@description('Required. Boolean value to enable resource lock.')
+param resourceLockEnabled bool
+
 var searchServiceName = toLower(searchService.name)
 
 var managedIdentityTags = {
@@ -55,7 +58,7 @@ module openAiUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-ident
   params: {
     name: toLower(managedIdentityName)
     tags: union(defaultTags, managedIdentityTags)
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
   }
 }
 
@@ -64,10 +67,10 @@ module searchServiceDeployment 'br/avm:search/search-service:0.4.4' = {
   params: {
     name: searchServiceName
     location: location
-    lock: {
+    lock: resourceLockEnabled ? {
       kind: 'CanNotDelete'
       name: 'CanNotDelete'
-    }
+    } : null
     publicNetworkAccess: 'disabled'
     networkRuleSet:{
       defaultAction: 'Deny'
