@@ -68,10 +68,10 @@ module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
     kind: 'OpenAI'
     name: openAi.name
     location: location
-    lock: {
+    lock: resourceLockEnabled ? {
       kind: 'CanNotDelete'
       name: 'CanNotDelete'
-    }
+    } : null
     disableLocalAuth: false
     publicNetworkAccess: 'Disabled'
     networkAcls: {

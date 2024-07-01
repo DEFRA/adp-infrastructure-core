@@ -74,7 +74,7 @@ module aadAdminUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-ide
   params: {
     name: toLower(managedIdentityName)
     tags: union(defaultTags, managedIdentityTags)
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
   }
 }
 
