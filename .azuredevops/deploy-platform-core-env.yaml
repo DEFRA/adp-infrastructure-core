@@ -70,7 +70,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      ref: jk/381893-appinsights-reader-group
+      ref: refs/tags/1.0.0-latest
       
 variables:
   - name: IsAll
