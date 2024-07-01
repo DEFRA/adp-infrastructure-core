@@ -237,4 +237,4 @@ extends:
                     scriptRepo: 'PipelineCommonScripts'
                     type: AzurePowerShell
                     scriptArguments: >
-                      -AADGroupsJsonManifestPath 'infra/core/env-shared/flux-notification/config/aad-groups/fluxApiAADGroups.$(environment)_$(subEnvironment).json'                      
+                      -AADGroupsJsonManifestPath '$(Pipeline.Workspace)/s/self/infra/core/env-shared/flux-notification/config/aad-groups/fluxApiAADGroups.$(environment)_$(subEnvironment).json'                      

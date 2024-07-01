@@ -89,7 +89,7 @@ extends:
               scriptRepo: 'PipelineCommonScripts'
               path: 'PowerShellLibrary/Create-AADGroups.ps1'
               scriptArguments: > 
-                -AADGroupsJsonManifestPath 'infra/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json'
+                -AADGroupsJsonManifestPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json'
 
       - ${{ if eq(variables.IsPortalADGroup, true) }}:  
         - name: portal_aadgroup
@@ -100,4 +100,4 @@ extends:
               scriptRepo: 'PipelineCommonScripts'
               path: 'PowerShellLibrary/Create-AADGroups.ps1'
               scriptArguments: > 
-                -AADGroupsJsonManifestPath 'infra/bootstrap/tenant/config/aad-groups/portalAADGroups.$(environment).json'
+                -AADGroupsJsonManifestPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/tenant/config/aad-groups/portalAADGroups.$(environment).json'

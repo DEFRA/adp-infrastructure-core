@@ -200,7 +200,7 @@ extends:
                   scriptRepo: 'PipelineCommonScripts'
                   path: 'PowerShellLibrary/Create-AADGroups.ps1'
                   scriptArguments: > 
-                    -AADGroupsJsonManifestPath 'infra/core/env/insights/aad-groups/monitoringpublishergroup.json'              
+                    -AADGroupsJsonManifestPath '$(Pipeline.Workspace)/s/self/infra/core/env/insights/aad-groups/monitoringpublishergroup.json'              
                 - name: component
                   path: infra/core/env/insights
                   resourceGroupName: $(servicesResourceGroup)
@@ -485,7 +485,7 @@ extends:
                   scriptRepo: 'PipelineCommonScripts'
                   path: 'PowerShellLibrary/Create-AADGroups.ps1'
                   scriptArguments: > 
-                    -AADGroupsJsonManifestPath 'infra/core/env/open-ai/aad-groups/openaiaccessgroup.json'              
+                    -AADGroupsJsonManifestPath '$(Pipeline.Workspace)/s/self/infra/core/env/open-ai/aad-groups/openaiaccessgroup.json'              
                 - name: open-ai
                   path: infra/core/env/open-ai
                   resourceGroupName: $(servicesResourceGroup)
@@ -507,7 +507,7 @@ extends:
                   scriptRepo: 'PipelineCommonScripts'
                   path: 'PowerShellLibrary/Create-AADGroups.ps1'
                   scriptArguments: > 
-                    -AADGroupsJsonManifestPath 'infra/core/env/search-service/aad-groups/searchserviceaccessgroup.json'                
+                    -AADGroupsJsonManifestPath '$(Pipeline.Workspace)/s/self/infra/core/env/search-service/aad-groups/searchserviceaccessgroup.json'                
                 - name: search-service
                   path: infra/core/env/search-service
                   resourceGroupName: $(servicesResourceGroup)
