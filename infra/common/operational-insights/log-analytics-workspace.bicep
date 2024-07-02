@@ -33,10 +33,7 @@ module logAnalyticsWorkspaceResource 'br/SharedDefraRegistry:operational-insight
     name: logAnalytics.name
     location: location
     skuName: logAnalytics.skuName
-    lock: resourceLockEnabled ? {
-      kind: 'CanNotDelete'
-      name: 'CanNotDelete'
-    } : null
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     tags: tags
   }
 }
