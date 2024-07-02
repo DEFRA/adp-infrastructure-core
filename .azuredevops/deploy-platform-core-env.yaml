@@ -43,6 +43,7 @@ parameters:
       - OpenAI - All
       - OpenAI - Infra  
       - OpenAI - Search Service
+      - Rbac - Global Team Permissions
 
 pr:
   branches:
@@ -155,6 +156,11 @@ variables:
     value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Infra')) }}
   - name: IsOpenAiSearchService
     value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Search Service')) }}
+
+  - name: IsGlobalTeamPermissions
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Rbac - Global Team Permissions')) }}
+  - name: globalReadGroupObjectId
+    value: 'dummyValueToPreventWarningInAzureDevOps'
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -536,3 +542,16 @@ extends:
                       -ResourceGroupName '$(servicesResourceGroup)'
                       -SearchServiceName '$(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01'
                       -Command 'Approve'
+        - ${{ if eq(variables.IsGlobalTeamPermissions, true) }}:
+          - name: global_team_permissions
+            deployments:
+              - name: global-team-permissions
+                path: infra/core/env/global-team-permissions
+                resourceGroupName: $(servicesResourceGroup)
+                preDeployScriptsList:
+                - displayName: 'Get Entra Global Read Group Id'
+                  type: AzurePowerShell
+                  serviceConnectionVariableName: ssvServiceConnection
+                  scriptPath: 'infra/core/tenant/scripts/Get-EntraGroupObjectId.ps1'
+                  scriptArguments: > 
+                    -EntraGroupName '$(globalReadGroupName)'
