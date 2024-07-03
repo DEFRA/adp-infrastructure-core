@@ -52,8 +52,11 @@
     "keyvaultType": {
       "value": "Application"
     },
-    "ipRules": {
+    "defraApprovedIpRules": {
       "value": #{{ noescape(customRule_DefraApprovedIp) }}
+    },
+    "additionalApprovedIpRules": {
+      "value": #{{ noescape(logicappServiceIpUkEurope) }}
     }
   }
 }

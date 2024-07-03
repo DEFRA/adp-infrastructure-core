@@ -30,7 +30,11 @@ param principalId string
 @description('Required. The parameter object for keyvault roleassignment. The object must contain the roleDefinitionIdOrName, description and principalType.')
 param roleAssignment array
 
-param ipRules array = []
+param defraApprovedIpRules array = []
+
+param additionalApprovedIpRules array = []
+
+var ipRules = concat(defraApprovedIpRules, additionalApprovedIpRules)
 
 var roleAssignments = [
   for item in roleAssignment: {
