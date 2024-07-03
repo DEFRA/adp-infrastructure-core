@@ -83,7 +83,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
       defaultAction: 'Deny'
       ipRules: [
         for rule in ipRules: {
-          value: rule
+          value: contains(rule, '::') ? null : rule
         }
       ]
     }    
