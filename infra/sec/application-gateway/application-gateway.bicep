@@ -40,6 +40,9 @@ param frontDoorId string
 @description('Required. backends Object(backendAddressPool, backendHttpSetting, httpListener, requestRoutingRule)')
 param backends array
 
+@description('Required. Boolean value to enable resource lock.')
+param resourceLockEnabled bool
+
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
@@ -148,10 +151,10 @@ module applicationGateway 'br/SharedDefraRegistry:network.application-gateway:0.
     location: location
     sku: sku
     enableHttp2: true
-    lock: {
+    lock: resourceLockEnabled ? {
       kind: 'CanNotDelete'
       name: 'CanNotDelete'
-    }
+    } : null
     tags: union(tags, applicationGatewayTags)
     diagnosticSettings : [
       {
