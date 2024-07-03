@@ -30,6 +30,10 @@ param principalId string
 @description('Required. The parameter object for keyvault roleassignment. The object must contain the roleDefinitionIdOrName, description and principalType.')
 param roleAssignment array
 
+param publicNetworkAccess string = 'Disabled'
+
+param privateEndpointsEnabled bool = true
+
 var roleAssignments = [
   for item in roleAssignment: {
     roleDefinitionIdOrName: item.roleDefinitionIdOrName
@@ -74,17 +78,17 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     softDeleteRetentionInDays: int(keyVault.softDeleteRetentionInDays)
     networkAcls: {
       bypass: 'AzureServices'
-      defaultAction: 'Deny'
+      defaultAction: (privateEndpointsEnabled) ? 'Deny' : 'Allow'
     }
-    publicNetworkAccess: 'Disabled'
-    privateEndpoints: [
+    publicNetworkAccess: publicNetworkAccess
+    privateEndpoints: (privateEndpointsEnabled) ? [
       {
         name: keyVault.privateEndpointName
         service: 'vault'
         subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
         tags: union(defaultTags, keyVaultPrivateEndpointTags)
       }
-    ]
+    ] : null
     roleAssignments: roleAssignments
   }
 }
