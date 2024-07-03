@@ -36,4 +36,4 @@ param roleAssignment = [
 
 param keyvaultType = 'Application'
 
-param ipRules = #{{ customRule_DefraApprovedIp }}
+param ipRules = #{{ noescape(vpn_DefraApprovedIp) }}
