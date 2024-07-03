@@ -31,12 +31,12 @@ resources:
   repositories:
     - repository: DEFRA-ADPPipelineCommon
       name: DEFRA/adp-pipeline-common
-      endpoint: DEFRA
+      endpoint: DEFRA-ADP
       type: github
       ref: refs/heads/main
     - repository: DEFRA-ADPFluxServices
       name: DEFRA/adp-flux-services
-      endpoint: DEFRA
+      endpoint: DEFRA-ADP
       type: github
       ref: refs/heads/main
 
