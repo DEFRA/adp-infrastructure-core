@@ -34,7 +34,7 @@ param defraApprovedIpRules array = []
 
 param additionalApprovedIpRules array = []
 
-var ipRules = concat(defraApprovedIpRules, additionalApprovedIpRules)
+var ipv4IpRules = filter(concat(defraApprovedIpRules, additionalApprovedIpRules), rule => !contains(rule, ':'))
 
 var roleAssignments = [
   for item in roleAssignment: {
@@ -82,8 +82,8 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
       bypass: 'AzureServices'
       defaultAction: 'Deny'
       ipRules: [
-        for rule in ipRules: {
-          value: contains(rule, ':') ? '' : rule
+        for rule in ipv4IpRules:  {
+          value: rule
         }
       ]
     }    
