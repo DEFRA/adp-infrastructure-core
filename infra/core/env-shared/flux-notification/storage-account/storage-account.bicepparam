@@ -18,3 +18,5 @@ param environment = '#{{ environment }}'
 param subEnvironment = '#{{ subEnvironment }}'
 
 param location = '#{{ location }}'
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}
