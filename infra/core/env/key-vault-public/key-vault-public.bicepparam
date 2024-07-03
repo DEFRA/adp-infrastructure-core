@@ -1,4 +1,4 @@
-using '../key-vault.bicep'
+using 'key-vault-public.bicep'
 
 param keyVault = {
   name: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}03'
@@ -7,8 +7,6 @@ param keyVault = {
   enablePurgeProtection: '#{{ keyvaultEnablePurgeProtection }}'
   softDeleteRetentionInDays: '#{{ keyvaultSoftDeleteRetentionInDays }}'
 }
-
-param vnet = {}
 
 param environment = '#{{ environment }}'
 
@@ -37,9 +35,5 @@ param roleAssignment = [
 ]
 
 param keyvaultType = 'Application'
-
-param publicNetworkAccess = 'Enabled'
-
-param privateEndpointsEnabled = false
 
 param ipRules = []

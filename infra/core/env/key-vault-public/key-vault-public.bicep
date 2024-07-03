@@ -1,6 +1,3 @@
-@description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPrivateEndpoints values.')
-param vnet object
-
 @description('Required. The parameter object for keyvault. The object must contain the name, enableSoftDelete, enablePurgeProtection and softDeleteRetentionInDays values.')
 param keyVault object
 
@@ -30,6 +27,8 @@ param principalId string
 @description('Required. The parameter object for keyvault roleassignment. The object must contain the roleDefinitionIdOrName, description and principalType.')
 param roleAssignment array
 
+param ipRules array = []
+
 var roleAssignments = [
   for item in roleAssignment: {
     roleDefinitionIdOrName: item.roleDefinitionIdOrName
@@ -55,11 +54,6 @@ var keyVaultTags = {
   Tier: 'Shared'
 }
 
-var keyVaultPrivateEndpointTags = {
-  Name: keyVault.privateEndpointName
-  Purpose: '${keyvaultType} Keyvault private endpoint'
-  Tier: 'Shared'
-}
 
 module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
   name: '${keyvaultType}-keyvault-${deploymentDate}'
@@ -74,17 +68,10 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     softDeleteRetentionInDays: int(keyVault.softDeleteRetentionInDays)
     networkAcls: {
       bypass: 'AzureServices'
-      defaultAction: 'Deny'
-    }
-    publicNetworkAccess: 'Disabled'
-    privateEndpoints: [
-      {
-        name: keyVault.privateEndpointName
-        service: 'vault'
-        subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
-        tags: union(defaultTags, keyVaultPrivateEndpointTags)
-      }
-    ]
+      defaultAction: 'Allow'
+      ipRules: ipRules
+    }    
+    publicNetworkAccess: 'Enabled'    
     roleAssignments: roleAssignments
   }
 }

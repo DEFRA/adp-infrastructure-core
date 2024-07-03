@@ -478,9 +478,8 @@ extends:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
               - ${{ if eq(variables.IsApplicationKeyVaultPublic, true) }}:
-                - name: key-vault
-                  path: infra/core/env/key-vault
-                  parameterFilePath: infra/core/env/key-vault/application-keyvault-public-params
+                - name: key-vault-public
+                  path: infra/core/env/key-vault-public
                   resourceGroupName: $(servicesResourceGroup)
         - ${{ if eq(variables.IsOpenAi, true) }}:  
           - name: openai
