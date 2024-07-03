@@ -26,6 +26,8 @@ param platformUserGroupId string
 @description('Required. The parameter object for the application insights.')
 param appInsights object
 
+@description('Required. Boolean value to enable resource lock.')
+param resourceLockEnabled bool
 
 var roleAssignments = [
   {
@@ -72,7 +74,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     name: keyVault.name
     tags: union(defaultTags, keyVaultTags)
     vaultSku: keyVault.skuName
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     enableRbacAuthorization: true    
     enableSoftDelete: bool(keyVault.enableSoftDelete)
     enablePurgeProtection: bool(keyVault.enablePurgeProtection)

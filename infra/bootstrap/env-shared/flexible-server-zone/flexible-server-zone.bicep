@@ -7,6 +7,9 @@ param privateDnsZone string
 @description('Required. Environment name.')
 param environment string
 
+@description('Required. Boolean value to enable resource lock.')
+param resourceLockEnabled bool
+
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
@@ -33,7 +36,8 @@ var dnsVnetLinksTags = {
 module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5.2' = {
   name: 'postgresql-private-dns-zone-${deploymentDate}'
   params: {
-   name: privateDnsZoneName  
+   name: privateDnsZoneName
+   lock: resourceLockEnabled ? 'CanNotDelete' : null 
    tags: union(tags, dnsTags)
    virtualNetworkLinks: [
     {

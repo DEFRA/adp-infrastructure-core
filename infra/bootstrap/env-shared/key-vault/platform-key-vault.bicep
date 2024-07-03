@@ -28,6 +28,9 @@ param roleAssignments array
   ])
 param skuName string = 'premium'
 
+@description('Required. Boolean value to enable resource lock.')
+param resourceLockEnabled bool
+
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
@@ -49,6 +52,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     name: keyVaultName
     tags: tags
     vaultSku: skuName
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     enableRbacAuthorization: true    
     enableSoftDelete: enableSoftDelete
     enablePurgeProtection: enablePurgeProtection

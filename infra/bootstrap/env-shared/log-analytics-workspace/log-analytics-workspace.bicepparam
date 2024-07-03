@@ -8,3 +8,5 @@ param logAnalytics = {
 param location = '#{{ location }}'
 
 param environment = '#{{ environment }}'
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}
