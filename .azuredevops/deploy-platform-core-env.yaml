@@ -72,8 +72,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA
       type: github
-      #ref: refs/tags/1.0.0-latest
-      ref: rv/406122
+      ref: refs/tags/1.0.0-latest
       
 variables:
   - name: IsAll
