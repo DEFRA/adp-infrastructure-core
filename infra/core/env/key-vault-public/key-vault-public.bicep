@@ -69,7 +69,11 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     networkAcls: {
       bypass: 'AzureServices'
       defaultAction: 'Allow'
-      ipRules: ipRules
+      ipRules: [
+        for rule in ipRules: {
+          value: rule
+        }
+      ]
     }    
     publicNetworkAccess: 'Enabled'    
     roleAssignments: roleAssignments
