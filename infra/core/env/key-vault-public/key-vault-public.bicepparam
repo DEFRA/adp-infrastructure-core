@@ -43,4 +43,4 @@ param roleAssignment = [
 
 param keyvaultType = 'Application'
 
-param ipRules = union(json(#{{ noescape(customRule_DefraApprovedIp) }}),json(#{{ noescape(logicappServiceIpUkEurope) }}))
+param ipRules = union(json({#{{ noescape(customRule_DefraApprovedIp) }}}),json({#{{ noescape(logicappServiceIpUkEurope) }}}))
