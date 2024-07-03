@@ -8,6 +8,8 @@ param keyVault = {
   softDeleteRetentionInDays: '#{{ keyvaultSoftDeleteRetentionInDays }}'
 }
 
+param vnet = {}
+
 param environment = '#{{ environment }}'
 
 param location = '#{{ location }}'
@@ -39,3 +41,5 @@ param keyvaultType = 'Application'
 param publicNetworkAccess = 'Enabled'
 
 param privateEndpointsEnabled = false
+
+param ipRules = []

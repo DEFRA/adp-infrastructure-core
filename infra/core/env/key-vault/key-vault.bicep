@@ -34,6 +34,8 @@ param publicNetworkAccess string = 'Disabled'
 
 param privateEndpointsEnabled bool = true
 
+param ipRules array = []
+
 var roleAssignments = [
   for item in roleAssignment: {
     roleDefinitionIdOrName: item.roleDefinitionIdOrName
@@ -79,7 +81,8 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     networkAcls: {
       bypass: 'AzureServices'
       defaultAction: (privateEndpointsEnabled) ? 'Deny' : 'Allow'
-    }
+      ipRules: ipRules
+    }    
     publicNetworkAccess: publicNetworkAccess
     privateEndpoints: (privateEndpointsEnabled) ? [
       {
