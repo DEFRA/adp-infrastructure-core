@@ -1,3 +1,6 @@
+@description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPrivateEndpoints values.')
+param vnet object
+
 @description('Required. The parameter object for keyvault. The object must contain the name, enableSoftDelete, enablePurgeProtection and softDeleteRetentionInDays values.')
 param keyVault object
 
@@ -54,6 +57,11 @@ var keyVaultTags = {
   Tier: 'Shared'
 }
 
+var keyVaultPrivateEndpointTags = {
+  Name: keyVault.privateEndpointName
+  Purpose: '${keyvaultType} Keyvault private endpoint'
+  Tier: 'Shared'
+}
 
 module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
   name: '${keyvaultType}-keyvault-${deploymentDate}'
@@ -75,7 +83,15 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
         }
       ]
     }    
-    publicNetworkAccess: 'Enabled'    
+    publicNetworkAccess: 'Enabled'
+    privateEndpoints: [
+      {
+        name: keyVault.privateEndpointName
+        service: 'vault'
+        subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
+        tags: union(defaultTags, keyVaultPrivateEndpointTags)
+      }
+    ]    
     roleAssignments: roleAssignments
   }
 }

@@ -482,6 +482,9 @@ extends:
                 - name: key-vault-public
                   path: infra/core/env/key-vault-public
                   resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)03
+                      resourceGroupName: $(servicesResourceGroup)                  
         - ${{ if eq(variables.IsOpenAi, true) }}:  
           - name: openai
             ${{ if eq(variables.IsAll, true) }}:

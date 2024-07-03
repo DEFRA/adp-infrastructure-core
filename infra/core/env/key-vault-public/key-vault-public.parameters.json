@@ -5,6 +5,7 @@
     "keyVault": {
       "value": {
         "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}03",
+        "privateEndpointName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}12",
         "skuName": "premium",
         "enableSoftDelete": "#{{ keyvaultEnableSoftDelete }}",
         "enablePurgeProtection": "#{{ keyvaultEnablePurgeProtection }}",
@@ -45,7 +46,7 @@
       "value": "Application"
     },
     "ipRules": {
-      "value": #{{ noescape(customRule_DefraApprovedIp) }}
+      "value": union(#{{ noescape(customRule_DefraApprovedIp) }},#{{ noescape(logicappServiceIpUkEurope) }})
     }
   }
 }
