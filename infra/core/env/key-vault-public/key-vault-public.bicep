@@ -68,7 +68,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     softDeleteRetentionInDays: int(keyVault.softDeleteRetentionInDays)
     networkAcls: {
       bypass: 'AzureServices'
-      defaultAction: 'Allow'
+      defaultAction: 'Deny'
       ipRules: [
         for rule in ipRules: {
           value: rule
