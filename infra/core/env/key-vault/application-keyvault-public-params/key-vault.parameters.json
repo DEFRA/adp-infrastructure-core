@@ -52,6 +52,9 @@
     "keyvaultType": {
       "value": "Application"
     },
+    "publicNetworkAccess": {
+      "value": "Enabled"
+    },
     "defraApprovedIpRules": {
       "value": #{{ noescape(customRule_DefraApprovedIp) }}
     },
