@@ -13,7 +13,7 @@ param environment string
 param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
-@description('Required. Boolean value to enable resource lock.')
+@description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
 
 var commonTags = {

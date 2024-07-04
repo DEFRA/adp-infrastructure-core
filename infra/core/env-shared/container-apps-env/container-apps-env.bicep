@@ -28,7 +28,7 @@ param portalEntraApp object
 @description('Required. portal app env type internal. Default to true')
 param internal bool = true
 
-@description('Required. Boolean value to enable resource lock.')
+@description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
 
 var customTags = {

@@ -28,7 +28,7 @@ param roleAssignments array
   ])
 param skuName string = 'premium'
 
-@description('Required. Boolean value to enable resource lock.')
+@description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
 
 @description('Optional. Date in the format yyyy-MM-dd.')

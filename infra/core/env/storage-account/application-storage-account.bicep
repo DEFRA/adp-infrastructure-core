@@ -20,7 +20,7 @@ param environment string
 @description('Optional. Type of Storage Account to create for the storage account.')
 param kind string = 'StorageV2'
 
-@description('Required. Boolean value to enable resource lock.')
+@description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
 
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')

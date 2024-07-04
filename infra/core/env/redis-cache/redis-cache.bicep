@@ -19,7 +19,7 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Object array, with propterties Name, addressprefix in cidr format')
 param firewallRules array = []
 
-@description('Required. Boolean value to enable resource lock.')
+@description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
 
 var customTags = {

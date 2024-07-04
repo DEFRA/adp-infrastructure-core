@@ -29,7 +29,7 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Required. The name of the key vault where the secrets will be stored.')
 param keyvaultName string
 
-@description('Required. Boolean value to enable resource lock.')
+@description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
 
 var customTags = {

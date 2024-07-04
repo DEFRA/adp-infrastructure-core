@@ -27,7 +27,7 @@ param privateLinkServiceConnectionExists string = 'false'
 @description('Required. Search Service UserGroup id.')
 param searchServiceUserGroupId string
 
-@description('Required. Boolean value to enable resource lock.')
+@description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
 
 var searchServiceName = toLower(searchService.name)

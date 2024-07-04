@@ -25,7 +25,7 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Application Insights object.')
 param appInsights object
 
-@description('Required. Boolean value to enable resource lock.')
+@description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
 
 var customTags = {

@@ -16,7 +16,7 @@ param endpoints array
 @description('Optional. Array of rule set objects.')
 param ruleSets array
 
-@description('Required. Boolean value to enable resource lock.')
+@description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
 
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')

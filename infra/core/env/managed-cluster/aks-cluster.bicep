@@ -37,7 +37,7 @@ param keyVault object
 @description('Required. The parameter object for the firewall certificate key vault. The object must contain name, resourceGroup, keyVaultName and secretName.')
 param keyvaultFwCertificate object
 
-@description('Required. Boolean value to enable resource lock.')
+@description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
 
 var commonTags = {

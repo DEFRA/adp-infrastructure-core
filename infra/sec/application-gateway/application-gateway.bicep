@@ -40,7 +40,7 @@ param frontDoorId string
 @description('Required. backends Object(backendAddressPool, backendHttpSetting, httpListener, requestRoutingRule)')
 param backends array
 
-@description('Required. Boolean value to enable resource lock.')
+@description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
 
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')

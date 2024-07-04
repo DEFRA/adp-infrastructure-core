@@ -29,7 +29,7 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
-@description('Required. Boolean value to enable resource lock.')
+@description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
 
 var customTags = {

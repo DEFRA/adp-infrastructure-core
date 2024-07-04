@@ -10,7 +10,7 @@ param environment string
 @description('Optional. Enable a single data endpoint per region for serving data. Not relevant in case of disabled public access. Note, requires the \'acrSku\' to be \'Premium\'.')
 param dataEndpointEnabled bool = false
 
-@description('Required. Boolean value to enable resource lock.')
+@description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
 
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')

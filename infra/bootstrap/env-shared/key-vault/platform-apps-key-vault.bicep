@@ -26,7 +26,7 @@ param platformUserGroupId string
 @description('Required. The parameter object for the application insights.')
 param appInsights object
 
-@description('Required. Boolean value to enable resource lock.')
+@description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
 
 var roleAssignments = [
