@@ -56,7 +56,7 @@
       "value": #{{ noescape(customRule_DefraApprovedIp) }}
     },
     "additionalApprovedIpRules": {
-      "value": #{{ noescape(logicappServiceIpUkEurope) }}
+      "value": #{{ noescape(powerPlatformIpEurope) }}
     }
   }
 }
