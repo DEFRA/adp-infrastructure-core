@@ -34,3 +34,4 @@ param appInsights = {
   subscriptionId: '#{{ subscriptionId }}'
 }
 
+param resourceLockEnabled = #{{ resourceLockEnabled }}

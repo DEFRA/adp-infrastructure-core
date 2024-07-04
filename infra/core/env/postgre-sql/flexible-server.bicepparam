@@ -37,3 +37,5 @@ param secrets = [
   'ADO-DefraGovUK-AAD-ADP-#{{ssvEnvironment}}#{{nc_shared_instance}}'
   'ADO-DefraGovUK-AAD-ADP-#{{ssvEnvironment}}#{{nc_shared_instance}}-ClientId'
 ]
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}

@@ -28,6 +28,9 @@ param portalEntraApp object
 @description('Required. portal app env type internal. Default to true')
 param internal bool = true
 
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
+
 var customTags = {
   Location: location
   CreatedDate: createdDate
@@ -65,10 +68,10 @@ module managedEnvironment 'br/SharedDefraRegistry:app.managed-environment:0.4.10
     infrastructureSubnetId: !empty(infrastructureSubnetId) ? infrastructureSubnetId : null
     internal: internal
     location: location
-    lock: {
+    lock: resourceLockEnabled ? {
       kind: 'CanNotDelete'
       name: '${containerAppEnv.name}-CanNotDelete'
-    }
+    } : null
     workloadProfiles: !empty(workloadProfiles) ? workloadProfiles : null
     zoneRedundant: zoneRedundant
     infrastructureResourceGroupName: infrastructureResourceGroupName

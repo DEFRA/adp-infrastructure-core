@@ -37,6 +37,9 @@ param keyVault object
 @description('Required. The parameter object for the firewall certificate key vault. The object must contain name, resourceGroup, keyVaultName and secretName.')
 param keyvaultFwCertificate object
 
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
+
 var commonTags = {
   Location: location
   CreatedDate: createdDate
@@ -125,7 +128,7 @@ module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-id
   params: {
     name: cluster.miControlPlane
     location: location
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     tags: union(tags, tagsMi)
   }
 }
@@ -135,7 +138,7 @@ module managedIdentityAppConfig 'br/SharedDefraRegistry:managed-identity.user-as
   params: {
     name: appConfig.managedIdentityName
     location: location
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     tags: union(tags, tagsAppConfigMi)
     federatedIdentityCredentials: [
       {
@@ -156,7 +159,7 @@ module managedIdentityAso 'br/SharedDefraRegistry:managed-identity.user-assigned
     name: asoPlatformManagedIdentity
     tags: union(tags, tagsAsoMi)
     location: location
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     federatedIdentityCredentials: [
       {
         name: asoPlatformManagedIdentity
@@ -253,10 +256,10 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.1
   params: {
     name: cluster.name
     location: location
-    lock: {
+    lock: resourceLockEnabled ? {
       kind: 'CanNotDelete'
       name: '${cluster.name}-CanNotDelete-lock'
-    }
+    } : null
     tags: union(tags, aksTags)
     kubernetesVersion: cluster.kubernetesVersion
     nodeResourceGroup: cluster.nodeResourceGroup

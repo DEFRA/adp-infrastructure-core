@@ -11,6 +11,9 @@ param location string
 @description('Required. Environment name.')
 param environment string
 
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
+
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
@@ -33,6 +36,6 @@ module publicDnsZone 'br/SharedDefraRegistry:network.dns-zone:0.5.2' = {
     location: location
     tags: tags
     enableDefaultTelemetry: true
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
   }
 }

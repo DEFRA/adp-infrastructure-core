@@ -7,6 +7,9 @@ param location string = resourceGroup().location
 @description('Required. Environment name.')
 param environment string
 
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
+
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
@@ -30,6 +33,7 @@ module logAnalyticsWorkspaceResource 'br/SharedDefraRegistry:operational-insight
     name: logAnalytics.name
     location: location
     skuName: logAnalytics.skuName
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     tags: tags
   }
 }
