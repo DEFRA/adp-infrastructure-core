@@ -14,7 +14,7 @@ resources:
   repositories:
     - repository: AdpFluxServices
       name: defra/adp-flux-services
-      endpoint: DEFRA
+      endpoint: DEFRA-ADP
       type: github
       ref: main
 
