@@ -39,6 +39,7 @@ parameters:
       - Application - Storage Account
       - Application - Service Bus
       - Application - Key Vault
+      - Application - Key Vault - Public
       - Platform - Key Vault
       - OpenAI - All
       - OpenAI - Infra  
@@ -147,7 +148,8 @@ variables:
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Service Bus')) }}
   - name: IsApplicationKeyVault
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
-
+  - name: IsApplicationKeyVaultPublic
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault - Public')) }}
   - name: IsOpenAi
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'OpenAI -')) }}
   - name: IsOpenAiAll
@@ -475,6 +477,14 @@ extends:
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsApplicationKeyVaultPublic, true) }}:
+                - name: key-vault
+                  path: infra/core/env/key-vault
+                  parameterFilePath: infra/core/env/key-vault/application-keyvault-public-params
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)03
+                      resourceGroupName: $(servicesResourceGroup)                  
         - ${{ if eq(variables.IsOpenAi, true) }}:  
           - name: openai
             ${{ if eq(variables.IsAll, true) }}:
