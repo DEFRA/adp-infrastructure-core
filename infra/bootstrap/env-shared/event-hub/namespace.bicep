@@ -7,6 +7,9 @@ param eventHubNamespace object
 @description('Required. Environment name.')
 param environment string
 
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
+
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
@@ -42,9 +45,9 @@ module eventHubNamespaceResource 'br/SharedDefraRegistry:event-hub.namespace:0.5
     name: eventHubNamespace.name
     skuName: 'Standard'
     location: location
-    lock: {
+    lock: resourceLockEnabled ? {
       kind: 'CanNotDelete'
-    }
+    } : null
     tags: union(tags, eventHubNamespaceTags)
     networkRuleSets: {
       defaultAction: 'Deny'

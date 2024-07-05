@@ -74,3 +74,5 @@ param deployments = [
     }
   }
 ]
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}

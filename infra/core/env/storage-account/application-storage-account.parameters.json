@@ -21,6 +21,9 @@
         },
         "location": {
             "value": "#{{ location }}"
+        },
+        "resourceLockEnabled": {
+            "value": #{{ resourceLockEnabled }}
         }
     }
 }

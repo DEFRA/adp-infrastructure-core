@@ -18,3 +18,5 @@ param keyvaultName = '#{{ ssvInfraKeyVault }}'
 param environment = '#{{ environment }}'
 
 param location = '#{{ location }}'
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}

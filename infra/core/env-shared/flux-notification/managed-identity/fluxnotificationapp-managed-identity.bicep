@@ -37,6 +37,9 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Application Insights object.')
 param appInsights object
 
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
+
 var customTags = {
   Location: location
   CreatedDate: createdDate
@@ -57,7 +60,7 @@ module managedIdentities 'br/SharedDefraRegistry:managed-identity.user-assigned-
   params: {
     name: managedIdentity.name
     tags: union(defaultTags, managedIdentityTags)
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     roleAssignments: roleAssignments
   }
 }

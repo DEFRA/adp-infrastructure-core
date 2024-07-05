@@ -930,3 +930,5 @@ param backends = [
     }
   }
 ]
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}

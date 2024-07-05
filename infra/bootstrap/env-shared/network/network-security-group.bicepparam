@@ -1614,3 +1614,5 @@ param nsgList = [
     ]
   }
 ]
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}

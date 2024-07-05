@@ -27,3 +27,5 @@ param appInsights = {
   name: '#{{ applicationInsightsName }}'
   resourceGroup: '#{{ ssvSharedResourceGroup }}'
 }
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}

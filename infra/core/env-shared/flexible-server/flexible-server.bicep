@@ -20,6 +20,8 @@ param diagnostics object
 param location string
 @description('Required. Environment name.')
 param environment string
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
@@ -68,7 +70,7 @@ module aadAdminUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-ide
   params: {
     name: toLower(managedIdentityName)
     tags: union(defaultTags, managedIdentityTags)
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
   }
 }
 
