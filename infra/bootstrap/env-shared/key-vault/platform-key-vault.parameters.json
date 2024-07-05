@@ -36,6 +36,9 @@
         },
         "softDeleteRetentionInDays": {
             "value": #{{ keyvaultSoftDeleteRetentionInDays }}
+        },
+        "resourceLockEnabled": {
+            "value": #{{ resourceLockEnabled }}
         }
     }
 }

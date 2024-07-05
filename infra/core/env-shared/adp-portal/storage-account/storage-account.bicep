@@ -29,6 +29,9 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Required. The name of the key vault where the secrets will be stored.')
 param keyvaultName string
 
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
+
 var customTags = {
   Location: location
   CreatedDate: createdDate
@@ -55,7 +58,7 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-account:0.5.3' = 
     name: toLower(storageAccount.name)
     tags: union(defaultTags, storageAccountTags)
     skuName: storageAccount.skuName
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     kind: kind
     networkAcls: {
       bypass: 'AzureServices'

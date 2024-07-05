@@ -121,3 +121,5 @@ param keyVault = {
   resourceGroup: '#{{ servicesResourceGroup }}'
   keyVaultName: '#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}02'
 }
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}

@@ -19,3 +19,5 @@ param routes = [
 param location = '#{{ location }}'
 
 param environment = '#{{ environment }}'
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}

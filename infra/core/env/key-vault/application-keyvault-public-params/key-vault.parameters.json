@@ -1,0 +1,68 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "keyVault": {
+      "value": {
+        "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_keyvault }}#{{ nc_instance_regionid }}03",
+        "privateEndpointName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}12",
+        "skuName": "premium",
+        "enableSoftDelete": "#{{ keyvaultEnableSoftDelete }}",
+        "enablePurgeProtection": "#{{ keyvaultEnablePurgeProtection }}",
+        "softDeleteRetentionInDays": "#{{ keyvaultSoftDeleteRetentionInDays }}"
+      }
+    },
+    "vnet": {
+      "value": {
+        "name": "#{{ virtualNetworkName }}",
+        "resourceGroup": "#{{ virtualNetworkResourceGroup }}",
+        "subnetPrivateEndpoints": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}98"
+      }
+    },    
+    "environment": {
+      "value": "#{{ environment }}"
+    },
+    "location": {
+      "value": "#{{ location }}"
+    },
+    "principalId": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/#{{ ssvSubscriptionId }}/resourceGroups/#{{ ssvSharedResourceGroup }}/providers/Microsoft.KeyVault/vaults/#{{ ssvPlatformKeyVaultName }}"
+        },
+        "secretName": "#{{ tier2ApplicationSPObjectIdSecretName }}"
+      }
+    },
+    "roleAssignment": {
+      "value": [
+        {
+          "roleDefinitionIdOrName": "Key Vault Secrets Officer",
+          "description": "Key Vault Secrets Officer Role Assignment",
+          "principalType": "ServicePrincipal",
+          "principalId": ""
+        },
+        {
+          "roleDefinitionIdOrName": "Key Vault Reader",
+          "description": "Key Vault Reader Role Assignment",
+          "principalType": "Group",
+          "principalId": "#{{ aadPlatformEngineersUserGroupObjectId }}"
+        }
+      ]
+    },
+    "keyvaultType": {
+      "value": "Application"
+    },
+    "publicNetworkAccess": {
+      "value": "Enabled"
+    },    
+    "resourceLockEnabled": {
+      "value": #{{ resourceLockEnabled }}
+    },
+    "defraApprovedIpRules": {
+      "value": #{{ noescape(customRule_DefraApprovedIp) }}
+    },
+    "additionalApprovedIpRules": {
+      "value": #{{ noescape(powerPlatformIpEurope) }}
+    }
+  }
+}

@@ -39,10 +39,12 @@ parameters:
       - Application - Storage Account
       - Application - Service Bus
       - Application - Key Vault
+      - Application - Key Vault - Public
       - Platform - Key Vault
       - OpenAI - All
       - OpenAI - Infra  
       - OpenAI - Search Service
+      - Rbac - Global Team Permissions
 
 pr:
   branches:
@@ -68,7 +70,7 @@ resources:
   repositories:
     - repository: ADPPipelineCommon
       name: DEFRA/adp-pipeline-common
-      endpoint: DEFRA
+      endpoint: DEFRA-ADP
       type: github
       #ref: refs/tags/1.0.0-latest
       ref: rv/405056
@@ -147,7 +149,8 @@ variables:
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Service Bus')) }}
   - name: IsApplicationKeyVault
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault')) }}
-
+  - name: IsApplicationKeyVaultPublic
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Key Vault - Public')) }}
   - name: IsOpenAi
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'OpenAI -')) }}
   - name: IsOpenAiAll
@@ -156,6 +159,11 @@ variables:
     value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Infra')) }}
   - name: IsOpenAiSearchService
     value: ${{ or(eq(variables.IsOpenAiAll,true), eq(parameters.deployResources, 'OpenAI - Search Service')) }}
+
+  - name: IsGlobalTeamPermissions
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources, 'Rbac - Global Team Permissions')) }}
+  - name: globalReadGroupObjectId
+    value: 'dummyValueToPreventWarningInAzureDevOps'
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -471,6 +479,14 @@ extends:
                   privateEndpointDnsRecordsForResources:
                     - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)01
                       resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsApplicationKeyVaultPublic, true) }}:
+                - name: key-vault
+                  path: infra/core/env/key-vault
+                  parameterFilePath: infra/core/env/key-vault/application-keyvault-public-params
+                  resourceGroupName: $(servicesResourceGroup)
+                  privateEndpointDnsRecordsForResources:
+                    - resourceName: $(infraResourceNamePrefix)$(nc_resource_keyvault)$(nc_instance_regionid)03
+                      resourceGroupName: $(servicesResourceGroup)                  
         - ${{ if eq(variables.IsOpenAi, true) }}:  
           - name: openai
             ${{ if eq(variables.IsAll, true) }}:
@@ -540,3 +556,16 @@ extends:
                       -ResourceGroupName '$(servicesResourceGroup)'
                       -SearchServiceName '$(infraResourceNamePrefix)$(nc_resource_search)$(nc_instance_regionid)01'
                       -Command 'Approve'
+        - ${{ if eq(variables.IsGlobalTeamPermissions, true) }}:
+          - name: global_team_permissions
+            deployments:
+              - name: global-team-permissions
+                path: infra/core/env/global-team-permissions
+                resourceGroupName: $(servicesResourceGroup)
+                preDeployScriptsList:
+                - displayName: 'Get Entra Global Read Group Id'
+                  type: AzurePowerShell
+                  serviceConnectionVariableName: ssvServiceConnection
+                  scriptPath: 'infra/core/tenant/scripts/Get-EntraGroupObjectId.ps1'
+                  scriptArguments: > 
+                    -EntraGroupName '$(globalReadGroupName)'

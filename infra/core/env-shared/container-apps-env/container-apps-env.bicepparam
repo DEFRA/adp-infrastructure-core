@@ -37,3 +37,5 @@ param portalEntraApp = {
 
 param internal = true 
 
+param resourceLockEnabled = #{{ resourceLockEnabled }}
+

@@ -19,6 +19,9 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Object array, with propterties Name, addressprefix in cidr format')
 param firewallRules array = []
 
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
+
 var customTags = {
   Location: location
   CreatedDate: createdDate
@@ -39,7 +42,7 @@ module redisCacheResource 'br/SharedDefraRegistry:cache.redis:0.5.10' = {
     skuName: redisCache.skuName
     capacity: int(redisCache.capacity)
     location: location
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     subnetId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.rediscachesubnet)
     tags: union(tags, redisCacheTags)
   }

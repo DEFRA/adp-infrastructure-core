@@ -14,3 +14,5 @@ param vnet = {
   resourceGroup: '#{{ ssvVirtualNetworkResourceGroup }}'
   subnetPrivateEndpoints: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01'
 }
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}
