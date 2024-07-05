@@ -56,7 +56,7 @@
       "value": "Enabled"
     },    
     "resourceLockEnabled": {
-      "value": "#{{ resourceLockEnabled }}"
+      "value": #{{ resourceLockEnabled }}
     },
     "defraApprovedIpRules": {
       "value": #{{ noescape(customRule_DefraApprovedIp) }}
