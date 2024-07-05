@@ -54,6 +54,9 @@
     },
     "publicNetworkAccess": {
       "value": "Enabled"
+    },    
+    "resourceLockEnabled": {
+      "value": "#{{ resourceLockEnabled }}"
     },
     "defraApprovedIpRules": {
       "value": #{{ noescape(customRule_DefraApprovedIp) }}
