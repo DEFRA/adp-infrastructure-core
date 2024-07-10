@@ -28,3 +28,5 @@ param monitoringWorkspace = {
 }
 
 param privateLinkServiceConnectionExists = '#{{ privateLinkServiceConnectionExists }}'
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}

@@ -5,6 +5,8 @@ param nsgList array = []
 param location string
 @description('Required. Environment name.')
 param environment string
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
@@ -22,7 +24,7 @@ module networksecuritygroup 'br/SharedDefraRegistry:network.network-security-gro
   name: '${nsg.name}-${deploymentDate}'
   params: {
     name: nsg.name
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     location: location
     tags: union(tags, { Purpose: nsg.purpose})
     securityRules: nsg.securityRules 

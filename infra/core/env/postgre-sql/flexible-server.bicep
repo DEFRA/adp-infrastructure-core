@@ -28,6 +28,9 @@ param location string
 @description('Required. Environment name.')
 param environment string
 
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
+
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
@@ -71,7 +74,7 @@ module aadAdminUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-ide
   params: {
     name: toLower(managedIdentityName)
     tags: union(defaultTags, managedIdentityTags)
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
   }
 }
 
@@ -104,9 +107,9 @@ module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1
     skuName: server.skuName
     activeDirectoryAuth:'Enabled'
     passwordAuth: 'Enabled'
-    lock: {
+    lock: resourceLockEnabled ? {
       kind: 'CanNotDelete'
-    }
+    } : null
     backupRetentionDays:14
     createMode: 'Default' 
     administrators: [

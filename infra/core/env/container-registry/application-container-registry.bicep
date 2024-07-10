@@ -13,6 +13,8 @@ param environment string
 @description('Optional. Enable a single data endpoint per region for serving data. Not relevant in case of disabled public access. Note, requires the \'acrSku\' to be \'Premium\'.')
 param dataEndpointEnabled bool = false
 
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
 
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
@@ -45,7 +47,7 @@ module registry 'br/SharedDefraRegistry:container-registry.registry:0.5.5' = {
   params: {
     name: containerRegistry.name
     acrSku: containerRegistry.acrSku
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     retentionPolicyDays: int(containerRegistry.retentionPolicyDays)
     softDeletePolicyDays: int(containerRegistry.softDeletePolicyDays)
     tags: union(defaultTags, containerRegistryTags)

@@ -39,7 +39,7 @@ resources:
   repositories:
     - repository: ADPPipelineCommon
       name: DEFRA/adp-pipeline-common
-      endpoint: DEFRA
+      endpoint: DEFRA-ADP
       type: github
       ref:  main
 

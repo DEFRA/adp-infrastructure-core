@@ -13,6 +13,8 @@ param environment string
 param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
 
 var commonTags = {
   Location: location
@@ -26,7 +28,7 @@ module route 'br/SharedDefraRegistry:network.route-table:0.4.2' = {
   name: 'route-table-${deploymentDate}'
   params: {
     name: routeTable.name
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     location: location
     tags: tags
     disableBgpRoutePropagation: true

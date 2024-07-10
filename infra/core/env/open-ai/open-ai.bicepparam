@@ -34,7 +34,7 @@ param deployments = [
     }
     sku: {
       name: 'Standard'
-      capacity: 10
+      capacity: #{{ openAiGpt4Capacity }}
     }
   }
   {
@@ -46,7 +46,7 @@ param deployments = [
     }
     sku: {
       name: 'Standard'
-      capacity: 10
+      capacity: #{{ openAiGpt35Capacity }}
     }
   }
   {
@@ -58,7 +58,7 @@ param deployments = [
     }
     sku: {
       name: 'Standard'
-      capacity: 10
+      capacity: #{{ openAiTextEmbedding3LargeCapacity }}
     }
   }
   {
@@ -70,7 +70,9 @@ param deployments = [
     }
     sku: {
       name: 'Standard'
-      capacity: 10
+      capacity: #{{ openAiTextEmbeddingAda002Capacity }}
     }
   }
 ]
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}

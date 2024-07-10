@@ -36,3 +36,5 @@ param location = '#{{ location }}'
 param environment = '#{{ environment }}'
 
 param managedIdentityName = '#{{ fluxNotificationDBAdminManagedIdentity }}'
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}

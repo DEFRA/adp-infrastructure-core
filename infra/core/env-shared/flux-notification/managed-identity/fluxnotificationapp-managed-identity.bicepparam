@@ -37,3 +37,5 @@ param appInsights = {
   resourceGroup: '#{{ ssvSharedResourceGroup }}'
   subscriptionId: '#{{ subscriptionId }}'
 }
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}

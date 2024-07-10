@@ -17,6 +17,9 @@ param environment string
 ])
 param keyvaultType string
 
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
+
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
@@ -29,6 +32,17 @@ param principalId string
 
 @description('Required. The parameter object for keyvault roleassignment. The object must contain the roleDefinitionIdOrName, description and principalType.')
 param roleAssignment array
+
+@description('Optional. Enable publicNetworkAccess. Default is Disabled')
+param publicNetworkAccess string = 'Disabled'
+
+@description('Optional. The parameter array for approved ip rules.')
+param defraApprovedIpRules array = []
+
+@description('Optional. The parameter array for approved additional ip rules.')
+param additionalApprovedIpRules array = []
+
+var ipv4IpRules = filter(concat(defraApprovedIpRules, additionalApprovedIpRules), rule => !contains(rule, ':'))
 
 var roleAssignments = [
   for item in roleAssignment: {
@@ -67,7 +81,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     name: keyVault.name
     tags: union(defaultTags, keyVaultTags)
     vaultSku: keyVault.skuName
-    lock: 'CanNotDelete'
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
     enableRbacAuthorization: true
     enableSoftDelete: bool(keyVault.enableSoftDelete)
     enablePurgeProtection: bool(keyVault.enablePurgeProtection)
@@ -75,8 +89,13 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
     networkAcls: {
       bypass: 'AzureServices'
       defaultAction: 'Deny'
-    }
-    publicNetworkAccess: 'Disabled'
+      ipRules: [
+        for rule in ipv4IpRules:  {
+          value: rule
+        }
+      ]
+    }    
+    publicNetworkAccess: publicNetworkAccess
     privateEndpoints: [
       {
         name: keyVault.privateEndpointName
@@ -84,7 +103,7 @@ module vaults 'br/SharedDefraRegistry:key-vault.vault:0.5.3' = {
         subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
         tags: union(defaultTags, keyVaultPrivateEndpointTags)
       }
-    ]
+    ]    
     roleAssignments: roleAssignments
   }
 }

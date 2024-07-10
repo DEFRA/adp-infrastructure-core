@@ -10,6 +10,9 @@ param location string = resourceGroup().location
 @description('Required. Environment name.')
 param environment string
 
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
+
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
@@ -42,9 +45,9 @@ module serviceBusResource 'br/SharedDefraRegistry:service-bus.namespace:0.5.16' 
     skuName: serviceBus.skuName
     location: location
     minimumTlsVersion:'1.2'
-    lock: {
-      kind:'CanNotDelete'
-    }
+    lock: resourceLockEnabled ? {
+      kind: 'CanNotDelete'
+    } : null
     networkRuleSets: {
       publicNetworkAccess: 'Disabled'
     }

@@ -8,3 +8,5 @@ param vnet = {
 param privateDnsZone = '#{{ postgreSqlPvtDnsZone }}'
 
 param environment = '#{{ environment }}'
+
+param resourceLockEnabled = #{{ resourceLockEnabled }}
