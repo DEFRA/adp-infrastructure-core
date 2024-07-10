@@ -64,9 +64,10 @@ extends:
                 type: 'script'
                 scriptType: AzurePowerShell
                 serviceConnectionVariableName: ssvServiceConnection
-                path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+                scriptRepo: 'PipelineCommonScripts'
+                path: 'PowerShellLibrary/Create-AADGroups.ps1'
                 scriptArguments: > 
-                  -AADGroupsJsonManifestPath 'infra/core/iam/subscription/aad-groups/clusteraccessgroup.json'
+                  -AADGroupsJsonManifestPath '$(Pipeline.Workspace)/s/self/infra/core/iam/subscription/aad-groups/clusteraccessgroup.json'
               - name: cluster-custom-resources-reader-role
                 path: infra/core/iam/subscription
                 scope: "Subscription"

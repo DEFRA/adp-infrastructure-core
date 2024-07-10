@@ -21,8 +21,6 @@ pr:
   paths:
     include:
       - infra/bootstrap/tenant/config/aad-groups/*
-      - infra/scripts/ado/Create-AADGroups.ps1
-      - scripts/modules/aad-groups/*
 
 trigger:
   batch: true
@@ -32,8 +30,6 @@ trigger:
   paths:
     include:
       - infra/bootstrap/tenant/config/aad-groups/*
-      - infra/scripts/ado/Create-AADGroups.ps1
-      - scripts/modules/aad-groups/*
 
 resources:
   repositories:
@@ -89,9 +85,10 @@ extends:
             - name: Create or Update Platform AAD groups
               type: 'script'
               scriptType: AzurePowerShell
-              path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+              scriptRepo: 'PipelineCommonScripts'
+              path: 'PowerShellLibrary/Create-AADGroups.ps1'
               scriptArguments: > 
-                -AADGroupsJsonManifestPath 'infra/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json'
+                -AADGroupsJsonManifestPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json'
 
       - ${{ if eq(variables.IsPortalADGroup, true) }}:  
         - name: portal_aadgroup
@@ -99,6 +96,7 @@ extends:
             - name: Create or Update portal AAD groups
               type: 'script'
               scriptType: AzurePowerShell
-              path: 'infra/bootstrap/tenant/scripts/Create-AADGroups.ps1'
+              scriptRepo: 'PipelineCommonScripts'
+              path: 'PowerShellLibrary/Create-AADGroups.ps1'
               scriptArguments: > 
-                -AADGroupsJsonManifestPath 'infra/bootstrap/tenant/config/aad-groups/portalAADGroups.$(environment).json'
+                -AADGroupsJsonManifestPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/tenant/config/aad-groups/portalAADGroups.$(environment).json'
