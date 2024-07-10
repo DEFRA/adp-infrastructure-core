@@ -123,22 +123,26 @@ var systemNodePool = {
 
 var contributorRoleId = 'b24988ac-6180-42a0-ab88-20f7382dd24c'
 
-module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
+module managedIdentity 'br/avm:managed-identity.user-assigned-identity:0.2.2' = {
   name: 'aks-cluster-mi-${deploymentDate}'
   params: {
     name: cluster.miControlPlane
     location: location
-    lock: resourceLockEnabled ? 'CanNotDelete' : null
+    lock: resourceLockEnabled ? {
+      kind: 'CanNotDelete'
+    } : null
     tags: union(tags, tagsMi)
   }
 }
 
-module managedIdentityAppConfig 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
+module managedIdentityAppConfig 'br/avm:managed-identity.user-assigned-identity:0.2.2' = {
   name: 'appconfig-mi-${deploymentDate}'
   params: {
     name: appConfig.managedIdentityName
     location: location
-    lock: resourceLockEnabled ? 'CanNotDelete' : null
+    lock: resourceLockEnabled ? {
+      kind: 'CanNotDelete'
+    } : null
     tags: union(tags, tagsAppConfigMi)
     federatedIdentityCredentials: [
       {
@@ -153,13 +157,15 @@ module managedIdentityAppConfig 'br/SharedDefraRegistry:managed-identity.user-as
   }
 }
 
-module managedIdentityAso 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
+module managedIdentityAso 'br/avm:managed-identity.user-assigned-identity:0.2.2' = {
   name: 'aso-managed-identity-${deploymentDate}'
   params: {
     name: asoPlatformManagedIdentity
     tags: union(tags, tagsAsoMi)
     location: location
-    lock: resourceLockEnabled ? 'CanNotDelete' : null
+    lock: resourceLockEnabled ? {
+      kind: 'CanNotDelete'
+    } : null
     federatedIdentityCredentials: [
       {
         name: asoPlatformManagedIdentity
@@ -246,7 +252,7 @@ module kmsKeyVaultRbac '.bicep/keyvault-rbac.bicep' = [for kmsKeyVaultRbac in km
 }
 ]
 
-module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.19-prerelease' = {
+module deployAKS 'br/avm:container-service.managed-cluster:0.1.7' = {
   name: 'aks-cluster-${deploymentDate}'
   dependsOn: [
     privateDnsZoneContributor
@@ -258,7 +264,6 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.1
     location: location
     lock: resourceLockEnabled ? {
       kind: 'CanNotDelete'
-      name: '${cluster.name}-CanNotDelete-lock'
     } : null
     tags: union(tags, aksTags)
     kubernetesVersion: cluster.kubernetesVersion
@@ -355,7 +360,7 @@ module deployAKS 'br/SharedDefraRegistry:container-service.managed-cluster:0.5.1
   }
 }
 
-module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.extension:0.4.5' = {
+module fluxExtensionResource 'br/avm:kubernetes-configuration.extension:0.3.4' = {
   name: 'flux-extension-${deploymentDate}'
   params: {
     clusterName: cluster.name
@@ -373,6 +378,18 @@ module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.ex
       'image-reflector-controller.enabled': 'true'
       'helm-controller.detectDrift': 'true'
       'useKubeletIdentity': 'true'
+      'kustomize-controller.resources.limits.memory': '2Gi'
+      'kustomize-controller.resources.requests.memory': '300Mi'
+      'kustomize-controller.resources.limits.cpu': '4'
+      'source-controller.resources.limits.memory': '2Gi'
+      'source-controller.resources.requests.memory': '300Mi'
+      'source-controller.resources.limits.cpu': '4'
+      'helm-controller.resources.limits.memory': '2Gi'
+      'helm-controller.resources.requests.memory': '300Mi'
+      'helm-controller.resources.limits.cpu': '4'
+      'image-automation-controller.resources.limits.memory': '2Gi'
+      'image-automation-controller.resources.requests.memory': '300Mi'
+      'image-automation-controller.resources.limits.cpu': '4'
     }
     fluxConfigurations: [
       {
