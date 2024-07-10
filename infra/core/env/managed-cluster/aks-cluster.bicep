@@ -373,6 +373,18 @@ module fluxExtensionResource 'br/SharedDefraRegistry:kubernetes-configuration.ex
       'image-reflector-controller.enabled': 'true'
       'helm-controller.detectDrift': 'true'
       'useKubeletIdentity': 'true'
+      'kustomize-controller.resources.limits.memory': '2Gi'
+      'kustomize-controller.resources.requests.memory': '300Mi'
+      'kustomize-controller.resources.limits.cpu': '4'
+      'source-controller.resources.limits.memory': '2Gi'
+      'source-controller.resources.requests.memory': '300Mi'
+      'source-controller.resources.limits.cpu': '4'
+      'helm-controller.resources.limits.memory': '2Gi'
+      'helm-controller.resources.requests.memory': '300Mi'
+      'helm-controller.resources.limits.cpu': '4'
+      'image-automation-controller.resources.limits.memory': '2Gi'
+      'image-automation-controller.resources.requests.memory': '300Mi'
+      'image-automation-controller.resources.limits.cpu': '4'
     }
     fluxConfigurations: [
       {
