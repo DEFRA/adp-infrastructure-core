@@ -43,7 +43,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA-ADP
       type: github
-      ref: gg/409694-custom-sb-role #main
+      ref: main
       
 variables:
   - name: IsAll
