@@ -514,9 +514,7 @@ extends:
                     serviceConnectionVariableName: 'ssvServiceConnection'
                     inlineScript: |
                       $groupId = (Get-AzADGroup -DisplayName '$(openAiUserGroup)').id
-                      $ContributorGroupId = (Get-AzADGroup -DisplayName '$(openAiContributorGroup)').id
                       Write-Host "##vso[task.setvariable variable=openAiUserGroupId;]$groupId"
-                      Write-Host "##vso[task.setvariable variable=openAiContributorGroupId;]$ContributorGroupId"
               - ${{ if eq(variables.IsOpenAiSearchService, true) }}:
                 - name: Create Search Service Access group
                   type: 'script'
