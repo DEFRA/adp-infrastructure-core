@@ -13,6 +13,7 @@ parameters:
       - All
       - Cluster Custom Resources Reader Role
       - Cluster Port Forward User Role
+      - Open AI Access
 pr:
   branches:
     include:
@@ -36,7 +37,8 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA-ADP
       type: github
-      ref: main
+      #ref: main
+      ref: rv/406831
       
 variables:
   - name: IsAll
@@ -45,6 +47,8 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Cluster Custom Resources Reader Role')) }}
   - name: IsClusterPortForwardUserRole
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Cluster Port Forward User Role')) }}
+  - name: IsOpenAIAccess
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Open AI Access')) }}    
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -103,3 +107,16 @@ extends:
                   inlineScript: |
                     $roleid = (Get-AzRoleDefinition -Name '$(customRolePortForwardUser)').Id
                     Write-Host "##vso[task.setvariable variable=customRolePortForwardUserRoleId;]$roleid"
+           - ${{ if eq(variables.IsOpenAIAccess, true) }}:
+              - name: open-ai-access
+                path: infra/core/iam/subscription/open-ai-access
+                scope: "Subscription"
+                preDeployScriptsList:
+                - displayName: 'Get Group Id'
+                  type: AzurePowerShell
+                  serviceConnectionVariableName: ssvServiceConnection
+                  inlineScript: |
+                    $readerGroupId = (Get-AzADGroup -DisplayName '$(resourcesReaderGroupName)').id
+                    $readWritegroupId = (Get-AzADGroup -DisplayName '$(resourcesDataReadWriteGroupName)').id
+                    Write-Host "##vso[task.setvariable variable=resourcesReaderGroupId;]$readerGroupId"
+                    Write-Host "##vso[task.setvariable variable=resourcesDataReadWriteGroupId;]$readWritegroupId"
