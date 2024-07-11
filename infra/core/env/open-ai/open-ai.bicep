@@ -93,7 +93,7 @@ module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
       defaultAction: 'Deny'
       bypass: 'AzureServices'      
     }
-    roleAssignments: [ openAiContributorGroupId !=null ? union(openAiUserRole,openAiContributorRole) : openAiUserRole]
+    roleAssignments: [ openAiContributorGroupId !='' ? union(openAiUserRole,openAiContributorRole) : openAiUserRole]
     sku: openAi.skuName
     customSubDomainName: openAi.customSubDomainName
     diagnosticSettings: [
