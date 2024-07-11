@@ -72,7 +72,8 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA-ADP
       type: github
-      ref: refs/tags/1.0.0-latest
+      #ref: refs/tags/1.0.0-latest
+      ref: rv/406831
       
 variables:
   - name: IsAll
@@ -513,7 +514,9 @@ extends:
                     serviceConnectionVariableName: 'ssvServiceConnection'
                     inlineScript: |
                       $groupId = (Get-AzADGroup -DisplayName '$(openAiUserGroup)').id
-                      Write-Host "##vso[task.setvariable variable=openAiUserGroupId;]$groupId"      
+                      $ContributorGroupId = (Get-AzADGroup -DisplayName '$(openAiContributorGroup)').id
+                      Write-Host "##vso[task.setvariable variable=openAiUserGroupId;]$groupId"
+                      Write-Host "##vso[task.setvariable variable=openAiContributorGroupId;]$ContributorGroupId"
               - ${{ if eq(variables.IsOpenAiSearchService, true) }}:
                 - name: Create Search Service Access group
                   type: 'script'

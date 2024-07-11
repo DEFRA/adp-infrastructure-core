@@ -13,6 +13,8 @@ param managedIdentityName = '#{{ infraResourceNamePrefix }}#{{ nc_resource_manag
 
 param openAiUserGroupId = '#{{ openAiUserGroupId }}'
 
+param openAiContributorGroupId = '#{{ openAiContributorGroupId }}'
+
 param vnet = {
   name: '#{{ virtualNetworkName }}'
   resourceGroup: '#{{ virtualNetworkResourceGroup }}'

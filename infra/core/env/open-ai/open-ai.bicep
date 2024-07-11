@@ -53,6 +53,9 @@ var managedIdentityTags = {
 @description('Required. openAiUserGroup id.')
 param openAiUserGroupId string
 
+@description('Required. openAiContributorGroup id.')
+param openAiContributorGroupId string
+
 module openAiUserMi 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
   name: 'managed-identity-${deploymentDate}'
   params: {
@@ -82,6 +85,11 @@ module openAIDeployment 'br/avm:cognitive-services/account:0.5.3' = {
       {
         roleDefinitionIdOrName: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'
         principalId: openAiUserGroupId
+        principalType: 'Group'
+      }
+      {
+        roleDefinitionIdOrName: 'a001fd3d-188f-4b5d-821b-7da978bf7442'
+        principalId: openAiContributorGroupId
         principalType: 'Group'
       }
     ]
