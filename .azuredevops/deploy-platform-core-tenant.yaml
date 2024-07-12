@@ -44,7 +44,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA-ADP
       type: github
-      ref: main
+      ref: gg/409694-sb-rbac #main
       
 variables:
   - name: IsAll
