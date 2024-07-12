@@ -12,7 +12,6 @@ parameters:
     values:
       - All
       - Platform - AAD Groups
-      - Portal - AAD Groups
       - Team - Access Groups
 
 pr:
@@ -46,9 +45,6 @@ variables:
 
   - name: IsPlatfromADGroup
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Platform - AAD Groups')) }}
-
-  - name: IsPortalADGroup
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Portal - AAD Groups')) }}
 
   - name: IsTeamAccessGroup
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Team - Access Groups')) }}  
@@ -93,17 +89,6 @@ extends:
               path: 'PowerShellLibrary/Create-AADGroups.ps1'
               scriptArguments: > 
                 -AADGroupsJsonManifestPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/tenant/config/aad-groups/platformAADGroups.$(environment).json'
-
-      - ${{ if eq(variables.IsPortalADGroup, true) }}:  
-        - name: portal_aadgroup
-          deployments:
-            - name: Create or Update portal AAD groups
-              type: 'script'
-              scriptType: AzurePowerShell
-              scriptRepo: 'PipelineCommonScripts'
-              path: 'PowerShellLibrary/Create-AADGroups.ps1'
-              scriptArguments: > 
-                -AADGroupsJsonManifestPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/tenant/config/aad-groups/portalAADGroups.$(environment).json'
 
       - ${{ if eq(variables.IsTeamAccessGroup, true) }}:  
         - name: team_accessgroup
