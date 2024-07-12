@@ -1,15 +1,15 @@
 {
     "accessADGroups": [
         {
-            "displayName": "#{{ serviceBusDataSendReceiveAccessGroup }}",
-            "description": "An Azure AD access group with Send and Receive permissions for the Service Bus. This group grants teams access to the service bus. Env: SND4",
+            "displayName": "#{{ resourcesDataReadWriterAccessGroup }}",
+            "description": "An Azure AD access group with Data Read and Write permissions for the Shared resources. This group grants teams read and write data access to the shared resources like service bus queues and topics. Env: SND4",
             "Owners": {
                 "users" : #{{ noescape(platformUserAndAccessAADGroupOwners) }}
             }
         },
         {
-            "displayName": "#{{ serviceBusDataReceiveAccessGroup }}",
-            "description": "An Azure AD access group with Receive permissions for the Service Bus. This group grants teams data read access to the service bus queues and topics. Env: DEV1, TST1, PRE1",
+            "displayName": "#{{ resourcesDataReaderAccessGroup }}",
+            "description": "An Azure AD access group with Data Read permissions for the Shared resources. This group grants teams read and write data access to the shared resources like service bus queues and topics. Env: DEV1, TST1, PRE1",
             "Owners": {
                 "users" : #{{ noescape(platformUserAndAccessAADGroupOwners) }}
             }
