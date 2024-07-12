@@ -43,33 +43,7 @@
                     "AAG-Users-ADP-Portal"
                 ]
             }
-        },
-        {
-            "displayName": "AAG-Azure-ADP-Resources-DataReadWrite",
-            "description": "Azure AD Access group with data read write permissions.",
-            "Owners": {
-                "serviceprincipals": [
-                    "ADO-DefraGovUK-AAD-CDO-SSV5"
-                ],
-                "users" : #{{ noescape(platformUserAndAccessAADGroupOwners) }}
-            },
-            "Members": {
-                "groups": []
-            }
-        },
-        {
-            "displayName": "AAG-Azure-ADP-Resources-Reader",
-            "description": "Azure AD Access group with read permissions.",
-            "Owners": {
-                "serviceprincipals": [
-                    "ADO-DefraGovUK-AAD-CDO-SSV5"
-                ],
-                "users" : #{{ noescape(platformUserAndAccessAADGroupOwners) }}
-            },
-            "Members": {
-                "groups": []
-            }
-        },
+        },        
         {
             "displayName": "AAG-Azure-AZR-ADP-SND4-Cont",
             "description": "Azure AD Access group with contributor permissions to the AZR-ADP-SND4 subscription.",

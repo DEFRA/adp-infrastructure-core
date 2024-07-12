@@ -37,7 +37,8 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA-ADP
       type: github
-      ref: main
+      #ref: main
+      ref: rv/406831
       
 variables:
   - name: IsAll
@@ -115,7 +116,5 @@ extends:
                   type: AzurePowerShell
                   serviceConnectionVariableName: ssvServiceConnection
                   inlineScript: |
-                    $readerGroupId = (Get-AzADGroup -DisplayName '$(resourcesReaderGroupName)').id
-                    $readWritegroupId = (Get-AzADGroup -DisplayName '$(resourcesDataReadWriteGroupName)').id
-                    Write-Host "##vso[task.setvariable variable=resourcesReaderGroupId;]$readerGroupId"
-                    Write-Host "##vso[task.setvariable variable=resourcesDataReadWriteGroupId;]$readWritegroupId"
+                    $groupId = (Get-AzADGroup -DisplayName '$(resourcesDataAccessGroup)').id
+                    Write-Host "##vso[task.setvariable variable=resourcesDataAccessGroupId;]$groupId"

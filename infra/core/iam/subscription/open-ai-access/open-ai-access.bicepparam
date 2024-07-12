@@ -1,8 +1,6 @@
 using './open-ai-access.bicep'
 
-param resourcesReaderGroupObjectId = '#{{ resourcesReaderGroupId }}'
-param resourcesReadWriteGroupObjectId = '#{{ resourcesDataReadWriteGroupId }}'
+param resourcesDataAccessGroupObjectId = '#{{ resourcesDataAccessGroupId }}'
 
-param deployOpenAIContributorRole = '#{{ deployOpenAIContributorRole }}'
-param deployOpenAIReaderRole = '#{{ deployOpenAIUserRole }}'
+param openAIDataAccessRole = '#{{ openAIDataAccessRole }}'
 
