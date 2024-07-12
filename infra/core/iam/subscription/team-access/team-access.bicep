@@ -6,7 +6,8 @@ param resourcesDataAccessGroupObjectId string
 @description('Open AI Role Name to be deployed.')
 param openAIDataAccessRole string = 'Cognitive Services OpenAI User'
 
-param serviceBusDataAccessRoleId string = 'Not Applicable'
+@description('Service Bus Role Name to be deployed.')
+param serviceBusDataAccessRoleId string
 
 var groupObjectIdvar = empty(resourcesDataAccessGroupObjectId) ? 'defaultgroupObjectIdforwhatif' : resourcesDataAccessGroupObjectId
 
@@ -29,7 +30,7 @@ resource openAIContributorRoleAssignment 'Microsoft.Authorization/roleAssignment
   }
 }
 
-resource serviceBusRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (serviceBusDataAccessRoleId != 'Not Applicable') {
+resource serviceBusRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (!empty(serviceBusDataAccessRoleId)) {
   name: guid(subscription().id, groupObjectIdvar, serviceBusDataAccessRoleId)
   properties: {
     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', serviceBusDataAccessRoleId)
