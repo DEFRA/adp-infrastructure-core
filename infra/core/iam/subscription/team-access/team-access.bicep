@@ -3,8 +3,10 @@ targetScope = 'subscription'
 @description('ID of the Access group.')
 param resourcesDataAccessGroupObjectId string
 
-@description('Role Name to be deployed.')
+@description('Open AI Role Name to be deployed.')
 param openAIDataAccessRole string = 'Cognitive Services OpenAI User'
+
+param serviceBusDataAccessRoleId string = 'Not Applicable'
 
 var groupObjectIdvar = empty(resourcesDataAccessGroupObjectId) ? 'defaultgroupObjectIdforwhatif' : resourcesDataAccessGroupObjectId
 
@@ -26,3 +28,13 @@ resource openAIContributorRoleAssignment 'Microsoft.Authorization/roleAssignment
     principalType: 'Group'
   }
 }
+
+resource serviceBusRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (serviceBusDataAccessRoleId != 'Not Applicable') {
+  name: guid(subscription().id, groupObjectIdvar, serviceBusDataAccessRoleId)
+  properties: {
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', serviceBusDataAccessRoleId)
+    principalId: groupObjectIdvar
+    principalType: 'Group'
+  }
+}
+

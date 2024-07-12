@@ -13,7 +13,7 @@ parameters:
       - All
       - Cluster Custom Resources Reader Role
       - Cluster Port Forward User Role
-      - Open AI Access
+      - Team Resource Access Role
 pr:
   branches:
     include:
@@ -47,8 +47,8 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Cluster Custom Resources Reader Role')) }}
   - name: IsClusterPortForwardUserRole
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Cluster Port Forward User Role')) }}
-  - name: IsOpenAIAccess
-    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Open AI Access')) }}    
+  - name: IsTeamResourceAccessRole
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Team Resource Access Role')) }}    
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -107,9 +107,9 @@ extends:
                   inlineScript: |
                     $roleid = (Get-AzRoleDefinition -Name '$(customRolePortForwardUser)').Id
                     Write-Host "##vso[task.setvariable variable=customRolePortForwardUserRoleId;]$roleid"
-           - ${{ if eq(variables.IsOpenAIAccess, true) }}:
-              - name: open-ai-access
-                path: infra/core/iam/subscription/open-ai-access
+           - ${{ if eq(variables.IsTeamResourceAccessRole, true) }}:
+              - name: team-access
+                path: infra/core/iam/subscription/team-access
                 scope: "Subscription"
                 preDeployScriptsList:
                 - displayName: 'Get Group Id'
@@ -118,3 +118,9 @@ extends:
                   inlineScript: |
                     $groupId = (Get-AzADGroup -DisplayName '$(resourcesDataAccessGroup)').id
                     Write-Host "##vso[task.setvariable variable=resourcesDataAccessGroupId;]$groupId"
+                - displayName: 'Get Role ID'
+                  type: AzurePowerShell
+                  serviceConnectionVariableName: 'subscriptionName'
+                  inlineScript: |
+                    $roleid = (Get-AzRoleDefinition -Name '$(serviceBusDataAccessRole)').Id
+                    Write-Host "##vso[task.setvariable variable=serviceBusDataAccessRoleId;]$roleid"                    
