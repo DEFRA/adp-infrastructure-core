@@ -7,11 +7,11 @@ param roleName string
 param roleScopes array
 
 @description('Detailed description of the role definition')
-param roleDescription string = 'Custom Role to Send/Receive access to Azure Service Bus Queues and Topics.'
+param roleDescription string = 'Custom Role to Receive access to Azure Service Bus Queues and Topics.'
 
-param deployServiceBusDataSendReceiveRole string = 'false'
+param deployServiceBusDataReceiveRole string = 'false'
 
-resource serviceBusDataSendReceiveCustomRoleResource 'Microsoft.Authorization/roleDefinitions@2022-04-01' = if (deployServiceBusDataSendReceiveRole == 'true') {
+resource serviceBusDataReceiveCustomRoleResource 'Microsoft.Authorization/roleDefinitions@2022-04-01' = if (deployServiceBusDataReceiveRole == 'true') {
   name: guid(subscription().id, roleName)
   scope: subscription()
   properties: {
@@ -26,7 +26,6 @@ resource serviceBusDataSendReceiveCustomRoleResource 'Microsoft.Authorization/ro
         ]
         dataActions: [
           'Microsoft.ServiceBus/*/receive/action'
-          'Microsoft.ServiceBus/*/send/action'
         ]
         notActions: []
         notDataActions: []

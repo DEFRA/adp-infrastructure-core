@@ -3,13 +3,13 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "roleName": {
-      "value": "#{{ customRoleServiceBusDataSendReceive }}"
+      "value": "#{{ customRoleServiceBusDataReceive }}"
     },
     "roleScopes": {
       "value": #{{ noescape(customRoleScopes) }}
     },
-    "deployServiceBusDataSendReceiveRole": {
-      "value": '#{{ deployServiceBusDataSendReceiveRole }}'
+    "deployServiceBusDataReceiveRole": {
+      "value": '#{{ deployServiceBusDataReceiveRole }}'
     }
   }
 }
