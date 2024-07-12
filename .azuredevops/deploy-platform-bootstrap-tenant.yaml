@@ -13,6 +13,7 @@ parameters:
       - All
       - Platform - AAD Groups
       - Portal - AAD Groups
+      - Team - Access Groups
 
 pr:
   branches:
@@ -37,7 +38,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA-ADP
       type: github
-      ref: refs/heads/main
+      ref: gg/409694-sb-rbac #refs/heads/main
       
 variables:
   - name: IsAll
@@ -48,6 +49,9 @@ variables:
 
   - name: IsPortalADGroup
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Portal - AAD Groups')) }}
+
+  - name: IsTeamAccessGroup
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Team - Access Groups')) }}  
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -100,3 +104,14 @@ extends:
               path: 'PowerShellLibrary/Create-AADGroups.ps1'
               scriptArguments: > 
                 -AADGroupsJsonManifestPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/tenant/config/aad-groups/portalAADGroups.$(environment).json'
+
+      - ${{ if eq(variables.IsTeamAccessGroup, true) }}:  
+        - name: team_accessgroup
+          deployments:
+            - name: Create or Update Team Access groups
+              type: 'script'
+              scriptType: AzurePowerShell
+              scriptRepo: 'PipelineCommonScripts'
+              path: 'PowerShellLibrary/Create-AADGroups.ps1'
+              scriptArguments: > 
+                -AADGroupsJsonManifestPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/tenant/config/aad-groups/TeamAccessGroups.$(environment).json'          
