@@ -1,14 +1,14 @@
 {
     "accessADGroups": [
         {
-            "displayName": "AAG-Azure-ADP-ServiceBusDataSendReceive",
+            "displayName": "#{{ serviceBusDataSendReceiveAccessGroup }}",
             "description": "An Azure AD access group with Send and Receive permissions for the Service Bus. This group grants teams access to the service bus. Env: SND4",
             "Owners": {
                 "users" : #{{ noescape(platformUserAndAccessAADGroupOwners) }}
             }
         },
         {
-            "displayName": "AAG-Azure-ADP-ServiceBusDataReceive",
+            "displayName": "#{{ serviceBusDataReceiveAccessGroup }}",
             "description": "An Azure AD access group with Receive permissions for the Service Bus. This group grants teams data read access to the service bus queues and topics. Env: DEV1, TST1, PRE1",
             "Owners": {
                 "users" : #{{ noescape(platformUserAndAccessAADGroupOwners) }}
