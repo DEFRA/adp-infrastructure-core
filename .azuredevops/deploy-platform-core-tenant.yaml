@@ -19,6 +19,7 @@ parameters:
       - Cluster Custom Resources Reader Role
       - Cluster Port Forward User Role
       - ServiceBus Data SendReceive Role
+      - ServiceBus Data Receive Role
 pr:
   branches:
     include:
@@ -43,7 +44,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA-ADP
       type: github
-      ref: main
+      ref: refs/tags/1.0.0-latest
       
 variables:
   - name: IsAll
@@ -64,6 +65,8 @@ variables:
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Cluster Port Forward User Role')) }} 
   - name: IsServiceBusDataSendReceiveRole
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'ServiceBus Data SendReceive Role')) }} 
+  - name: IsServiceBusDataReceiveRole
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'ServiceBus Data Receive Role')) }}   
 
 extends:
   template: /pipelines/common-infra-deploy.yaml@ADPPipelineCommon
@@ -131,4 +134,8 @@ extends:
            - ${{ if eq(variables.IsServiceBusDataSendReceiveRole, true) }}:
               - name: servicebus-data-sendreceive-role
                 path: infra/core/tenant/role-definition
-                scope: "Subscription"     
+                scope: "Subscription" 
+           - ${{ if eq(variables.IsServiceBusDataReceiveRole, true) }}:
+              - name: servicebus-data-receive-role
+                path: infra/core/tenant/role-definition
+                scope: "Subscription"          
