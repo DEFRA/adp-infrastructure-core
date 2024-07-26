@@ -69,7 +69,7 @@ try {
     $subscriptionId = "55f3b8c6-6800-41c7-a40d-2adb5e4e1bd1"
     $subsName = "AZD-ADP-SND1"
     $tenantID = "6f504113-6b64-43f2-ade9-242e05780007"
-    $serviceConnectionName = "test"  
+    $serviceConnectionName = "test05"  
 
     az devops service-endpoint azurerm create --azure-rm-service-principal-id $appId --azure-rm-subscription-id $subscriptionId --azure-rm-subscription-name $subsName  --azure-rm-tenant-id  $tenantID  --name  $serviceConnectionName --org $devopsOrgnizationUri --project $devopsProjectName
     
