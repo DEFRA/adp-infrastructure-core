@@ -68,8 +68,7 @@ try {
     $subscriptionId = "55f3b8c6-6800-41c7-a40d-2adb5e4e1bd1"
     $subsName = "AZD-ADP-SND1"
     $tenantID = "6f504113-6b64-43f2-ade9-242e05780007"
-    $organization = "defragovuk"
-    $project = "DEFRA-FFC"
+
     $serviceConnectionName = "test"
 
     # Define the service connection configuration
@@ -95,7 +94,7 @@ try {
     $serviceConnectionConfigJson = $serviceConnectionConfig | ConvertTo-Json -Depth 10
 
     # Create the service connection
-    az devops service-endpoint create --organization https://dev.azure.com/$organization --project $project --service-endpoint-configuration $serviceConnectionConfigJson
+    az devops service-endpoint create --organization https://dev.azure.com/$devopsOrgnizationUri --project $devopsProjectName --service-endpoint-configuration $serviceConnectionConfigJson
 
 
     
