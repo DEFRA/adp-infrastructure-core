@@ -60,6 +60,7 @@ try {
     Write-Debug "${functionName}:devopsProjectId=$devopsProjectId"
    
     $env:AZURE_DEVOPS_EXT_PAT = $env:SYSTEM_ACCESSTOKEN 
+    $env:AZURE_DEVOPS_EXT_AZURE_RM_SERVICE_PRINCIPAL_KEY="mysecrete12345666"
     az devops configure --defaults organization=$devopsOrgnizationUri project=$devopsProjectName
 
     # Define Azure DevOps variables
