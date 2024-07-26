@@ -61,6 +61,14 @@ try {
    
     $env:AZURE_DEVOPS_EXT_PAT = $env:SYSTEM_ACCESSTOKEN 
     az devops configure --defaults organization=$devopsOrgnizationUri project=$devopsProjectName
+
+    $spiname = "ADO-DefraGovUK-ADP-SND1-ContUAA"
+    $spiID = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
+    $subsID = "55f3b8c6-6800-41c7-a40d-2adb5e4e1bd1"
+    $subsName = "AZD-ADP-SND1"
+    $tenantID = "6f504113-6b64-43f2-ade9-242e05780007"
+    az devops service-endpoint azurerm create --azure-rm-service-principal-id $spiID --azure-rm-subscription-id $subsID  --azure-rm-subscription-name $subsName --azure-rm-tenant-id $tenantID --name $spiname --org $devopsOrgnizationUri --project $devopsProjectName
+
     if ($LASTEXITCODE -ne 0) {
         throw "Error configuring default devops organization=$devopsOrgnizationUri project=$devopsProjectName with exit code $LASTEXITCODE"
     }
