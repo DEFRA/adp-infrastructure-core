@@ -65,7 +65,7 @@ try {
 
     # Define Azure DevOps variables
     $spiname = "ADO-DefraGovUK-ADP-SND1-ContUAA"
-    $appId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
+    $appId = "bd055de4-122a-45ed-bccd-79d950d069ed"
     $subscriptionId = "55f3b8c6-6800-41c7-a40d-2adb5e4e1bd1"
     $subsName = "AZD-ADP-SND1"
     $tenantID = "6f504113-6b64-43f2-ade9-242e05780007"
