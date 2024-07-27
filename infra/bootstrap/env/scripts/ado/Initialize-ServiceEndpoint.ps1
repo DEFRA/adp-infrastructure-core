@@ -72,7 +72,7 @@ try {
     az devops service-endpoint create --service-endpoint-configuration $EndpointJsonPath --org https://dev.azure.com/defragovuk/ --project DEFRA-FFC
 
     $appObjectId = "ea14266a-4d9e-4674-9f98-08d077ac8d93"
-    New-AzADAppFederatedCredential -ApplicationObjectId $appObjectId -Audience api://AzureADTokenExchange -Issuer https://vstoken.dev.azure.com/0843dc02-bf94-4c0c-b0ed-bb5f8c829f46 -name 'testing03' -Subject 'sc://defragovuk/DEFRA-FFC/WorkloadIdentityFederation-svc'
+    New-AzADAppFederatedCredential -ApplicationObjectId $appObjectId -Audience api://AzureADTokenExchange -Issuer https://vstoken.dev.azure.com/0843dc02-bf94-4c0c-b0ed-bb5f8c829f46 -name 'testing04' -Subject 'sc://defragovuk/DEFRA-FFC/WorkloadIdentityFederation-svc2'
 
 
     # Define Azure DevOps variables
