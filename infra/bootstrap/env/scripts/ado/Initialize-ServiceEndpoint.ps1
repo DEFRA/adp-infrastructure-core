@@ -9,7 +9,7 @@ Create an Azure RM type service endpoint (ServiceConnection). It also verifies t
 Mandatory. Service connection configuration file.
 
 .PARAMETER EndpointJsonPath
-Mandatory. Service connection configuration file.
+Mandatory. Connection configuration file.
 
 .PARAMETER WorkingDirectory
 Optional. Working directory. Default is $PWD.
