@@ -154,6 +154,7 @@ extends:
               path: "infra/bootstrap/env/scripts/ado/Initialize-ServiceEndpoint.ps1"
               scriptArguments: > 
                 -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
+                -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/federation-svc-connection.json'
                 -WorkingDirectory $(Pipeline.Workspace)\s\self
       - ${{ if eq(variables.IsLogAnalyticsWorkspace,true) }}:
         - name: logAnalyticsWorkspace

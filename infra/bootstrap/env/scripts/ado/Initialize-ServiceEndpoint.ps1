@@ -19,6 +19,8 @@ Optional. Working directory. Default is $PWD.
 param(
     [Parameter(Mandatory)] 
     [string]$ServiceEndpointJsonPath,
+    [Parameter(Mandatory)] 
+    [string]$EndpointJsonPath,
     [Parameter()]
     [string]$WorkingDirectory = $PWD
 )
@@ -42,6 +44,7 @@ if ($enableDebug) {
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
 Write-Debug "${functionName}:ServiceEndpointJsonPath=$ServiceEndpointJsonPath"
+Write-Debug "${functionName}:EndpointJsonPath=$EndpointJsonPath"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
@@ -60,19 +63,23 @@ try {
     Write-Debug "${functionName}:devopsProjectId=$devopsProjectId"
    
     $env:AZURE_DEVOPS_EXT_PAT = $env:SYSTEM_ACCESSTOKEN 
-    $env:AZURE_DEVOPS_EXT_AZURE_RM_SERVICE_PRINCIPAL_KEY="mysecrete12345666"
+    #$env:AZURE_DEVOPS_EXT_AZURE_RM_SERVICE_PRINCIPAL_KEY="mysecrete12345666"
     az devops configure --defaults organization=$devopsOrgnizationUri project=$devopsProjectName
 
-    # Define Azure DevOps variables
-    $spiname = "ADO-DefraGovUK-ADP-SND1-ContUAA"
-    $appId = "bd055de4-122a-45ed-bccd-79d950d069ed"
-    $subscriptionId = "55f3b8c6-6800-41c7-a40d-2adb5e4e1bd1"
-    $subsName = "AZD-ADP-SND1"
-    $tenantID = "6f504113-6b64-43f2-ade9-242e05780007"
-    $serviceConnectionName = "test05"  
+    az devops service-endpoint create --service-endpoint-configuration $EndpointJsonPath --org https://dev.azure.com/defragovuk/ --project DEFRA-FFC
 
-    az devops service-endpoint azurerm create --azure-rm-service-principal-id $appId --azure-rm-subscription-id $subscriptionId --azure-rm-subscription-name $subsName  --azure-rm-tenant-id  $tenantID  --name  $serviceConnectionName --org $devopsOrgnizationUri --project $devopsProjectName
-    
+    # Define Azure DevOps variables
+    #$spiname = "ADO-DefraGovUK-ADP-SND1-ContUAA"
+    #$appId = "bd055de4-122a-45ed-bccd-79d950d069ed"
+    #$subscriptionId = "55f3b8c6-6800-41c7-a40d-2adb5e4e1bd1"
+    #$subsName = "AZD-ADP-SND1"
+    #$tenantID = "6f504113-6b64-43f2-ade9-242e05780007"
+    #$serviceConnectionName = "test05"  
+
+    #az devops service-endpoint azurerm create --azure-rm-service-principal-id $appId --azure-rm-subscription-id $subscriptionId --azure-rm-subscription-name $subsName  --azure-rm-tenant-id  $tenantID  --name  $serviceConnectionName --org $devopsOrgnizationUri --project $devopsProjectName
+    #az devops service-endpoint azurerm create --azure-rm-service-principal-id "xxxxx6d26a31435cb" --azure-rm-subscription-id "xxxxx7cb2a7" --azure-rm-subscription-name "xxx subscription" --azure-rm-tenant-id "xxxxx-af9038592395" --name "AzureSp"
+
+
     if ($LASTEXITCODE -ne 0) {
         throw "Error configuring default devops organization=$devopsOrgnizationUri project=$devopsProjectName with exit code $LASTEXITCODE"
     }

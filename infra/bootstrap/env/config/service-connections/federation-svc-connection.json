@@ -1,0 +1,29 @@
+{
+    "data": {
+        "subscriptionId": "55f3b8c6-6800-41c7-a40d-2adb5e4e1bd1",
+        "subscriptionName": "AZD-ADP-SND1",
+        "environment": "AzureCloud",
+        "scopeLevel": "Subscription"
+    },
+    "name": "WorkloadIdentityFederation-svc",
+    "type": "azurerm",
+    "url": "https://management.azure.com/",
+    "authorization": {
+        "scheme": "WorkloadIdentityFederation",
+        "parameters": {
+        "tenantid": "6f504113-6b64-43f2-ade9-242e05780007",
+        "serviceprincipalid": "bd055de4-122a-45ed-bccd-79d950d069ed"
+        }
+    },
+    "isShared": false,
+    "isReady": true,
+    "serviceEndpointProjectReferences": [
+        {
+        "projectReference": {
+            "id": "93c65135-d16b-49d6-a191-4a5313532779",
+            "name": "DEFRA-FFC"
+        },
+        "name": "WorkloadIdentityFederation-svc"
+        }
+    ]
+}
