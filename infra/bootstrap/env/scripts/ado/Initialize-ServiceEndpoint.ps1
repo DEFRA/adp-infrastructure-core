@@ -83,7 +83,8 @@ try {
 
     $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput
 
-    $serviceprincipalid = Get-AzKeyVaultSecret -VaultName "SSVADPINFVT3401" -Name "ADO-DefraGovUK-ADP-SND1-ContUAA-ClientId" -AsPlainText
+    $serviceprincipalid = Get-AzKeyVaultSecret -VaultName SSVADPINFVT3401 -Name ADO-DefraGovUK-ADP-SND1-ContUAA-ClientId -AsPlainText
+    
 
     Write-Output "serviceprincipalid ====== $serviceprincipalid "
 
