@@ -85,12 +85,18 @@ try {
 
     $clientId = az keyvault secret show --name ADO-DefraGovUK-ADP-SND2-ContUAA-ClientId --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --query value
 
-    #$clientId = Invoke-CommandLine -Command "az keyvault secret show --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --name ADO-DefraGovUK-ADP-SND2-ContUAA-ClientId --query id -o tsv"
+
     Write-Host "Finished getting keyVault resourceId for KeyVault '$clientId'"
 
+    $a = Get-Content $EndpointJsonPath -raw | ConvertFrom-Json
+    $a.authorization.serviceprincipalid =  $clientId
+    $a.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}, {$_.name=$devopsProjectName}}
+    $a | ConvertTo-Json -depth 32| set-content $EndpointJsonPath
 
 
-    #az devops service-endpoint create --service-endpoint-configuration $EndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
+
+
+    az devops service-endpoint create --service-endpoint-configuration $EndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
 
 
     $exitCode = 0    
