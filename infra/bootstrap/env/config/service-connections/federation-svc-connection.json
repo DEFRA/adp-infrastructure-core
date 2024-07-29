@@ -5,14 +5,14 @@
         "environment": "AzureCloud",
         "scopeLevel": "Subscription"
     },  
-    "name": "#{{ subscriptionName }}-SC3",
+    "name": "#{{ subscriptionName }}-SC4",
     "type": "azurerm",
     "url": "https://management.azure.com/",
     "authorization": {
         "scheme": "WorkloadIdentityFederation",
         "parameters": {
         "tenantid": "#{{ tenantId }}",
-        "serviceprincipalid": "bd055de4-122a-45ed-bccd-79d950d069ed"
+        "serviceprincipalid": ""
         }
     },  
     "isShared": false,
@@ -20,10 +20,10 @@
     "serviceEndpointProjectReferences": [
         {
         "projectReference": {
-            "id": "93c65135-d16b-49d6-a191-4a5313532779",
-            "name": "DEFRA-FFC"
+            "id": "",
+            "name": ""
         },
-        "name": "#{{ subscriptionName }}-SC3"
+        "name": "#{{ subscriptionName }}-SC4"
         }
     ]
 }
