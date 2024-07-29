@@ -84,7 +84,7 @@ try {
     #$serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput
 
     Set-StrictMode -Version 3.0
-    [string]$secretValue = Get-AzKeyVaultSecret -VaultName SSVADPINFVT3401 -Name ADO-DefraGovUK-ADP-SND1-ContUAA-ClientId -AsPlainText -ErrorAction Stop
+    $secretValue = Get-AzKeyVaultSecret -VaultName $serviceEndpoints.azureRMServiceConnections.keyVault.name -Name $serviceEndpoints.azureRMServiceConnections.keyVault.secrets.tier2ApplicationClientIdSecretName -AsPlainText
 
      Write-Host "Fetching Keyvault secret $secretValue from KeyVaultName" 
 
