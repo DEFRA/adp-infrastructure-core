@@ -88,14 +88,17 @@ try {
 
     Write-Host "Finished getting keyVault resourceId for KeyVault '$clientId'"
 
-    $jsonObj = Get-Content $EndpointJsonPath -raw | ConvertFrom-Json
-    $jsonObj.authorization.parameters.serviceprincipalid =  $clientId
-    $jsonObj.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}}
-    $jsonObj.serviceEndpointProjectReferences.projectReference | % {{{$_.name=$devopsProjectName}}
-    $jsonObj | ConvertTo-Json -depth 32| set-content $EndpointJsonPath
+    $jsonObject = Get-Content $EndpointJsonPath -raw | ConvertFrom-Json
+    $jsonObject.authorization.parameters.serviceprincipalid =  $clientId
+    $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}}
+    $jsonObject.serviceEndpointProjectReferences.projectReference | % {{{$_.name=$devopsProjectName}}
 
+    Write-Host "json file output '$jsonObject'"
+    
 
+    $jsonObject | ConvertTo-Json -depth 32| set-content $EndpointJsonPath
 
+  
 
     az devops service-endpoint create --service-endpoint-configuration $EndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
 
