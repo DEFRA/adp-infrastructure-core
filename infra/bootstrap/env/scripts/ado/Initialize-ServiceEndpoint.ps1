@@ -83,28 +83,23 @@ try {
 
     #$serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput
 
-    $clientId = az keyvault secret show --name ADO-DefraGovUK-ADP-SND1-ContUAA --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --query value
+    #$clientId = az keyvault secret show --name ADO-DefraGovUK-ADP-SND1-ContUAA --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --query value
+    #Write-Host "Finished getting keyVault resourceId for KeyVault '$clientId'"
 
-    $principalId = (az ad app list --display-name ADO-DefraGovUK-ADP-SND1-ContUAA | convertFrom-Json).appId
+    $principalId = (az ad app list --display-name $serviceEndpoints.appRegName | convertFrom-Json).appId
 
-    Write-Host "principalId of ADO-DefraGovUK-ADP-SND2-ContUAA '$principalId'"
-
-    Write-Host "Finished getting keyVault resourceId for KeyVault '$clientId'"
+    Write-Host "The principalId of $serviceEndpoints.appRegName is '$principalId'"
+    
 
     $jsonObject = Get-Content $EndpointJsonPath -raw | ConvertFrom-Json
     $jsonObject.authorization.parameters.serviceprincipalid =  $principalId
     $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}}
     $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.name=$devopsProjectName}}
 
-    Write-Host "json file output '$jsonObject'"
-    
+    Write-Host "json file output '$jsonObject'"    
 
     $jsonObject | ConvertTo-Json -depth 32| set-content $EndpointJsonPath
-
-  
-
     az devops service-endpoint create --service-endpoint-configuration $EndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
-
 
     $exitCode = 0    
 }

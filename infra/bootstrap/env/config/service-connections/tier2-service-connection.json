@@ -1,6 +1,7 @@
 {
     "azureRMServiceConnections": [
         {
+            "appRegName": "#{{ tier2ServiceConnectionAppRegName }}",
             "displayName": "#{{ SubscriptionName }}",
             "description": "ADO automatic Service Connection #{{ SubscriptionName }}",
             "tenantId":  "#{{ TenantId }}",
