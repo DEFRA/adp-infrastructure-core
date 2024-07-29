@@ -32,13 +32,13 @@ param roleAssignment = [
     description: 'Key Vault Secrets Officer Role Assignment'
     principalType: 'ServicePrincipal'
     principalId: ''
-  },
+  }
   {
     roleDefinitionIdOrName: 'Key Vault Secrets Officer'
     description: 'Key Vault Secrets Officer Role Assignment'
     principalType: 'ServicePrincipal'
     principalId: '#{{ ssvAppRegServicePrincipalId }}'
-  },
+  }
   {
     roleDefinitionIdOrName: 'Key Vault Reader'
     description: 'Key Vault Reader Role Assignment'
