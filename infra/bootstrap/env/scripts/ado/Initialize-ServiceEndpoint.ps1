@@ -91,7 +91,7 @@ try {
     $jsonObject = Get-Content $EndpointJsonPath -raw | ConvertFrom-Json
     $jsonObject.authorization.parameters.serviceprincipalid =  $clientId
     $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}}
-    $jsonObject.serviceEndpointProjectReferences.projectReference | % {{{$_.name=$devopsProjectName}}
+    $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.name=$devopsProjectName}}
 
     Write-Host "json file output '$jsonObject'"
     
