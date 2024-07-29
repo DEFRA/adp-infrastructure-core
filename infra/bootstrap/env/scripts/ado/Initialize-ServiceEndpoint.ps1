@@ -83,9 +83,9 @@ try {
 
     #$serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput
 
-    az keyvault secret show --name $serviceEndpoints.azureRMServiceConnections.keyVault.secrets[0] --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --query "value"
+    az keyvault secret show --name ADO-DefraGovUK-ADP-SND2-ContUAA-ClientId --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --query "value"
 
-    $clientId = Invoke-CommandLine -Command "az keyvault secret show --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --name $serviceEndpoints.azureRMServiceConnections.keyVault.secrets[0] --query id -o tsv"
+    $clientId = Invoke-CommandLine -Command "az keyvault secret show --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --name ADO-DefraGovUK-ADP-SND2-ContUAA-ClientId --query id -o tsv"
     Write-Host "Finished getting keyVault resourceId for KeyVault '$clientId'"
 
 
