@@ -86,7 +86,7 @@ try {
     $serviceprincipalid = Get-AzKeyVaultSecret -VaultName SSVADPINFVT3401 -Name ADO-DefraGovUK-ADP-SND1-ContUAA-ClientId -AsPlainText
     
 
-    Write-Output "serviceprincipalid ====== $serviceprincipalid "
+     Write-Host "serviceprincipalid ==================  '$serviceprincipalid', value matches."
 
     az devops service-endpoint create --service-endpoint-configuration $EndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
 
