@@ -81,14 +81,16 @@ try {
         OrgnizationUri = $devopsOrgnizationUri
     }
 
-    $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput
+    #$serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput
 
-    $serviceprincipalid = Get-AzKeyVaultSecret -VaultName SSVADPINFVT3401 -Name ADO-DefraGovUK-ADP-SND1-ContUAA-ClientId -AsPlainText
-    
+    Set-StrictMode -Version 3.0
+    [string]$secretValue = Get-AzKeyVaultSecret -VaultName SSVADPINFVT3401 -Name ADO-DefraGovUK-ADP-SND1-ContUAA-ClientId -AsPlainText -ErrorAction Stop
 
-     Write-Host "serviceprincipalid ==================  '$serviceprincipalid', value matches."
+     Write-Host "Fetching Keyvault secret $secretValue from KeyVaultName" 
 
-    az devops service-endpoint create --service-endpoint-configuration $EndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
+
+
+    #az devops service-endpoint create --service-endpoint-configuration $EndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
 
 
     $exitCode = 0    
