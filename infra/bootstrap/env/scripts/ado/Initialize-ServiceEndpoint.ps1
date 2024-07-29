@@ -88,10 +88,11 @@ try {
 
     Write-Host "Finished getting keyVault resourceId for KeyVault '$clientId'"
 
-    $a = Get-Content $EndpointJsonPath -raw | ConvertFrom-Json
-    $a.authorization.serviceprincipalid =  $clientId
-    $a.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}, {$_.name=$devopsProjectName}}
-    $a | ConvertTo-Json -depth 32| set-content $EndpointJsonPath
+    $jsonObj = Get-Content $EndpointJsonPath -raw | ConvertFrom-Json
+    $jsonObj.authorization.parameters.serviceprincipalid =  $clientId
+    $jsonObj.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}}
+    $jsonObj.serviceEndpointProjectReferences.projectReference | % {{{$_.name=$devopsProjectName}}
+    $jsonObj | ConvertTo-Json -depth 32| set-content $EndpointJsonPath
 
 
 
