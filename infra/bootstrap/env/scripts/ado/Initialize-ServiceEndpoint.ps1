@@ -86,7 +86,7 @@ try {
     #$clientId = az keyvault secret show --name ADO-DefraGovUK-ADP-SND1-ContUAA --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --query value
     #Write-Host "Finished getting keyVault resourceId for KeyVault '$clientId'"
 
-    $principalId = (az ad app list --display-name $serviceEndpoints.appRegName | convertFrom-Json).appId
+    $principalId = (az ad app list --display-name $serviceEndpoints.azureRMServiceConnections.appRegName | convertFrom-Json).appId
 
     Write-Host "The principalId of $serviceEndpoints.appRegName is '$principalId'"
     
