@@ -85,11 +85,14 @@ try {
 
     $clientId = az keyvault secret show --name ADO-DefraGovUK-ADP-SND2-ContUAA-ClientId --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --query value
 
+    $principalId = (az ad app list --display-name ADO-DefraGovUK-ADP-SND2-ContUAA | convertFrom-Json).appId
+
+    Write-Host "principalId of ADO-DefraGovUK-ADP-SND2-ContUAA '$clientId'"
 
     Write-Host "Finished getting keyVault resourceId for KeyVault '$clientId'"
 
     $jsonObject = Get-Content $EndpointJsonPath -raw | ConvertFrom-Json
-    $jsonObject.authorization.parameters.serviceprincipalid =  $clientId
+    $jsonObject.authorization.parameters.serviceprincipalid =  $principalId
     $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}}
     $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.name=$devopsProjectName}}
 
