@@ -170,6 +170,7 @@ extends:
     projectName: $(projectName)
     keyVaultName: $(ssvPlatformKeyVaultName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
+    includePlatformEnvs: false
     filePathsForTransform: |
       **/core/env/app-configuration/config-data/config-data.json
       **/infra/core/env/insights/aad-groups/monitoringpublishergroup.json    
