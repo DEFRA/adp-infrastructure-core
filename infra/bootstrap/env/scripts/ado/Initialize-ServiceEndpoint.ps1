@@ -83,10 +83,10 @@ try {
 
     #$serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput
 
-    Set-StrictMode -Version 3.0
-    $secretValue = Get-AzKeyVaultSecret -VaultName $serviceEndpoints.azureRMServiceConnections.keyVault.name -Name $serviceEndpoints.azureRMServiceConnections.keyVault.secrets[0] -AsPlainText
+    az keyvault secret show --name $serviceEndpoints.azureRMServiceConnections.keyVault.secrets[0] --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --query "value"
 
-     Write-Host "Fetching Keyvault secret $secretValue from KeyVaultName" 
+    $clientId = Invoke-CommandLine -Command "az keyvault secret show --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --name $serviceEndpoints.azureRMServiceConnections.keyVault.secrets[0] --query id -o tsv"
+    Write-Host "Finished getting keyVault resourceId for KeyVault '$clientId'"
 
 
 
