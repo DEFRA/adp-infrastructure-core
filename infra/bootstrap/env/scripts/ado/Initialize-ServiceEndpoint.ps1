@@ -83,11 +83,11 @@ try {
 
     #$serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput
 
-    $clientId = az keyvault secret show --name ADO-DefraGovUK-ADP-SND2-ContUAA-ClientId --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --query value
+    $clientId = az keyvault secret show --name ADO-DefraGovUK-ADP-SND1-ContUAA --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --query value
 
-    $principalId = (az ad app list --display-name ADO-DefraGovUK-ADP-SND2-ContUAA | convertFrom-Json).appId
+    $principalId = (az ad app list --display-name ADO-DefraGovUK-ADP-SND1-ContUAA | convertFrom-Json).appId
 
-    Write-Host "principalId of ADO-DefraGovUK-ADP-SND2-ContUAA '$clientId'"
+    Write-Host "principalId of ADO-DefraGovUK-ADP-SND2-ContUAA '$principalId'"
 
     Write-Host "Finished getting keyVault resourceId for KeyVault '$clientId'"
 
