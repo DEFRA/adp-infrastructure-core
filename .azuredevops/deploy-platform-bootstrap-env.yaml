@@ -129,6 +129,7 @@ extends:
     filePathsForTransform: |
       **/bootstrap/env/config/app-registrations/tier2-app-registration.json
       **/bootstrap/env/config/service-connections/tier2-service-connection.json
+      **/bootstrap/env/config/service-connections/federation-svc-connection.json
       **/bootstrap/env/config/role-assignments/tier2-role-assignments.json
     groupedDeployments:
       - ${{ if eq(variables.IsServiceConnections,true) }}:
