@@ -23,7 +23,7 @@ param(
     [Parameter(Mandatory)] 
     [string]$ServiceEndpointJsonPath,
     [Parameter(Mandatory)] 
-    [string]$EndpointJsonPath,
+    [string]$FederatedEndpointJsonPath,
     [Parameter()]
     [string]$WorkingDirectory = $PWD
 )
@@ -47,7 +47,7 @@ if ($enableDebug) {
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
 Write-Debug "${functionName}:ServiceEndpointJsonPath=$ServiceEndpointJsonPath"
-Write-Debug "${functionName}:EndpointJsonPath=$EndpointJsonPath"
+Write-Debug "${functionName}:FederatedEndpointJsonPath=$FederatedEndpointJsonPath"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
@@ -74,6 +74,7 @@ try {
     }
 
     [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json
+   
 
     $functionInput = @{
         ProjectId      = $devopsProjectId
@@ -91,29 +92,26 @@ try {
     Write-Host "The principalId of $serviceEndpoints.appRegName is '$principalId'"
     
 
-    $jsonObject = Get-Content $EndpointJsonPath -raw | ConvertFrom-Json
+    $jsonObject = Get-Content $FederatedEndpointJsonPath -raw | ConvertFrom-Json
     $jsonObject.authorization.parameters.serviceprincipalid =  $principalId
     $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}}
     $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.name=$devopsProjectName}}
 
     Write-Host "json file output '$jsonObject'"    
 
-    $jsonObject | ConvertTo-Json -depth 32| set-content $EndpointJsonPath    
+    $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath 
 
-    #$serviceConnectionId = (az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName | convertFrom-Json).id
-    $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name=='AZD-ADP-SND1-SC5'].id" -o tsv
+    $federatedServiceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
+    $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name==$federatedServiceEndpoint.serviceEndpointProjectReferences.name].id" -o tsv
 
     Write-Host "Service connection Id '$serviceConnectionId'"   
     
     if ($serviceConnectionId) {
-        Write-Output "ADO service connection $serviceConnectionId exist."
-    } else {
+        Write-Output "ADO service connection name: $federatedServiceEndpoint.serviceEndpointProjectReferences.name and id: $serviceConnectionId is already exist."
+    } else { 
         Write-Output "Creating ADO service connection."
-        az devops service-endpoint create --service-endpoint-configuration $EndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
-    }
-
-
-    
+        az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
+    }    
 
     $exitCode = 0    
 }
