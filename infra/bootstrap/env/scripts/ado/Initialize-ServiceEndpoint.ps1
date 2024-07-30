@@ -120,6 +120,9 @@ Function CreateFederatedCredentialServiceConnection() {
         [ValidateNotNullOrEmpty()]
         [string]$federatedEndpointJsonPath,
         [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$serviceEndpointJsonPath,
+        [Parameter(Mandatory = $true)]
         [PSCustomObject]$serviceEndpoints,
         [Parameter(Mandatory = $true)]
         [string]$devopsOrgnizationUri,
@@ -140,23 +143,25 @@ Function CreateFederatedCredentialServiceConnection() {
     Write-Host "Service connection Id '$serviceConnectionId'"
     
     if ($serviceConnectionId) {
-        Write-Output "ADO service connection id: $serviceConnectionId is already exist."
+        Write-Output "ADO service connection id: $serviceConnectionId is already exist. No changes made."
     } else { 
         Write-Output "Creating ADO service connection."
+
+        [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $serviceEndpointJsonPath | ConvertFrom-Json
 
         $principalId = (az ad app list --display-name $serviceEndpoints.azureRMServiceConnections.appRegName | convertFrom-Json).appId
         Write-Host "The principalId of $serviceEndpoints.appRegName is '$principalId'"
 
-        $jsonObject = Get-Content $FederatedEndpointJsonPath -raw | ConvertFrom-Json
+        $jsonObject = Get-Content $federatedEndpointJsonPath -raw | ConvertFrom-Json
         $jsonObject.authorization.parameters.serviceprincipalid =  $principalId
         $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}}
         $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.name=$devopsProjectName}}
-        $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath
+        $jsonObject | ConvertTo-Json -depth 32| set-content $federatedEndpointJsonPath
 
-        az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
+        az devops service-endpoint create --service-endpoint-configuration $federatedEndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
     }   
 }
 
 CreateServiceConnection -serviceEndpointJsonPath $ServiceEndpointJsonPath 
-CreateFederatedCredentialServiceConnection -federatedEndpointJsonPath $FederatedEndpointJsonPath -serviceEndpoints $serviceEndpoints -devopsOrgnizationUri $devopsOrgnizationUri -devopsProjectName $devopsProjectName -devopsProjectId $devopsProjectId
+CreateFederatedCredentialServiceConnection -federatedEndpointJsonPath $FederatedEndpointJsonPath -serviceEndpointJsonPath $ServiceEndpointJsonPath -devopsOrgnizationUri $devopsOrgnizationUri -devopsProjectName $devopsProjectName -devopsProjectId $devopsProjectId
      
