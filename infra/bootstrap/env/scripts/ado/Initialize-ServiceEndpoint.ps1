@@ -32,7 +32,7 @@ Function CreateServiceConnection() {
     [CmdletBinding(SupportsShouldProcess)]
     Param(
         [Parameter(Mandatory)] 
-        [string]$serviceEndpointJsonPath,
+        [string]$ServiceEndpointJsonPath,
         [Parameter()]
         [string]$workingDirectory = $PWD
     )
@@ -92,6 +92,7 @@ Function CreateServiceConnection() {
 
         $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput   
               
+        CreateFederatedCredentialServiceConnection -federatedEndpointJsonPath $FederatedEndpointJsonPath -serviceEndpoints $serviceEndpoints -devopsOrgnizationUri $devopsOrgnizationUri -devopsProjectName $devopsProjectName -devopsProjectId $devopsProjectId
 
         $exitCode = 0    
     }
@@ -110,12 +111,7 @@ Function CreateServiceConnection() {
             $host.SetShouldExit($exitCode)
         }
         exit $exitCode
-    }
-
-    Write-Host "in function +++++++++++++++++++++++++++++++++==1"
-
-    CreateFederatedCredentialServiceConnection -federatedEndpointJsonPath $FederatedEndpointJsonPath -serviceEndpoints $serviceEndpoints -devopsOrgnizationUri $devopsOrgnizationUri -devopsProjectName $devopsProjectName -devopsProjectId $devopsProjectId
-
+    }    
 }
 
 Function CreateFederatedCredentialServiceConnection() {
@@ -123,7 +119,7 @@ Function CreateFederatedCredentialServiceConnection() {
     Param(
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
-        [string]$federatedEndpointJsonPath,
+        [string]$FederatedEndpointJsonPath,
         [Parameter(Mandatory = $true)]
         [PSCustomObject]$serviceEndpoints,
         [Parameter(Mandatory = $true)]
@@ -153,16 +149,16 @@ Function CreateFederatedCredentialServiceConnection() {
         $principalId = (az ad app list --display-name $serviceEndpoints.azureRMServiceConnections.appRegName | convertFrom-Json).appId
         Write-Host "The principalId of $serviceEndpoints.appRegName is '$principalId'"
 
-        $jsonObject = Get-Content $federatedEndpointJsonPath -raw | ConvertFrom-Json
+        $jsonObject = Get-Content $FederatedEndpointJsonPath -raw | ConvertFrom-Json
         $jsonObject.authorization.parameters.serviceprincipalid =  $principalId
         $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}}
         $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.name=$devopsProjectName}}
-        $jsonObject | ConvertTo-Json -depth 32| set-content $federatedEndpointJsonPath
+        $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath
 
-        az devops service-endpoint create --service-endpoint-configuration $federatedEndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
-    }  
-    Write-Host "in function ======================================================= 2" 
+        az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
+    }     
 }
+
 
 CreateServiceConnection -serviceEndpointJsonPath $ServiceEndpointJsonPath 
      
