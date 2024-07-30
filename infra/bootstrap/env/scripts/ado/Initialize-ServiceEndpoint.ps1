@@ -89,7 +89,7 @@ try {
     $serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
     Write-Host "Service connection name "
     
-    $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name==$serviceConnectionName].id" -o tsv
+    $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name=='$serviceConnectionName'].id" -o tsv
 
     Write-Host "Service connection Id '$serviceConnectionId'"
     
