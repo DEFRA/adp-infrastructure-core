@@ -81,30 +81,27 @@ try {
         OrgnizationUri = $devopsOrgnizationUri
     }
 
-    $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput   
-
-    $principalId = (az ad app list --display-name $serviceEndpoints.azureRMServiceConnections.appRegName | convertFrom-Json).appId
-
-    Write-Host "The principalId of $serviceEndpoints.appRegName is '$principalId'"    
-
-    $jsonObject = Get-Content $FederatedEndpointJsonPath -raw | ConvertFrom-Json
-    $jsonObject.authorization.parameters.serviceprincipalid =  $principalId
-    $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}}
-    $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.name=$devopsProjectName}}
-
-    Write-Host "json file output '$jsonObject'"    
-
-    $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath 
+    $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput           
 
     $federatedServiceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
     $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name==$federatedServiceEndpoint.name].id" -o tsv
 
-    Write-Host "Service connection Id '$serviceConnectionId'"   
+    Write-Host "Service connection Id '$serviceConnectionId'"
     
     if ($serviceConnectionId) {
-        Write-Output "ADO service connection name: $federatedServiceEndpoint.serviceEndpointProjectReferences.name and id: $serviceConnectionId is already exist."
+        Write-Output "ADO service connection name: $federatedServiceEndpoint.name and id: $serviceConnectionId is already exist."
     } else { 
         Write-Output "Creating ADO service connection."
+
+        $principalId = (az ad app list --display-name $serviceEndpoints.azureRMServiceConnections.appRegName | convertFrom-Json).appId
+        Write-Host "The principalId of $serviceEndpoints.appRegName is '$principalId'"
+
+        $jsonObject = Get-Content $FederatedEndpointJsonPath -raw | ConvertFrom-Json
+        $jsonObject.authorization.parameters.serviceprincipalid =  $principalId
+        $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}}
+        $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.name=$devopsProjectName}}
+        $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath
+
         az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
     }    
 
