@@ -122,14 +122,6 @@ Function CreateFederatedCredentialServiceConnection() {
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$serviceEndpointJsonPath,
-        [Parameter(Mandatory = $true)]
-        [PSCustomObject]$serviceEndpoints,
-        [Parameter(Mandatory = $true)]
-        [string]$devopsOrgnizationUri,
-        [Parameter(Mandatory = $true)]
-        [string]$devopsProjectName,
-        [Parameter(Mandatory = $true)]
-        [string]$devopsProjectId, 
         [Parameter(Mandatory = $false)]
         [string]$graphApiversion = "v1.0"
     )
@@ -149,6 +141,22 @@ Function CreateFederatedCredentialServiceConnection() {
 
         [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $serviceEndpointJsonPath | ConvertFrom-Json
 
+        # Initialize az devops commands
+        [string]$devopsOrgnizationUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
+        [string]$devopsProjectName = $env:SYSTEM_TEAMPROJECT
+        [string]$devopsProjectId = $env:SYSTEM_TEAMPROJECTID
+        Write-Debug "${functionName}:devopsOrgnizationUri=$devopsOrgnizationUri"
+        Write-Debug "${functionName}:devopsProjectName=$devopsProjectName"
+        Write-Debug "${functionName}:devopsProjectId=$devopsProjectId"
+    
+        $env:AZURE_DEVOPS_EXT_PAT = $env:SYSTEM_ACCESSTOKEN
+
+        az devops configure --defaults organization=$devopsOrgnizationUri project=$devopsProjectName    
+
+        if ($LASTEXITCODE -ne 0) {
+            throw "Error configuring default devops organization=$devopsOrgnizationUri project=$devopsProjectName with exit code $LASTEXITCODE"
+        }
+
         $principalId = (az ad app list --display-name $serviceEndpoints.azureRMServiceConnections.appRegName | convertFrom-Json).appId
         Write-Host "The principalId of $serviceEndpoints.appRegName is '$principalId'"
 
@@ -163,5 +171,5 @@ Function CreateFederatedCredentialServiceConnection() {
 }
 
 CreateServiceConnection -serviceEndpointJsonPath $ServiceEndpointJsonPath 
-CreateFederatedCredentialServiceConnection -federatedEndpointJsonPath $FederatedEndpointJsonPath -serviceEndpointJsonPath $ServiceEndpointJsonPath -devopsOrgnizationUri $devopsOrgnizationUri -devopsProjectName $devopsProjectName -devopsProjectId $devopsProjectId
+CreateFederatedCredentialServiceConnection -federatedEndpointJsonPath $FederatedEndpointJsonPath -serviceEndpointJsonPath $ServiceEndpointJsonPath
      
