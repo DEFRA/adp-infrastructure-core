@@ -99,6 +99,13 @@ try {
     Write-Host "json file output '$jsonObject'"    
 
     $jsonObject | ConvertTo-Json -depth 32| set-content $EndpointJsonPath
+
+    az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName
+
+    $serviceConnectionId = (az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName | convertFrom-Json).id
+
+    Write-Host "Service connection Id '$serviceConnectionId'"    
+
     az devops service-endpoint create --service-endpoint-configuration $EndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
 
     $exitCode = 0    
