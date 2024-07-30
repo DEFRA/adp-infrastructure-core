@@ -42,7 +42,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA-ADP
       type: github
-      ref: main      
+      ref: main
 
 variables:
   - name: IsAll
