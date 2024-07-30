@@ -42,7 +42,8 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA-ADP
       type: github
-      ref: main
+      #ref: main
+      ref: sm/419239/automateFederatedServiceConnection
 
 variables:
   - name: IsAll
@@ -129,6 +130,7 @@ extends:
     filePathsForTransform: |
       **/bootstrap/env/config/app-registrations/tier2-app-registration.json
       **/bootstrap/env/config/service-connections/tier2-service-connection.json
+      **/bootstrap/env/config/service-connections/federated-credential-service-connection.json
       **/bootstrap/env/config/role-assignments/tier2-role-assignments.json
     groupedDeployments:
       - ${{ if eq(variables.IsServiceConnections,true) }}:
@@ -154,6 +156,7 @@ extends:
               path: "infra/bootstrap/env/scripts/ado/Initialize-ServiceEndpoint.ps1"
               scriptArguments: > 
                 -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
+                -FederatedEndpointJsonPath 'infra/bootstrap/env/config/service-connections/federated-credential-service-connection.json'
                 -WorkingDirectory $(Pipeline.Workspace)\s\self
       - ${{ if eq(variables.IsLogAnalyticsWorkspace,true) }}:
         - name: logAnalyticsWorkspace
