@@ -86,13 +86,12 @@ try {
    
 
     $federatedServiceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
-    $serviceConnectionName = $federatedServiceEndpoint.name
-    $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name==$serviceConnectionName].id" -o tsv
+    $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name==$federatedServiceEndpoint.name].id" -o tsv
 
     Write-Host "Service connection Id '$serviceConnectionId'"
     
     if ($serviceConnectionId) {
-        Write-Output "ADO service connection name: $federatedServiceEndpoint.name and id: $serviceConnectionId is already exist."
+        Write-Output "ADO service connection id: $serviceConnectionId is already exist."
     } else { 
         Write-Output "Creating ADO service connection."
 
