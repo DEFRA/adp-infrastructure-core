@@ -131,8 +131,7 @@ Function CreateFederatedCredentialServiceConnection() {
         [Parameter(Mandatory = $false)]
         [string]$graphApiversion = "v1.0"
     )
-
-
+    
     $federatedServiceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
     $serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
     Write-Host "Service connection name '$serviceConnectionName'"
