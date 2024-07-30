@@ -81,10 +81,13 @@ try {
         OrgnizationUri = $devopsOrgnizationUri
     }
 
-    $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput           
+    $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput   
+    
+   
 
     $federatedServiceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
-    $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name=='AZD-ADP-SND1-SC5'].id" -o tsv
+    $serviceConnectionName = $federatedServiceEndpoint.name
+    $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name==$serviceConnectionName].id" -o tsv
 
     Write-Host "Service connection Id '$serviceConnectionId'"
     
