@@ -43,7 +43,7 @@ resources:
       endpoint: DEFRA-ADP
       type: github
       #ref: main
-      ref: sm/419239/automateFederatedServiceConnection
+      ref: sm/xxxx/FederatedServiceConnection
 
 variables:
   - name: IsAll
