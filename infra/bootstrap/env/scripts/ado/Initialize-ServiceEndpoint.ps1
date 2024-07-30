@@ -28,13 +28,13 @@ param(
     [string]$WorkingDirectory = $PWD
 )
 
-Function CredentialServiceConnection() {
+Function CreateServiceConnection() {
     [CmdletBinding(SupportsShouldProcess)]
     Param(
         [Parameter(Mandatory)] 
-        [string]$ServiceEndpointJsonPath,
+        [string]$serviceEndpointJsonPath,
         [Parameter()]
-        [string]$WorkingDirectory = $PWD
+        [string]$workingDirectory = $PWD
     )
 
     Set-StrictMode -Version 3.0
@@ -157,6 +157,6 @@ Function CreateFederatedCredentialServiceConnection() {
     }   
 }
 
-CredentialServiceConnection -ServiceEndpointJsonPath $ServiceEndpointJsonPath 
+CreateServiceConnection -serviceEndpointJsonPath $ServiceEndpointJsonPath 
 CreateFederatedCredentialServiceConnection -federatedEndpointJsonPath $FederatedEndpointJsonPath -serviceEndpoints $serviceEndpoints -devopsOrgnizationUri $devopsOrgnizationUri -devopsProjectName $devopsProjectName -devopsProjectId $devopsProjectId
      
