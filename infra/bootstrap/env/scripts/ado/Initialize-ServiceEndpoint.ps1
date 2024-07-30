@@ -8,7 +8,7 @@ Create an Azure RM type service endpoint (ServiceConnection). It also verifies t
 .PARAMETER ServiceEndpointJsonPath
 Mandatory. Service connection configuration file.
 
-.PARAMETER EndpointJsonPath
+.PARAMETER FederatedEndpointJsonPath
 Mandatory. Connection configuration file.
 
 .PARAMETER WorkingDirectory
@@ -73,8 +73,7 @@ try {
         throw "Error configuring default devops organization=$devopsOrgnizationUri project=$devopsProjectName with exit code $LASTEXITCODE"
     }
 
-    [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json
-   
+    [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json   
 
     $functionInput = @{
         ProjectId      = $devopsProjectId
@@ -82,15 +81,11 @@ try {
         OrgnizationUri = $devopsOrgnizationUri
     }
 
-    #$serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput
-
-    #$clientId = az keyvault secret show --name ADO-DefraGovUK-ADP-SND1-ContUAA --vault-name $serviceEndpoints.azureRMServiceConnections.keyVault.name --query value
-    #Write-Host "Finished getting keyVault resourceId for KeyVault '$clientId'"
+    $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput   
 
     $principalId = (az ad app list --display-name $serviceEndpoints.azureRMServiceConnections.appRegName | convertFrom-Json).appId
 
-    Write-Host "The principalId of $serviceEndpoints.appRegName is '$principalId'"
-    
+    Write-Host "The principalId of $serviceEndpoints.appRegName is '$principalId'"    
 
     $jsonObject = Get-Content $FederatedEndpointJsonPath -raw | ConvertFrom-Json
     $jsonObject.authorization.parameters.serviceprincipalid =  $principalId
