@@ -82,12 +82,50 @@ try {
     }
 
     $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput   
-    
    
+    CreateFederatedCredentialServiceConnection -federatedEndpointJsonPath $FederatedEndpointJsonPath -serviceEndpoints $serviceEndpoints -devopsOrgnizationUri $devopsOrgnizationUri -devopsProjectName $devopsProjectName -devopsProjectId $devopsProjectId
+        
+
+    $exitCode = 0    
+}
+catch {
+    $exitCode = -2
+    Write-Error $_.Exception.ToString()
+    throw $_.Exception
+}
+finally {
+    [DateTime]$endTime = [DateTime]::UtcNow
+    [Timespan]$duration = $endTime.Subtract($startTime)
+
+    Write-Host "${functionName} finished at $($endTime.ToString('u')) (duration $($duration -f 'g')) with exit code $exitCode"
+    if ($setHostExitCode) {
+        Write-Debug "${functionName}:Setting host exit code"
+        $host.SetShouldExit($exitCode)
+    }
+    exit $exitCode
+}
+
+Function CreateFederatedCredentialServiceConnection() {
+    [CmdletBinding(SupportsShouldProcess)]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [string]$federatedEndpointJsonPath,
+        [Parameter(Mandatory = $true)]
+        [PSCustomObject]$serviceEndpoints,
+        [Parameter(Mandatory = $true)]
+        [string]$devopsOrgnizationUri,
+        [Parameter(Mandatory = $true)]
+        [string]$devopsProjectName,
+        [Parameter(Mandatory = $true)]
+        [string]$devopsProjectId, 
+        [Parameter(Mandatory = $false)]
+        [string]$graphApiversion = "v1.0"
+    )
 
     $federatedServiceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
     $serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
-    Write-Host "Service connection name "
+    Write-Host "Service connection name '$serviceConnectionName'"
     
     $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name=='$serviceConnectionName'].id" -o tsv
 
@@ -108,23 +146,5 @@ try {
         $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath
 
         az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
-    }    
-
-    $exitCode = 0    
-}
-catch {
-    $exitCode = -2
-    Write-Error $_.Exception.ToString()
-    throw $_.Exception
-}
-finally {
-    [DateTime]$endTime = [DateTime]::UtcNow
-    [Timespan]$duration = $endTime.Subtract($startTime)
-
-    Write-Host "${functionName} finished at $($endTime.ToString('u')) (duration $($duration -f 'g')) with exit code $exitCode"
-    if ($setHostExitCode) {
-        Write-Debug "${functionName}:Setting host exit code"
-        $host.SetShouldExit($exitCode)
-    }
-    exit $exitCode
+    }   
 }
