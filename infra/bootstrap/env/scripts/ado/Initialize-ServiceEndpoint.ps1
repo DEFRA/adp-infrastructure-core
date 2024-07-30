@@ -86,9 +86,10 @@ try {
    
 
     $federatedServiceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
-    Write-Host "Service connection name $federatedServiceEndpoint.serviceEndpointProjectReferences.name"
+    $serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
+    Write-Host "Service connection name "
     
-    $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name==$federatedServiceEndpoint.serviceEndpointProjectReferences.name].id" -o tsv
+    $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name==$serviceConnectionName].id" -o tsv
 
     Write-Host "Service connection Id '$serviceConnectionId'"
     
