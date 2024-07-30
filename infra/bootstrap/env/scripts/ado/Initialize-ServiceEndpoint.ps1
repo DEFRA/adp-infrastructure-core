@@ -98,15 +98,22 @@ try {
 
     Write-Host "json file output '$jsonObject'"    
 
-    $jsonObject | ConvertTo-Json -depth 32| set-content $EndpointJsonPath
+    $jsonObject | ConvertTo-Json -depth 32| set-content $EndpointJsonPath    
 
-    az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName
+    #$serviceConnectionId = (az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName | convertFrom-Json).id
+    $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name=='AZD-ADP-SND1-SC5'].id" -o tsv
 
-    $serviceConnectionId = (az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName | convertFrom-Json).id
+    Write-Host "Service connection Id '$serviceConnectionId'"   
+    
+    if ($serviceConnectionId) {
+        Write-Output "ADO service connection $serviceConnectionId exist."
+    } else {
+        Write-Output "Creating ADO service connection."
+        az devops service-endpoint create --service-endpoint-configuration $EndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
+    }
 
-    Write-Host "Service connection Id '$serviceConnectionId'"    
 
-    az devops service-endpoint create --service-endpoint-configuration $EndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
+    
 
     $exitCode = 0    
 }
