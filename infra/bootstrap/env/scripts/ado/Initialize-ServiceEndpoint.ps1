@@ -143,7 +143,7 @@ Function CreateFederatedCredentialServiceConnection() {
     if ($serviceConnectionId) {
         Write-Output "ADO service connection id: $serviceConnectionId is already exist. No changes made."
     } else { 
-        Write-Output "Creating ADO service connection."
+        Write-Output "Creating ADO federated credential service connection."
 
         $principalId = (az ad app list --display-name $serviceEndpoints.azureRMServiceConnections.appRegName | convertFrom-Json).appId
         Write-Host "The principalId of $serviceEndpoints.appRegName is '$principalId'"
@@ -153,6 +153,8 @@ Function CreateFederatedCredentialServiceConnection() {
         $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}}
         $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.name=$devopsProjectName}}
         $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath
+
+        Write-Host "The updated json  $FederatedEndpointJsonPath"
 
         az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
     }     
