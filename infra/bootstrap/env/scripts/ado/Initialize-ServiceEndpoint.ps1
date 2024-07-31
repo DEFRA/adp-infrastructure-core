@@ -72,8 +72,9 @@ if ($LASTEXITCODE -ne 0) {
     throw "Error configuring default devops organization=$devopsOrgnizationUri project=$devopsProjectName with exit code $LASTEXITCODE"
 }
 
- $principalId = (az ad app list --display-name $serviceEndpoints.azureRMServiceConnections.appRegName | convertFrom-Json).appId
-        Write-Host "The principalId is '$principalId'"
+[PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json 
+$principalId = (az ad app list --display-name $serviceEndpoints.azureRMServiceConnections.appRegName | convertFrom-Json).appId
+Write-Host "The principalId is '$principalId'"
 
 Function CreateServiceConnection() {
     [CmdletBinding(SupportsShouldProcess)]
@@ -85,8 +86,6 @@ Function CreateServiceConnection() {
     )
 
     try {        
-
-        [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json   
 
         $functionInput = @{
             ProjectId      = $devopsProjectId
