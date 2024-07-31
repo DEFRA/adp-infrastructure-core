@@ -21,6 +21,8 @@ param(
     [string]$ServiceEndpointJsonPath,
     [Parameter(Mandatory)] 
     [string]$FederatedEndpointJsonPath,
+    [Parameter(Mandatory = $false)]
+    [bool]$federatedCredential,
     [Parameter()]
     [string]$WorkingDirectory = $PWD
 )
