@@ -28,6 +28,53 @@ param(
     [string]$WorkingDirectory = $PWD
 )
 
+
+Set-StrictMode -Version 3.0
+
+[string]$functionName = $MyInvocation.MyCommand
+[datetime]$startTime = [datetime]::UtcNow
+
+[int]$exitCode = -1
+[bool]$setHostExitCode = (Test-Path -Path ENV:TF_BUILD) -and ($ENV:TF_BUILD -eq "true")
+[bool]$enableDebug = (Test-Path -Path ENV:SYSTEM_DEBUG) -and ($ENV:SYSTEM_DEBUG -eq "true")
+
+Set-Variable -Name ErrorActionPreference -Value Continue -scope global
+Set-Variable -Name InformationPreference -Value Continue -Scope global
+
+if ($enableDebug) {
+    Set-Variable -Name VerbosePreference -Value Continue -Scope global
+    Set-Variable -Name DebugPreference -Value Continue -Scope global
+}
+
+Write-Host "${functionName} started at $($startTime.ToString('u'))"
+Write-Debug "${functionName}:ServiceEndpointJsonPath=$ServiceEndpointJsonPath"
+Write-Debug "${functionName}:FederatedEndpointJsonPath=$FederatedEndpointJsonPath"
+Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
+
+[System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ado"
+Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
+
+Import-Module $moduleDir.FullName -Force
+
+# Initialize az devops commands
+[string]$devopsOrgnizationUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
+[string]$devopsProjectName = $env:SYSTEM_TEAMPROJECT
+[string]$devopsProjectId = $env:SYSTEM_TEAMPROJECTID
+Write-Debug "${functionName}:devopsOrgnizationUri=$devopsOrgnizationUri"
+Write-Debug "${functionName}:devopsProjectName=$devopsProjectName"
+Write-Debug "${functionName}:devopsProjectId=$devopsProjectId"
+
+$env:AZURE_DEVOPS_EXT_PAT = $env:SYSTEM_ACCESSTOKEN
+
+az devops configure --defaults organization=$devopsOrgnizationUri project=$devopsProjectName    
+
+if ($LASTEXITCODE -ne 0) {
+    throw "Error configuring default devops organization=$devopsOrgnizationUri project=$devopsProjectName with exit code $LASTEXITCODE"
+}
+
+ $principalId = (az ad app list --display-name $serviceEndpoints.azureRMServiceConnections.appRegName | convertFrom-Json).appId
+        Write-Host "The principalId is '$principalId'"
+
 Function CreateServiceConnection() {
     [CmdletBinding(SupportsShouldProcess)]
     Param(
@@ -37,50 +84,7 @@ Function CreateServiceConnection() {
         [string]$workingDirectory = $PWD
     )
 
-    Set-StrictMode -Version 3.0
-
-    [string]$functionName = $MyInvocation.MyCommand
-    [datetime]$startTime = [datetime]::UtcNow
-
-    [int]$exitCode = -1
-    [bool]$setHostExitCode = (Test-Path -Path ENV:TF_BUILD) -and ($ENV:TF_BUILD -eq "true")
-    [bool]$enableDebug = (Test-Path -Path ENV:SYSTEM_DEBUG) -and ($ENV:SYSTEM_DEBUG -eq "true")
-
-    Set-Variable -Name ErrorActionPreference -Value Continue -scope global
-    Set-Variable -Name InformationPreference -Value Continue -Scope global
-
-    if ($enableDebug) {
-        Set-Variable -Name VerbosePreference -Value Continue -Scope global
-        Set-Variable -Name DebugPreference -Value Continue -Scope global
-    }
-
-    Write-Host "${functionName} started at $($startTime.ToString('u'))"
-    Write-Debug "${functionName}:ServiceEndpointJsonPath=$ServiceEndpointJsonPath"
-    Write-Debug "${functionName}:FederatedEndpointJsonPath=$FederatedEndpointJsonPath"
-    Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
-
-    try {
-
-        [System.IO.DirectoryInfo]$moduleDir = Join-Path -Path $WorkingDirectory -ChildPath "scripts/modules/ado"
-        Write-Debug "${functionName}:moduleDir.FullName=$($moduleDir.FullName)"
-
-        Import-Module $moduleDir.FullName -Force
-
-        # Initialize az devops commands
-        [string]$devopsOrgnizationUri = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
-        [string]$devopsProjectName = $env:SYSTEM_TEAMPROJECT
-        [string]$devopsProjectId = $env:SYSTEM_TEAMPROJECTID
-        Write-Debug "${functionName}:devopsOrgnizationUri=$devopsOrgnizationUri"
-        Write-Debug "${functionName}:devopsProjectName=$devopsProjectName"
-        Write-Debug "${functionName}:devopsProjectId=$devopsProjectId"
-    
-        $env:AZURE_DEVOPS_EXT_PAT = $env:SYSTEM_ACCESSTOKEN
-
-        az devops configure --defaults organization=$devopsOrgnizationUri project=$devopsProjectName    
-
-        if ($LASTEXITCODE -ne 0) {
-            throw "Error configuring default devops organization=$devopsOrgnizationUri project=$devopsProjectName with exit code $LASTEXITCODE"
-        }
+    try {        
 
         [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json   
 
@@ -90,10 +94,8 @@ Function CreateServiceConnection() {
             OrgnizationUri = $devopsOrgnizationUri
         }
 
-        $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput   
-              
-        CreateFederatedCredentialServiceConnection -federatedEndpointJsonPath $FederatedEndpointJsonPath -serviceEndpoints $serviceEndpoints -devopsOrgnizationUri $devopsOrgnizationUri -devopsProjectName $devopsProjectName -devopsProjectId $devopsProjectId
-
+        $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput                 
+        
         $exitCode = 0    
     }
     catch {
@@ -120,14 +122,6 @@ Function CreateFederatedCredentialServiceConnection() {
         [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [string]$FederatedEndpointJsonPath,
-        [Parameter(Mandatory = $true)]
-        [PSCustomObject]$serviceEndpoints,
-        [Parameter(Mandatory = $true)]
-        [string]$devopsOrgnizationUri,
-        [Parameter(Mandatory = $true)]
-        [string]$devopsProjectName,
-        [Parameter(Mandatory = $true)]
-        [string]$devopsProjectId, 
         [Parameter(Mandatory = $false)]
         [string]$graphApiversion = "v1.0"
     )
@@ -143,10 +137,7 @@ Function CreateFederatedCredentialServiceConnection() {
     if ($serviceConnectionId) {
         Write-Output "ADO service connection $serviceConnectionName is already exist. No changes made."
     } else { 
-        Write-Output "Creating ADO federated credential service connection $serviceConnectionName"
-
-        $principalId = (az ad app list --display-name $serviceEndpoints.azureRMServiceConnections.appRegName | convertFrom-Json).appId
-        Write-Host "The principalId is '$principalId'"
+        Write-Output "Creating ADO federated credential service connection $serviceConnectionName"      
 
         $jsonObject = Get-Content $FederatedEndpointJsonPath -raw | ConvertFrom-Json
         $jsonObject.authorization.parameters.serviceprincipalid =  $principalId
@@ -159,4 +150,4 @@ Function CreateFederatedCredentialServiceConnection() {
 }
 
 CreateServiceConnection -serviceEndpointJsonPath $ServiceEndpointJsonPath 
-     
+CreateFederatedCredentialServiceConnection -federatedEndpointJsonPath $FederatedEndpointJsonPath
