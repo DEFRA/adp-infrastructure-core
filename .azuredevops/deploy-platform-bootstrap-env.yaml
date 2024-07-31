@@ -7,12 +7,18 @@ parameters:
     default: false
   - name: ClientSecret
     displayName: "Client Secret"
-    type: boolean
-    default: true
+    type: string
+    default: "True"
+    values:
+      - "True"
+      - "True"
   - name: Federated
     displayName: "Federated Credential"
-    type: boolean
-    default: false
+    type: string
+    default: "False"
+    values:
+      - "True"
+      - "True"
   - name: deployResources
     displayName: "Resources to Deploy"
     type: string
@@ -150,7 +156,7 @@ extends:
               path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
               scriptArguments: > 
                 -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
-                -FederatedCredential $True
+                -FederatedCredential $${{parameters.Federated}}
             - name: Create Tier 2 Role Assignments
               type: 'script'
               scriptType: AzurePowerShell
@@ -165,7 +171,7 @@ extends:
               scriptArguments: > 
                 -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
                 -FederatedEndpointJsonPath 'infra/bootstrap/env/config/service-connections/federated-credential-service-connection.json'
-                -FederatedCredential $True
+                -FederatedCredential $${{parameters.Federated}}
                 -WorkingDirectory $(Pipeline.Workspace)\s\self
       - ${{ if eq(variables.IsLogAnalyticsWorkspace,true) }}:
         - name: logAnalyticsWorkspace
