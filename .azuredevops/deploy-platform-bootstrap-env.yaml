@@ -11,14 +11,14 @@ parameters:
     default: "True"
     values:
       - "True"
-      - "True"
+      - "False"
   - name: Federated
     displayName: "Federated Credential"
     type: string
     default: "False"
     values:
       - "True"
-      - "True"
+      - "False"
   - name: deployResources
     displayName: "Resources to Deploy"
     type: string
