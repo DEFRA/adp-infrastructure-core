@@ -23,9 +23,9 @@
                 ]
             },
             "federartedCredential":{
-                "name": "#{{ tier2ServiceConnectionAppRegName }}-fic2",
+                "name": "#{{ tier2ServiceConnectionAppRegName }}-fic",
                 "issuer": "https://vstoken.dev.azure.com/0843dc02-bf94-4c0c-b0ed-bb5f8c829f46",
-                "subject": "sc://defragovuk/DEFRA-FFC/#{{ subscriptionName }}-FSC2",
+                "subject": "sc://defragovuk/DEFRA-FFC/#{{ subscriptionName }}-FSC",
                 "audience": "api://AzureADTokenExchange"
             },
             "requiredResourceAccess": [
