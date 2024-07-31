@@ -4,21 +4,7 @@ parameters:
   - name: deployFromFeature
     displayName: "Deploy from Feature Branch"
     type: boolean
-    default: false
-  - name: ClientSecret
-    displayName: "Client Secret"
-    type: string
-    default: "True"
-    values:
-      - "True"
-      - "False"
-  - name: Federated
-    displayName: "Federated Credential"
-    type: string
-    default: "False"
-    values:
-      - "True"
-      - "False"
+    default: false  
   - name: deployResources
     displayName: "Resources to Deploy"
     type: string
@@ -29,6 +15,13 @@ parameters:
       - Monitoring - Workspace
       - Policy Assignments
       - Network
+  - name: Federated
+    displayName: "Use Federated Credential"
+    type: string
+    default: "False"
+    values:
+      - "True"
+      - "False"
 
 pr:
   branches:
