@@ -70,18 +70,17 @@ try {
         throw "Error configuring default devops organization=$devopsOrgnizationUri project=$devopsProjectName with exit code $LASTEXITCODE"
     }
 
-    [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json
-
-    $functionInput = @{
-        ProjectId      = $devopsProjectId
-        ProjectName    = $devopsProjectName
-        OrgnizationUri = $devopsOrgnizationUri
-    }
-
-    $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput
-
-    if($federatedCredential)
+    if($federatedCredential -eq $False)
     {
+        [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json
+        $functionInput = @{
+            ProjectId      = $devopsProjectId
+            ProjectName    = $devopsProjectName
+            OrgnizationUri = $devopsOrgnizationUri
+        }    
+        $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput   
+    }
+    else {
         $federatedServiceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
         $serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
         Write-Host "Service connection name '$serviceConnectionName'"
@@ -103,8 +102,7 @@ try {
 
             az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
         }
-    }
-    
+    }   
 
     $exitCode = 0    
 }
