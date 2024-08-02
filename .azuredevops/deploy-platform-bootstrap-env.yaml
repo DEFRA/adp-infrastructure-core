@@ -4,7 +4,7 @@ parameters:
   - name: deployFromFeature
     displayName: "Deploy from Feature Branch"
     type: boolean
-    default: false  
+    default: false
   - name: deployResources
     displayName: "Resources to Deploy"
     type: string
