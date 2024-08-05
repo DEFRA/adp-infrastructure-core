@@ -95,14 +95,15 @@ try {
             }                
         }
 
-        $functionInput = @{
-            FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
-            FederatedCredentialName = $federatedCredentialName
-            AppRegId = $appReg.id
-            ProjectName    = $devopsProjectName
-            OrgnizationUri = $devopsOrgnizationUri
-        }
-        $serviceEndpoints.azureRMServiceConnections | Set-FederatedServiceEndpoint @functionInput        
+        # $functionInput = @{
+        #     FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
+        #     FederatedCredentialName = $federatedCredentialName
+        #     AppRegId = $appReg.id
+        #     ProjectName    = $devopsProjectName
+        #     OrgnizationUri = $devopsOrgnizationUri
+        # }
+        Set-FederatedServiceEndpoint -FederatedEndpointJsonPath $FederatedEndpointJsonPath -FederatedCredentialName $FederatedCredentialName -ServiceConnectionName $serviceEndpoints.azureRMServiceConnections.displayName -AppRegId $appReg.id -ProjectName $ProjectName -OrgnizationUri $OrgnizationUri    
+
     }   
 
     $exitCode = 0    

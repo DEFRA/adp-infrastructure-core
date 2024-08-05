@@ -300,13 +300,13 @@ Mandatory. Azure devops project Orgnization Uri
 Function Set-FederatedServiceEndpoint() {
     [CmdletBinding()]
     Param(
-        [ValidateNotNullOrEmpty()]
-        [Parameter(ValueFromPipeline = $true)]
-        [Object]$ArmServiceConnection,
+        [ValidateNotNullOrEmpty()]       
         [Parameter(Mandatory)]
         [string]$FederatedEndpointJsonPath,
         [Parameter(Mandatory)]
         [string]$FederatedCredentialName,
+        [Parameter(Mandatory)]
+        [string]$ServiceConnectionName,
         [Parameter(Mandatory)]
         [string]$AppRegId,               
         [Parameter(Mandatory)]        
@@ -321,6 +321,7 @@ Function Set-FederatedServiceEndpoint() {
         Write-Debug "${functionName}:appRegName=$appRegName" 
         Write-Debug "${functionName}:FederatedEndpointJsonPath=$FederatedEndpointJsonPath"
         Write-Debug "${functionName}:FederatedCredentialName=$FederatedCredentialName"
+        Write-Debug "${functionName}:FederatedCredentialName=$ServiceConnectionName"
         Write-Debug "${functionName}:AppRegId=$AppRegId"
         Write-Debug "${functionName}:ProjectName=$ProjectName"
         Write-Debug "${functionName}:OrgnizationUri=$OrgnizationUri"     
@@ -328,7 +329,7 @@ Function Set-FederatedServiceEndpoint() {
 
     process {   
         
-        Write-Debug "${functionName}:ArmServiceConnection=$($ArmServiceConnection | ConvertTo-Json -Depth 10)"
+        #Write-Debug "${functionName}:ArmServiceConnection=$($ArmServiceConnection | ConvertTo-Json -Depth 10)"
         # Create Federated Identity Credential   
 
         # $appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.appRegName   
@@ -342,10 +343,13 @@ Function Set-FederatedServiceEndpoint() {
         Write-Host "devopsOrgnizationUri: $OrgnizationUri"
         Write-Host "devopsProjectName: $ProjectName"
         Write-Host "organizationName: $devopsOrganizationName"
+        Write-Host "FederatedCredentialName: $FederatedCredentialName"
+        Write-Host "ServiceConnectionName: $ServiceConnectionName"
+        Write-Host "AppRegId: $AppRegId"
 
-        $ficName =  $ArmServiceConnection.displayName
+        $ficName =  $ServiceConnectionName
         $issuer = "https://vstoken.dev.azure.com/" + $ArmServiceConnection.adoOrganizationId
-        $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $ArmServiceConnection.displayName
+        $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $ServiceConnectionName
         $audience = "api://AzureADTokenExchange"
       
         Write-Host "Federated credential name: $ficName"
