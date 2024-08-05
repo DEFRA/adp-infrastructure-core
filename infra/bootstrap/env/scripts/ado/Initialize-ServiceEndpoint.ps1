@@ -87,6 +87,7 @@ try {
         $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
         $federatedCredentials | Select-Object -Property Name
 
+        $ficName =  $serviceEndpoints.azureRMServiceConnections.displayName
         $federatedCredentialName = ""
         foreach ($credential in $federatedCredentials) {
             if($ficName -eq $credential.Name) {
@@ -102,7 +103,7 @@ try {
         #     ProjectName    = $devopsProjectName
         #     OrgnizationUri = $devopsOrgnizationUri
         # }
-        Set-FederatedServiceEndpoint -FederatedEndpointJsonPath $FederatedEndpointJsonPath -FederatedCredentialName $FederatedCredentialName -ServiceConnectionName $serviceEndpoints.azureRMServiceConnections.displayName -AppRegId $appReg.id -ProjectName $ProjectName -OrgnizationUri $OrgnizationUri    
+        Set-FederatedServiceEndpoint -FederatedEndpointJsonPath $FederatedEndpointJsonPath -FederatedCredentialName $FederatedCredentialName -ServiceConnectionName $ficName -AppRegId $appReg.id -ProjectName $ProjectName -OrgnizationUri $OrgnizationUri    
 
     }   
 
