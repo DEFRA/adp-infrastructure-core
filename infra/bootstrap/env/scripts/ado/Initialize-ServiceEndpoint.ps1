@@ -81,27 +81,8 @@ try {
         $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput   
     }
     else {
-        $federatedServiceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
-        $serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
-        Write-Host "Service connection name '$serviceConnectionName'"
-        
-        $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name=='$serviceConnectionName'].id" -o tsv
 
-        Write-Host "Service connection Id '$serviceConnectionId'"
-        
-        if ($serviceConnectionId) {
-            Write-Output "ADO service connection $serviceConnectionName is already exist. No changes made."
-        } else { 
-            Write-Output "Creating ADO federated credential service connection $serviceConnectionName"      
-
-            $jsonObject = Get-Content $FederatedEndpointJsonPath -raw | ConvertFrom-Json
-            $jsonObject.authorization.parameters.serviceprincipalid =  $principalId
-            $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}}
-            $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.name=$devopsProjectName}}
-            $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath        
-
-            az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
-        }
+        Set-FederatedServiceEndpoint -FederatedEndpointJsonPath $FederatedEndpointJsonPath -ProjectName $devopsProjectName -OrgnizationUri $devopsOrgnizationUri
     }   
 
     $exitCode = 0    
