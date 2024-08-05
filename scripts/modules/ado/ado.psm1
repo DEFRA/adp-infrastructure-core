@@ -324,7 +324,7 @@ Function Set-FederatedServiceEndpoint() {
         
         # Create Federated Identity Credential   
         
-        $appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.$appRegName   
+        $appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.appRegName   
 
         $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
         $federatedCredentials | Select-Object -Property Name
