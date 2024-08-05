@@ -77,6 +77,7 @@ FunctionsToExport = @(
     'Initialize-ProxyRequestBody',
     'Initialize-RequestBody',
     'Set-ServiceEndpoint',
+    'Set-FederatedServiceEndpoint',
     'Test-ServiceEndpoint',
     'New-BuildRun'
 )
