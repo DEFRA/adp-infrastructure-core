@@ -88,7 +88,8 @@ try {
             OrgnizationUri = $devopsOrgnizationUri
         }
 
-        $serviceEndpoints.azureRMServiceConnections | Set-FederatedServiceEndpoint @functionInput     
+        $serviceEndpoints.azureRMServiceConnections | Set-FederatedServiceEndpoint @functionInput        
+    }   
 
     $exitCode = 0    
 }
