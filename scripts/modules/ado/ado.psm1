@@ -305,6 +305,10 @@ Function Set-FederatedServiceEndpoint() {
         [Object]$ArmServiceConnection,
         [Parameter(Mandatory)]
         [string]$FederatedEndpointJsonPath,
+        [Parameter(Mandatory)]
+        [string]$FederatedCredentialName,
+        [Parameter(Mandatory)]
+        [string]$AppRegId,               
         [Parameter(Mandatory)]        
         [string]$ProjectName,
         [Parameter(Mandatory)]
@@ -316,6 +320,8 @@ Function Set-FederatedServiceEndpoint() {
         Write-Debug "${functionName}:Entered"
         Write-Debug "${functionName}:appRegName=$appRegName" 
         Write-Debug "${functionName}:FederatedEndpointJsonPath=$FederatedEndpointJsonPath"
+        Write-Debug "${functionName}:FederatedCredentialName=$FederatedCredentialName"
+        Write-Debug "${functionName}:AppRegId=$AppRegId"
         Write-Debug "${functionName}:ProjectName=$ProjectName"
         Write-Debug "${functionName}:OrgnizationUri=$OrgnizationUri"     
     }
@@ -324,12 +330,10 @@ Function Set-FederatedServiceEndpoint() {
         
         # Create Federated Identity Credential   
 
-        Install-Module -Name Az.Resources -Force -AllowClobber
-        
-        $appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.appRegName   
+        # $appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.appRegName   
 
-        $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
-        $federatedCredentials | Select-Object -Property Name
+        # $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
+        # $federatedCredentials | Select-Object -Property Name
 
         $devopsOrganizationName = $OrgnizationUri.substring(22)
         $devopsOrganizationName = $devopsOrganizationName | %{$_.Substring(0, $_.length - 1) }      
@@ -345,24 +349,24 @@ Function Set-FederatedServiceEndpoint() {
       
         Write-Host "Federated credential name: $ficName"
 
-        $federatedCredentialName = ""
-        foreach ($credential in $federatedCredentials) {
-            if($ficName -eq $credential.Name) {
-                $federatedCredentialName = $credential.Name
-                break
-            }                
-        }
+        # $federatedCredentialName = ""
+        # foreach ($credential in $federatedCredentials) {
+        #     if($ficName -eq $credential.Name) {
+        #         $federatedCredentialName = $credential.Name
+        #         break
+        #     }                
+        # }
 
         Write-Host "ficName : $ficName"
         Write-Host "issuer : $issuer"
         Write-Host "subject : $subject"
         Write-Host "audience : $audience"
 
-        if ($federatedCredentialName -eq "") {            
+        if ($FederatedCredentialName -eq "") {            
             Write-Output "Creating Federated Identity Credentials $ficName"
-            New-AzADAppFederatedCredential -ApplicationObjectId $appReg.id -Audience $audience -Issuer $issuer -name $ficName -Subject $subject
+            New-AzADAppFederatedCredential -ApplicationObjectId $AppRegId -Audience $audience -Issuer $issuer -name $ficName -Subject $subject
         } else {
-            Write-Output "Federated Identity Credentials $federatedCredentialName already exist"
+            Write-Output "Federated Identity Credentials $FederatedCredentialName already exist"
         }
 
 

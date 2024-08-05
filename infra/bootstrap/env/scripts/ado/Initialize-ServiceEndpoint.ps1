@@ -80,14 +80,28 @@ try {
         }    
         $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput   
     }
-    else {
+    else {       
+
+        $appReg = Get-AzADApplication -DisplayName $serviceEndpoints.azureRMServiceConnections.appRegName   
+
+        $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
+        $federatedCredentials | Select-Object -Property Name
+
+        $federatedCredentialName = ""
+        foreach ($credential in $federatedCredentials) {
+            if($ficName -eq $credential.Name) {
+                $federatedCredentialName = $credential.Name
+                break
+            }                
+        }
 
         $functionInput = @{
             FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
+            FederatedCredentialName = $federatedCredentialName
+            AppRegId = $appReg.id
             ProjectName    = $devopsProjectName
             OrgnizationUri = $devopsOrgnizationUri
         }
-
         $serviceEndpoints.azureRMServiceConnections | Set-FederatedServiceEndpoint @functionInput        
     }   
 
