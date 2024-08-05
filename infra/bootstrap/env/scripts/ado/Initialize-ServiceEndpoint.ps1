@@ -96,15 +96,16 @@ try {
             }                
         }
 
-        # $functionInput = @{
-        #     FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
-        #     FederatedCredentialName = $federatedCredentialName
-        #     AppRegId = $appReg.id
-        #     ProjectName    = $devopsProjectName
-        #     OrgnizationUri = $devopsOrgnizationUri
-        # }
-        Set-FederatedServiceEndpoint -FederatedEndpointJsonPath $FederatedEndpointJsonPath -FederatedCredentialName $FederatedCredentialName -ServiceConnectionName $ficName -AppRegId $appReg.id -ProjectName $devopsProjectName -OrgnizationUri $devopsOrgnizationUri    
-
+        $functionInput = @{
+            FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
+            FederatedCredentialName = $federatedCredentialName
+            ServiceConnectionName = $ficName
+            AppRegId = $appReg.id
+            ProjectName    = $devopsProjectName
+            OrgnizationUri = $devopsOrgnizationUri
+        }
+        #Set-FederatedServiceEndpoint -FederatedEndpointJsonPath $FederatedEndpointJsonPath -FederatedCredentialName $FederatedCredentialName -ServiceConnectionName $ficName -AppRegId $appReg.id -ProjectName $devopsProjectName -OrgnizationUri $devopsOrgnizationUri    
+        Set-FederatedServiceEndpoint @functionInput
     }   
 
     $exitCode = 0    
