@@ -97,10 +97,7 @@ try {
         }
 
         $functionInput = @{
-            FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
-            FederatedCredentialName = $federatedCredentialName
-            ServiceConnectionName = $ficName
-            AppRegId = $appReg.id
+            FederatedEndpointJsonPath =  $FederatedEndpointJsonPat
             ProjectName    = $devopsProjectName
             OrgnizationUri = $devopsOrgnizationUri
         }        
