@@ -323,6 +323,8 @@ Function Set-FederatedServiceEndpoint() {
     process {   
         
         # Create Federated Identity Credential   
+
+        Install-Module -Name Az.Resources -Force -AllowClobber
         
         $appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.appRegName   
 
