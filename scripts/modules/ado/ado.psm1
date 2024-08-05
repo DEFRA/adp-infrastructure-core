@@ -332,13 +332,6 @@ Function Set-FederatedServiceEndpoint() {
         $devopsOrganizationName = $OrgnizationUri.substring(22)
         $devopsOrganizationName = $devopsOrganizationName | %{$_.Substring(0, $_.length - 1) }      
 
-        Write-Host "devopsOrgnizationUri: $OrgnizationUri"
-        Write-Host "devopsProjectName: $ProjectName"
-        Write-Host "organizationName: $devopsOrganizationName"
-        Write-Host "FederatedCredentialName: $FederatedCredentialName"
-        Write-Host "ServiceConnectionName: $ServiceConnectionName"
-        Write-Host "AppRegId: $AppRegId"
-
         $ficName =  $ArmServiceConnection.displayName
         $issuer = "https://vstoken.dev.azure.com/" + $ArmServiceConnection.adoOrganizationId
         $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $ArmServiceConnection.displayName
@@ -365,7 +358,6 @@ Function Set-FederatedServiceEndpoint() {
         } else {
             Write-Output "Federated Identity Credentials $federatedCredentialName already exist"
         }
-
 
         # Create ADO Service Connection
 
