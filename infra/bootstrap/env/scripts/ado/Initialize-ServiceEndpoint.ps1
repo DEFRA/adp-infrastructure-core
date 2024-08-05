@@ -103,9 +103,8 @@ try {
             AppRegId = $appReg.id
             ProjectName    = $devopsProjectName
             OrgnizationUri = $devopsOrgnizationUri
-        }
-        #Set-FederatedServiceEndpoint -FederatedEndpointJsonPath $FederatedEndpointJsonPath -FederatedCredentialName $FederatedCredentialName -ServiceConnectionName $ficName -AppRegId $appReg.id -ProjectName $devopsProjectName -OrgnizationUri $devopsOrgnizationUri    
-        Set-FederatedServiceEndpoint @functionInput
+        }        
+        $serviceEndpoints.azureRMServiceConnections | Set-FederatedServiceEndpoint @functionInput
     }   
 
     $exitCode = 0    

@@ -300,7 +300,9 @@ Mandatory. Azure devops project Orgnization Uri
 Function Set-FederatedServiceEndpoint() {
     [CmdletBinding()]
     Param(
-        [ValidateNotNullOrEmpty()]       
+        [ValidateNotNullOrEmpty()]
+        [Parameter(ValueFromPipeline = $true)]
+        [Object]$ArmServiceConnection,      
         [Parameter(Mandatory)]
         [string]$FederatedEndpointJsonPath,
         [Parameter(Mandatory)]
@@ -329,13 +331,15 @@ Function Set-FederatedServiceEndpoint() {
 
     process {   
         
-        #Write-Debug "${functionName}:ArmServiceConnection=$($ArmServiceConnection | ConvertTo-Json -Depth 10)"
+        Write-Debug "${functionName}:ArmServiceConnection=$($ArmServiceConnection | ConvertTo-Json -Depth 10)"
         # Create Federated Identity Credential   
 
-        # $appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.appRegName   
+        $appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.appRegName   
 
-        # $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
-        # $federatedCredentials | Select-Object -Property Name
+        $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
+        $federatedCredentials | Select-Object -Property Name
+
+        Write-Host "federatedCredentials =======================: $federatedCredentials"
 
         $devopsOrganizationName = $OrgnizationUri.substring(22)
         $devopsOrganizationName = $devopsOrganizationName | %{$_.Substring(0, $_.length - 1) }      
