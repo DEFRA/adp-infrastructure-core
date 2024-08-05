@@ -328,6 +328,7 @@ Function Set-FederatedServiceEndpoint() {
 
     process {   
         
+        Write-Debug "${functionName}:ArmServiceConnection=$($ArmServiceConnection | ConvertTo-Json -Depth 10)"
         # Create Federated Identity Credential   
 
         # $appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.appRegName   
