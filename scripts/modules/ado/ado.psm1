@@ -329,8 +329,8 @@ Function Set-FederatedServiceEndpoint() {
         $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
         $federatedCredentials | Select-Object -Property Name
 
-        $devopsOrganizationName = $OrgnizationUri.substring(22)
-        $devopsOrganizationName = $devopsOrganizationName | %{$_.Substring(0, $_.length - 1) }      
+        $OrganizationName = $OrgnizationUri.substring(22)
+        $devopsOrganizationName = $OrganizationName | %{$_.Substring(0, $_.length - 1) }      
 
         $ficName =  $ArmServiceConnection.displayName
         $issuer = "https://vstoken.dev.azure.com/" + $ArmServiceConnection.adoOrganizationId
