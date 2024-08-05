@@ -103,7 +103,7 @@ try {
         #     ProjectName    = $devopsProjectName
         #     OrgnizationUri = $devopsOrgnizationUri
         # }
-        Set-FederatedServiceEndpoint -FederatedEndpointJsonPath $FederatedEndpointJsonPath -FederatedCredentialName $FederatedCredentialName -ServiceConnectionName $ficName -AppRegId $appReg.id -ProjectName $ProjectName -OrgnizationUri $OrgnizationUri    
+        Set-FederatedServiceEndpoint -FederatedEndpointJsonPath $FederatedEndpointJsonPath -FederatedCredentialName $FederatedCredentialName -ServiceConnectionName $ficName -AppRegId $appReg.id -ProjectName $devopsProjectName -OrgnizationUri $devopsOrgnizationUri    
 
     }   
 
