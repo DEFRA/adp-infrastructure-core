@@ -295,15 +295,17 @@ Mandatory. Azure devops project name
 Mandatory. Azure devops project Orgnization Uri
 
 .EXAMPLE
-.\Set-FederatedServiceEndpoint -FederatedEndpointJsonPath <FederatedEndpointJsonPath> -ProjectName <ProjectName> OrgnizationUri <OrgnizationUri>
+.\Set-FederatedServiceEndpoint -ArmServiceConnection <ArmServiceConnectionObject> -FederatedEndpointJsonPath <FederatedEndpointJsonPath> -ProjectName <ProjectName> OrgnizationUri <OrgnizationUri>
 #> 
 Function Set-FederatedServiceEndpoint() {
     [CmdletBinding()]
     Param(
         [ValidateNotNullOrEmpty()]
+        [Parameter(ValueFromPipeline = $true)]
+        [Object]$ArmServiceConnection,
         [Parameter(Mandatory)]
         [string]$FederatedEndpointJsonPath,
-        [Parameter(Mandatory)]
+        [Parameter(Mandatory)]        
         [string]$ProjectName,
         [Parameter(Mandatory)]
         [string]$OrgnizationUri
@@ -311,13 +313,59 @@ Function Set-FederatedServiceEndpoint() {
 
     begin {
         [string]$functionName = $MyInvocation.MyCommand    
-        Write-Debug "${functionName}:Entered"  
-        Write-Debug "${functionName}:ProjectName=$FederatedEndpointJsonPath"
+        Write-Debug "${functionName}:Entered"
+        Write-Debug "${functionName}:appRegName=$appRegName" 
+        Write-Debug "${functionName}:FederatedEndpointJsonPath=$FederatedEndpointJsonPath"
         Write-Debug "${functionName}:ProjectName=$ProjectName"
         Write-Debug "${functionName}:OrgnizationUri=$OrgnizationUri"     
     }
 
-    process {        
+    process {   
+        
+        # Create Federated Identity Credential   
+        
+        $appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.$appRegName   
+
+        $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
+        $federatedCredentials | Select-Object -Property Name
+
+        $devopsOrganizationName = $OrgnizationUri.substring(22)
+        $devopsOrganizationName = $devopsOrganizationName | %{$_.Substring(0, $_.length - 1) }      
+
+        Write-Host "devopsOrgnizationUri: $OrgnizationUri"
+        Write-Host "devopsProjectName: $ProjectName"
+        Write-Host "organizationName: $devopsOrganizationName"
+
+        $ficName =  $ArmServiceConnection.displayName
+        $issuer = "https://vstoken.dev.azure.com/" + $ArmServiceConnection.adoOrganizationId
+        $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $ArmServiceConnection.displayName
+        $audience = "api://AzureADTokenExchange"
+      
+        Write-Host "Federated credential name: $ficName"
+
+        $federatedCredentialName = ""
+        foreach ($credential in $federatedCredentials) {
+            if($ficName -eq $credential.Name) {
+                $federatedCredentialName = $credential.Name
+                break
+            }                
+        }
+
+        Write-Host "ficName : $ficName"
+        Write-Host "issuer : $issuer"
+        Write-Host "subject : $subject"
+        Write-Host "audience : $audience"
+
+        if ($federatedCredentialName -eq "") {            
+            Write-Output "Creating Federated Identity Credentials $ficName"
+            New-AzADAppFederatedCredential -ApplicationObjectId $appReg.id -Audience $audience -Issuer $issuer -name $ficName -Subject $subject
+        } else {
+            Write-Output "Federated Identity Credentials $federatedCredentialName already exist"
+        }
+
+
+        # Create ADO Service Connection
+
         $federatedServiceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
         $serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
         Write-Host "Service connection name '$serviceConnectionName'"        
@@ -341,7 +389,7 @@ Function Set-FederatedServiceEndpoint() {
             $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.name=$devopsProjectName}}
             $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath        
 
-            az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $devopsOrgnizationUri --project $devopsProjectName
+            az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $OrgnizationUri --project $ProjectName
         }
     }
     end {

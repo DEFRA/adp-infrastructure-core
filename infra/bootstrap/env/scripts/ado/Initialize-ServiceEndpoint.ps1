@@ -70,9 +70,9 @@ try {
         throw "Error configuring default devops organization=$devopsOrgnizationUri project=$devopsProjectName with exit code $LASTEXITCODE"
     }
 
+    [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json
     if($federatedCredential -eq $False)
-    {
-        [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json
+    {       
         $functionInput = @{
             ProjectId      = $devopsProjectId
             ProjectName    = $devopsProjectName
@@ -82,8 +82,13 @@ try {
     }
     else {
 
-        Set-FederatedServiceEndpoint -FederatedEndpointJsonPath $FederatedEndpointJsonPath -ProjectName $devopsProjectName -OrgnizationUri $devopsOrgnizationUri
-    }   
+        $functionInput = @{
+            FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
+            ProjectName    = $devopsProjectName
+            OrgnizationUri = $devopsOrgnizationUri
+        }
+
+        $serviceEndpoints.azureRMServiceConnections | Set-FederatedServiceEndpoint @functionInput     
 
     $exitCode = 0    
 }
