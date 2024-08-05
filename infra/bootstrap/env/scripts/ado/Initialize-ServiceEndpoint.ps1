@@ -97,7 +97,7 @@ try {
         }
 
         $functionInput = @{
-            FederatedEndpointJsonPath =  $FederatedEndpointJsonPat
+            FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
             ProjectName    = $devopsProjectName
             OrgnizationUri = $devopsOrgnizationUri
         }        
