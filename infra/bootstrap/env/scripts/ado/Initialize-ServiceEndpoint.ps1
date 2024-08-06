@@ -71,7 +71,7 @@ try {
     }
 
     [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json
-    if($federatedCredential -eq $False)
+    if($federatedCredential -eq $false)
     {       
         $functionInput = @{
             ProjectId      = $devopsProjectId
