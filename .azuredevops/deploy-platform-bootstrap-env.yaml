@@ -155,16 +155,28 @@ extends:
               path: "infra/bootstrap/env/scripts/Set-RoleAssignments.ps1"
               scriptArguments: > 
                 -RoleAssignmentsJsonPath 'infra/bootstrap/env/config/role-assignments/tier2-role-assignments.json'   
-            - name: Create or Update AzureRm Service Endpoint(Service Connection)
-              type: 'script'
-              scriptType: AzureCLI
-              useSystemAccessTokeninScript: true
-              path: "infra/bootstrap/env/scripts/ado/Initialize-ServiceEndpoint.ps1"
-              scriptArguments: > 
-                -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
-                -FederatedEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-federated-credential-service-connection.json'
-                -FederatedCredential $${{parameters.Federated}}
-                -WorkingDirectory $(Pipeline.Workspace)\s\self
+            - ${{ if eq(parameters.Federated,true) }}:            
+              - name: Create or Update AzureRm Service Endpoint(Service Connection)
+                type: 'script'
+                scriptType: AzurePowerShell
+                useSystemAccessTokeninScript: true
+                path: "infra/bootstrap/env/scripts/ado/Initialize-ServiceEndpoint.ps1"
+                scriptArguments: > 
+                  -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
+                  -FederatedEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-federated-credential-service-connection.json'
+                  -FederatedCredential $True
+                  -WorkingDirectory $(Pipeline.Workspace)\s\self
+            - ${{ else }}:
+              - name: Create or Update AzureRm Service Endpoint(Service Connection)
+                type: 'script'
+                scriptType: AzureCLI
+                useSystemAccessTokeninScript: true
+                path: "infra/bootstrap/env/scripts/ado/Initialize-ServiceEndpoint.ps1"
+                scriptArguments: > 
+                  -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'                 
+                  -FederatedCredential $False
+                  -WorkingDirectory $(Pipeline.Workspace)\s\self
+
       - ${{ if eq(variables.IsLogAnalyticsWorkspace,true) }}:
         - name: logAnalyticsWorkspace
           ${{ if eq(variables.IsAll, true) }}:

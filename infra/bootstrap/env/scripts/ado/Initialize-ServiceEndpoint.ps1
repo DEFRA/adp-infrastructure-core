@@ -19,7 +19,6 @@ Optional. Working directory. Default is $PWD.
 param(
     [Parameter(Mandatory)] 
     [string]$ServiceEndpointJsonPath,
-    [Parameter(Mandatory)] 
     [string]$FederatedEndpointJsonPath,
     [Parameter(Mandatory = $false)]
     [bool]$federatedCredential,
@@ -46,7 +45,6 @@ if ($enableDebug) {
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
 Write-Debug "${functionName}:ServiceEndpointJsonPath=$ServiceEndpointJsonPath"
-Write-Debug "${functionName}:FederatedEndpointJsonPath=$FederatedEndpointJsonPath"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
