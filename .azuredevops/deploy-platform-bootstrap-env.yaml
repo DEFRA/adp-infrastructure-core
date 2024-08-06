@@ -163,7 +163,7 @@ extends:
               scriptArguments: > 
                 -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
                 -FederatedEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-federated-credential-service-connection.json'
-                -FederatedCredential ${{parameters.Federated}}
+                -FederatedCredential $${{parameters.Federated}}
                 -WorkingDirectory $(Pipeline.Workspace)\s\self
       - ${{ if eq(variables.IsLogAnalyticsWorkspace,true) }}:
         - name: logAnalyticsWorkspace
