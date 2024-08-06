@@ -49,7 +49,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA-ADP
       type: github
-      ref: main
+      ref: sm/xxxx/FederatedServiceConnection
 
 variables:
   - name: IsAll
@@ -136,7 +136,7 @@ extends:
     filePathsForTransform: |
       **/bootstrap/env/config/app-registrations/tier2-app-registration.json
       **/bootstrap/env/config/service-connections/tier2-service-connection.json
-      **/bootstrap/env/config/service-connections/federated-credential-service-connection.json
+      **/bootstrap/env/config/service-connections/tier2-federated-credential-service-connection.json
       **/bootstrap/env/config/role-assignments/tier2-role-assignments.json
     groupedDeployments:
       - ${{ if eq(variables.IsServiceConnections,true) }}:
@@ -149,7 +149,6 @@ extends:
               path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
               scriptArguments: > 
                 -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
-                -FederatedCredential $${{parameters.Federated}}
             - name: Create Tier 2 Role Assignments
               type: 'script'
               scriptType: AzurePowerShell
@@ -163,7 +162,7 @@ extends:
               path: "infra/bootstrap/env/scripts/ado/Initialize-ServiceEndpoint.ps1"
               scriptArguments: > 
                 -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
-                -FederatedEndpointJsonPath 'infra/bootstrap/env/config/service-connections/federated-credential-service-connection.json'
+                -FederatedEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-federated-credential-service-connection.json'
                 -FederatedCredential $${{parameters.Federated}}
                 -WorkingDirectory $(Pipeline.Workspace)\s\self
       - ${{ if eq(variables.IsLogAnalyticsWorkspace,true) }}:

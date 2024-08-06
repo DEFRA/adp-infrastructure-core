@@ -1,10 +1,7 @@
 {
     "applications": [
         {
-            "subscriptionName": "#{{ subscriptionName }}",
-            "adoOrganizationId": "#{{ adoOrganizationId }}",
             "displayName": "#{{ tier2ServiceConnectionAppRegName }}",
-            "createFederatedCredentialServiceConnection": true,
             "IdentifierUris": "",
             "secretAutoRenewalEnabled": true,
             "keyVault": {
