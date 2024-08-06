@@ -71,22 +71,24 @@ try {
     }
 
     [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json
-    if($federatedCredential -eq $false)
-    {       
+    if($federatedCredential)
+    { 
+        Write-Debug "$federatedCredential Federated Service Connection"
+        $functionInput = @{
+            FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
+            ProjectName    = $devopsProjectName
+            OrgnizationUri = $devopsOrgnizationUri
+        }        
+        $serviceEndpoints.azureRMServiceConnections | Set-FederatedServiceEndpoint @functionInput        
+    }
+    else {
+        Write-Debug "$federatedCredential Client Service Connection"
         $functionInput = @{
             ProjectId      = $devopsProjectId
             ProjectName    = $devopsProjectName
             OrgnizationUri = $devopsOrgnizationUri
         }    
         $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput   
-    }
-    else {
-        $functionInput = @{
-            FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
-            ProjectName    = $devopsProjectName
-            OrgnizationUri = $devopsOrgnizationUri
-        }        
-        $serviceEndpoints.azureRMServiceConnections | Set-FederatedServiceEndpoint @functionInput
     }   
 
     $exitCode = 0    
