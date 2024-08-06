@@ -19,9 +19,6 @@ parameters:
     displayName: "Use Federated Credential"
     type: boolean
     default: false
-    values:
-      - false
-      - true
 
 pr:
   branches:
