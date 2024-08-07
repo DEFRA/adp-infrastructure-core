@@ -341,7 +341,7 @@ Function Set-FederatedServiceEndpoint() {
 
         $federatedCredentials = az ad app federated-credential list --id $appObjId --query '[].{Name:name}' --output table
 
-        $federatedCredentialnew = "TEST"
+        $federatedCredentialnew = "TEST2"
 
         Write-Host "FederatedCredential List: $federatedCredentials"
 
