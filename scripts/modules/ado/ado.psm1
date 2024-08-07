@@ -324,19 +324,11 @@ Function Set-FederatedServiceEndpoint() {
         Write-Debug "${functionName}:ArmServiceConnection=$($ArmServiceConnection | ConvertTo-Json -Depth 10)"
         # Create Federated Identity Credential   
 
-        Write-Host "========================================"
-
-        az ad app list --filter "displayname eq '$ArmServiceConnection.appRegName'"
-
-        Write-Host "++++++++++++++++++++++++++++++++++++++++"
-
-        az ad app list --display-name '$ArmServiceConnection.appRegName'
-
         Write-Host "xxxxxxxxxxxxxxxxxxxxxxxxxx"
-        az ad app list --display-name '$ArmServiceConnection.appRegName'
+        $appReg = az ad app list --display-name  $ArmServiceConnection.appRegName --output table
 
 
-        $appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.appRegName   
+        #$appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.appRegName   
 
         $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
         $federatedCredentials | Select-Object -Property Name
