@@ -349,7 +349,7 @@ Function Set-FederatedServiceEndpoint() {
         $ficName =  $federatedCredentialName #$ArmServiceConnection.displayName
         $issuer = "https://vstoken.dev.azure.com/" + $ArmServiceConnection.adoOrganizationId
         $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $federatedCredentialName #$ArmServiceConnection.displayName
-        $audience = "[api://AzureADTokenExchange]"
+        $audience = "[" + "api://AzureADTokenExchange" + "]"
       
         Write-Host "Federated credential name: $ficName"      
 
