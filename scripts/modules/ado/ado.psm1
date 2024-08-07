@@ -349,15 +349,14 @@ Function Set-FederatedServiceEndpoint() {
         $ficName =  $federatedCredentialName #$ArmServiceConnection.displayName
         $issuer = "https://vstoken.dev.azure.com/" + $ArmServiceConnection.adoOrganizationId
         $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $federatedCredentialName #$ArmServiceConnection.displayName
-        $audience = "[" + '""api://AzureADTokenExchange""' + "]"
+        #$audience = "[" + '""api://AzureADTokenExchange""' + "]"
       
         Write-Host "Federated credential name: $ficName"      
 
         $jsonObject = Get-Content $FederatedCredentialJsonPath -raw | ConvertFrom-Json
         $jsonObject.name =  $ficName
         $jsonObject.issuer = $issuer
-        $jsonObject.subject = $subject
-        $jsonObject.audiences =  $audience
+        $jsonObject.subject = $subject     
         $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedCredentialJsonPath  
 
         $federatedCredential = Get-Content -Raw -Path $FederatedCredentialJsonPath | ConvertFrom-Json
