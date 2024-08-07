@@ -339,18 +339,18 @@ Function Set-FederatedServiceEndpoint() {
 
         $federatedCredentials = az ad app federated-credential list --id $appObjId --query '[].{Name:name}' --output table
 
-        #$federatedCredentialName = "TEST"
+        $federatedCredentialnew = "TEST"
 
-        Write-Host "FederatedCredential Name $federatedCredentials"
+        Write-Host "FederatedCredential List: $federatedCredentials"
 
         $organizationName = $OrgnizationUri.substring(22)
         $devopsOrganizationName = $organizationName | %{$_.Substring(0, $_.length - 1) }
 
-        $ficName =  $ArmServiceConnection.displayName
+        $ficName =  $federatedCredentialnew #$ArmServiceConnection.displayName
         $issuer = "https://vstoken.dev.azure.com/" + $ArmServiceConnection.adoOrganizationId
-        $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $ArmServiceConnection.displayName
+        $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $federatedCredentialnew # $ArmServiceConnection.displayName
       
-        Write-Host "Federated credential name: $ficName"      
+        Write-Host "Federated credential new name: $ficName"      
 
         $jsonObject = Get-Content $FederatedCredentialJsonPath -raw | ConvertFrom-Json
         $jsonObject.name =  $ficName
@@ -371,22 +371,13 @@ Function Set-FederatedServiceEndpoint() {
         for ($i=2; $i -lt $federatedCredentials.Length; $i++) {
             if($ficName -eq $federatedCredentials[$i]) {
                 $federatedCredentialName = $federatedCredentials[$i]
-                Write-Host "federatedCredentialName in Loop : $federatedCredentials[$i]"
+                Write-Host "federatedCredential existing Name in Loop : $federatedCredentialName"
                 break
             }
         }
-        # foreach ($credential in $federatedCredentials) {
-        #     if($ficName -eq $credential.Name) {
-        #         $federatedCredentialName = $credential.Name
-        #         break
-        #     }                
-        #}
-
         if ($federatedCredentialName -eq "") {            
             Write-Output "Creating Federated Identity Credentials $ficName"
-            az ad app federated-credential create --id $appClientId --parameters $FederatedCredentialJsonPath
-
-            #New-AzADAppFederatedCredential -ApplicationObjectId $AppRegId -Audience $audience -Issuer $issuer -name $ficName -Subject $subject
+            az ad app federated-credential create --id $appClientId --parameters $FederatedCredentialJsonPath           
         } else {
             Write-Output "Federated Identity Credentials $federatedCredentialName already exist"
         }
@@ -395,7 +386,9 @@ Function Set-FederatedServiceEndpoint() {
 
         $federatedServiceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
         $serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
-        Write-Host "Service connection name '$serviceConnectionName'"        
+        Write-Host "Service connection name '$serviceConnectionName'"  
+        
+        $serviceConnectionName =  $federatedCredentialnew
         
         Write-Debug "Check if $($serviceConnectionName) exists"
         $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name=='$serviceConnectionName'].id" -o tsv
