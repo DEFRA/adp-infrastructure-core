@@ -327,8 +327,8 @@ Function Set-FederatedServiceEndpoint() {
     process {   
         
         Write-Debug "${functionName}:ArmServiceConnection=$($ArmServiceConnection | ConvertTo-Json -Depth 10)"
-        # Create Federated Identity Credential   
 
+        # Create Federated Identity Credential
         $appReg = az ad app list --display-name $ArmServiceConnection.appRegName --query '[].{Id:id}' --output table
 
         $appObjId =  $appReg[2]
@@ -341,19 +341,15 @@ Function Set-FederatedServiceEndpoint() {
 
         $federatedCredentials = az ad app federated-credential list --id $appObjId --query '[].{Name:name}' --output table
 
-        $federatedCredentialnew = "TEST2"
-
         Write-Host "FederatedCredential List: $federatedCredentials"
 
         $organizationName = $OrgnizationUri.substring(22)
         $devopsOrganizationName = $organizationName | %{$_.Substring(0, $_.length - 1) }
 
-        $ficName =  $federatedCredentialnew #$ArmServiceConnection.displayName
+        $ficName =  $ArmServiceConnection.displayName
         $issuer = "https://vstoken.dev.azure.com/" + $ArmServiceConnection.adoOrganizationId
-        $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $federatedCredentialnew # $ArmServiceConnection.displayName
+        $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $ArmServiceConnection.displayName
       
-        Write-Host "Federated credential new name: $ficName"      
-
         $jsonObject = Get-Content $FederatedCredentialJsonPath -raw | ConvertFrom-Json
         $jsonObject.name =  $ficName
         $jsonObject.issuer = $issuer
@@ -385,13 +381,10 @@ Function Set-FederatedServiceEndpoint() {
         }
 
         # Create ADO Service Connection
-
         $federatedServiceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
         $serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
-        Write-Host "Service connection name '$serviceConnectionName'"  
-        
-        $serviceConnectionName =  $federatedCredentialnew
-        
+        Write-Host "Service connection name '$serviceConnectionName'"        
+             
         Write-Debug "Check if $($serviceConnectionName) exists"
         $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name=='$serviceConnectionName'].id" -o tsv
         if ($LASTEXITCODE -ne 0) {
