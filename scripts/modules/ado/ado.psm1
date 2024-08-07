@@ -331,11 +331,14 @@ Function Set-FederatedServiceEndpoint() {
 
         Write-Host "App Reg $appRegId[2]"
 
-        $federatedCredentials = az ad app federated-credential list --id $appRegId[2]
+        
+        $federatedCredentialName = az ad app federated-credential list --id $name[2] --query '[].{Name:name}' --output table
         #$appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.appRegName   
-        Write-Host "federatedCredentials           $federatedCredentials"
+        Write-Host "federatedCredential Name           $federatedCredentialName"
         #$federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
-        $federatedCredentials | Select-Object -Property Name
+        #$federatedCredentials | Select-Object -Property Name
+
+        #Write-Host "federatedCredentials names           $federatedCredentials"
 
         $organizationName = $OrgnizationUri.substring(22)
         $devopsOrganizationName = $organizationName | %{$_.Substring(0, $_.length - 1) }      
@@ -347,13 +350,13 @@ Function Set-FederatedServiceEndpoint() {
       
         Write-Host "Federated credential name: $ficName"
 
-        $federatedCredentialName = ""
-        foreach ($credential in $federatedCredentials) {
-            if($ficName -eq $credential.Name) {
-                $federatedCredentialName = $credential.Name
-                break
-            }                
-        }
+        # $federatedCredentialName = ""
+        # foreach ($credential in $federatedCredentials) {
+        #     if($ficName -eq $credential.Name) {
+        #         $federatedCredentialName = $credential.Name
+        #         break
+        #     }                
+        # }
 
         Write-Host "ficName : $ficName"
         Write-Host "issuer : $issuer"
