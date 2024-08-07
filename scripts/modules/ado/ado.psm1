@@ -405,14 +405,14 @@ Function Set-FederatedServiceEndpoint() {
         } else { 
             Write-Output "Creating ADO federated credential service connection $serviceConnectionName"      
 
-            $jsonObject = Get-Content $FederatedEndpointJsonPath -raw | ConvertFrom-Json
-            $jsonObject.authorization.parameters.serviceprincipalid =  $principalId
-            $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.id=$ProjectId}}
-            $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.name=$ProjectName}}
-            $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath  
+            $jsonObj = Get-Content $FederatedEndpointJsonPath -raw | ConvertFrom-Json
+            $jsonObj.authorization.parameters.serviceprincipalid =  $principalId
+            $jsonObj.serviceEndpointProjectReferences.projectReference | % {{$_.id=$ProjectId}}
+            $jsonObj.serviceEndpointProjectReferences.projectReference | % {{$_.name=$ProjectName}}
+            $jsonObj | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath  
             
             Write-Host "ProjectId : $ProjectId"
-            Write-Host "ProjectId : $ProjectName"
+            Write-Host "ProjectName : $ProjectName"
 
 
             az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $OrgnizationUri --project $ProjectName
