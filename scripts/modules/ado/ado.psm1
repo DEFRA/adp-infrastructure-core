@@ -327,11 +327,11 @@ Function Set-FederatedServiceEndpoint() {
         Write-Host "xxxxxxxxxxxxxxxxxxxxxxxxxx"
         #$appReg = az ad app list --display-name  $ArmServiceConnection.appRegName
 
-        $appRegId = az ad app list --display-name ADO-DefraGovUK-ADP-SND1-ContUAA --query '[].{Id:id}' --output table
+        $appRegId = az ad app list --display-name $ArmServiceConnection.appRegName --query '[].{Id:id}' --output table
 
-        Write-Host "App Reg $appRegId"
+        Write-Host "App Reg $appRegId[2]"
 
-        $federatedCredentials = az ad app federated-credential list --id $appRegId
+        $federatedCredentials = az ad app federated-credential list --id $appRegId[2]
         #$appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.appRegName   
         Write-Host "federatedCredentials           $federatedCredentials"
         #$federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
