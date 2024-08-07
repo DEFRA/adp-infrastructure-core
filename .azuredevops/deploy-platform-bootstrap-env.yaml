@@ -46,7 +46,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA-ADP
       type: github
-      ref: sm/xxxx/FederatedServiceConnection
+      ref: main
 
 variables:
   - name: IsAll
