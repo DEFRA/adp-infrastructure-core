@@ -327,10 +327,11 @@ Function Set-FederatedServiceEndpoint() {
         Write-Host "xxxxxxxxxxxxxxxxxxxxxxxxxx"
         $appReg = az ad app list --display-name  $ArmServiceConnection.appRegName --output table
 
-
+        Write-Host "App Reg $appReg"
+        $federatedCredentials = az ad app federated-credential list --id $appReg.Id
         #$appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.appRegName   
-
-        $federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
+        Write-Host "federatedCredentials           $federatedCredentials"
+        #$federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
         $federatedCredentials | Select-Object -Property Name
 
         $organizationName = $OrgnizationUri.substring(22)
