@@ -325,12 +325,13 @@ Function Set-FederatedServiceEndpoint() {
         # Create Federated Identity Credential   
 
         Write-Host "xxxxxxxxxxxxxxxxxxxxxxxxxx"
-        $appReg = az ad app list --display-name  $ArmServiceConnection.appRegName --output table
+        #$appReg = az ad app list --display-name  $ArmServiceConnection.appRegName
 
-        Write-Host "App Reg $appReg"
-         Write-Host "App Reg $appReg.Id"
-        Write-Host "App Reg $appReg.id"
-        $federatedCredentials = az ad app federated-credential list --id $appReg.id
+        $appRegId = az ad app list --display-name ADO-DefraGovUK-ADP-SND1-ContUAA --query '[].{Id:id}' --output table
+
+        Write-Host "App Reg $appRegId"
+
+        $federatedCredentials = az ad app federated-credential list --id $appRegId
         #$appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.appRegName   
         Write-Host "federatedCredentials           $federatedCredentials"
         #$federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
