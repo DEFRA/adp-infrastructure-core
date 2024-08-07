@@ -80,6 +80,7 @@ try {
         $functionInput = @{
             FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
             FederatedCredentialJsonPath =  $FederatedCredentialJsonPath
+            ProjectId      = $devopsProjectId
             ProjectName    = $devopsProjectName
             OrgnizationUri = $devopsOrgnizationUri
         }        

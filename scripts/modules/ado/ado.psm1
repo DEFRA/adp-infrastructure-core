@@ -306,7 +306,9 @@ Function Set-FederatedServiceEndpoint() {
         [Parameter(Mandatory)]
         [string]$FederatedEndpointJsonPath,
         [Parameter(Mandatory)]
-        [string]$FederatedCredentialJsonPath,        
+        [string]$FederatedCredentialJsonPath,  
+        [Parameter(Mandatory)]
+        [string]$ProjectId,      
         [Parameter(Mandatory)]        
         [string]$ProjectName,
         [Parameter(Mandatory)]
@@ -405,9 +407,13 @@ Function Set-FederatedServiceEndpoint() {
 
             $jsonObject = Get-Content $FederatedEndpointJsonPath -raw | ConvertFrom-Json
             $jsonObject.authorization.parameters.serviceprincipalid =  $principalId
-            $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.id=$devopsProjectId}}
-            $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.name=$devopsProjectName}}
-            $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath        
+            $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.id=$ProjectId}}
+            $jsonObject.serviceEndpointProjectReferences.projectReference | % {{$_.name=$ProjectName}}
+            $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath  
+            
+            Write-Host "ProjectId : $ProjectId"
+            Write-Host "ProjectId : $ProjectName"
+
 
             az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $OrgnizationUri --project $ProjectName
         }
