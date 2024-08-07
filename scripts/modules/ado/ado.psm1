@@ -360,16 +360,10 @@ Function Set-FederatedServiceEndpoint() {
 
         Write-Host "Federated credential Json: $federatedCredential"
 
-        Write-Host "ficName : $ficName"
-        Write-Host "issuer : $issuer"
-        Write-Host "subject : $subject"
-        Write-Host "audience : $audience"
-
         $federatedCredentialName = ""
         for ($i=2; $i -lt $federatedCredentials.Length; $i++) {
             if($ficName -eq $federatedCredentials[$i]) {
                 $federatedCredentialName = $federatedCredentials[$i]
-                Write-Host "federatedCredential existing Name in Loop : $federatedCredentialName"
                 break
             }
         }
