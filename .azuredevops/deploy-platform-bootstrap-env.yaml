@@ -151,7 +151,7 @@ extends:
               scriptType: AzurePowerShell
               path: "infra/bootstrap/env/scripts/Set-RoleAssignments.ps1"
               scriptArguments: > 
-                -RoleAssignmentsJsonPath 'infra/bootstrap/env/config/role-assignments/tier2-role-assignments.json'
+                -RoleAssignmentsJsonPath 'infra/bootstrap/env/config/role-assignments/tier2-role-assignments.json'   
             - name: Create or Update AzureRm Service Endpoint(Service Connection)
               type: 'script'
               scriptType: AzureCLI
