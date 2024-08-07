@@ -337,19 +337,18 @@ Function Set-FederatedServiceEndpoint() {
         $appClientId =  $appReg[2]
         Write-Host "appClientId: $appClientId"
 
-        #$federatedCredentialName = az ad app federated-credential list --id $appObjId --query '[].{Name:name}' --output table
+        $federatedCredentials = az ad app federated-credential list --id $appObjId --query '[].{Name:name}' --output table
 
-        $federatedCredentialName = "TEST"
+        #$federatedCredentialName = "TEST"
 
-        Write-Host "FederatedCredential Name $federatedCredentialName"
+        Write-Host "FederatedCredential Name $federatedCredentials"
 
         $organizationName = $OrgnizationUri.substring(22)
         $devopsOrganizationName = $organizationName | %{$_.Substring(0, $_.length - 1) }
 
-        $ficName =  $federatedCredentialName #$ArmServiceConnection.displayName
+        $ficName =  $ArmServiceConnection.displayName
         $issuer = "https://vstoken.dev.azure.com/" + $ArmServiceConnection.adoOrganizationId
-        $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $federatedCredentialName #$ArmServiceConnection.displayName
-        #$audience = "[" + '""api://AzureADTokenExchange""' + "]"
+        $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $ArmServiceConnection.displayName
       
         Write-Host "Federated credential name: $ficName"      
 
@@ -369,6 +368,19 @@ Function Set-FederatedServiceEndpoint() {
         Write-Host "audience : $audience"
 
         $federatedCredentialName = ""
+        for ($i=2; $i -lt $federatedCredentials.Length; $i++) {
+            if($ficName -eq $federatedCredentials[$i]) {
+                $federatedCredentialName = $federatedCredentials[$i]
+                Write-Host "federatedCredentialName in Loop : $federatedCredentials[$i]"
+                break
+            }
+        }
+        # foreach ($credential in $federatedCredentials) {
+        #     if($ficName -eq $credential.Name) {
+        #         $federatedCredentialName = $credential.Name
+        #         break
+        #     }                
+        }
 
         if ($federatedCredentialName -eq "") {            
             Write-Output "Creating Federated Identity Credentials $ficName"
