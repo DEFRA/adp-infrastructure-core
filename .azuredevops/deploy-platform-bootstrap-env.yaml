@@ -139,19 +139,19 @@ extends:
       - ${{ if eq(variables.IsServiceConnections,true) }}:
         - name: serviceConnections
           deployments:
-            - name: Create Tier 2 App Registrations
-              type: 'script'
-              scriptType: AzurePowerShell
-              scriptRepo: PipelineCommonScripts
-              path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
-              scriptArguments: > 
-                -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
-            - name: Create Tier 2 Role Assignments
-              type: 'script'
-              scriptType: AzurePowerShell
-              path: "infra/bootstrap/env/scripts/Set-RoleAssignments.ps1"
-              scriptArguments: > 
-                -RoleAssignmentsJsonPath 'infra/bootstrap/env/config/role-assignments/tier2-role-assignments.json'
+            # - name: Create Tier 2 App Registrations
+            #   type: 'script'
+            #   scriptType: AzurePowerShell
+            #   scriptRepo: PipelineCommonScripts
+            #   path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+            #   scriptArguments: > 
+            #     -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
+            # - name: Create Tier 2 Role Assignments
+            #   type: 'script'
+            #   scriptType: AzurePowerShell
+            #   path: "infra/bootstrap/env/scripts/Set-RoleAssignments.ps1"
+            #   scriptArguments: > 
+            #     -RoleAssignmentsJsonPath 'infra/bootstrap/env/config/role-assignments/tier2-role-assignments.json'
             - name: Create or Update AzureRm Service Endpoint(Service Connection)
               type: 'script'
               scriptType: AzureCLI
