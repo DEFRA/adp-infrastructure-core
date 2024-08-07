@@ -346,19 +346,18 @@ Function Set-FederatedServiceEndpoint() {
         $organizationName = $OrgnizationUri.substring(22)
         $devopsOrganizationName = $organizationName | %{$_.Substring(0, $_.length - 1) }
 
-        $ficName =  $ArmServiceConnection.displayName
+        [PSCustomObject]$federatedserviceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
+        $serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
+
+        $ficName =  $serviceConnectionName
         $issuer = "https://vstoken.dev.azure.com/" + $ArmServiceConnection.adoOrganizationId
-        $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $ArmServiceConnection.displayName
+        $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $serviceConnectionName
       
         $jsonObject = Get-Content $FederatedCredentialJsonPath -raw | ConvertFrom-Json
         $jsonObject.name =  $ficName
         $jsonObject.issuer = $issuer
         $jsonObject.subject = $subject     
-        $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedCredentialJsonPath  
-
-        $federatedCredential = Get-Content -Raw -Path $FederatedCredentialJsonPath | ConvertFrom-Json
-
-        Write-Host "Federated credential Json: $federatedCredential"
+        $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedCredentialJsonPath
 
         $federatedCredentialName = ""
         for ($i=2; $i -lt $federatedCredentials.Length; $i++) {
@@ -375,8 +374,8 @@ Function Set-FederatedServiceEndpoint() {
         }
 
         # Create ADO Service Connection
-        $federatedServiceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
-        $serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
+        #$federatedServiceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
+        #$serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
         Write-Host "Service connection name '$serviceConnectionName'"        
              
         Write-Debug "Check if $($serviceConnectionName) exists"
@@ -396,12 +395,7 @@ Function Set-FederatedServiceEndpoint() {
             $jsonObj.authorization.parameters.serviceprincipalid =  $appClientId
             $jsonObj.serviceEndpointProjectReferences.projectReference | % {{$_.id=$ProjectId}}
             $jsonObj.serviceEndpointProjectReferences.projectReference | % {{$_.name=$ProjectName}}
-            $jsonObj | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath  
-            
-            $FederatedEndpointJson = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
-
-            Write-Host "Federated credential Json: $FederatedEndpointJson"
-
+            $jsonObj | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath
 
             az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $OrgnizationUri --project $ProjectName
         }
