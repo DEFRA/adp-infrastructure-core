@@ -380,7 +380,7 @@ Function Set-FederatedServiceEndpoint() {
         #         $federatedCredentialName = $credential.Name
         #         break
         #     }                
-        }
+        #}
 
         if ($federatedCredentialName -eq "") {            
             Write-Output "Creating Federated Identity Credentials $ficName"
