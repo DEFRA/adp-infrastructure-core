@@ -406,7 +406,7 @@ Function Set-FederatedServiceEndpoint() {
             Write-Output "Creating ADO federated credential service connection $serviceConnectionName"      
 
             $jsonObj = Get-Content $FederatedEndpointJsonPath -raw | ConvertFrom-Json
-            $jsonObj.authorization.parameters.serviceprincipalid =  $principalId
+            $jsonObj.authorization.parameters.serviceprincipalid =  $appClientId
             $jsonObj.serviceEndpointProjectReferences.projectReference | % {{$_.id=$ProjectId}}
             $jsonObj.serviceEndpointProjectReferences.projectReference | % {{$_.name=$ProjectName}}
             $jsonObj | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath  
