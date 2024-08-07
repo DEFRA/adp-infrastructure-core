@@ -304,7 +304,9 @@ Function Set-FederatedServiceEndpoint() {
         [Parameter(ValueFromPipeline = $true)]
         [Object]$ArmServiceConnection,      
         [Parameter(Mandatory)]
-        [string]$FederatedEndpointJsonPath,              
+        [string]$FederatedEndpointJsonPath,
+        [Parameter(Mandatory)]
+        [string]$FederatedCredentialJsonPath,        
         [Parameter(Mandatory)]        
         [string]$ProjectName,
         [Parameter(Mandatory)]
@@ -315,6 +317,7 @@ Function Set-FederatedServiceEndpoint() {
         [string]$functionName = $MyInvocation.MyCommand    
         Write-Debug "${functionName}:Entered"       
         Write-Debug "${functionName}:FederatedEndpointJsonPath=$FederatedEndpointJsonPath"
+        Write-Debug "${functionName}:FederatedCredentialJsonPath=$FederatedCredentialJsonPath"
         Write-Debug "${functionName}:ProjectName=$ProjectName"
         Write-Debug "${functionName}:OrgnizationUri=$OrgnizationUri"     
     }
@@ -325,29 +328,54 @@ Function Set-FederatedServiceEndpoint() {
         # Create Federated Identity Credential   
 
         $appReg = az ad app list --display-name $ArmServiceConnection.appRegName --query '[].{Id:id}' --output table
-        
-        $federatedCredentialName = az ad app federated-credential list --id $appReg[2] --query '[].{Name:name}' --output table
+
+        $appObjId =  $appReg[2]
+        Write-Host "appObjId: $appObjId"
+
+        $appReg = az ad app list --display-name $ArmServiceConnection.appRegName --query '[].{AppId:appId}' --output table
+
+        $appClientId =  $appReg[2]
+        Write-Host "appClientId: $appClientId"
+
+        #$federatedCredentialName = az ad app federated-credential list --id $appObjId --query '[].{Name:name}' --output table
+
+        $federatedCredentialName = "TEST"
 
         Write-Host "FederatedCredential Name $federatedCredentialName"
 
         $organizationName = $OrgnizationUri.substring(22)
-        $devopsOrganizationName = $organizationName | %{$_.Substring(0, $_.length - 1) }      
+        $devopsOrganizationName = $organizationName | %{$_.Substring(0, $_.length - 1) }
 
-        $ficName =  $ArmServiceConnection.displayName
+        $ficName =  $federatedCredentialName #$ArmServiceConnection.displayName
         $issuer = "https://vstoken.dev.azure.com/" + $ArmServiceConnection.adoOrganizationId
-        $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $ArmServiceConnection.displayName
+        $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $federatedCredentialName #$ArmServiceConnection.displayName
         $audience = "api://AzureADTokenExchange"
       
-        Write-Host "Federated credential name: $ficName"
+        Write-Host "Federated credential name: $ficName"      
+
+        $jsonObject = Get-Content $FederatedCredentialJsonPath -raw | ConvertFrom-Json
+        $jsonObject.name =  $ficName
+        $jsonObject.issuer = $issuer
+        $jsonObject.subject = $subject
+        $jsonObject.audiences =  $audience
+        $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedCredentialJsonPath  
+
+        $federatedCredential = Get-Content -Raw -Path $FederatedCredentialJsonPath | ConvertFrom-Json
+
+        Write-Host "Federated credential Json: $federatedCredential"
 
         Write-Host "ficName : $ficName"
         Write-Host "issuer : $issuer"
         Write-Host "subject : $subject"
         Write-Host "audience : $audience"
 
+        $federatedCredentialName = ""
+
         if ($federatedCredentialName -eq "") {            
             Write-Output "Creating Federated Identity Credentials $ficName"
-            New-AzADAppFederatedCredential -ApplicationObjectId $AppRegId -Audience $audience -Issuer $issuer -name $ficName -Subject $subject
+            az ad app federated-credential create --id $appClientId --parameters $FederatedCredentialJsonPath
+
+            #New-AzADAppFederatedCredential -ApplicationObjectId $AppRegId -Audience $audience -Issuer $issuer -name $ficName -Subject $subject
         } else {
             Write-Output "Federated Identity Credentials $federatedCredentialName already exist"
         }
