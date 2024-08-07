@@ -411,8 +411,9 @@ Function Set-FederatedServiceEndpoint() {
             $jsonObj.serviceEndpointProjectReferences.projectReference | % {{$_.name=$ProjectName}}
             $jsonObj | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath  
             
-            Write-Host "ProjectId : $ProjectId"
-            Write-Host "ProjectName : $ProjectName"
+            $FederatedEndpointJson = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
+
+            Write-Host "Federated credential Json: $FederatedEndpointJson"
 
 
             az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $OrgnizationUri --project $ProjectName
