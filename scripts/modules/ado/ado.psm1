@@ -324,21 +324,11 @@ Function Set-FederatedServiceEndpoint() {
         Write-Debug "${functionName}:ArmServiceConnection=$($ArmServiceConnection | ConvertTo-Json -Depth 10)"
         # Create Federated Identity Credential   
 
-        Write-Host "xxxxxxxxxxxxxxxxxxxxxxxxxx"
-        #$appReg = az ad app list --display-name  $ArmServiceConnection.appRegName
-
         $appReg = az ad app list --display-name $ArmServiceConnection.appRegName --query '[].{Id:id}' --output table
-
-        Write-Host "App Reg $appReg[2]"
-
         
         $federatedCredentialName = az ad app federated-credential list --id $appReg[2] --query '[].{Name:name}' --output table
-        #$appReg = Get-AzADApplication -DisplayName $ArmServiceConnection.appRegName   
-        Write-Host "federatedCredential Name           $federatedCredentialName"
-        #$federatedCredentials = Get-AzADAppFederatedCredential -ApplicationObjectId $appReg.id
-        #$federatedCredentials | Select-Object -Property Name
 
-        #Write-Host "federatedCredentials names           $federatedCredentials"
+        Write-Host "FederatedCredential Name $federatedCredentialName"
 
         $organizationName = $OrgnizationUri.substring(22)
         $devopsOrganizationName = $organizationName | %{$_.Substring(0, $_.length - 1) }      
@@ -349,14 +339,6 @@ Function Set-FederatedServiceEndpoint() {
         $audience = "api://AzureADTokenExchange"
       
         Write-Host "Federated credential name: $ficName"
-
-        # $federatedCredentialName = ""
-        # foreach ($credential in $federatedCredentials) {
-        #     if($ficName -eq $credential.Name) {
-        #         $federatedCredentialName = $credential.Name
-        #         break
-        #     }                
-        # }
 
         Write-Host "ficName : $ficName"
         Write-Host "issuer : $issuer"

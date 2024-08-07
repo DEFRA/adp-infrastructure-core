@@ -139,40 +139,29 @@ extends:
       - ${{ if eq(variables.IsServiceConnections,true) }}:
         - name: serviceConnections
           deployments:
-            # - name: Create Tier 2 App Registrations
-            #   type: 'script'
-            #   scriptType: AzurePowerShell
-            #   scriptRepo: PipelineCommonScripts
-            #   path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
-            #   scriptArguments: > 
-            #     -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
-            # - name: Create Tier 2 Role Assignments
-            #   type: 'script'
-            #   scriptType: AzurePowerShell
-            #   path: "infra/bootstrap/env/scripts/Set-RoleAssignments.ps1"
-            #   scriptArguments: > 
-            #     -RoleAssignmentsJsonPath 'infra/bootstrap/env/config/role-assignments/tier2-role-assignments.json'   
-            - ${{ if eq(parameters.Federated,true) }}:            
-              - name: Create or Update AzureRm Service Endpoint(Service Connection)
-                type: 'script'
-                scriptType: AzureCLI
-                useSystemAccessTokeninScript: true
-                path: "infra/bootstrap/env/scripts/ado/Initialize-ServiceEndpoint.ps1"
-                scriptArguments: > 
-                  -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
-                  -FederatedEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-federated-credential-service-connection.json'
-                  -FederatedCredential $True
-                  -WorkingDirectory $(Pipeline.Workspace)\s\self
-            - ${{ else }}:
-              - name: Create or Update AzureRm Service Endpoint(Service Connection)
-                type: 'script'
-                scriptType: AzureCLI
-                useSystemAccessTokeninScript: true
-                path: "infra/bootstrap/env/scripts/ado/Initialize-ServiceEndpoint.ps1"
-                scriptArguments: > 
-                  -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'                 
-                  -FederatedCredential $False
-                  -WorkingDirectory $(Pipeline.Workspace)\s\self
+            - name: Create Tier 2 App Registrations
+              type: 'script'
+              scriptType: AzurePowerShell
+              scriptRepo: PipelineCommonScripts
+              path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
+              scriptArguments: > 
+                -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
+            - name: Create Tier 2 Role Assignments
+              type: 'script'
+              scriptType: AzurePowerShell
+              path: "infra/bootstrap/env/scripts/Set-RoleAssignments.ps1"
+              scriptArguments: > 
+                -RoleAssignmentsJsonPath 'infra/bootstrap/env/config/role-assignments/tier2-role-assignments.json'          
+            - name: Create or Update AzureRm Service Endpoint(Service Connection)
+              type: 'script'
+              scriptType: AzureCLI
+              useSystemAccessTokeninScript: true
+              path: "infra/bootstrap/env/scripts/ado/Initialize-ServiceEndpoint.ps1"
+              scriptArguments: > 
+                -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
+                -FederatedEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-federated-credential-service-connection.json'
+                -FederatedCredential $${{parameters.Federated}}
+                -WorkingDirectory $(Pipeline.Workspace)\s\self          
 
       - ${{ if eq(variables.IsLogAnalyticsWorkspace,true) }}:
         - name: logAnalyticsWorkspace
