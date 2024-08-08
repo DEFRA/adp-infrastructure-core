@@ -374,8 +374,6 @@ Function Set-FederatedServiceEndpoint() {
         }
 
         # Create ADO Service Connection
-        #$federatedServiceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
-        #$serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
         Write-Host "Service connection name '$serviceConnectionName'"        
              
         Write-Debug "Check if $($serviceConnectionName) exists"
