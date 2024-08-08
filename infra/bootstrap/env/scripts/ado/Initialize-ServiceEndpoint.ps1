@@ -79,7 +79,7 @@ try {
             ProjectName    = $devopsProjectName
             OrgnizationUri = $devopsOrgnizationUri
         }        
-        Set-FederatedServiceEndpoint @functionInput        
+        $serviceEndpoints.azureRMServiceConnections | Set-FederatedServiceEndpoint @functionInput        
     }
     else {
         $functionInput = @{

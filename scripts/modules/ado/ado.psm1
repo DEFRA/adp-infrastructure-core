@@ -302,6 +302,8 @@ Function Set-FederatedServiceEndpoint() {
     Param(
         [ValidateNotNullOrEmpty()]
         [Parameter(ValueFromPipeline = $true)]
+        [Object]$ArmServiceConnection,
+        [Parameter(Mandatory)]
         [string]$FederatedEndpointJsonPath, 
         [Parameter(Mandatory)]
         [string]$ProjectId,      
@@ -320,8 +322,17 @@ Function Set-FederatedServiceEndpoint() {
     }
 
     process {
-        
+
         # Create ADO Service Connection
+
+        $appReg = az ad app list --display-name $ArmServiceConnection.appRegName --query '[].{AppId:appId}' --output table
+
+        $appClientId =  $appReg[2]
+        Write-Host "appClientId: $appClientId"
+
+        [PSCustomObject]$federatedserviceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
+        $serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
+
         Write-Host "Service connection name '$serviceConnectionName'"        
              
         Write-Debug "Check if $($serviceConnectionName) exists"
