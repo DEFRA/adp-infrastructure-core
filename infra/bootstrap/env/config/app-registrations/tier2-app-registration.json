@@ -1,6 +1,8 @@
 {
     "applications": [
         {
+            "subscriptionName": "#{{ subscriptionName }}",
+            "adoOrganizationId": "#{{ adoOrganizationId }}",
             "displayName": "#{{ tier2ServiceConnectionAppRegName }}",
             "IdentifierUris": "",
             "secretAutoRenewalEnabled": true,

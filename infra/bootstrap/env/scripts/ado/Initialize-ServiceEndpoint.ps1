@@ -20,9 +20,7 @@ param(
     [Parameter(Mandatory)] 
     [string]$ServiceEndpointJsonPath,
     [Parameter(Mandatory)] 
-    [string]$FederatedEndpointJsonPath,
-    [Parameter(Mandatory)] 
-    [string]$FederatedCredentialJsonPath,
+    [string]$FederatedEndpointJsonPath,    
     [Parameter(Mandatory = $false)]
     [bool]$federatedCredential,
     [Parameter()]
@@ -48,7 +46,6 @@ if ($enableDebug) {
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
 Write-Debug "${functionName}:ServiceEndpointJsonPath=$ServiceEndpointJsonPath"
-Write-Debug "${functionName}:FederatedEndpointJsonPath=$FederatedEndpointJsonPath"
 Write-Debug "${functionName}:FederatedCredentialJsonPath=$FederatedCredentialJsonPath"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
@@ -78,12 +75,11 @@ try {
     {         
         $functionInput = @{
             FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
-            FederatedCredentialJsonPath =  $FederatedCredentialJsonPath
             ProjectId      = $devopsProjectId
             ProjectName    = $devopsProjectName
             OrgnizationUri = $devopsOrgnizationUri
         }        
-        $serviceEndpoints.azureRMServiceConnections | Set-FederatedServiceEndpoint @functionInput        
+        Set-FederatedServiceEndpoint @functionInput        
     }
     else {
         $functionInput = @{

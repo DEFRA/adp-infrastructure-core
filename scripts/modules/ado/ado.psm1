@@ -302,11 +302,7 @@ Function Set-FederatedServiceEndpoint() {
     Param(
         [ValidateNotNullOrEmpty()]
         [Parameter(ValueFromPipeline = $true)]
-        [Object]$ArmServiceConnection,      
-        [Parameter(Mandatory)]
-        [string]$FederatedEndpointJsonPath,
-        [Parameter(Mandatory)]
-        [string]$FederatedCredentialJsonPath,  
+        [string]$FederatedEndpointJsonPath, 
         [Parameter(Mandatory)]
         [string]$ProjectId,      
         [Parameter(Mandatory)]        
@@ -319,60 +315,12 @@ Function Set-FederatedServiceEndpoint() {
         [string]$functionName = $MyInvocation.MyCommand    
         Write-Debug "${functionName}:Entered"       
         Write-Debug "${functionName}:FederatedEndpointJsonPath=$FederatedEndpointJsonPath"
-        Write-Debug "${functionName}:FederatedCredentialJsonPath=$FederatedCredentialJsonPath"
         Write-Debug "${functionName}:ProjectName=$ProjectName"
         Write-Debug "${functionName}:OrgnizationUri=$OrgnizationUri"     
     }
 
-    process {   
+    process {
         
-        Write-Debug "${functionName}:ArmServiceConnection=$($ArmServiceConnection | ConvertTo-Json -Depth 10)"
-
-        # Create Federated Identity Credential
-        $appReg = az ad app list --display-name $ArmServiceConnection.appRegName --query '[].{Id:id}' --output table
-
-        $appObjId =  $appReg[2]
-        Write-Host "appObjId: $appObjId"
-
-        $appReg = az ad app list --display-name $ArmServiceConnection.appRegName --query '[].{AppId:appId}' --output table
-
-        $appClientId =  $appReg[2]
-        Write-Host "appClientId: $appClientId"
-
-        $federatedCredentials = az ad app federated-credential list --id $appObjId --query '[].{Name:name}' --output table
-
-        Write-Host "FederatedCredential List: $federatedCredentials"
-
-        $organizationName = $OrgnizationUri.substring(22)
-        $devopsOrganizationName = $organizationName | %{$_.Substring(0, $_.length - 1) }
-
-        [PSCustomObject]$federatedserviceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
-        $serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
-
-        $ficName =  $serviceConnectionName
-        $issuer = "https://vstoken.dev.azure.com/" + $ArmServiceConnection.adoOrganizationId
-        $subject = "sc://" + $devopsOrganizationName + "/" + $ProjectName + "/" + $serviceConnectionName
-      
-        $jsonObject = Get-Content $FederatedCredentialJsonPath -raw | ConvertFrom-Json
-        $jsonObject.name =  $ficName
-        $jsonObject.issuer = $issuer
-        $jsonObject.subject = $subject     
-        $jsonObject | ConvertTo-Json -depth 32| set-content $FederatedCredentialJsonPath
-
-        $federatedCredentialName = ""
-        for ($i=2; $i -lt $federatedCredentials.Length; $i++) {
-            if($ficName -eq $federatedCredentials[$i]) {
-                $federatedCredentialName = $federatedCredentials[$i]
-                break
-            }
-        }
-        if ($federatedCredentialName -eq "") {            
-            Write-Output "Creating Federated Identity Credentials $ficName"
-            az ad app federated-credential create --id $appClientId --parameters $FederatedCredentialJsonPath           
-        } else {
-            Write-Output "Federated Identity Credentials $federatedCredentialName already exist"
-        }
-
         # Create ADO Service Connection
         Write-Host "Service connection name '$serviceConnectionName'"        
              

@@ -46,7 +46,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA-ADP
       type: github
-      ref: main
+      ref: sm/xxxx/FederatedServiceConnection
 
 variables:
   - name: IsAll
@@ -160,7 +160,6 @@ extends:
               scriptArguments: > 
                 -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
                 -FederatedEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-federated-credential-service-connection.json'
-                -FederatedCredentialJsonPath 'infra/bootstrap/env/config/service-connections/tier2-federated-credential.json'
                 -FederatedCredential $${{parameters.Federated}}
                 -WorkingDirectory $(Pipeline.Workspace)\s\self          
 
