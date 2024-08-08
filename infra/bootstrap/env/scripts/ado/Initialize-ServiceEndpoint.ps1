@@ -46,7 +46,6 @@ if ($enableDebug) {
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
 Write-Debug "${functionName}:ServiceEndpointJsonPath=$ServiceEndpointJsonPath"
-Write-Debug "${functionName}:FederatedCredentialJsonPath=$FederatedCredentialJsonPath"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
