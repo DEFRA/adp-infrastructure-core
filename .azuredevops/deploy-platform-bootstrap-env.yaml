@@ -146,6 +146,7 @@ extends:
               path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
               scriptArguments: > 
                 -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
+                -FederatedCredential $${{parameters.Federated}}
             - name: Create Tier 2 Role Assignments
               type: 'script'
               scriptType: AzurePowerShell
