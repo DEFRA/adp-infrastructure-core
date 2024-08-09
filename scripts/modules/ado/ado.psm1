@@ -280,6 +280,90 @@ Function Set-ServiceEndpoint() {
 
 <#
 .SYNOPSIS
+Create an Azure Federated service endpoint (ServiceConnection).
+
+.DESCRIPTION
+Create an Azure Federated service endpoint (ServiceConnection).
+
+.PARAMETER  FederatedEndpointJsonPath
+Mandatory. Federated Service connection json file
+
+.PARAMETER ProjectName
+Mandatory. Azure devops project name
+
+.PARAMETER OrgnizationUri
+Mandatory. Azure devops project Orgnization Uri
+
+.EXAMPLE
+.\Set-FederatedServiceEndpoint -ArmServiceConnection <ArmServiceConnectionObject> -FederatedEndpointJsonPath <FederatedEndpointJsonPath> -ProjectName <ProjectName> OrgnizationUri <OrgnizationUri>
+#> 
+Function Set-FederatedServiceEndpoint() {
+    [CmdletBinding()]
+    Param(
+        [ValidateNotNullOrEmpty()]
+        [Parameter(ValueFromPipeline = $true)]
+        [Object]$ArmServiceConnection,
+        [Parameter(Mandatory)]
+        [string]$FederatedEndpointJsonPath, 
+        [Parameter(Mandatory)]
+        [string]$ProjectId,      
+        [Parameter(Mandatory)]        
+        [string]$ProjectName,
+        [Parameter(Mandatory)]
+        [string]$OrgnizationUri
+    )
+
+    begin {
+        [string]$functionName = $MyInvocation.MyCommand    
+        Write-Debug "${functionName}:Entered"       
+        Write-Debug "${functionName}:FederatedEndpointJsonPath=$FederatedEndpointJsonPath"
+        Write-Debug "${functionName}:ProjectName=$ProjectName"
+        Write-Debug "${functionName}:OrgnizationUri=$OrgnizationUri"     
+    }
+
+    process {
+
+        # Create ADO Service Connection
+
+        $appReg = az ad app list --display-name $ArmServiceConnection.appRegName --query '[].{AppId:appId}' --output table
+
+        $appClientId =  $appReg[2]
+        Write-Host "appClientId: $appClientId"
+
+        [PSCustomObject]$federatedserviceEndpoint = Get-Content -Raw -Path $FederatedEndpointJsonPath | ConvertFrom-Json
+        $serviceConnectionName = $federatedServiceEndpoint.serviceEndpointProjectReferences[0].name
+
+        Write-Host "Service connection name '$serviceConnectionName'"        
+             
+        Write-Debug "Check if $($serviceConnectionName) exists"
+        $serviceConnectionId = az devops service-endpoint list --org $devopsOrgnizationUri --project $devopsProjectName --query "[?name=='$serviceConnectionName'].id" -o tsv
+        if ($LASTEXITCODE -ne 0) {
+            throw "Error getting service endpoint Id for '$serviceConnectionName' using 'az devops service-endpoint list' command with exit code $LASTEXITCODE"
+        }
+
+        Write-Host "Existing Service connection Id '$serviceConnectionId'"
+        
+        if ($serviceConnectionId) {
+            Write-Output "ADO service connection $serviceConnectionName is already exist. No changes made."
+        } else { 
+            Write-Output "Creating ADO federated credential service connection $serviceConnectionName"      
+
+            $jsonObj = Get-Content $FederatedEndpointJsonPath -raw | ConvertFrom-Json
+            $jsonObj.authorization.parameters.serviceprincipalid =  $appClientId
+            $jsonObj.serviceEndpointProjectReferences.projectReference | % {{$_.id=$ProjectId}}
+            $jsonObj.serviceEndpointProjectReferences.projectReference | % {{$_.name=$ProjectName}}
+            $jsonObj | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath
+
+            az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $OrgnizationUri --project $ProjectName
+        }
+    }
+    end {
+        Write-Debug "${functionName}:Exited"
+    }    
+}
+
+<#
+.SYNOPSIS
 Verify service endpoint (ServiceConnection).
 
 .DESCRIPTION
