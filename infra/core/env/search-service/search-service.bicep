@@ -78,7 +78,7 @@ module searchServiceDeployment 'br/avm:search/search-service:0.4.4' = {
     }
     roleAssignments: [
       {
-        roleDefinitionIdOrName: '8ebe5a00-799e-43f5-93ac-243d3dce84a7'
+        roleDefinitionIdOrName: '7ca78c08-252a-4471-8644-bb5ff32d4ba0'
         principalId: searchServiceUserGroupId
         principalType: 'Group'
       }
