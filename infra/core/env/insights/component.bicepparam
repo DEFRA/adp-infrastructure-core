@@ -11,4 +11,6 @@ param environment = '#{{ environment }}'
 
 param monitoringPublisherGroup = '#{{ monitoringPublisherGroup }}'
 
+param monitoringReaderGroup = '#{{ monitoringReaderGroup }}'
+
 param disableLocalAuth = #{{ applicationInsightsDisableLocalAuth }}
