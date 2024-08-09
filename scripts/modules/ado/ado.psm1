@@ -301,8 +301,6 @@ Function Set-FederatedServiceEndpoint() {
     [CmdletBinding()]
     Param(
         [ValidateNotNullOrEmpty()]
-        [Parameter(ValueFromPipeline = $true)]
-        [Object]$ArmServiceConnection,
         [Parameter(Mandatory)]
         [string]$FederatedEndpointJsonPath, 
         [Parameter(Mandatory)]
@@ -317,6 +315,7 @@ Function Set-FederatedServiceEndpoint() {
         [string]$functionName = $MyInvocation.MyCommand    
         Write-Debug "${functionName}:Entered"       
         Write-Debug "${functionName}:FederatedEndpointJsonPath=$FederatedEndpointJsonPath"
+        Write-Debug "${functionName}:ProjectId=$ProjectId"
         Write-Debug "${functionName}:ProjectName=$ProjectName"
         Write-Debug "${functionName}:OrgnizationUri=$OrgnizationUri"     
     }
