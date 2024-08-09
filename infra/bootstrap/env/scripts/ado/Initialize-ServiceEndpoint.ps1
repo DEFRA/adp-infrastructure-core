@@ -19,6 +19,10 @@ Optional. Working directory. Default is $PWD.
 param(
     [Parameter(Mandatory)] 
     [string]$ServiceEndpointJsonPath,
+    [Parameter(Mandatory)] 
+    [string]$FederatedEndpointJsonPath,    
+    [Parameter(Mandatory = $false)]
+    [bool]$federatedCredential,
     [Parameter()]
     [string]$WorkingDirectory = $PWD
 )
@@ -66,14 +70,24 @@ try {
     }
 
     [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json
-
-    $functionInput = @{
-        ProjectId      = $devopsProjectId
-        ProjectName    = $devopsProjectName
-        OrgnizationUri = $devopsOrgnizationUri
+    if($federatedCredential)
+    {         
+        $functionInput = @{
+            FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
+            ProjectId      = $devopsProjectId
+            ProjectName    = $devopsProjectName
+            OrgnizationUri = $devopsOrgnizationUri
+        }        
+        $serviceEndpoints.azureRMServiceConnections | Set-FederatedServiceEndpoint @functionInput        
     }
-
-    $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput
+    else {
+        $functionInput = @{
+            ProjectId      = $devopsProjectId
+            ProjectName    = $devopsProjectName
+            OrgnizationUri = $devopsOrgnizationUri
+        }    
+        $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput   
+    }   
 
     $exitCode = 0    
 }
