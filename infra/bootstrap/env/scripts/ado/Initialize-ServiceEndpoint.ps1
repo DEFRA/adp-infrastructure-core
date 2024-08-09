@@ -5,7 +5,7 @@ Create or Update an Azure RM type service endpoint (ServiceConnection).
 .DESCRIPTION
 Create an Azure RM type service endpoint (ServiceConnection). It also verifies the service endpoint using endpointproxy.
 
-.PARAMETER ServiceEndpointJsonPath
+.PARAMETER FederatedEndpointJsonPath
 Mandatory. Service connection configuration file.
 
 .PARAMETER WorkingDirectory
@@ -17,8 +17,6 @@ Optional. Working directory. Default is $PWD.
 
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory)] 
-    [string]$ServiceEndpointJsonPath,
     [Parameter(Mandatory)] 
     [string]$FederatedEndpointJsonPath,
     [Parameter()]
@@ -43,7 +41,7 @@ if ($enableDebug) {
 }
 
 Write-Host "${functionName} started at $($startTime.ToString('u'))"
-Write-Debug "${functionName}:ServiceEndpointJsonPath=$ServiceEndpointJsonPath"
+Write-Debug "${functionName}:FederatedEndpointJsonPath=$FederatedEndpointJsonPath"
 Write-Debug "${functionName}:WorkingDirectory=$WorkingDirectory"
 
 try {
@@ -66,8 +64,6 @@ try {
     if ($LASTEXITCODE -ne 0) {
         throw "Error configuring default devops organization=$devopsOrgnizationUri project=$devopsProjectName with exit code $LASTEXITCODE"
     }
-
-    [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json
         
     $functionInput = @{
         FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
