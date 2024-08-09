@@ -15,10 +15,6 @@ parameters:
       - Monitoring - Workspace
       - Policy Assignments
       - Network
-  - name: Federated
-    displayName: "Use Federated Credential"
-    type: boolean
-    default: false
 
 pr:
   branches:
@@ -146,7 +142,6 @@ extends:
               path: "PowerShellLibrary/Add-AdAppRegistrations.ps1"
               scriptArguments: > 
                 -AppRegJsonPath '$(Pipeline.Workspace)/s/self/infra/bootstrap/env/config/app-registrations/tier2-app-registration.json'
-                -FederatedCredential $${{parameters.Federated}}
             - name: Create Tier 2 Role Assignments
               type: 'script'
               scriptType: AzurePowerShell
@@ -161,7 +156,6 @@ extends:
               scriptArguments: > 
                 -ServiceEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-service-connection.json'
                 -FederatedEndpointJsonPath 'infra/bootstrap/env/config/service-connections/tier2-federated-credential-service-connection.json'
-                -FederatedCredential $${{parameters.Federated}}
                 -WorkingDirectory $(Pipeline.Workspace)\s\self          
 
       - ${{ if eq(variables.IsLogAnalyticsWorkspace,true) }}:

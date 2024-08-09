@@ -20,9 +20,7 @@ param(
     [Parameter(Mandatory)] 
     [string]$ServiceEndpointJsonPath,
     [Parameter(Mandatory)] 
-    [string]$FederatedEndpointJsonPath,    
-    [Parameter(Mandatory = $false)]
-    [bool]$federatedCredential,
+    [string]$FederatedEndpointJsonPath,
     [Parameter()]
     [string]$WorkingDirectory = $PWD
 )
@@ -70,24 +68,14 @@ try {
     }
 
     [PSCustomObject]$serviceEndpoints = Get-Content -Raw -Path $ServiceEndpointJsonPath | ConvertFrom-Json
-    if($federatedCredential)
-    {         
-        $functionInput = @{
-            FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
-            ProjectId      = $devopsProjectId
-            ProjectName    = $devopsProjectName
-            OrgnizationUri = $devopsOrgnizationUri
-        }        
-        $serviceEndpoints.azureRMServiceConnections | Set-FederatedServiceEndpoint @functionInput        
-    }
-    else {
-        $functionInput = @{
-            ProjectId      = $devopsProjectId
-            ProjectName    = $devopsProjectName
-            OrgnizationUri = $devopsOrgnizationUri
-        }    
-        $serviceEndpoints.azureRMServiceConnections | Set-ServiceEndpoint @functionInput   
-    }   
+        
+    $functionInput = @{
+        FederatedEndpointJsonPath =  $FederatedEndpointJsonPath
+        ProjectId      = $devopsProjectId
+        ProjectName    = $devopsProjectName
+        OrgnizationUri = $devopsOrgnizationUri
+    }        
+    Set-FederatedServiceEndpoint @functionInput    
 
     $exitCode = 0    
 }
