@@ -59,6 +59,24 @@
                 }
               ],
               "exclusions": []
+            },
+            {
+              "ruleGroupName": "General",
+              "rules": [
+                  {
+                      "ruleId": "200003",
+                      "enabledState": "Disabled",
+                      "action": "AnomalyScoring",
+                      "exclusions": []
+                  },
+                  {
+                      "ruleId": "200002",
+                      "enabledState": "Disabled",
+                      "action": "AnomalyScoring",
+                      "exclusions": []
+                  }
+              ],
+              "exclusions": []
             }                     
           ],
           "exclusions": []
