@@ -12,7 +12,7 @@ Mandatory. Service connection configuration file.
 Optional. Working directory. Default is $PWD.
 
 .EXAMPLE
-.\Initialize-ServiceEndpoint.ps1 -ServiceEndpointJsonPath <Service endpoint config json path>
+.\Initialize-ServiceEndpoint.ps1 -FederatedEndpointJsonPath <Service endpoint config json path>
 #> 
 
 [CmdletBinding()]
