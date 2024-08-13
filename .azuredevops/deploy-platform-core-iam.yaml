@@ -11,6 +11,7 @@ parameters:
     default: "All"
     values:
       - All
+      - GlobalRead Group RoleAssignment
       - Cluster Custom Resources Reader Role
       - Cluster Port Forward User Role
       - Team Resource Access Role
@@ -42,6 +43,8 @@ resources:
 variables:
   - name: IsAll
     value: ${{ eq(parameters.deployResources,'All') }}
+  - name: IsGlobalReadGroupRoleAssignment
+    value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'GlobalRead Group RoleAssignment')) }}
   - name: IsClusterCustomResourcesReaderRole
     value: ${{ or(eq(variables.IsAll,true), eq(parameters.deployResources,'Cluster Custom Resources Reader Role')) }}
   - name: IsClusterPortForwardUserRole
@@ -122,4 +125,15 @@ extends:
                   serviceConnectionVariableName: 'subscriptionName'
                   inlineScript: |
                     $roleid = (Get-AzRoleDefinition -Name '$(serviceBusDataAccessRole)').Id
-                    Write-Host "##vso[task.setvariable variable=serviceBusDataAccessRoleId;]$roleid"                    
+                    Write-Host "##vso[task.setvariable variable=serviceBusDataAccessRoleId;]$roleid"   
+           - ${{ if eq(variables.IsGlobalReadGroupRoleAssignment, true) }}:
+              - name: global-reader-group
+                path: infra/core/iam/subscription/global-reader-group
+                scope: "Subscription"
+                preDeployScriptsList:
+                - displayName: 'Get GlobalReader Access Group Id'
+                  type: AzurePowerShell
+                  serviceConnectionVariableName: ssvServiceConnection
+                  inlineScript: |
+                    $groupId = (Get-AzADGroup -DisplayName '$(globalReadGroupName)').id
+                    Write-Host "##vso[task.setvariable variable=globalReaderGroupId;]$groupId"
