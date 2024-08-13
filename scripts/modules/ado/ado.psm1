@@ -346,7 +346,7 @@ Function Set-FederatedServiceEndpoint() {
         # if ($serviceConnectionId) {
         #     Write-Output "ADO service connection $serviceConnectionName is already exist. No changes made."
         # } else 
-        { 
+        #{ 
             Write-Output "Creating ADO federated credential service connection $serviceConnectionName"      
 
             $jsonObj = Get-Content $FederatedEndpointJsonPath -raw | ConvertFrom-Json
@@ -356,7 +356,7 @@ Function Set-FederatedServiceEndpoint() {
             $jsonObj | ConvertTo-Json -depth 32| set-content $FederatedEndpointJsonPath
 
             az devops service-endpoint create --service-endpoint-configuration $FederatedEndpointJsonPath --org $OrgnizationUri --project $ProjectName
-        }
+        #}
     }
     end {
         Write-Debug "${functionName}:Exited"
