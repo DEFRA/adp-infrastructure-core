@@ -343,9 +343,10 @@ Function Set-FederatedServiceEndpoint() {
 
         Write-Host "Existing Service connection Id '$serviceConnectionId'"
         
-        # if ($serviceConnectionId) {
-        #     Write-Output "ADO service connection $serviceConnectionName is already exist. No changes made."
-        # } else 
+        if ($serviceConnectionId) {
+            Write-Output "ADO service connection $serviceConnectionName is already exist. No changes made."
+            az devops service-endpoint delete --id $serviceConnectionId
+        } #else 
         #{ 
             Write-Output "Creating ADO federated credential service connection $serviceConnectionName"      
 
