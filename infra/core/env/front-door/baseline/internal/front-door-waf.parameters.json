@@ -56,18 +56,6 @@
                           "selector": "session"
                       }
                   ]
-                },
-                {
-                  "ruleId": "942210",
-                  "enabledState": "Enabled",
-                  "action": "AnomalyScoring",
-                  "exclusions": [
-                      {
-                          "matchVariable": "RequestCookieNames",
-                          "selectorMatchOperator": "Contains",
-                          "selector": "session"
-                      }
-                  ]
                 }
               ],
               "exclusions": []
@@ -87,6 +75,24 @@
                       "action": "AnomalyScoring",
                       "exclusions": []
                   }
+              ],
+              "exclusions": []
+            },
+            {
+              "ruleGroupName": "SQLI",
+              "rules": [
+                {
+                  "ruleId": "942210",
+                  "enabledState": "Enabled",
+                  "action": "AnomalyScoring",
+                  "exclusions": [
+                      {
+                          "matchVariable": "RequestCookieNames",
+                          "selectorMatchOperator": "Contains",
+                          "selector": "session"
+                      }
+                  ]
+                }
               ],
               "exclusions": []
             }                     
