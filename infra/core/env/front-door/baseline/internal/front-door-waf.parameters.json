@@ -52,8 +52,20 @@
                   "exclusions": [
                       {
                           "matchVariable": "RequestCookieNames",
-                          "selectorMatchOperator": "StartsWith",
-                          "selector": "session-auth"
+                          "selectorMatchOperator": "Contains",
+                          "selector": "session"
+                      }
+                  ]
+                },
+                {
+                  "ruleId": "942210",
+                  "enabledState": "Enabled",
+                  "action": "AnomalyScoring",
+                  "exclusions": [
+                      {
+                          "matchVariable": "RequestCookieNames",
+                          "selectorMatchOperator": "Contains",
+                          "selector": "session"
                       }
                   ]
                 }
