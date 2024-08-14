@@ -2,7 +2,7 @@
     "accessADGroups": [
         {
             "displayName": "#{{ searchServiceUserGroup }}",
-            "description": "Azure AD Access group with Search Index Data Contributor permission.",
+            "description": "Azure AD Access group with Search Service Contributor permission.",
             "Owners": {
                 "serviceprincipals" : [
                     "#{{ ssvAppRegServicePrincipalName }}"
