@@ -23,7 +23,7 @@ param cluster = {
     count: 2
     osDiskSizeGB: 80
     maxCount: 4
-    minCount: 1
+    minCount: 2
     maxPods: 110
     availabilityZones: [
       '1'
