@@ -26,6 +26,12 @@ var roleAssignments = [
     principalId: monitoringPublisherGroup
     principalType: 'Group'
   }
+  {
+    roleDefinitionIdOrName: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'acdd72a7-3385-48ef-bd42-f606fba81ae7') // Reader
+    description: 'Reader Role Assignment'
+    principalId: '57bbad31-f9d5-425b-ac7d-1ccdf02c567b'
+    principalType: 'Group'
+  }
 ]
 
 var customTags = {
