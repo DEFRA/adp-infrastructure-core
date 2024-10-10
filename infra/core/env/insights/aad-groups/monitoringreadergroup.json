@@ -1,0 +1,15 @@
+{
+    "accessADGroups": [
+        {
+            "displayName": "#{{ monitoringReaderGroup }}",
+            "description": "Azure AD Access group with Monitoring Reader role.",
+            "Owners": {
+                "serviceprincipals" : [
+                    "#{{ ssvAppRegServicePrincipalName }}"
+                ],
+                "users" : #{{ noescape(platformAccessAADGroupOwners) }}
+            }
+        }    
+    ]
+}
+
