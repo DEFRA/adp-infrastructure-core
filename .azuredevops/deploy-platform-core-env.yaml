@@ -208,14 +208,6 @@ extends:
                   path: 'PowerShellLibrary/Create-AADGroups.ps1'
                   scriptArguments: > 
                     -AADGroupsJsonManifestPath '$(Pipeline.Workspace)/s/self/infra/core/env/insights/aad-groups/monitoringpublishergroup.json'              
-                - name: Create or Update AAD groups Monitoring Reader
-                  type: 'script'
-                  scriptType: AzurePowerShell
-                  serviceConnectionVariableName: ssvServiceConnection
-                  scriptRepo: 'PipelineCommonScripts'
-                  path: 'PowerShellLibrary/Create-AADGroups.ps1'
-                  scriptArguments: > 
-                    -AADGroupsJsonManifestPath '$(Pipeline.Workspace)/s/self/infra/core/env/insights/aad-groups/monitoringreadergroup.json'              
                 - name: component
                   path: infra/core/env/insights
                   resourceGroupName: $(servicesResourceGroup)
@@ -226,12 +218,12 @@ extends:
                     inlineScript: |
                       $groupId = (Get-AzADGroup -DisplayName '$(monitoringPublisherGroup)').id
                       Write-Host "##vso[task.setvariable variable=monitoringPublisherGroup;]$groupId"
-                  - displayName: 'Get Group Id for Monitoring Reader Group'
+                  - displayName: 'Get Group Id for Global Reader Group'
                     type: AzurePowerShell
                     serviceConnectionVariableName: 'ssvServiceConnection'
                     inlineScript: |
-                      $groupIdReader = (Get-AzADGroup -DisplayName '$(monitoringReaderGroup)').id
-                      Write-Host "##vso[task.setvariable variable=monitoringReaderGroup;]$groupIdReader"
+                      $groupIdReader = (Get-AzADGroup -DisplayName '$(globalReadGroupName)').id
+                      Write-Host "##vso[task.setvariable variable=globalReadGroupName;]$groupIdReader"
                   postDeployScriptsList:
                     - displayName: 'GetAppInsightConnectionString'
                       type: AzurePowerShell

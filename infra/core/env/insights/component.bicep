@@ -20,7 +20,7 @@ param createdDate string = utcNow('yyyy-MM-dd')
 param monitoringPublisherGroup string
 
 @description('Required. globalReadGroupName id.')
-param monitoringReaderGroup string
+param globalReadGroupName string
 
 var roleAssignments = [
   {
@@ -32,7 +32,7 @@ var roleAssignments = [
   {
     roleDefinitionIdOrName: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'acdd72a7-3385-48ef-bd42-f606fba81ae7') // Reader
     description: 'Reader Role Assignment'
-    principalId: monitoringReaderGroup
+    principalId: globalReadGroupName
     principalType: 'Group'
   }
 ]
