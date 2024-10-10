@@ -6,8 +6,7 @@
             "Owners": {
                 "serviceprincipals" : [
                     "#{{ ssvAppRegServicePrincipalName }}"
-                ],
-                "users" : #{{ noescape(platformAccessAADGroupOwners) }}
+                ]
             }
         }    
     ]
