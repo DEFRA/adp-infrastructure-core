@@ -200,7 +200,7 @@ extends:
           - name: monitoring
             deployments:
               - ${{ if eq(variables.IsMonitoringInsights, true) }}:
-                - name: Create or Update AAD groups
+                - name: Create or Update AAD groups Monitoring Publisher
                   type: 'script'
                   scriptType: AzurePowerShell
                   serviceConnectionVariableName: ssvServiceConnection
@@ -212,12 +212,18 @@ extends:
                   path: infra/core/env/insights
                   resourceGroupName: $(servicesResourceGroup)
                   preDeployScriptsList:
-                  - displayName: 'Get Group Id'
+                  - displayName: 'Get Group Id for Monitoring Publisher Group'
                     type: AzurePowerShell
                     serviceConnectionVariableName: 'ssvServiceConnection'
                     inlineScript: |
                       $groupId = (Get-AzADGroup -DisplayName '$(monitoringPublisherGroup)').id
                       Write-Host "##vso[task.setvariable variable=monitoringPublisherGroup;]$groupId"
+                  - displayName: 'Get Group Id for Global Reader Group'
+                    type: AzurePowerShell
+                    serviceConnectionVariableName: 'ssvServiceConnection'
+                    inlineScript: |
+                      $groupIdReader = (Get-AzADGroup -DisplayName '$(globalReadGroupName)').id
+                      Write-Host "##vso[task.setvariable variable=globalReadGroupName;]$groupIdReader"
                   postDeployScriptsList:
                     - displayName: 'GetAppInsightConnectionString'
                       type: AzurePowerShell
