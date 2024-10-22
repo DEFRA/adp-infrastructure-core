@@ -79,6 +79,18 @@
               "exclusions": []
             },
             {
+              "ruleGroupName": "RCE",
+              "rules": [
+                  {
+                      "ruleId": "932115",
+                      "enabledState": "Disabled",
+                      "action": "AnomalyScoring",
+                      "exclusions": []
+                  }
+              ],
+              "exclusions": []
+            },
+            {
               "ruleGroupName": "SQLI",
               "rules": [
                 {
