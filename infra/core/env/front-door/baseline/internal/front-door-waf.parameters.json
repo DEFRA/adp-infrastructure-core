@@ -150,7 +150,7 @@
           "action": "Allow"
         },
         {
-          "name": "AllowfcpDALcustomRuleEurope",
+          "name": "AllowfcpDALcustomRuleWestEurope",
           "enabledState": "Enabled",
           "priority": 150,
           "ruleType": "MatchRule",
@@ -172,7 +172,7 @@
               "selector": null,
               "operator": "IPMatch",
               "negateCondition": false,
-              "matchValue": #{{ noescape(powerPlatformIpEurope) }},
+              "matchValue": #{{ noescape(powerPlatformIpWestEurope) }},
               "transforms": []
             }            
           ],
