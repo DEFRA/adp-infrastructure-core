@@ -177,7 +177,28 @@
             }            
           ],
           "action": "Allow"
-        }     
+        },     
+        {
+          "name": "AllowLoginMicrosoftonlineRule",
+          "enabledState": "Enabled",
+          "priority": 500,
+          "ruleType": "MatchRule",
+          "matchConditions": [
+            {
+              "matchVariable": "RequestHeader",
+              "selector": "Origin",
+              "operator": "BeginsWith",
+              "negateCondition": false,
+              "matchValue": [
+                  "https://login.microsoftonline.com"
+              ],
+              "transforms": [
+                  "Lowercase"
+              ]
+            }
+          ],
+          "action": "Allow"
+        }
       ]
     },
     "nonProductionCustomRule": {
