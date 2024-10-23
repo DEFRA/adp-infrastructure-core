@@ -79,6 +79,18 @@
               "exclusions": []
             },
             {
+              "ruleGroupName": "RCE",
+              "rules": [
+                  {
+                      "ruleId": "932115",
+                      "enabledState": "Disabled",
+                      "action": "AnomalyScoring",
+                      "exclusions": []
+                  }
+              ],
+              "exclusions": []
+            },
+            {
               "ruleGroupName": "SQLI",
               "rules": [
                 {
@@ -150,6 +162,35 @@
           "action": "Allow"
         },
         {
+          "name": "AllowfcpDALcustomRuleWestEurope",
+          "enabledState": "Enabled",
+          "priority": 150,
+          "ruleType": "MatchRule",
+          "matchConditions": [
+            {
+              "matchVariable": "RequestUri",
+              "selector": null,
+              "operator": "Contains",
+              "negateCondition": false,
+              "matchValue": [
+                  "fcp-data-access-layer-api"
+              ],
+              "transforms": [
+                  "Lowercase"
+              ]
+            },            
+            {
+              "matchVariable": "RemoteAddr",
+              "selector": null,
+              "operator": "IPMatch",
+              "negateCondition": false,
+              "matchValue": #{{ noescape(powerPlatformIpWestEurope) }},
+              "transforms": []
+            }            
+          ],
+          "action": "Allow"
+        },
+        {
           "name": "AllowfcpDALcustomRule",
           "enabledState": "Enabled",
           "priority": 100,
@@ -177,7 +218,7 @@
             }            
           ],
           "action": "Allow"
-        }     
+        }
       ]
     },
     "nonProductionCustomRule": {
