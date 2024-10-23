@@ -72,7 +72,7 @@ resources:
       name: DEFRA/adp-pipeline-common
       endpoint: DEFRA-ADP
       type: github
-      ref: ml/extend-dal-pa-to-eu
+      ref: refs/tags/1.0.0-latest
       
 variables:
   - name: IsAll
