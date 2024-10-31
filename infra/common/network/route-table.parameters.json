@@ -16,6 +16,9 @@
     },
     "resourceLockEnabled": {
       "value": #{{ resourceLockEnabled }}
+    },
+    "postgresSubnetRange": {
+      "value": "#{{ subnet96AddressPrefix }}"
     }
   }
 }
