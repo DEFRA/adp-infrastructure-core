@@ -59,7 +59,7 @@ module route 'br/SharedDefraRegistry:network.route-table:0.4.2' = {
   }
 }
 
-module route-aks 'br/SharedDefraRegistry:network.route-table:0.4.2' = {
+module route_aks 'br/SharedDefraRegistry:network.route-table:0.4.2' = {
   name: 'route-table-aks-${deploymentDate}'
   params: {
     name: '${routeTable.name}-aks'
