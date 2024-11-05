@@ -11,6 +11,7 @@ parameters:
     default: "All"
     values:
       - All
+      - AI - Document Intelligence
       - Network - All
       - Network - VNET
       - Network - NSGs
@@ -129,7 +130,6 @@ variables:
     value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF Baseline External')) }}
   - name: IsFrontDoorWAFAdpPortal
     value: ${{ or(eq(variables.IsFrontDoorAll,true), eq(parameters.deployResources, 'Front Door - WAF ADP Portal')) }}
-
   - name: IsApplication
     value: ${{ or(eq(variables.IsAll,true), startsWith(parameters.deployResources, 'Application')) }}
   - name: IsApplicationAll
@@ -142,6 +142,8 @@ variables:
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - PostgreSql Server')) }}
   - name: IsApplicationRedisCache
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Redis Cache')) }}
+  - name: IsAiDocumentIntelligence
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'AI - Document Intelligence')) }}
   - name: IsApplicationStorageAccount
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Storage Account')) }}
   - name: IsApplicationServiceBus
@@ -461,6 +463,10 @@ extends:
               - ${{ if eq(variables.IsApplicationRedisCache, true) }}:                    
                 - name: redis-cache
                   path: infra/core/env/redis-cache
+                  resourceGroupName: $(servicesResourceGroup)
+              - ${{ if eq(variables.IsAiDocumentIntelligence, true) }}:                    
+                - name: ai-document-intelligence
+                  path: infra/core/env/ai-document-intelligence
                   resourceGroupName: $(servicesResourceGroup)
               - ${{ if eq(variables.IsApplicationStorageAccount, true) }}:                    
                 - name: application-storage-account
