@@ -38,6 +38,7 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
     publicNetworkAccess: 'Disabled'
     location: location
     sku: aiDocumentIntelligence.sku
+    customSubDomainName: aiDocumentIntelligence.customSubDomainName
     privateEndpoints: [
       {
         subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
