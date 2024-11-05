@@ -2,13 +2,10 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "containerRegistry": {
+        "aiDocumentIntelligence": {
             "value": {
-                "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_containerregistry }}#{{ nc_instance_regionid }}01",
-                "privateEndpointName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_privateendpoint }}#{{ nc_instance_regionid }}04",
-                "acrSku": "Premium",
-                "softDeletePolicyDays": "#{{ acrSoftDeletePolicyDays }}",
-                "retentionPolicyDays": "#{{ acrRetentionPolicyDays }}"
+                "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_ai_document_intelligence }}#{{ nc_instance_regionid }}01",
+                "sku": "#{{ aiDocumentIntelligenceSku }}"
             }    
         },
         "vnet": {
@@ -20,12 +17,6 @@
         },
         "environment": {
             "value": "#{{ environment }}"
-        },
-        "location": {
-            "value": "#{{ location }}"
-        },
-        "resourceLockEnabled": {
-            "value": #{{ resourceLockEnabled }}
         }
     }
 }
