@@ -33,7 +33,7 @@ var tags = union(loadJsonContent('../default-tags.json'), commonTags)
 
 var vnetResourceId = virtualNetwork.outputs.resourceId
 
-var locationToLower = toLower(location)
+// var locationToLower = toLower(location)
 
 module virtualNetwork 'br/SharedDefraRegistry:network.virtual-network:0.4.2' = {
   name: 'virtual-network-${deploymentDate}'
@@ -86,40 +86,48 @@ module virtualNetwork 'br/SharedDefraRegistry:network.virtual-network:0.4.2' = {
 //   properties: {}
 // }
 
+
+
+// resource flowLog 'Microsoft.Network/networkWatchers/flowLogs@2022-01-01' = {
+//   name: 'NetworkWatcher_${locationToLower}/${vnet.name}-flow-log'
+//   scope: resourceGroup('NetworkWatcherRG')
+//   location: location
+//   properties: {
+//     targetResourceId: vnetResourceId
+//     storageId: storageAccountResourceId
+//     enabled: true
+//     retentionPolicy: {
+//       days: 7
+//       enabled: true
+//     }
+//     format: {
+//       type: 'JSON'
+//       version: 2
+//     }
+//   }
+// }
+
 resource storageAccountResource 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
   name: 'sndadpinfst1401'
 }
 
 var storageAccountResourceId = storageAccountResource.id
 
-resource flowLog 'Microsoft.Network/networkWatchers/flowLogs@2022-01-01' = {
-  name: 'NetworkWatcher_${locationToLower}/${vnet.name}-flow-log'
-  location: location
-  properties: {
-    targetResourceId: vnetResourceId
-    storageId: storageAccountResourceId
-    enabled: true
-    retentionPolicy: {
-      days: 7
-      enabled: true
-    }
-    format: {
-      type: 'JSON'
-      version: 2
-    }
+
+module vnetFlowLogs 'br/SharedDefraRegistry:network.network-watcher:0.4.9' = {
+  name: 'virtual-network-flow-logs-${deploymentDate}'
+  params: {
+    name: '${vnet.name}-flow-logs'
+    location: location
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
+    tags: tags
+    enableDefaultTelemetry: true
+    flowLogs: [
+        {
+          name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01-flow-logs'
+          storageId: storageAccountResourceId
+          targetResourceId: vnetResourceId
+        }
+      ]
   }
 }
-
-
-
-// module vnetFlowLogs 'br/SharedDefraRegistry:network.watcher:0.4.9' = {
-//   name: 'virtual-network-flow-logs-${deploymentDate}'
-//   params: {
-//     name: '${vnet.name}-flow-logs'
-//     location: location
-//     lock: resourceLockEnabled ? 'CanNotDelete' : null
-//     tags: tags
-//     enableDefaultTelemetry: true
-//     flowLogs: flowLogs
-//   }
-// }
