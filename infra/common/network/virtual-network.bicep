@@ -91,7 +91,7 @@ resource storageAccountResource 'Microsoft.Storage/storageAccounts@2021-04-01' e
 var storageAccountResourceId = storageAccountResource.id
 
 resource flowLog 'Microsoft.Network/networkWatchers/flowLogs@2022-01-01' = {
-  name: '${vnet.name}-flow-log'
+  name: 'NetworkWatcher_${location}/${vnet.name}-flow-log'
   location: location
   properties: {
     targetResourceId: vnetResourceId
