@@ -33,6 +33,8 @@ var tags = union(loadJsonContent('../default-tags.json'), commonTags)
 
 var vnetResourceId = virtualNetwork.outputs.resourceId
 
+var locationToLower = toLower(location)
+
 module virtualNetwork 'br/SharedDefraRegistry:network.virtual-network:0.4.2' = {
   name: 'virtual-network-${deploymentDate}'
   params: {
@@ -91,7 +93,7 @@ resource storageAccountResource 'Microsoft.Storage/storageAccounts@2021-04-01' e
 var storageAccountResourceId = storageAccountResource.id
 
 resource flowLog 'Microsoft.Network/networkWatchers/flowLogs@2022-01-01' = {
-  name: 'NetworkWatcher_${location}/${vnet.name}-flow-log'
+  name: 'NetworkWatcher_${locationToLower}/${vnet.name}-flow-log'
   location: location
   properties: {
     targetResourceId: vnetResourceId
