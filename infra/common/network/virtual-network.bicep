@@ -119,7 +119,7 @@ module vnetFlowLogs 'br/SharedDefraRegistry:network.network-watcher:0.4.9' = {
   params: {
     name: '${vnet.name}-flow-logs'
     location: location
-    lock: resourceLockEnabled ? 'CanNotDelete' : null
+    lock: resourceLockEnabled ? { name: null, kind: 'CanNotDelete' } : null
     tags: tags
     enableDefaultTelemetry: true
     flowLogs: [
