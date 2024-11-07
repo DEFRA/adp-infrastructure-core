@@ -33,7 +33,7 @@ var tags = union(loadJsonContent('../default-tags.json'), commonTags)
 
 var vnetResourceId = virtualNetwork.outputs.resourceId
 
-// var locationToLower = toLower(location)
+var locationToLower = toLower(location)
 
 module virtualNetwork 'br/SharedDefraRegistry:network.virtual-network:0.4.2' = {
   name: 'virtual-network-${deploymentDate}'
@@ -127,6 +127,7 @@ module vnetFlowLogs 'br/SharedDefraRegistry:network.network-watcher:0.4.9' = {
           name: '#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}01-flow-logs'
           storageId: storageAccountResourceId
           targetResourceId: vnetResourceId
+          networkWatcherName: 'NetworkWatcher_${locationToLower}'
         }
       ]
   }
