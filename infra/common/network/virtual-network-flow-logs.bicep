@@ -9,6 +9,7 @@ param environment string
 // param resourceLockEnabled bool
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
+param serviceResourceGroup string
 // param virtualNetworkResourceGroup string
 // param virtualNetworkName string
 // @description('Optional. Enable VNET flow logs.')
@@ -64,7 +65,7 @@ var locationToLower = toLower(location)
 // }
 
 resource storageAccountResource 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
-  scope: resourceGroup(vnet.resourceGroup)
+  scope: resourceGroup(serviceResourceGroup)
   name: 'sndadpinfst1401'
 }
 
