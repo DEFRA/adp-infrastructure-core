@@ -191,6 +191,10 @@ extends:
                 - name: virtual-network
                   path: infra/common/network
                   resourceGroupName: $(virtualNetworkResourceGroup)
+              - ${{ if eq(variables.IsNetworkVnet, true) }}:
+                - name: virtual-network-flow-logs
+                  path: infra/common/network
+                  resourceGroupName: 'NetworkWatcherRG'
               - ${{ if eq(variables.IsNetworkPublicDNSZone, true) }}:
                 - name: dns-zone
                   path: infra/core/env/public-dns-zone
