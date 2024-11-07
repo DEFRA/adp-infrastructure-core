@@ -65,7 +65,7 @@ var locationToLower = toLower(location)
 // }
 
 resource storageAccountResource 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
-  scope: resourceGroup(serviceResourceGroup)
+  scope: resourceGroup('SNDADPINFRG1401')
   name: 'sndadpinfst1401'
 }
 
