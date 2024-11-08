@@ -466,10 +466,10 @@ extends:
                   path: infra/core/env/redis-cache
                   resourceGroupName: $(servicesResourceGroup)
               - ${{ if eq(variables.IsApplicationAiDocumentIntelligence1, true) }}:                    
-                - name: ai-document-intelligence-1
+                - name: ai-document-intelligence
                   path: infra/core/env/ai-document-intelligence
                   parameterFilePath: infra/core/env/ai-document-intelligence/ai-document-intelligence-depolyment-1-params
-                  resourceGroupName: $(servicesResourceGroup)     
+                  resourceGroupName: $(servicesResourceGroup)
               - ${{ if eq(variables.IsApplicationStorageAccount, true) }}:                    
                 - name: application-storage-account
                   path: infra/core/env/storage-account
