@@ -32,7 +32,7 @@ parameters:
       - Front Door - WAF Baseline External
       - Front Door - WAF ADP Portal
       - Application - All
-      - Application - AI Document Intelligence
+      - Application - AI Document Intelligence - Deployment 1
       - Application - App Configuration
       - Application - Apps Container Registry
       - Application - PostgreSql Server
@@ -143,8 +143,8 @@ variables:
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - PostgreSql Server')) }}
   - name: IsApplicationRedisCache
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Redis Cache')) }}
-  - name: IsApplicationAiDocumentIntelligence
-    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - AI Document Intelligence')) }}
+  - name: IsApplicationAiDocumentIntelligence1
+    value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - AI Document Intelligence - Deployment 1')) }}
   - name: IsApplicationStorageAccount
     value: ${{ or(eq(variables.IsApplicationAll,true), eq(parameters.deployResources, 'Application - Storage Account')) }}
   - name: IsApplicationServiceBus
@@ -465,9 +465,10 @@ extends:
                 - name: redis-cache
                   path: infra/core/env/redis-cache
                   resourceGroupName: $(servicesResourceGroup)
-              - ${{ if eq(variables.IsApplicationAiDocumentIntelligence, true) }}:                    
-                - name: ai-document-intelligence
+              - ${{ if eq(variables.IsApplicationAiDocumentIntelligence1, true) }}:                    
+                - name: ai-document-intelligence-1
                   path: infra/core/env/ai-document-intelligence
+                  parameterFilePath: infra/core/env/key-vault/ai-document-intelligence/ai-document-intelligence-depolyment-1-params
                   resourceGroupName: $(servicesResourceGroup)
               - ${{ if eq(variables.IsApplicationStorageAccount, true) }}:                    
                 - name: application-storage-account
