@@ -468,8 +468,8 @@ extends:
               - ${{ if eq(variables.IsApplicationAiDocumentIntelligence1, true) }}:                    
                 - name: ai-document-intelligence-1
                   path: infra/core/env/ai-document-intelligence
-                  parameterFilePath: infra/core/env/key-vault/ai-document-intelligence/ai-document-intelligence-depolyment-1-params
-                  resourceGroupName: $(servicesResourceGroup)
+                  parameterFilePath: infra/core/env/ai-document-intelligence/ai-document-intelligence-depolyment-1-params
+                  resourceGroupName: $(servicesResourceGroup)     
               - ${{ if eq(variables.IsApplicationStorageAccount, true) }}:                    
                 - name: application-storage-account
                   path: infra/core/env/storage-account
