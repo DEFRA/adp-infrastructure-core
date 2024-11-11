@@ -1,5 +1,7 @@
 @description('Required. The VNET Infra object.')
 param vnet object
+@description('Required. The Flow Logs object.')
+param flowLogs object
 @description('Required. The Azure region where the resources will be deployed.')
 param location string
 @description('Required. Environment name.')
@@ -10,13 +12,6 @@ param createdDate string = utcNow('yyyy-MM-dd')
 param servicesResourceGroup string
 
 
-
-// @description('Optional. Enable VNET flow logs.')
-// param enableFlowLogs bool = false
-// @description('Optional. VNET flow log configuration')
-// param flowLogs array
-
-
 var commonTags = {
   Location: location
   CreatedDate: createdDate
@@ -25,7 +20,6 @@ var commonTags = {
 }
 var tags = union(loadJsonContent('../default-tags.json'), commonTags)
 
-var locationToLower = toLower(location)
 
 // TODO: Create new var for storage account name
 resource storageAccountResource 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
@@ -43,7 +37,7 @@ resource vnetResource 'Microsoft.Network/virtualNetworks@2023-04-01' existing = 
 var vnetResourceId = vnetResource.id
 
 resource flowLog 'Microsoft.Network/networkWatchers/flowLogs@2024-03-01' = {
-  name: 'NetworkWatcher_${locationToLower}/${vnet.name}-flow-log'
+  name: flowLogs.name
   location: location
   tags: tags
   properties: {
@@ -219,3 +213,6 @@ resource flowLog 'Microsoft.Network/networkWatchers/flowLogs@2024-03-01' = {
 //     "resourceGroup": "#{{ virtualNetworkResourceGroup }}"
 //   }
 // },
+
+
+// var locationToLower = toLower(location)

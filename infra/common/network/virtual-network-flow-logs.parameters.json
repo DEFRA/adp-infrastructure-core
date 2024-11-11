@@ -4,8 +4,13 @@
   "parameters": {
     "vnet": {
       "value": {
-        "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_flowlog }}#{{ nc_instance_regionid }}01",
+        "name": "#{{ virtualNetworkName }}",
         "resourceGroup": "#{{ virtualNetworkResourceGroup }}"
+      }
+    },
+    "flowLogs": {
+      "value": {
+        "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_flowlog }}#{{ nc_instance_regionid }}01"
       }
     },
     "location": {
