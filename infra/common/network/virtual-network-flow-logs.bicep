@@ -2,6 +2,8 @@
 param vnet object
 @description('Required. The Flow Logs object.')
 param flowLogs object
+@description('Required. The Storage Account object.')
+param storageAccount object
 @description('Required. The Azure region where the resources will be deployed.')
 param location string
 @description('Required. Environment name.')
@@ -20,11 +22,12 @@ var commonTags = {
 }
 var tags = union(loadJsonContent('../default-tags.json'), commonTags)
 
+var storageAccountToLower = toLower(storageAccount.name)
 
 // TODO: Create new var for storage account name
 resource storageAccountResource 'Microsoft.Storage/storageAccounts@2021-04-01' existing = {
   scope: resourceGroup(servicesResourceGroup)
-  name: 'sndadpinfst1401'
+  name: storageAccountToLower
 }
 
 var storageAccountResourceId = storageAccountResource.id
@@ -36,8 +39,10 @@ resource vnetResource 'Microsoft.Network/virtualNetworks@2023-04-01' existing = 
 
 var vnetResourceId = vnetResource.id
 
+var locationToLower = toLower(location)
+
 resource flowLog 'Microsoft.Network/networkWatchers/flowLogs@2024-03-01' = {
-  name: flowLogs.name
+  name: 'NetworkWatcher_${locationToLower}/${flowLogs.name}'
   location: location
   tags: tags
   properties: {

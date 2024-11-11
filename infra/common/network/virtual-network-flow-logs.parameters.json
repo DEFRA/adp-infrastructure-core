@@ -13,6 +13,11 @@
         "name": "NetworkWatcher_uksouth/#{{ infraResourceNamePrefix }}#{{ nc_resource_flowlog }}#{{ nc_instance_regionid }}01"
       }
     },
+    "storageAccount": {
+      "value": {
+        "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_storageaccount }}#{{ nc_instance_regionid }}01"
+      }
+    },
     "location": {
       "value": "#{{ location }}"
     },
