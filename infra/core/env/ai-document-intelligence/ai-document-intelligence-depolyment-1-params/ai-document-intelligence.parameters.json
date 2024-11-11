@@ -1,0 +1,23 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "aiDocumentIntelligence": {
+            "value": {
+                "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_ai_document_intelligence }}#{{ nc_instance_regionid }}01",
+                "sku": "#{{ aiDocumentIntelligenceSku }}",
+                "customSubDomainName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_ai_document_intelligence }}#{{ nc_instance_regionid }}01"
+            }    
+        },
+        "vnet": {
+            "value": {
+              "name": "#{{ virtualNetworkName }}",
+              "resourceGroup": "#{{ virtualNetworkResourceGroup }}",
+              "subnetPrivateEndpoints": "#{{ networkResourceNamePrefix }}#{{ nc_resource_subnet }}#{{ nc_instance_regionid }}98"
+            }
+        },
+        "environment": {
+            "value": "#{{ environment }}"
+        }
+    }
+}
