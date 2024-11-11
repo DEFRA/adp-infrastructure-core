@@ -210,3 +210,12 @@ resource flowLog 'Microsoft.Network/networkWatchers/flowLogs@2024-03-01' = {
 //       ]
 //   }
 // }
+
+
+
+// "flowLogs": {
+//   "value": {
+//     "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_flow_logs }}#{{ nc_instance_regionid }}01",
+//     "resourceGroup": "#{{ virtualNetworkResourceGroup }}"
+//   }
+// },
