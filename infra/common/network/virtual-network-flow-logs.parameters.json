@@ -10,7 +10,7 @@
     },
     "flowLogs": {
       "value": {
-        "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_flowlog }}#{{ nc_instance_regionid }}01"
+        "name": "NetworkWatcher_uksouth/#{{ infraResourceNamePrefix }}#{{ nc_resource_flowlog }}#{{ nc_instance_regionid }}01"
       }
     },
     "location": {
