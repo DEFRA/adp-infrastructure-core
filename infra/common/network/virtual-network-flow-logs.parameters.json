@@ -8,11 +8,21 @@
         "resourceGroup": "#{{ virtualNetworkResourceGroup }}"
       }
     },
+    "flowLogs": {
+      "value": {
+        "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_ai_document_intelligence }}#{{ nc_instance_regionid }}01",
+        "resourceGroup": "#{{ virtualNetworkResourceGroup }}"
+      }
+    },
     "location": {
       "value": "#{{ location }}"
     },
     "environment": {
       "value": "#{{ environment }}"
+    },
+    "servicesResourceGroup": {
+      "value": "#{{ servicesResourceGroup }}"
     }
   }
 }
+
