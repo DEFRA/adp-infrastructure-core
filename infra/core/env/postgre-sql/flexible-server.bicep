@@ -127,7 +127,7 @@ module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1
     privateDnsZoneArmResourceId: private_dns_zone.id
     diagnosticSettings: [ {
       logCategoriesAndGroups: [ {
-        category: logCategories
+        category: server.logCategories
       }       
       ]
     }
