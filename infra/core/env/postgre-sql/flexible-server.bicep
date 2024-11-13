@@ -1,4 +1,4 @@
-@description('Required. The object of the PostgreSQL Flexible Server. The object must contain name,storageSizeGB,highAvailability and administratorLogin properties.')
+@description('Required. The object of the PostgreSQL Flexible Server. The object must contain name,storageSizeGB,highAvailability,logCategories and administratorLogin properties.')
 param server object
 
 @description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPostgreSql values.')
@@ -31,14 +31,14 @@ param environment string
 @description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
 
+@description('Required. The parameter object for the monitoringWorkspace. The object must contain name of the workspace and resourceGroup.')
+param monitoringWorkspace object
+
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
-
-@description('Optional. List of log categories to enable for DB.')
-param logCategories string
 
 param guidValue string = guid(deploymentDate)
 var administratorLoginPassword  = substring(replace(replace(guidValue, '.', '-'), '-', ''), 0, 20)
@@ -130,6 +130,11 @@ module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1
         category: server.logCategories
       }       
       ]
+      workspaceResourceId: resourceId(
+        monitoringWorkspace.resourceGroup,
+        'Microsoft.OperationalInsights/workspaces',
+        monitoringWorkspace.name
+      )
     }
     ]
       
