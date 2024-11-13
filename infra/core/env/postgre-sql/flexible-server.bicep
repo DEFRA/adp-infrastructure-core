@@ -37,6 +37,9 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Optional. Date in the format yyyyMMdd-HHmmss.')
 param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 
+@description('Optional. List of log categories to enable for DB.')
+param logCategories string
+
 param guidValue string = guid(deploymentDate)
 var administratorLoginPassword  = substring(replace(replace(guidValue, '.', '-'), '-', ''), 0, 20)
 
@@ -122,6 +125,14 @@ module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1
     configurations:[]
     delegatedSubnetResourceId : virtual_network::subnet.id
     privateDnsZoneArmResourceId: private_dns_zone.id
+    diagnosticSettings: [ {
+      logCategoriesAndGroups: [ {
+        category: logCategories
+      }       
+      ]
+    }
+    ]
+      
   }
 }
 
