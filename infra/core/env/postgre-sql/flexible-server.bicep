@@ -94,7 +94,7 @@ module keyvaultSecretsUserRoleAssignment '.bicep/kv-secret-role-secrets-user.bic
   }
 }]
 
-module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1' = {
+module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.2.0' = {
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
     name: toLower(server.name)
@@ -127,7 +127,7 @@ module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1
     privateDnsZoneArmResourceId: private_dns_zone.id
     diagnosticSettings: [ {
       logCategoriesAndGroups: [ {
-        categoryGroup: server.logCategoryGroups
+        category: server.logCategories
       }       
       ]
       workspaceResourceId: resourceId(
