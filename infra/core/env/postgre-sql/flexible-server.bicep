@@ -135,6 +135,7 @@ module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.2.0
         'Microsoft.OperationalInsights/workspaces',
         monitoringWorkspace.name
       )
+      metricCategories: []
     }
     ]
       
