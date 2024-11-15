@@ -12,10 +12,10 @@ param server = {
 
 // param logCategories = '#{{ postgreSqlLogCategories }}'
 
-param logCategories = [
-  'PostgreSQLLogs'
-  'PostgreSQLFlexSessions'
-]
+// param logCategories = [
+//   'PostgreSQLLogs'
+//   'PostgreSQLFlexSessions'
+// ]
 
 param vnet = {
   name: '#{{ virtualNetworkName }}'
