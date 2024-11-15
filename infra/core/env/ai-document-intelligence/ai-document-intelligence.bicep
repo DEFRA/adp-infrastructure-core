@@ -53,7 +53,7 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
         privateDnsZoneGroup: {
           privateDnsZoneGroupConfigs: [
             {
-              privateDnsZoneResourceId: '<privateDnsZoneResourceId>'
+              privateDnsZoneResourceId: private_dns_zone.id
             }
           ]
         }
