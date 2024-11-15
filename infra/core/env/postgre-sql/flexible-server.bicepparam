@@ -8,9 +8,14 @@ param server = {
   highAvailability: '#{{ postgreSqlHighAvailability }}'
   availabilityZone: '#{{ postgreSqlAvailabilityZone }}'
   administratorLogin: '#{{ postgreSqlAdministratorUserName }}'
-  }
+}
 
-param logCategories = #{{ postgreSqlLogCategories }}
+// param logCategories = '#{{ postgreSqlLogCategories }}'
+
+param logCategories = [
+  'PostgreSQLLogs'
+  'PostgreSQLFlexSessions'
+]
 
 param vnet = {
   name: '#{{ virtualNetworkName }}'

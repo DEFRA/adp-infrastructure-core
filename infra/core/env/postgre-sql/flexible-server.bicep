@@ -35,7 +35,7 @@ param resourceLockEnabled bool
 param monitoringWorkspace object
 
 @description('Required. The Postgres log types to be enabled')
-param logCategories array
+param logCategories array = []
 
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
