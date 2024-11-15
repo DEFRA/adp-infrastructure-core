@@ -10,9 +10,7 @@ param server = {
   administratorLogin: '#{{ postgreSqlAdministratorUserName }}'
   }
 
-param logCategories = {
-      value: '#{{ postgreSqlLogCategories }}'
-    }
+param logCategories = #{{ postgreSqlLogCategories }}
 
 param vnet = {
   name: '#{{ virtualNetworkName }}'
