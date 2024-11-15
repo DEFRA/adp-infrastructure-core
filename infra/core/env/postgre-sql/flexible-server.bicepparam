@@ -10,7 +10,7 @@ param server = {
   administratorLogin: '#{{ postgreSqlAdministratorUserName }}'
   }
 
-param logCategories: {
+param logCategories = {
       value: '#{{ postgreSqlLogCategories }}'
     }
 
