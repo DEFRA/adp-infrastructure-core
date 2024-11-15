@@ -8,6 +8,7 @@ param server = {
   highAvailability: '#{{ postgreSqlHighAvailability }}'
   availabilityZone: '#{{ postgreSqlAvailabilityZone }}'
   administratorLogin: '#{{ postgreSqlAdministratorUserName }}'
+  logCategories: '#{{ postgreSqlLogCategories }}'
 }
 
 // param logCategories = '#{{ postgreSqlLogCategories }}'
