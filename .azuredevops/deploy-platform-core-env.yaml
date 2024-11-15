@@ -16,6 +16,7 @@ parameters:
       - Network - NSGs
       - Network - Route Tables
       - Network - Public DNS Zone
+      - Network - Flow Logs
       - Monitoring - All
       - Monitoring - Insights
       - Monitoring - Azure Monitor Workspace
@@ -87,6 +88,8 @@ variables:
     value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - NSGs')) }}
   - name: IsNetworkRouteTable
     value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - Route Tables')) }}
+  - name: IsNetworkFlowLogs
+    value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - Flow Logs')) }}
   - name: IsNetworkPublicDNSZone
     value: ${{ or(eq(variables.IsNetworkAll,true), eq(parameters.deployResources,'Network - Public DNS Zone')) }}
   - name: IsMonitoring
@@ -191,7 +194,7 @@ extends:
                 - name: virtual-network
                   path: infra/common/network
                   resourceGroupName: $(virtualNetworkResourceGroup)
-              - ${{ if eq(variables.IsNetworkVnet, true) }}:
+              - ${{ if eq(variables.IsNetworkFlowLogs, true) }}:
                 - name: virtual-network-flow-logs
                   path: infra/common/network
                   resourceGroupName: 'NetworkWatcherRG'

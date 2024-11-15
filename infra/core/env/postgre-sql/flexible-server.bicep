@@ -34,9 +34,6 @@ param resourceLockEnabled bool
 @description('Required. The parameter object for the monitoringWorkspace. The object must contain name of the workspace and resourceGroup.')
 param monitoringWorkspace object
 
-// @description('Required. The Postgres log types to be enabled')
-// param logCategories array = []
-
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
@@ -128,21 +125,9 @@ module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.2.0
     configurations:[]
     delegatedSubnetResourceId : virtual_network::subnet.id
     privateDnsZoneArmResourceId: private_dns_zone.id
-    // diagnosticSettings: [ {
-      // logCategoriesAndGroups: [for logCategory in logCategories: {
-      //   category: logCategory
-      // }]
-      // logCategoriesAndGroups: [
-      //   {
-      //     category: 'PostgreSQLLogs'
-      //   }
-      //   {
-      //     category: 'PostgreSQLFlexSessions'
-      //   }
-      // ]
       diagnosticSettings: [ {
         logCategoriesAndGroups: [ {
-          category: server.logCategories
+          category: server.logCategory
         }       
         ]
       workspaceResourceId: resourceId(

@@ -10,7 +10,9 @@
     },
     "flowLogs": {
       "value": {
-        "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_flowlog }}#{{ nc_instance_regionid }}01"
+        "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_flowlog }}#{{ nc_instance_regionid }}01",
+        "enabled": "#{{ networkFlowLogsEnabled }}",
+        "retentionDays": "#{{ networkFlowLogsRetentionDays }}"
       }
     },
     "storageAccount": {
