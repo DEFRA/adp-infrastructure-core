@@ -126,10 +126,9 @@ module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.2.0
     delegatedSubnetResourceId : virtual_network::subnet.id
     privateDnsZoneArmResourceId: private_dns_zone.id
     diagnosticSettings: [ {
-      logCategoriesAndGroups: [ {
-        category: server.logCategories
-      }       
-      ]
+      logCategoriesAndGroups: [for logCategory in server.logCategories: {
+        category: logCategory
+      }]
       workspaceResourceId: resourceId(
         monitoringWorkspace.resourceGroup,
         'Microsoft.OperationalInsights/workspaces',
