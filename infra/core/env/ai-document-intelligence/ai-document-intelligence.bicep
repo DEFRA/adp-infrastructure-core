@@ -16,6 +16,9 @@ param deploymentDate string = utcNow('yyyyMMdd-HHmmss')
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
 
+@description('Required. The parameter object for the private Dns zone. The object must contain the name and resourceGroup values')
+param privateDnsZone object
+
 var customTags = {
   Location: location
   CreatedDate: createdDate
@@ -30,6 +33,12 @@ var documentIntelligenceTags = {
   Tier: 'Shared'
 }
 
+resource private_dns_zone 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
+  name: privateDnsZone.name
+  scope: resourceGroup(privateDnsZone.resourceGroup)
+}
+
+
 module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = {
   name: 'ai-document-intelligence-${deploymentDate}'
   params: {
@@ -41,9 +50,17 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
     customSubDomainName: aiDocumentIntelligence.customSubDomainName
     privateEndpoints: [
       {
+        privateDnsZoneGroup: {
+          privateDnsZoneGroupConfigs: [
+            {
+              privateDnsZoneResourceId: '<privateDnsZoneResourceId>'
+            }
+          ]
+        }
         subnetResourceId: resourceId(vnet.resourceGroup, 'Microsoft.Network/virtualNetworks/subnets', vnet.name, vnet.subnetPrivateEndpoints)
       }
     ]
+
     tags: union(defaultTags, documentIntelligenceTags)
 
   }
