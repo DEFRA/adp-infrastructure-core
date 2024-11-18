@@ -79,7 +79,7 @@ module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5
     {
       aRecords: [
         {
-          ipv4Address: documentIntelligenceResource.outputs.privateEndpoints[0].ipConfigurations.properties.privateIPAddress
+          ipv4Address: documentIntelligenceResource.outputs.privateEndpoints[0].customDnsConfigs.ipAddresses[0]
 
         }
       ]
