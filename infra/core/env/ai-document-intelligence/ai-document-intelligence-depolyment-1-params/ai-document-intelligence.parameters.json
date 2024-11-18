@@ -11,7 +11,7 @@
         },
         "privateDnsZone": {
             "value": {
-                "name": "#{{ dnsResourceNamePrefix }}#{{ nc_resource_dnszone }}#{{ nc_instance_regionid }}01.privatelink.cognitiveservices.azure.com",
+                "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_ai_document_intelligence }}#{{ nc_instance_regionid }}01.privatelink.cognitiveservices.azure.com",
                 "resourceGroup": "#{{ dnsResourceGroup }}"
             }
         },

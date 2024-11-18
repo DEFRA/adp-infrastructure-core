@@ -66,8 +66,6 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
   }
 }
 
-output objectOutput object = documentIntelligenceResource.outputs
-
 
 module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5.2' = {
   name: 'aks-private-dns-zone-${deploymentDate}'
