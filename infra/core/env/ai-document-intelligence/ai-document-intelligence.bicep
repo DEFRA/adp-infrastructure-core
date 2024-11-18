@@ -75,18 +75,27 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
 }
 
 
-resource aRecord 'Microsoft.Network/privateDnsZones/A@2024-06-01' = {
-  name: 'privateDnsZone.name/@'
-  properties: {
-    ttl: 300
-    aRecords: [
-      {
-        ipv4Address: '1.1.1.1'
-      }
-    ]
+// SNDADPINFRG1401
+// SNDADPDNSRG1401
+
+module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5.2' = {
+  name: 'aks-private-dns-zone-${deploymentDate}'
+  scope: resourceGroup(privateDnsZone.resourceGroup)
+  params: {
+   name: privateDnsZone.name
+   a: [
+    {
+      aRecords: [
+        {
+          ipv4Address: '10.240.4.4'
+        }
+      ]
+      name: 'A_10.240.4.4'
+     
+      ttl: 3600
+    }
+  ]  
+
   }
-  dependsOn: [
-     documentIntelligenceResource
-  ]
 }
 
