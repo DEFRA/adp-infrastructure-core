@@ -1,4 +1,4 @@
-@description('Required. The object of the PostgreSQL Flexible Server. The object must contain name,storageSizeGB,highAvailability,logCategories and administratorLogin properties.')
+@description('Required. The object of the PostgreSQL Flexible Server. The object must contain name,storageSizeGB,highAvailability,logCategory and administratorLogin properties.')
 param server object
 
 @description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPostgreSql values.')
