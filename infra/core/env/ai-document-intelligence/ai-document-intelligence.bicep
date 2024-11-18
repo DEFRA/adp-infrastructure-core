@@ -50,6 +50,14 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
     customSubDomainName: aiDocumentIntelligence.customSubDomainName
     privateEndpoints: [
       {
+        customDnsConfigs: [
+          {
+            fqdn: 'abc.account.com'
+            ipAddresses: [
+              '10.0.0.10'
+            ]
+          }
+        ]
         privateDnsZoneGroup: {
           privateDnsZoneGroupConfigs: [
             {
