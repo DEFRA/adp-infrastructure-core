@@ -33,6 +33,11 @@ var documentIntelligenceTags = {
   Tier: 'Shared'
 }
 
+var dnsTags = {
+  Name: privateDnsZone.name
+  Purpose: 'AKS Private DNS Zone'
+}
+
 resource private_dns_zone 'Microsoft.Network/privateDnsZones@2020-06-01' existing = {
   name: privateDnsZone.name
   scope: resourceGroup(privateDnsZone.resourceGroup)
@@ -72,6 +77,7 @@ module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5
   scope: resourceGroup(privateDnsZone.resourceGroup)
   params: {
    name: privateDnsZone.name
+   tags: union(defaultTags, dnsTags)
    a: [
     {
       aRecords: [
@@ -80,9 +86,8 @@ module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5
 
         }
       ]
-      name: '@'
-     
-      ttl: 3600
+      name: '@'  
+      ttl: 300
     }
   ]  
 
