@@ -66,6 +66,8 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
   }
 }
 
+output objectOutput object = documentIntelligenceResource.outputs
+
 
 // SNDADPINFRG1401
 // SNDADPDNSRG1401
@@ -79,7 +81,7 @@ module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5
     {
       aRecords: [
         {
-          ipv4Address: documentIntelligenceResource.outputs.privateEndpoints[0].customDnsConfig.ipAddresses[0]
+          ipv4Address: documentIntelligenceResource.outputs.privateEndpoints[0].customDnsConfig[0].ipAddresses[0]
 
         }
       ]
