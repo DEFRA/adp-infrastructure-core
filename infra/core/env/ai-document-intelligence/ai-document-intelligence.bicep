@@ -50,15 +50,7 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
     customSubDomainName: aiDocumentIntelligence.customSubDomainName
     privateEndpoints: [
       {
-        customDnsConfigs: [
-          {
-            fqdn: 'abc.account.com'
-            ipAddresses: [
-              '10.0.0.10'
-            ]
-          }
-        ]
-        privateDnsZoneGroup: {
+         privateDnsZoneGroup: {
           privateDnsZoneGroupConfigs: [
             {
               privateDnsZoneResourceId: private_dns_zone.id
@@ -87,10 +79,11 @@ module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5
     {
       aRecords: [
         {
-          ipv4Address: '10.240.4.4'
+          ipv4Address: documentIntelligenceResource.outputs.privateEndpoints[0].ipConfigurations.properties.privateIPAddress
+
         }
       ]
-      name: 'A_10.240.4.4'
+      name: '@'
      
       ttl: 3600
     }
