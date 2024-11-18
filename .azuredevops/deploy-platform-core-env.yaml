@@ -474,7 +474,7 @@ extends:
                       type: PowerShell
                       useSystemAccessToken: true
                       scriptArguments: >
-                        -PrivateDnsZoneName "$(dnsResourceNamePrefix)$(nc_resource_dnszone)$(nc_instance_regionid)01.privatelink.cognitiveservices.azure.com"
+                        -PrivateDnsZoneName "$(infraResourceNamePrefix)$(nc_resource_ai_document_intelligence)$(nc_instance_regionid)01.privatelink.cognitiveservices.azure.com"
                         -ResourceGroupName $(dnsResourceGroup)
                         -SubscriptionName $(subscriptionName)
                         -TenantId $(tenantId)                   
