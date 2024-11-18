@@ -69,9 +69,6 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
 output objectOutput object = documentIntelligenceResource.outputs
 
 
-// SNDADPINFRG1401
-// SNDADPDNSRG1401
-
 module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5.2' = {
   name: 'aks-private-dns-zone-${deploymentDate}'
   scope: resourceGroup(privateDnsZone.resourceGroup)
