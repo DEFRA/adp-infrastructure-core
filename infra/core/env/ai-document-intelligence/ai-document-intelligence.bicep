@@ -73,3 +73,20 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
 
   }
 }
+
+
+resource aRecord 'Microsoft.Network/privateDnsZones/A@2024-06-01' = {
+  name: 'privateDnsZone.name/@'
+  properties: {
+    ttl: 300
+    aRecords: [
+      {
+        ipv4Address: '1.1.1.1'
+      }
+    ]
+  }
+  dependsOn: [
+     documentIntelligenceResource
+  ]
+}
+
