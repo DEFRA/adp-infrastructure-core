@@ -1,4 +1,4 @@
-@description('Required. The object of the PostgreSQL Flexible Server. The object must contain name,storageSizeGB,highAvailability and administratorLogin properties.')
+@description('Required. The object of the PostgreSQL Flexible Server. The object must contain name,storageSizeGB,highAvailability,logCategory and administratorLogin properties.')
 param server object
 
 @description('Required. The parameter object for the virtual network. The object must contain the name,skuName,resourceGroup and subnetPostgreSql values.')
@@ -30,6 +30,9 @@ param environment string
 
 @description('Required. Boolean value to enable or disable resource lock.')
 param resourceLockEnabled bool
+
+@description('Required. The parameter object for the monitoringWorkspace. The object must contain name of the workspace and resourceGroup.')
+param monitoringWorkspace object
 
 @description('Optional. Date in the format yyyy-MM-dd.')
 param createdDate string = utcNow('yyyy-MM-dd')
@@ -91,7 +94,7 @@ module keyvaultSecretsUserRoleAssignment '.bicep/kv-secret-role-secrets-user.bic
   }
 }]
 
-module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1' = {
+module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.2.0' = {
   name: 'postgre-sql-flexible-server-${deploymentDate}'
   params: {
     name: toLower(server.name)
@@ -122,6 +125,20 @@ module flexibleServerDeployment 'br/avm:db-for-postgre-sql/flexible-server:0.1.1
     configurations:[]
     delegatedSubnetResourceId : virtual_network::subnet.id
     privateDnsZoneArmResourceId: private_dns_zone.id
+      diagnosticSettings: [ {
+        logCategoriesAndGroups: [ {
+          category: server.logCategory
+        }       
+        ]
+      workspaceResourceId: resourceId(
+        monitoringWorkspace.resourceGroup,
+        'Microsoft.OperationalInsights/workspaces',
+        monitoringWorkspace.name
+      )
+      metricCategories: []
+    }
+    ]
+      
   }
 }
 

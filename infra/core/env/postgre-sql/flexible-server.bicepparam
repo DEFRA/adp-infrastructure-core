@@ -8,7 +8,9 @@ param server = {
   highAvailability: '#{{ postgreSqlHighAvailability }}'
   availabilityZone: '#{{ postgreSqlAvailabilityZone }}'
   administratorLogin: '#{{ postgreSqlAdministratorUserName }}'
+  logCategory: '#{{ postgreSqlLogCategory }}'
 }
+
 param vnet = {
   name: '#{{ virtualNetworkName }}'
   resourceGroup: '#{{ virtualNetworkResourceGroup }}'
@@ -39,3 +41,8 @@ param secrets = [
 ]
 
 param resourceLockEnabled = #{{ resourceLockEnabled }}
+
+param monitoringWorkspace = {
+  name: '#{{ logAnalyticsWorkspace }}'
+  resourceGroup: '#{{ servicesResourceGroup }}'
+}
