@@ -9,6 +9,12 @@
                 "customSubDomainName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_ai_document_intelligence }}#{{ nc_instance_regionid }}01"
             }    
         },
+        "privateDnsZone": {
+            "value": {
+                "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_ai_document_intelligence }}#{{ nc_instance_regionid }}01.privatelink.cognitiveservices.azure.com",
+                "resourceGroup": "#{{ dnsResourceGroup }}"
+            }
+        },
         "vnet": {
             "value": {
               "name": "#{{ virtualNetworkName }}",

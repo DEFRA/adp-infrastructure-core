@@ -464,7 +464,20 @@ extends:
                 - name: redis-cache
                   path: infra/core/env/redis-cache
                   resourceGroupName: $(servicesResourceGroup)
-              - ${{ if eq(variables.IsApplicationAiDocumentIntelligence1, true) }}:                    
+              - ${{ if eq(variables.IsApplicationAiDocumentIntelligence1, true) }}:
+                - name: ai-document-intelligence-zone
+                  path: infra/core/env/private-dns-zone
+                  resourceGroupName: $(dnsResourceGroup)
+                  postDeployScriptsList:
+                    - displayName: Link the Private DNS Zone to Central networks
+                      scriptPath: infra/core/env/scripts/Trigger-LinkPrivateDNSZones.ps1
+                      type: PowerShell
+                      useSystemAccessToken: true
+                      scriptArguments: >
+                        -PrivateDnsZoneName "$(infraResourceNamePrefix)$(nc_resource_ai_document_intelligence)$(nc_instance_regionid)01.privatelink.cognitiveservices.azure.com"
+                        -ResourceGroupName $(dnsResourceGroup)
+                        -SubscriptionName $(subscriptionName)
+                        -TenantId $(tenantId)                   
                 - name: ai-document-intelligence
                   path: infra/core/env/ai-document-intelligence
                   parameterFilePath: infra/core/env/ai-document-intelligence/ai-document-intelligence-depolyment-1-params
