@@ -7,6 +7,9 @@ param aiDocumentIntelligence object
 @description('Optional. Location for all resources.')
 param location string = resourceGroup().location
 
+@description('Optional. Restrict outbound network access.')
+param restrictOutboundNetworkAccess bool = false
+
 @description('Required. Environment name.')
 param environment string
 
@@ -53,6 +56,7 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
     location: location
     sku: aiDocumentIntelligence.sku
     customSubDomainName: aiDocumentIntelligence.customSubDomainName
+    restrictOutboundNetworkAccess: restrictOutboundNetworkAccess
     privateEndpoints: [
       {
          privateDnsZoneGroup: {
