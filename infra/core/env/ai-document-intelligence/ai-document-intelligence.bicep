@@ -22,19 +22,10 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Required. The parameter object for the private Dns zone. The object must contain the name and resourceGroup values')
 param privateDnsZone object
 
-@description('Required. Boolean value to enable or disable resource lock.')
-param resourceLockEnabled bool
-
 var customTags = {
   Location: location
   CreatedDate: createdDate
   Environment: environment
-}
-
-var tagsMi = {
-  Name: aiDocumentIntelligence.miName
-  Purpose: 'Document Intelligence Control Plane Managed Identity'
-  Tier: 'Security'
 }
 
 var defaultTags = union(json(loadTextContent('../../../common/default-tags.json')), customTags)
@@ -58,9 +49,6 @@ resource private_dns_zone 'Microsoft.Network/privateDnsZones@2020-06-01' existin
 
 module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = {
   name: 'ai-document-intelligence-${deploymentDate}'
-  dependsOn: [
-    managedIdentity
-  ]
   params: {
     kind: 'FormRecognizer'
     name: aiDocumentIntelligence.name
@@ -70,9 +58,7 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
     customSubDomainName: aiDocumentIntelligence.customSubDomainName
     restrictOutboundNetworkAccess: restrictOutboundNetworkAccess
     managedIdentities: {
-      userAssignedResourceIds: [
-        managedIdentity.outputs.resourceId
-      ]
+      systemAssigned: true
     }
     
     privateEndpoints: [
@@ -90,16 +76,6 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
 
     tags: union(defaultTags, documentIntelligenceTags)
 
-  }
-}
-
-module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
-  name: 'aks-cluster-mi-${deploymentDate}'
-  params: {
-    name: aiDocumentIntelligence.miName
-    location: location
-    lock: resourceLockEnabled ? 'CanNotDelete' : null
-    tags: union(defaultTags, tagsMi)
   }
 }
 
