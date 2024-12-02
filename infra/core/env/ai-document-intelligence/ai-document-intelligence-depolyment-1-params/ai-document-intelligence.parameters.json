@@ -27,7 +27,7 @@
             "value": "#{{ environment }}"
         },
         "resourceLockEnabled":  {
-            "value": "#{{ resourceLockEnabled }}"
+            "value": #{{ resourceLockEnabled }}
         } 
     }
 }
