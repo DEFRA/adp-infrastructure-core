@@ -58,6 +58,9 @@ resource private_dns_zone 'Microsoft.Network/privateDnsZones@2020-06-01' existin
 
 module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = {
   name: 'ai-document-intelligence-${deploymentDate}'
+  dependsOn: [
+    managedIdentity
+  ]
   params: {
     kind: 'FormRecognizer'
     name: aiDocumentIntelligence.name
