@@ -22,10 +22,19 @@ param createdDate string = utcNow('yyyy-MM-dd')
 @description('Required. The parameter object for the private Dns zone. The object must contain the name and resourceGroup values')
 param privateDnsZone object
 
+@description('Required. Boolean value to enable or disable resource lock.')
+param resourceLockEnabled bool
+
 var customTags = {
   Location: location
   CreatedDate: createdDate
   Environment: environment
+}
+
+var tagsMi = {
+  Name: aiDocumentIntelligence.miName
+  Purpose: 'Document Intelligence Control Plane Managed Identity'
+  Tier: 'Security'
 }
 
 var defaultTags = union(json(loadTextContent('../../../common/default-tags.json')), customTags)
@@ -57,6 +66,16 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
     sku: aiDocumentIntelligence.sku
     customSubDomainName: aiDocumentIntelligence.customSubDomainName
     restrictOutboundNetworkAccess: restrictOutboundNetworkAccess
+    lock: {
+      kind: resourceLockEnabled ? 'CanNotDelete' : null
+      name: 'diLock'
+    }
+    managedIdentities: {
+      userAssignedResourceIds: [
+        managedIdentity.outputs.resourceId
+      ]
+    }
+    
     privateEndpoints: [
       {
          privateDnsZoneGroup: {
@@ -75,6 +94,15 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
   }
 }
 
+module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-identity:0.4.3' = {
+  name: 'aks-cluster-mi-${deploymentDate}'
+  params: {
+    name: aiDocumentIntelligence.miName
+    location: location
+    lock: resourceLockEnabled ? 'CanNotDelete' : null
+    tags: union(defaultTags, tagsMi)
+  }
+}
 
 module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5.2' = {
   name: 'aks-private-dns-zone-${deploymentDate}'
