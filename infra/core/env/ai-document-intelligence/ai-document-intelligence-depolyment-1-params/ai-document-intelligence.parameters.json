@@ -7,7 +7,6 @@
                 "name": "#{{ infraResourceNamePrefix }}#{{ nc_resource_ai_document_intelligence }}#{{ nc_instance_regionid }}01",
                 "sku": "#{{ aiDocumentIntelligenceSku }}",
                 "customSubDomainName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_ai_document_intelligence }}#{{ nc_instance_regionid }}01",
-                "miName": "#{{ infraResourceNamePrefix }}#{{ nc_resource_managedidentity }}#{{ nc_instance_regionid }}01"
             }    
         },
         "privateDnsZone": {
@@ -25,9 +24,6 @@
         },
         "environment": {
             "value": "#{{ environment }}"
-        },
-        "resourceLockEnabled":  {
-            "value": #{{ resourceLockEnabled }}
-        } 
+        }
     }
 }
