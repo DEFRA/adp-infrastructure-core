@@ -69,10 +69,6 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
     sku: aiDocumentIntelligence.sku
     customSubDomainName: aiDocumentIntelligence.customSubDomainName
     restrictOutboundNetworkAccess: restrictOutboundNetworkAccess
-    lock: {
-      kind: resourceLockEnabled ? 'CanNotDelete' : null
-      name: 'diLock'
-    }
     managedIdentities: {
       userAssignedResourceIds: [
         managedIdentity.outputs.resourceId
