@@ -109,6 +109,9 @@ module managedIdentity 'br/SharedDefraRegistry:managed-identity.user-assigned-id
 
 module privateDnsZoneModule 'br/SharedDefraRegistry:network.private-dns-zone:0.5.2' = {
   name: 'aks-private-dns-zone-${deploymentDate}'
+  dependsOn: [
+    documentIntelligenceResource
+  ]
   scope: resourceGroup(privateDnsZone.resourceGroup)
   params: {
    name: privateDnsZone.name
