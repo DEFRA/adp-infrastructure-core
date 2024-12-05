@@ -57,6 +57,7 @@ module documentIntelligenceResource 'br/avm:cognitive-services/account:0.8.0' = 
     sku: aiDocumentIntelligence.sku
     customSubDomainName: aiDocumentIntelligence.customSubDomainName
     restrictOutboundNetworkAccess: restrictOutboundNetworkAccess
+    disableLocalAuth: aiDocumentIntelligence.disableLocalAuth
     managedIdentities: {
       systemAssigned: true
     }
