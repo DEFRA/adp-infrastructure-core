@@ -22,7 +22,7 @@ param cluster = {
   npSystem: {
     count: 2
     osDiskSizeGB: 80
-    maxCount: #{{ aksClusterNpSystemMaxCount }}
+    maxCount: '#{{ aksClusterNpSystemMaxCount }}'
     minCount: 2
     maxPods: 110
     availabilityZones: [
@@ -34,7 +34,7 @@ param cluster = {
   npUser: {
     count: 2
     osDiskSizeGB: 128
-    maxCount: #{{ aksClusterNpUserMaxCount }}
+    maxCount: '#{{ aksClusterNpUserMaxCount }}'
     minCount: 2
     maxPods: 110
     minPods: 2
