@@ -68,23 +68,7 @@ extends:
   parameters:
     projectName: $(projectName)
     deployFromFeature: ${{ parameters.deployFromFeature }}
-    environments:
-      - name: 'snd1'
-        serviceConnection: AZD-ADP-SND1
-        deploymentBranches:
-          - 'refs/heads/main'
-        developmentEnvironment: true
-        privateAgentName: 'DEFRA-ADP-SND1-ubuntu2204'
-        azureRegions:
-          primary: 'UKSouth'
-      - name: 'snd3'
-        serviceConnection: AZD-ADP-SND3
-        deploymentBranches:
-          - 'refs/heads/main'
-          - 'refs/pull/*/merge'
-        privateAgentName: 'DEFRA-ADP-SND3-ubuntu2204'
-        azureRegions:
-          primary: 'UKSouth'          
+    environments:       
       - name: pre1
         serviceConnection: AZR-ADP-PRE1
         deploymentBranches:
