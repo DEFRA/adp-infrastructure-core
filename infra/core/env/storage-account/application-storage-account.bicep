@@ -61,6 +61,8 @@ module storageAccounts 'br/SharedDefraRegistry:storage.storage-account:0.5.3' = 
       bypass: 'AzureServices'
       defaultAction: 'Deny'
     }
+    allowSharedKeyAccess: false
+  
     publicNetworkAccess: 'Disabled'
     privateEndpoints: [
       {
