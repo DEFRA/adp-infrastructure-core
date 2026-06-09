@@ -1,0 +1,60 @@
+trigger:
+  branches:
+    include:
+      - remove-locks
+pr: none
+
+parameters:
+  - name: resourceId
+    type: string
+    default: ''
+    displayName: 'Resource ID (e.g. /subscriptions/.../resourceGroups/.../providers/Microsoft.Network/privateEndpoints/...)'
+  - name: azureServiceConnection
+    type: string
+    default: 'AZR-ADP-SSV5'
+    displayName: 'AZR-ADP-SSV5'
+
+stages:
+  - stage: RemoveLock
+    displayName: 'Remove resource locks'
+    jobs:
+      - job: RemoveLockJob
+        displayName: 'Remove Locks'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - checkout: none
+          - task: AzureCLI@2
+            displayName: 'Remove locks from resource'
+            inputs:
+              azureSubscription: ${{ parameters.azureServiceConnection }}
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |
+                set -euo pipefail
+                RESOURCE_ID='${{ parameters.resourceId }}'
+                if [ -z "$RESOURCE_ID" ]; then
+                  echo "ERROR: resourceId parameter is empty. Provide the full resource id when queuing the pipeline." >&2
+                  exit 1
+                fi
+
+                echo "Listing locks for the resource..."
+                LOCK_IDS=$(az lock list --ids "$RESOURCE_ID" --query "[].id" -o tsv)
+
+                if [ -z "$LOCK_IDS" ]; then
+                  echo "No locks found on $RESOURCE_ID"
+                  exit 0
+                fi
+
+                echo "Found locks:"
+                echo "$LOCK_IDS"
+
+                # Delete each lock id (only if an id exists)
+                echo "$LOCK_IDS" | while read -r id; do
+                  if [ -n "$id" ]; then
+                    echo "Deleting lock $id"
+                    az lock delete --ids "$id"
+                  fi
+                done
+
+                echo "Completed lock removal."
