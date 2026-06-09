@@ -38,8 +38,24 @@ stages:
                   exit 1
                 fi
 
+                echo "Parsing resource id..."
+                IFS='/' read -ra parts <<< "$RESOURCE_ID"
+                if [ "${#parts[@]}" -lt 9 ]; then
+                  echo "ERROR: unexpected resource id format: $RESOURCE_ID" >&2
+                  exit 1
+                fi
+                RG=${parts[4]}
+                NAMESPACE=${parts[6]}
+                RESOURCE_TYPE=${parts[7]}
+                RESOURCE_NAME=${parts[8]}
+
+                echo "Resource group: $RG"
+                echo "Namespace: $NAMESPACE"
+                echo "Resource type: $RESOURCE_TYPE"
+                echo "Resource name: $RESOURCE_NAME"
+
                 echo "Listing locks for the resource..."
-                LOCK_IDS=$(az lock list --ids "$RESOURCE_ID" --query "[].id" -o tsv)
+                LOCK_IDS=$(az lock list --resource-group "$RG" --namespace "$NAMESPACE" --resource-type "$RESOURCE_TYPE" --resource-name "$RESOURCE_NAME" --query "[].id" -o tsv)
 
                 if [ -z "$LOCK_IDS" ]; then
                   echo "No locks found on $RESOURCE_ID"
@@ -49,12 +65,10 @@ stages:
                 echo "Found locks:"
                 echo "$LOCK_IDS"
 
-                # Delete each lock id (only if an id exists)
-                echo "$LOCK_IDS" | while read -r id; do
-                  if [ -n "$id" ]; then
-                    echo "Deleting lock $id"
-                    az lock delete --ids "$id"
-                  fi
+                # Delete each lock
+                for id in $LOCK_IDS; do
+                  echo "Deleting lock $id"
+                  az lock delete --ids "$id"
                 done
 
                 echo "Completed lock removal."
