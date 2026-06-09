@@ -5,10 +5,6 @@ trigger:
 pr: none
 
 parameters:
-  - name: resourceId
-    type: string
-    default: '/subscriptions/bccee885-7385-4bec-b3d1-55deb6bc6044/resourceGroups/SSVADPINFRG5401/providers/Microsoft.Network/privateEndpoints/SSVADPINFPE5401'
-    displayName: 'Resource ID (e.g. /subscriptions/.../resourceGroups/.../providers/Microsoft.Network/privateEndpoints/...)'
   - name: azureServiceConnection
     type: string
     default: 'AZR-ADP-SSV5'
@@ -25,40 +21,19 @@ stages:
         steps:
           - checkout: none
           - task: AzureCLI@2
-            displayName: 'Remove locks from resource'
+            displayName: 'Remove locks'
             inputs:
               azureSubscription: ${{ parameters.azureServiceConnection }}
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |
                 set -euo pipefail
-                RESOURCE_ID='${{ parameters.resourceId }}'
-                if [ -z "$RESOURCE_ID" ]; then
-                  echo "ERROR: resourceId parameter is empty. Provide the full resource id when queuing the pipeline." >&2
-                  exit 1
-                fi
-
-                echo "Parsing resource id..."
-                IFS='/' read -ra parts <<< "$RESOURCE_ID"
-                if [ "${#parts[@]}" -lt 9 ]; then
-                  echo "ERROR: unexpected resource id format: $RESOURCE_ID" >&2
-                  exit 1
-                fi
-                RG=${parts[4]}
-                NAMESPACE=${parts[6]}
-                RESOURCE_TYPE=${parts[7]}
-                RESOURCE_NAME=${parts[8]}
-
-                echo "Resource group: $RG"
-                echo "Namespace: $NAMESPACE"
-                echo "Resource type: $RESOURCE_TYPE"
-                echo "Resource name: $RESOURCE_NAME"
 
                 echo "Listing locks for the resource..."
-                LOCK_IDS=$(az lock list --resource-group "$RG" --namespace "$NAMESPACE" --resource-type "$RESOURCE_TYPE" --resource-name "$RESOURCE_NAME" --query "[].id" -o tsv)
+                LOCK_IDS=$(az lock list --query "[].id" -o tsv)
 
                 if [ -z "$LOCK_IDS" ]; then
-                  echo "No locks found on $RESOURCE_ID"
+                  echo "No locks found"
                   exit 0
                 fi
 
