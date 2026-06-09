@@ -7,8 +7,8 @@ pr: none
 parameters:
   - name: azureServiceConnection
     type: string
-    default: 'AZR-ADP-SSV5'
-    displayName: 'AZR-ADP-SSV5'
+    default: 'AZR-ADP-PRD1'
+    displayName: 'AZR-ADP-PRD1'
 
 stages:
   - stage: RemoveLock
